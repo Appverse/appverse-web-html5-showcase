@@ -1,10 +1,16 @@
 'use strict';
 
 angular.module('appverseClientIncubatorApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
+  .controller('MainShowIntro', function ($scope) {
+    $scope.issuesList = [
+      'Security',
+      'Integration to external systems',
+      'Styling management',
+      'Client/Server communication',
+      'Performance',
+      'Document Management',
+      'Decoupled Application Configuration',
+      'Testing',
+      'and other important aspects'
     ];
   });

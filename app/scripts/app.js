@@ -5,7 +5,7 @@ angular.module('appverseClientIncubatorApp', [])
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        controller: 'MainShowIntro'
       })
       .otherwise({
         redirectTo: '/'
