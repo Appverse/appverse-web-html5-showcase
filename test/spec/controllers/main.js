@@ -4,6 +4,9 @@ describe('Controller: MainShowIntro', function () {
 
   // load the controller's module
   beforeEach(module('appverseClientIncubatorApp'));
+  
+   // Add the Bootstrap UI module to our tests by loading the BootstrapUI module
+  beforeEach(module('ui.bootstrap'));
 
   var MainShowIntro,
     scope;

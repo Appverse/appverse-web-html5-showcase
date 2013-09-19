@@ -1,6 +1,10 @@
 'use strict';
 
-angular.module('appverseClientIncubatorApp', [])
+/* 
+ * It is needed to add the ui.bootstrap module 
+ * as a dependency to the Angular modules.
+ */
+angular.module('appverseClientIncubatorApp', ['ui.bootstrap'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
