@@ -1,0 +1,52 @@
+{
+  "topics":[
+    {
+      "id": 1,
+      "name": "Security",
+      "items": [
+        {
+          "id": "a",
+          "type": "Priority",
+          "value": "high"
+        },
+        {
+          "id": "b",
+          "type": "Assigned PSU Task",
+          "value": "PSU-1"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Styling",
+      "items": [
+        {
+          "id": "a",
+          "type": "Priority",
+          "value": "high"
+        },
+        {
+          "id": "b",
+          "type": "Assigned PSU Task",
+          "value": "PSU-2"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Configuration",
+     "items": [
+        {
+          "id": "a",
+          "type": "Priority",
+          "value": "medium"
+        },
+        {
+          "id": "b",
+          "type": "Assigned PSU Task",
+          "value": "PSU-3"
+        }
+      ]
+    }
+  ]
+}
