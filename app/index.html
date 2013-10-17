@@ -27,10 +27,11 @@
       <script src="bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
 
-<!--    This is the unnamed root, aka index.html
-        where we can populate *any* view within *any* 
-        ancestor state.-->
 
+    <!-- HEADER/NAVIGATION BAR
+     This is the unnamed root, aka index.html
+     You can place here your views in the ui-view points.
+    -->
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
           <div class="container">
@@ -46,25 +47,28 @@
             <!-- Here you can see ui-sref in action again. Also notice the use of $state.includes, which
                  will set the links to 'active' if, for example on the first link, 'contacts' or any of
                  its descendant states are activated. -->
-              <li ng-class="{ active: $state.includes('topics') }"><a ui-sref="topics.list">Topics</a></li>
+              <li ng-class="{ active: $state.includes('topics') }"><a ui-sref="topics.list">Dev. Topics</a></li>
+              <li ng-class="{ active: $state.includes('ui') }"><a ui-sref="ui">UI Demo</a></li>
               <li ng-class="{ active: $state.includes('about') }"><a ui-sref="about">About</a></li>
             </ul>
 
             <!-- Here is a named ui-view (ui-view="hint"). ui-views don't have to be named, but we'll be populate this
                  on from various different child states and we want a name to help us target. -->
-<!--            <p ui-view="hint" class="navbar-text pull-right"></p>-->
+            <p ui-view="hint" class="navbar-text pull-left"></p>
           </div>
       </div>
     </div>
 
-    <!-- Here is the main ui-view (it is unnamed).
+    <!-- MAIN INSERTION POINT
+         Here is the main ui-view (it is unnamed) as the main content insertion point.
          It replaces the default Angular's ng-view directive.
-         It will be populate by its immediate children's templates/views unless otherwise 
+         It will be populate by its immediate children's templates/views unless otherwise
          explicitly named views are targeted.
          It's also employing the ng-animate directive.
-         For example: <div ui-view ng-animate="{enter:'fade-enter'}"> -->
+         For example: <div ui-view ng-animate="{enter:'fade-enter'}">
+     -->
     <div ui-view class="container" style="margin-top:60px" ng-animate="{enter:'fade-enter'}"></div>
-    
+
 
 
         <script src="bower_components/jquery/jquery.js"></script>
@@ -97,10 +101,14 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/app-factory.js"></script>
-        <script src="scripts/app-states.js"></script>
-        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/app-controllers.js"></script>
+        <script src="scripts/controllers/ui-b-controllers.js"></script>
+        <script src="scripts/factories/app-factory.js"></script>
+        <script src="scripts/states/app-states.js"></script>
         <!-- endbuild -->
         
+
 </body>
 </html>
+
+

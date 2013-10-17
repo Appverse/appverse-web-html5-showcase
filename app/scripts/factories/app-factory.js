@@ -1,6 +1,10 @@
 angular.module('appverseClientIncubatorApp')
 
-    // A RESTful factory for retrieving topics (to be developed) from 'topics.json'
+    /*
+     * Factory Name: 'topics'
+     * This factory contains is RESTful for retrieving topics 
+     * from data (in this case'topics.json').
+     */
   .factory('topics', ['$http', function ($http, utils) {
     var path = 'views/topics/topics.json';
     var topics = $http.get(path).then(function (resp) {
@@ -18,12 +22,19 @@ angular.module('appverseClientIncubatorApp')
     };
     return factory;
   }])
-
+   
+   /*
+    * Factory Name: 'utils'
+    * Contains methods for data finding (demo).
+    * 
+    * findById: Util for finding an object by its 'id' property among an array
+    * newRandomKey: Util for returning a randomKey from a collection that also isn't the current key
+    */
   .factory('utils', function () {
 
     return {
 
-      // Util for finding an object by its 'id' property among an array
+      // 
       findById: function findById(a, id) {
         for (var i = 0; i < a.length; i++) {
           if (a[i].id == id) return a[i];
@@ -31,7 +42,6 @@ angular.module('appverseClientIncubatorApp')
         return null;
       },
 
-      // Util for returning a randomKey from a collection that also isn't the current key
       newRandomKey: function newRandomKey(coll, key, currentKey){
         var randKey;
         do {

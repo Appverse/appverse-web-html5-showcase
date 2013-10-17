@@ -1,4 +1,4 @@
- /////////////////////////////////////////////////
+//////////////////////////////////////////////////
 // The main module configuration section shows  //
 // how to define when (redirects) and otherwise //
 // (invalid urls) to arrangesite navigation     //
@@ -21,6 +21,7 @@ angular.module('appverseClientIncubatorApp')
           .when('/c?id', '/topics/:id')
           .when('/user/:id', '/topics/:id')
 
+
           // If the url is ever invalid, e.g. '/asdf', then redirect to '/' aka the home state
           .otherwise('/');
 
@@ -33,6 +34,7 @@ angular.module('appverseClientIncubatorApp')
         // topics.list
         // topics.detail
         // topics.detail.item
+        // ui.list
         // about
         // 
         //////////////////////////
@@ -83,23 +85,8 @@ angular.module('appverseClientIncubatorApp')
             },
 
             // You can pair a controller to your template. There *must* be a template to pair with.
-            controller: ['$scope', '$state', 'topics', 'utils',
-              function (  $scope,   $state,   topics,   utils) {
-
-                // Add a 'topics' field in this abstract parent's scope, so that all
-                // child state views can access it in their scopes. Please note: scope
-                // inheritance is not due to nesting of states, but rather choosing to
-                // nest the templates of those states. It's normal scope inheritance.
-                $scope.topics = topics;
-
-                $scope.goToRandom = function () {
-                  var randId = utils.newRandomKey($scope.topics, "id", $state.params.topicId);
-
-                  // $state.go() can be used as a high level convenience method
-                  // for activating a state programmatically.
-                  $state.go('topics.detail', { topicId: randId });
-                };
-              }]
+            // controller: ['$scope', '$state', 'topics', 'utils','TopicsController']
+            controller: 'TopicsController'
             
           })
 
@@ -159,16 +146,13 @@ angular.module('appverseClientIncubatorApp')
               // So this one is targeting the unnamed view within the parent state's template.
               '': {
                 templateUrl: 'views/topics/topics.detail.html',
-                controller: ['$scope', '$stateParams', 'utils',
-                  function (  $scope,   $stateParams,   utils) {
-                    $scope.topic = utils.findById($scope.topics, $stateParams.topicId);
-                  }]
+                controller: 'TopicDetailsController'
               },
 
               // This one is targeting the ui-view="hint" within the unnamed root, aka index.html.
               // This shows off how you could populate *any* view within *any* ancestor state.
               'hint@': {
-                template: 'This is topics.detail populating the "hint" ui-view'
+                template: 'Hint: Use the ui-view directives to place content anywhere.'
               },
 
               // This one is targeting the ui-view="menu" within the parent state's template.
@@ -203,22 +187,12 @@ angular.module('appverseClientIncubatorApp')
               // We could instead just set templateUrl and controller outside of the view obj.
               '': {
                 templateUrl: 'views/topics/topics.detail.item.html',
-                controller: ['$scope', '$stateParams', '$state', 'utils',
-                  function (  $scope,   $stateParams,   $state,   utils) {
-                    $scope.item = utils.findById($scope.topic.items, $stateParams.itemId);
-
-                    $scope.edit = function () {
-                      // Here we show off go's ability to navigate to a relative state. Using '^' to go upwards
-                      // and '.' to go down, you can navigate to any relative state (ancestor or descendant).
-                      // Here we are going down to the child state 'edit' (full name of 'topics.detail.item.edit')
-                      $state.go('.edit', $stateParams);
-                    };
-                  }]
+                controller: 'TopicDetailsItemController'
               },
 
               // Here we see we are overriding the template that was set by 'topic.detail'
               'hint@': {
-                template: ' This is topics.detail.item overriding the "hint" ui-view'
+                template: ' Hint: Use overriding of the ui-view for contextual information.'
               }
             }
           })
@@ -238,17 +212,22 @@ angular.module('appverseClientIncubatorApp')
               // had inserted with this state's template.
               '@topics.detail': {
                 templateUrl: 'views/topics/topics.detail.item.edit.html',
-                controller: ['$scope', '$stateParams', '$state', 'utils',
-                  function (  $scope,   $stateParams,   $state,   utils) {
-                    $scope.item = utils.findById($scope.topic.items, $stateParams.itemId);
-                    $scope.done = function () {
-                      // Go back up. '^' means up one. '^.^' would be up twice, to the grandparent.
-                      $state.go('^', $stateParams);
-                    };
-                  }]
+                controller: 'TopicDetailsItemEditController'
               }
             }
           })
+          
+          ////////////////////////////////
+          // SECTION: UI Bootstrap Demo //
+          ////////////////////////////////
+        .state('ui', {
+
+            abstract: false,
+            url: '/ui',
+            templateUrl: 'views/demo/ui-bootstrap/ui-b.html',
+            
+          })
+          
 
           ////////////////////
           // SECTION: About //

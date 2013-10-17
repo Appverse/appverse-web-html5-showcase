@@ -1,22 +1,6 @@
 'use strict';
-
-/* 
- * It is needed to add the ui.bootstrap module 
- * as a dependency to the Angular modules.
- */
-//angular.module('appverseClientIncubatorApp', ['ui.bootstrap'])
-//  .config(function ($routeProvider) {
-//    $routeProvider
-//      .when('/', {
-//        templateUrl: 'views/main.html',
-//        controller: 'MainShowIntro'
-//      })
-//      .otherwise({
-//        redirectTo: '/'
-//      });
-//  });
   
-// Make sure to include the `ui.router` module as a dependency
+// Make sure to include dependencies.
 angular.module('appverseClientIncubatorApp', ['ui.bootstrap', 'ui.router'])
     .run(['$rootScope', '$state', '$stateParams',
       function ($rootScope,   $state,   $stateParams) {
@@ -28,3 +12,4 @@ angular.module('appverseClientIncubatorApp', ['ui.bootstrap', 'ui.router'])
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
       }]);
+    
