@@ -23,7 +23,18 @@ angular.module('appverseClientIncubatorApp')
       
 .controller('CollapseDemoCtrl',
       function ($scope) {
-        $scope.isCollapsed = false;
+        //UI Demo Page
+        $scope.uidemoCollapsed = false;
+        //Landing Page
+        $scope.routingCollapsed = true;
+        $scope.stylingCollapsed = true;
+        $scope.securityCollapsed = true;
+        $scope.integrationCollapsed = true;
+        $scope.configurationCollapsed = true;
+        $scope.performanceCollapsed = true;
+        $scope.servercommunicationCollapsed = true;
+        $scope.testingCollapsed = true;
+        $scope.lifecycleCollapsed = true;
       })
 
 .controller('DatepickerDemoCtrl',

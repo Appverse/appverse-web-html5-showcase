@@ -241,10 +241,10 @@ angular.module('appverseClientIncubatorApp')
               function (        $timeout) {
                 return $timeout(function () {
                   return '<p class="lead">Appverse Web HTML5 Resources</p><ul>' +
-                           '<li><a href="">Source for the Incubator</a></li>' +
-                           '<li><a href="">Appverse Wev Main Page</a></li>' +
-                           '<li><a href="">Quick Start</a></li>' +
-                           '<li><a href="">API Reference</a></li>' +
+                           '<li><a href="https://jdediego@appverse.gftlabs.com/git/scm/ahi/html5-incubator.git">Source for the Incubator</a></li>' +
+                           '<li><a href="http://appverse.github.io/appverse-web/">Appverse Web Main Page</a></li>' +
+                           '<li><a href="">Quick Start</a> (Coming soon)</li>' +
+                           '<li><a href="">API Reference</a> (Coming soon)</li>' +
                          '</ul>';
                 }, 100);
               }]
