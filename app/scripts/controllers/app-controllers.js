@@ -6,7 +6,7 @@
  */
 angular.module('appverseClientIncubatorApp')
   .controller('TopicsController',
-      function ($scope,   $state,   topics,   utils) {
+      function ($scope,   $state,   topics,   utils, CacheService) {
                 // Add a 'topics' field in this abstract parent's scope, so that all
                 // child state views can access it in their scopes. Please note: scope
                 // inheritance is not due to nesting of states, but rather choosing to
