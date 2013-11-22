@@ -1,7 +1,7 @@
 'use strict';
   
 // Make sure to include dependencies.
-angular.module('appverseClientIncubatorApp', ['ui.bootstrap', 'ui.router','CacheService'])
+angular.module('appverseClientIncubatorApp', ['ui.bootstrap', 'ui.router'])
     .run(['$rootScope', '$state', '$stateParams',
       function ($rootScope,   $state,   $stateParams) {
 
@@ -12,17 +12,5 @@ angular.module('appverseClientIncubatorApp', ['ui.bootstrap', 'ui.router','Cache
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
       }]);
-  
-/*
-* Factory Name: 'CacheService'
-* 
-* Based on $cacheFactory, creates a cache called CacheService.
-* Use it to communicate data across different scopes.
-* 1-Put data in cache: CacheService.put(1,'value-1');
-* 2-Retrieve data from cache: CacheService.get(1);
-*/
-angular.module('CacheService', ['ng'])
-    .factory('CacheService', function($cacheFactory) {
-    return $cacheFactory('CacheService');
-});
+
     

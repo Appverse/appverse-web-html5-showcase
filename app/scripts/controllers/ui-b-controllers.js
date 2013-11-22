@@ -5,7 +5,7 @@
  */
 angular.module('appverseClientIncubatorApp')
   .controller('AlertDemoCtrl',
-      function ($scope, CacheService) {
+      function ($scope) {
         $scope.alerts = [
           { type: 'error', msg: 'Oh snap! Change a few things up and try submitting again.' }, 
           { type: 'success', msg: 'Well done! You successfully read this important alert message.' }
@@ -79,22 +79,28 @@ angular.module('appverseClientIncubatorApp')
       
 .controller('ModalDemoCtrl', ['$scope', '$modal', '$log', function ($scope, $modal, $log) {
 
-  $scope.items = ['item1', 'item2', 'item3'];
-
+  $scope.items = ['patata1', 'patata2'];
+  
   $scope.open = function () {
-    var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
+    var ModalInstanceCtrl = function ($scope, $modalInstance, items, input) {
 
+//        $scope.input = {};
+//        $scope.ok = function () {
+//            alert($scope.input.abc);
+//        };
+        
         $scope.items = items;
         $scope.selected = {
           item: $scope.items[0]
         };
 
         $scope.ok = function () {
-          $modalInstance.close($scope.selected.item);
+            //$log.info("en OK titleData: " + $scope.input.title)
+            $modalInstance.close($scope.selected.item);
         };
 
         $scope.cancel = function () {
-          $modalInstance.dismiss('cancel');
+            $modalInstance.dismiss('cancel');
         };
     };  
 
@@ -102,6 +108,9 @@ angular.module('appverseClientIncubatorApp')
       templateUrl: 'myModalContent.html',
       controller: ModalInstanceCtrl,
       resolve: {
+//        input: function (){
+//            return $scope.input;
+//        },
         items: function () {
           return $scope.items;
         }

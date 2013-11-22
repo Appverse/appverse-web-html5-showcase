@@ -9,9 +9,9 @@ angular.module('appverseClientIncubatorApp')
     [          '$stateProvider', '$urlRouterProvider',
       function ($stateProvider,   $urlRouterProvider) {
 
-        /////////////////////////////
+        ///////////////////////////////
         // 1-Redirects and Otherwise //
-        /////////////////////////////
+        ///////////////////////////////
 
         // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
         $urlRouterProvider
@@ -35,6 +35,7 @@ angular.module('appverseClientIncubatorApp')
         // topics.detail
         // topics.detail.item
         // ui.list
+        // serverpush
         // about
         // 
         //////////////////////////
@@ -225,6 +226,29 @@ angular.module('appverseClientIncubatorApp')
             abstract: false,
             url: '/ui',
             templateUrl: 'views/demo/ui-bootstrap/ui-b.html',
+            
+          })
+        
+          ////////////////////////////////
+          // SECTION: Server Push Demo  //
+          ////////////////////////////////
+        .state('serverpush', {
+
+            abstract: false,
+            url: '/serverpush',
+            templateUrl: 'views/demo/serverpush/stockmarket.html',
+            // Use `resolve` to resolve any asynchronous controller dependencies
+            // *before* the controller is instantiated. In this case, since topics
+            // returns a promise, the controller will wait until topics.all() is
+            // resolved before instantiation. Non-promise return values are considered
+            // to be resolved immediately.
+            resolve: {
+              trades: ['trades',
+                function( trades){
+                  return trades.all();
+                }]
+            },
+            controller: 'ServerPushController'
             
           })
           
