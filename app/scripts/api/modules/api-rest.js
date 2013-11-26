@@ -28,61 +28,57 @@ angular.module('AppREST', [
     'restangular',
     'AppCache',
     'AppConfiguration'])
-    .config(['RestangularProvider', 'REST_CONFIG',
-      function (RestangularProvider, REST_CONFIG) {
+    .config(['RestangularProvider', 'CacheFactory', 'REST_CONFIG', 'CACHE_CONFIG',
+      function (RestangularProvider, CacheFactory, REST_CONFIG, CACHE_CONFIG) {
 
           /*
           The cache for http calls
            */
-          setDefaultHttpCacheStorage();
+          CacheFactory.setDefaultHttpCacheStorage(CACHE_CONFIG.HttpCache_duration, CACHE_CONFIG.HttpCache_capacity);
 
-          /*
-          The base URL for all calls to the main backend.
-          Only one main base URL is allowed for now.
-          */
           RestangularProvider.setBaseUrl(REST_CONFIG.BaseUrl);
-          //These are the fields that you want to save from your parent resources if you need to display them.
-          RestangularProvider.setExtraFields();
-          /* 
-          Use this property to control whether Restangularized elements to have a parent or not.
-          This method accepts 2 parameters:
-            Boolean: Specifies if all elements should be parentless or not
-            Array: Specifies the routes (types) of all elements that should be parentless. For example ['buildings']
-          */
-          RestangularProvider.setParentless();
-          /*
-          $http from AngularJS can receive a bunch of parameters like cache, transformRequest and so on. 
-          You can set all of those properties in the object sent on this setter so that they will be used 
-          in EVERY API call made by Restangular. This is very useful for caching for example. 
-          All properties that can be set can be checked here: 
-          http://docs.angularjs.org/api/ng.$http#parameters
-          */
+          RestangularProvider.setExtraFields(REST_CONFIG.ExtraFields);
+          RestangularProvider.setParentless(REST_CONFIG.Parentless);
+          //RestangularProvider.setDefaultHttpFields(REST_CONFIG.DefaultHttpFields);
           RestangularProvider.setDefaultHttpFields(REST_CONFIG.DefaultHttpFields);
-          RestangularProvider.addElementTransformer();
-          RestangularProvider.setOnElemRestangularized();
+          RestangularProvider.addElementTransformer(REST_CONFIG.ElementTransformer);
+          RestangularProvider.setOnElemRestangularized(REST_CONFIG.OnElemRestangularized);
           RestangularProvider.setResponseInterceptor (
-              /*
-              Invalidate http cache for editing methods
-               */
               function(response){
                   for (var operation in REST_CONFIG.NoCacheHttpMethods) {
                       if (operation === true) {
-                          cache.removeAll();
+                          CacheFactory.removeDefaultHttpCacheStorage();
                       }
                   }
+                  return response;
               }
           );
-          RestangularProvider.setRequestInterceptor();
-          RestangularProvider.setFullRequestInterceptor();
-          RestangularProvider.setErrorInterceptor();
-          RestangularProvider.setRestangularFields();
-          RestangularProvider.setMethodOverriders();
-          RestangularProvider.setDefaultRequestParams();
-          RestangularProvider.setFullResponse();
-          RestangularProvider.setDefaultHeaders();
-          RestangularProvider.setRequestSuffix();
-          RestangularProvider.setUseCannonicalId();
-          RestangularProvider.setEncodeIds();
+
+
+/*          service.init = function() {
+              cache = $cacheFactory('http');
+              Restangular.setDefaultHttpFields({cache: cache});
+
+              Restangular.setResponseInterceptor(function(response, operation) {
+                  if (operation === 'put' || operation === 'post' || operation === 'delete') {
+                      cache.removeAll();
+                  }
+                  return response;
+              })
+          }*/
+
+
+          RestangularProvider.setRequestInterceptor(REST_CONFIG.RequestInterceptor);
+          RestangularProvider.setFullRequestInterceptor(REST_CONFIG.FullRequestInterceptor);
+          RestangularProvider.setErrorInterceptor(REST_CONFIG.ErrorInterceptor);
+          RestangularProvider.setRestangularFields(REST_CONFIG.RestangularFields);
+          RestangularProvider.setMethodOverriders(REST_CONFIG.MethodOverriders);
+          RestangularProvider.setDefaultRequestParams(REST_CONFIG.DefaultRequestParams);
+          RestangularProvider.setFullResponse(REST_CONFIG.FullResponse);
+          RestangularProvider.setDefaultHeaders(REST_CONFIG.DefaultHeaders);
+          RestangularProvider.setRequestSuffix(REST_CONFIG.RequestSuffix);
+          RestangularProvider.setUseCannonicalId(REST_CONFIG.UseCannonicalId);
+          RestangularProvider.setEncodeIds(REST_CONFIG.EncodeIds);
 
       }])
    /*

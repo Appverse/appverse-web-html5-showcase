@@ -11,11 +11,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//angular.module('COMMONAPI', ['RESTIntegrated','CacheService', 'Detection', 'ServerPush', 'Security' ])
-angular.module('COMMONAPI', ['AppREST', 'AppCache', 'AppConfiguration', 'AppTranslate'])
-    .config(['$rootScope', 'CacheFactory', 'RESTFactory', 'CACHE_SERVICE',
-      function ($rootScope, CacheFactory, RESTFactory, CACHE_SERVICE) {
+angular.module('COMMONAPI', ['AppREST', 'AppCache', 'AppConfiguration', 'AppTranslate', 'AppServerPush'])
+    .config(['$rootScope', 'CacheFactory', 'RESTFactory', 'CACHE_CONFIG',
+      function ($rootScope, CacheFactory, RESTFactory, CACHE_CONFIG) {
           /*
            CACHE MODULE
            Initializes the different caches with params in configuration.

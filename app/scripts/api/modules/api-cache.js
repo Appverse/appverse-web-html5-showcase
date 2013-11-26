@@ -91,14 +91,14 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
                  */
                 $indexedDBProvider.connection('commonIndexedDB')
                     .upgradeDatabase(myVersion, function (event, db, tx) {
-                        var objStore = db.createObjectStore(CACHE_SERVICE.IndexedDB_objectStore, {
-                            keyPath: CACHE_SERVICE.IndexedDB_keyPath
+                        var objStore = db.createObjectStore(CACHE_CONFIG.IndexedDB_objectStore, {
+                            keyPath: CACHE_CONFIG.IndexedDB_keyPath
                         });
-                        objStore.createIndex('primary_idx', CACHE_SERVICE.IndexedDB_mainIndex, {
-                            unique: CACHE_SERVICE.IndexedDB_mainIndex_isUnique
+                        objStore.createIndex('primary_idx', CACHE_CONFIG.IndexedDB_mainIndex, {
+                            unique: CACHE_CONFIG.IndexedDB_mainIndex_isUnique
                         });
-                        objStore.createIndex('secondary_idx', CACHE_SERVICE.IndexedDB_secondaryIndex, {
-                            unique: CACHE_SERVICE.IndexedDB_secondaryIndex_isUnique
+                        objStore.createIndex('secondary_idx', CACHE_CONFIG.IndexedDB_secondaryIndex, {
+                            unique: CACHE_CONFIG.IndexedDB_secondaryIndex_isUnique
                         });
                     });
             };
@@ -116,11 +116,18 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
              Your can retrieve the currently cached data: var cachedData =
              */
             factory.setDefaultHttpCacheStorage = function (duration, capacity) {
+                //var cache = $cacheFactory('http');
                 $httpProvider.defaults.cache = $cacheFactory('HttpDefaultCache', {
                     maxAge: duration,
                     capacity: capacity
                 });
+                return cache;
             };
+
+            factory.removeDefaultHttpCacheStorage = function () {
+                $httpProvider.defaults.cache.removeAll();
+            };
+
 
             return factory;
         }

@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////
 angular.module('appverseClientIncubatorApp')
   .config(
-    [          '$stateProvider', '$urlRouterProvider',
+    ['$stateProvider', '$urlRouterProvider',
       function ($stateProvider,   $urlRouterProvider) {
 
         ///////////////////////////////

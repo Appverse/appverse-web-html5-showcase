@@ -11,6 +11,8 @@ angular.module('appverseClientIncubatorApp')
       return resp.data.topics;
     });
 
+
+
     var factory = {};
     factory.all = function () {
       return topics;
