@@ -9,81 +9,193 @@
 
 
 angular.module('AppConfiguration')
+
+/*
+PROJECT CONFIGURATION
+This constants can be used to set basic information related to the application.
+All data are auto-explained because their names ;)
+ */
 .constant('PROJECT_DATA', {
-    ApplicationName: '',
-    Version: '',
-    Company: '',
-    Year: '',
-    Team:'',
+    ApplicationName: 'Appverse Web HTML5 Incubator Demo',
+    Version: '0.1',
+    Company: 'GFT',
+    Year: '2013',
+    Team:'GFT Appverse Web',
     URL: ''
 })
+    /*
+LOGGING MODULE CONFIGURATION
+This section contains basic configuration for the logging module
+in the common API.
+*/
+.constant('LOGGING_CONFIG', {
+    ServerEnabled: true,
+    EnabledLogLevels: {'log': true, 'error': true, 'debug': true, 'warn': true, 'info': true}
+})
+/*
+CACHE MODULE CONFIGURATION
+This section contains basic configuration for the several types of cache handled by the cache module
+in the common API.
+*/
 .constant('CACHE_CONFIG', {
+     /////////////////////////////
+     //SCOPE CACHE
+     /////////////////////////////
+     /*
+     Max duration in milliseconds of the scope cache
+      */
      ScopeCache_duration: '10000',
+     /*
+     This param turns the scope cache into a LRU one.
+     The cache’s capacity is used together to track available memory.
+      */
      ScopeCache_capacity: '10',
+     /////////////////////////////
+     //BROWSER STORAGE TYPE
+     //This sets the preferred browser storage in the app.
+     //Most of times it is convenient follow a policy for browser storage, using only one of the two types.
+     //If you prefer flexibility (the developer makes a choice for each case) do not use the provided API.
+     /////////////////////////////
+     /*
+     1 = $localStorage
+     2 = $sessionStorage
+      */
      BrowserStorage_type: '1',
+     /////////////////////////////
+     //$http SERVICE CACHE
+     /////////////////////////////
+     /*
+     Max duration in milliseconds of the http service cache.
+     */
      HttpCache_duration: '100000',
+     /*
+     This param turns the http cache into a LRU one.
+     The cache’s capacity is used together to track available memory.
+     */
      HttpCache_capacity: '10',
+     /////////////////////////////
+     //BROWSER'S INDEXED DB CACHE
+     /////////////////////////////
+     /*
+     Name of the default object store
+      */
      IndexedDB_objectStore:'structuredCache',
+     /*
+     The key name for the default path
+      */
      IndexedDB_keyPath:'messages',
+     /*
+     The name of the main index in the indexeddb
+      */
      IndexedDB_mainIndex:'name',
+     /*
+     The main index can be unique or not. This is the value of this attribute.
+      */
      IndexedDB_mainIndex_isUnique:'false',
+     /*
+     The name of the secondary index in the indexeddb.
+     It improves searches in the indexeddb.
+      */
      IndexedDB_secondaryIndex:'property',
+     /*
+      The secondary index can be unique or not. This is the value of this attribute.
+      */
      IndexedDB_secondaryIndex_isUnique:'false'
 
 })
+/*
+SERVER PUSH MODULE CONFIGURATION
+This section contains the configuration for the server push module.
+It si related to socket.io configuration params.
+Read Configuration section in socket.io documentation for further details.
+https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
+*/
 .constant('SERVERPUSH_CONFIG', {
-        /*
-         resource
-         defaults to socket.io
-         Note the subtle difference between the server, this one is missing a /. These 2 should be in sync with the server to prevent mismatches.
-
-         connect timeout
-         defaults to 10000 ms
-         How long should Socket.IO wait before it aborts the connection attempt with the server to try another fall-back. Please note that some transports require a longer timeout than others. Setting this really low could potentially harm them.
-
-         try multiple transports
-         defaults to true
-         When Socket.IO reconnects and it keeps failing over and over again, should it try all available transports when it finally gives up.
-
-         reconnect
-         defaults to true
-         Should Socket.IO automatically reconnect when it detects a dropped connection or timeout.
-
-         reconnection delay
-         defaults to 500 ms
-         The initial timeout to start a reconnect, this is increased using an exponential back off algorithm each time a new reconnection attempt has been made.
-
-         reconnection limit
-         defaults to Infinity
-         The maximum reconnection delay in milliseconds, or Infinity.
-
-         max reconnection attempts
-         defaults to 10
-         How many times should Socket.IO attempt to reconnect with the server after a a dropped connection. After this we will emit the reconnect_failed event.
-
-         sync disconnect on unload
-         defaults to false
-         Do we need to send a disconnect packet to server when the browser unloads.
-
-         auto connect
-         defaults to true
-         When you call io.connect() should Socket.IO automatically establish a connection with the server.
-
-         flash policy port
-         defaults to 10843
-         If you have Flashsocket enabled, this should match the same port as the server.
-
-         force new connection
-         defaults to false
-         Force multiple io.connect() calls to the same server to use different connections.
-         */
+     /*
+     URL of the listened server
+      */
      BaseUrl: 'http://server.com',
+     /*
+     Port to be listened at the base url.
+      */
      ListenedPort: '80',
+     /*
+      resource
+      defaults to socket.io
+      Note the subtle difference between the server, this one is missing a /.
+      These 2 should be in sync with the server to prevent mismatches.
+      */
      Resource:'socket.io',
+     /*
+      connect timeout
+      defaults to 10000 ms
+      How long should Socket.IO wait before it aborts the connection attempt with the server to try another fall-back.
+      Please note that some transports require a longer timeout than others.
+      Setting this really low could potentially harm them.
+      */
      ConnectTimeout:'10000',
+     /*
+      try multiple transports
+      defaults to true
+      When Socket.IO reconnects and it keeps failing over and over again, should it try all available transports when it finally gives up.
+      */
      TryMultipleTransports: true,
-     Reconnect: true
+     /*
+      reconnect
+      defaults to true
+      Should Socket.IO automatically reconnect when it detects a dropped connection or timeout.
+      */
+     Reconnect: true,
+     /*
+      reconnection delay
+      defaults to 500 ms
+      The initial timeout to start a reconnect, this is increased using an exponential back off algorithm each time a new reconnection attempt has been made.
+      */
+     ReconnectionDelay: '',
+     /*
+      reconnection limit
+      defaults to Infinity
+      The maximum reconnection delay in milliseconds, or Infinity.
+      */
+     ReconnectionLimit: '',
+     /*
+      max reconnection attempts
+      defaults to 10
+      How many times should Socket.IO attempt to reconnect with the server after a a dropped connection. After this we will emit the reconnect_failed event.
+      */
+     MaxReconnectionAttempts: '',
+     /*
+      sync disconnect on unload
+      defaults to false
+      Do we need to send a disconnect packet to server when the browser unloads.
+      */
+     SyncDisconnectOnUnload: '',
+     /*
+      auto connect
+      defaults to true
+      When you call io.connect() should Socket.IO automatically establish a connection with the server.
+      */
+     AutoConnect: '',
+     /*
+      flash policy port
+      defaults to 10843
+      If you have Flashsocket enabled, this should match the same port as the server.
+      */
+     FlashPolicyPort: '',
+     /*
+      force new connection
+      defaults to false
+      Force multiple io.connect() calls to the same server to use different connections.
+      */
+     ForceNewConnection: ''
 })
+/*
+REST MODULE CONFIGURATION
+This section contains the ccnfiguration for the REST module.
+This module (and/or) its clones is based on Restangular (https://github.com/mgonto/restangular).
+So, all configuration params are based on its configuration (https://github.com/mgonto/restangular#configuring-restangular).
+Future updates of Restangular imply review of this section in order to keep consistency between config and the module.
+ */
 .constant('REST_CONFIG', {
    /*
     The base URL for all calls to a given set of REST resources.

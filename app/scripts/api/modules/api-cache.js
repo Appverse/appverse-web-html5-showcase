@@ -28,10 +28,10 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
              @param duration  items expire after this time.
              @param capacity  turns the cache into LRU (Least Recently Used) cache.
              If you don't want $http's default cache to store every response.
-             @description getScopeCache is the singleton that CacheFactory manages
-             as a local cache created with $cacheFactory, which is what we return
-             from the service. We can inject this into any controller we
+             @description getScopeCache is the singleton that CacheFactory manages as a local cache created with
+             $cacheFactory, which is what we return from the service. Then, we can inject this into any controller we
              want and it will always return the same values.
+
              The newly created cache object has the following set of methods:
              {object} info() — Returns id, size, and options of cache.
              {{*}} put({string} key, {*} value) — Puts a new key-value pair into the cache and returns it.
@@ -51,11 +51,12 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
              @function
              @param type Type of storage ( 1 local | 2 session).
              @description This object makes Web Storage working in the Angular Way.
-             By default, web storage allows you 5-10MB of space to work with, and
-             your data is stored locally on the device rather than passed back-and-forth
-             with each request to the server. Web storage is useful for storing small
-             amounts of key/value data and preserving functionality online and offline.
+             By default, web storage allows you 5-10MB of space to work with, and your data is stored locally
+             on the device rather than passed back-and-forth with each request to the server.
+             Web storage is useful for storing small amounts of key/value data and preserving functionality
+             online and offline.
              With web storage, both the keys and values are stored as strings.
+
              We can store anything except those not supported by JSON:
              Infinity, NaN - Will be replaced with null.
              undefined, Function - Will be removed.
@@ -66,7 +67,7 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
                 if (type === 1) {
                     var _lstore = $localStorage;
                     return _lstore;
-                } else {
+                } else if (type === 2){
                     var _sstore = $sessionStorage;
                     return _sstore;
                 }
@@ -76,13 +77,20 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
              @function
              @param
              @description
-             The HTML5 indexedDB feature works both online and offline, allowing for
-             client-side storage of large amounts of structured data, in-order key retrieval,
-             searches over the values stored, and the option to store multiple values per key.
+             The HTML5 indexedDB feature works both online and offline, allowing for client-side storage of large
+             amounts of structured data, in-order key retrieval, searches over the values stored, and the option
+             to store multiple values per key.
              IndexedDB offers asynchronous calls and all interactions happen within a transaction.
-             This method initializes a basic cache for data structure storage.
+             This method initializes a basic cache for data structure storage. Then, controllers of the app using
+             IndexedDB can start to use it. For example:
+             var myObjectStore = $indexedDB.objectStore(CACHE_SERVICE.IndexedDB_objectStore);
+             myObjectStore.insert(
+                 {"ssn": "444-444-222-111",
+                  "name": "John Doe",
+                  "age": 57}
+              ).then(function(e){...});
              */
-            factory.setIndexedDBStorage = function (objectStore, keyPath, mainIndex, mainIndexUnique, secIndex, secIndexUnique) {
+            factory.setIndexedDBStorage = function (objectStore, keyPathValue, mainIndex, mainIndexUnique, secIndex, secIndexUnique) {
                 /*
                  The connection method takes the databasename as parameter, the upgradeCallback has
                  3 parameters: function callback(event, database, transaction).
@@ -91,14 +99,14 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
                  */
                 $indexedDBProvider.connection('commonIndexedDB')
                     .upgradeDatabase(myVersion, function (event, db, tx) {
-                        var objStore = db.createObjectStore(CACHE_CONFIG.IndexedDB_objectStore, {
-                            keyPath: CACHE_CONFIG.IndexedDB_keyPath
+                        var objStore = db.createObjectStore(objectStore, {
+                            keyPath: keyPathValue
                         });
-                        objStore.createIndex('primary_idx', CACHE_CONFIG.IndexedDB_mainIndex, {
-                            unique: CACHE_CONFIG.IndexedDB_mainIndex_isUnique
+                        objStore.createIndex('primary_idx', mainIndex, {
+                            unique: mainIndexUnique
                         });
-                        objStore.createIndex('secondary_idx', CACHE_CONFIG.IndexedDB_secondaryIndex, {
-                            unique: CACHE_CONFIG.IndexedDB_secondaryIndex_isUnique
+                        objStore.createIndex('secondary_idx', secIndex, {
+                            unique: secIndexUnique
                         });
                     });
             };

@@ -80,12 +80,15 @@
     <div ui-view class="container" style="margin-top:60px" ng-animate="{enter:'fade-enter'}"></div>
 
 
-
+        <!-- build:js scripts/external.js -->
         <script src="bower_components/jquery/jquery.js"></script>
         <script src="bower_components/angular/angular.js"></script>
         <script src="bower_components/modernizr/modernizr.js"></script>
+        <script src="bower_components/stacktrace/stacktrace.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <!-- endbuild -->
 
-        <!-- build:js scripts/plugins.js -->
+        <!-- build:js scripts/uibootstrap.js -->
         <script src="bower_components/bootstrap-sass/js/bootstrap-affix.js"></script>
         <script src="bower_components/bootstrap-sass/js/bootstrap-alert.js"></script>
         <script src="bower_components/bootstrap-sass/js/bootstrap-dropdown.js"></script>

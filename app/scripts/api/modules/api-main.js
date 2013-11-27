@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-angular.module('COMMONAPI', ['AppREST', 'AppCache', 'AppConfiguration', 'AppTranslate', 'AppServerPush'])
+angular.module('COMMONAPI', ['AppLogging', 'AppREST', 'AppCache', 'AppConfiguration', 'AppTranslate', 'AppServerPush'])
     .config(['$rootScope', 'CacheFactory', 'RESTFactory', 'CACHE_CONFIG',
       function ($rootScope, CacheFactory, RESTFactory, CACHE_CONFIG) {
           /*
