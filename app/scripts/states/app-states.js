@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////
 angular.module('appverseClientIncubatorApp')
   .config(
-    ['$stateProvider', '$urlRouterProvider',
+    [          '$stateProvider', '$urlRouterProvider',
       function ($stateProvider,   $urlRouterProvider) {
 
         ///////////////////////////////
@@ -27,7 +27,7 @@ angular.module('appverseClientIncubatorApp')
 
 
         //////////////////////////
-        // 2-State Configurations 
+        // 2-State Configurations
         // Several states hav been configured:
         // home
         // topics
@@ -37,7 +37,7 @@ angular.module('appverseClientIncubatorApp')
         // ui.list
         // serverpush
         // about
-        // 
+        //
         //////////////////////////
 
         // We must configure states using $stateProvider.
@@ -88,7 +88,7 @@ angular.module('appverseClientIncubatorApp')
             // You can pair a controller to your template. There *must* be a template to pair with.
             // controller: ['$scope', '$state', 'topics', 'utils','TopicsController']
             controller: 'TopicsController'
-            
+
           })
 
           //////////////////////////
@@ -217,18 +217,18 @@ angular.module('appverseClientIncubatorApp')
               }
             }
           })
-          
+
           ////////////////////////////////
           // SECTION: UI Bootstrap Demo //
           ////////////////////////////////
-        .state('ui', {
+          .state('ui', {
 
             abstract: false,
             url: '/ui',
             templateUrl: 'views/demo/ui-bootstrap/ui-b.html',
-            
+
           })
-        
+
           ////////////////////////////////
           // SECTION: Server Push Demo  //
           ////////////////////////////////
@@ -250,8 +250,17 @@ angular.module('appverseClientIncubatorApp')
             },
             controller: 'ServerPushController'
             
+        })
+
+          //////////////////////////
+          // SECTION: Translation //
+          //////////////////////////
+          .state('translation', {
+
+            url: '/translation',
+            templateUrl: 'views/translation/translation.html',
+            controller: 'translationController'
           })
-          
 
           ////////////////////
           // SECTION: About //
