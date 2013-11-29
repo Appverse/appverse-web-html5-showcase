@@ -10,17 +10,13 @@
 ////////////////////////////////////////////////////////////////////////////
 
 angular.module('AppTranslate', ['pascalprecht.translate', 'AppConfiguration'])
-    .config(['$translateProvider', 'I18N_SETTINGS', 'I18N_MESSAGES_EN', 'I18N_MESSAGES_ES',
-        function($translateProvider, I18N_SETTINGS, I18N_MESSAGES_EN, I18N_MESSAGES_ES) {
-        // Our translations will go in here
-        $translateProvider.translations('en_US', {
-            HEADLINE: I18N_MESSAGES_EN.HEADLINE,
-            INTRO_TEXT: I18N_MESSAGES_EN.INTRO_TEXT
-        });
-        $translateProvider.translations('es_ES', {
-            HEADLINE: I18N_MESSAGES_ES.HEADLINE,
-            INTRO_TEXT: I18N_MESSAGES_ES.INTRO_TEXT
+    .config(['$translateProvider', 'I18N_CONFIG',
+        function($translateProvider, I18N_CONFIG) {
+
+        $translateProvider.useStaticFilesLoader({
+            prefix: 'i18n/',
+            suffix: '.json'
         });
 
-        $translateProvider.preferredLanguage(I18N_SETTINGS.PreferredLang);
+        $translateProvider.preferredLanguage(I18N_CONFIG.PreferredLocale);
     }]);
