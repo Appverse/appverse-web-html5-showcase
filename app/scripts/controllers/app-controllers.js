@@ -42,4 +42,16 @@ angular.module('appverseClientIncubatorApp')
                       // Go back up. '^' means up one. '^.^' would be up twice, to the grandparent.
                       $state.go('^', $stateParams);
                     };
-                  });
+                  })
+
+.controller('translationController', ['$scope', '$translate',
+     function ( $scope, $translate ) {
+
+                    $scope.now = new Date();
+                    $scope.name = 'Alex';
+                    $scope.age = '20';
+
+                    $scope.setLocale = function(locale) {
+                        $translate.uses(locale);
+                    };
+                  }]);
