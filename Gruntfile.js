@@ -290,13 +290,20 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
+      },
+      i18n: {
+        expand: true,
+        cwd: '<%= yeoman.app %>/bower_components/angular-i18n',
+        dest: '.tmp/i18n/',
+        src: '*.js'
       }
     },
     concurrent: {
       server: [
         'coffee:dist',
         'compass:server',
-        'copy:styles'
+        'copy:styles',
+        'copy:i18n'
       ],
       test: [
         'coffee',
