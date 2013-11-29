@@ -1,0 +1,26 @@
+<h2>Translation Demo</h2>
+
+<h4>Date</h4>
+
+<p>{{now | date:'fullDate'}}</p>
+
+<h4>Currency</h4>
+
+<p>{{100 | currency}}</p>
+
+<h4>Number</h4>
+
+<p>{{1000000.000000 | number}}</p>
+
+<h4>Text</h4>
+
+<p>Select desired locale:</p>
+<button class="btn" ng-click="setLocale('es-ES')">es-ES</button>
+<button class="btn" ng-click="setLocale('en-US')">en-US</button>
+
+<br><br>
+<p translate>WELCOME</p>
+
+<p>{{ 'WELCOME_NAME' | translate:'{"name": "Alex"}' }}</p>
+
+<p>{{ 'WELCOME_NAME_AGE' | translate:'{"name": "Alicia", "age": 25 }' }}</p>
