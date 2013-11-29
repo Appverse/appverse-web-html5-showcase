@@ -7,8 +7,9 @@
 // It includes constants for all the common API components.
 ////////////////////////////////////////////////////////////////////////////
 
+console.log('AppConfiguration loading');
 
-angular.module('AppConfiguration')
+angular.module('AppConfiguration',{})
 
 /*
 PROJECT CONFIGURATION
@@ -200,7 +201,7 @@ Future updates of Restangular imply review of this section in order to keep cons
    /*
     The base URL for all calls to a given set of REST resources.
     This configuration is related only to calls to the set main url.
-    */    
+    */
     BaseUrl: '',
     //These are the fields that you want to save from your parent resources if you need to display them.
     ExtraFields: '',
@@ -360,19 +361,7 @@ Future updates of Restangular imply review of this section in order to keep cons
          */
     EncodeIds: true
 })
-.constant('I18N_SETTINGS', {
-    PreferredLang: 'en'
-})
-.constant('I18N_MESSAGES_EN', {
-     HEADLINE: 'International Section',
-     INTRO_TEXT: 'AppVerse HTML5 supports multi-language.'
-})
-.constant('I18N_MESSAGES_ES', {
-     HEADLINE: 'Seccion Internacional',
-     INTRO_TEXT: 'AppVerse HTML5 soporta multilenguaje.'
+.constant('I18N_CONFIG', {
+    PreferredLocale: 'en-US',
+    DetectLocale: true
 });
-
-
-
-
-        
