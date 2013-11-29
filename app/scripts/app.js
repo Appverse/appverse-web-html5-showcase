@@ -1,7 +1,7 @@
 'use strict';
-  
+
 // Make sure to include dependencies.
-angular.module('appverseClientIncubatorApp', ['ui.bootstrap', 'ui.router'])
+angular.module('appverseClientIncubatorApp', ['ui.bootstrap', 'ui.router', 'AppTranslate'])
     .run(['$rootScope', '$state', '$stateParams',
       function ($rootScope,   $state,   $stateParams) {
 
@@ -13,4 +13,4 @@ angular.module('appverseClientIncubatorApp', ['ui.bootstrap', 'ui.router'])
         $rootScope.$stateParams = $stateParams;
       }]);
 
-    
+
