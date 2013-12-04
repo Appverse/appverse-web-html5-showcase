@@ -2,15 +2,35 @@
 
 ////////////////////////////////////////////////////////////////////////////
 // COMMON API - 0.1
-// CACHE MODULE (AppCache)
+// CACHE
+// PRIMARY MODULE (AppCache)
 ////////////////////////////////////////////////////////////////////////////
 // The Cache module includes several types of cache.
 // Scope Cache: To be used in a limited scope. It does not persist when navigation.
 // Browser Storage: It handles short strings into local or session storage. Access is synchronous.
 // IndexedDB: It initializes indexed database at browser to handle data structures. Access is asynchronous.
-// Http Cache: It initilizes cache for the $httpProvider. $http service instances will use this cache.
-// WARNING
+// Http Cache: It initializes cache for the $httpProvider. $http service instances will use this cache.
+//
+// WARNING - HTTP Service Cache:
 // The rest module handles its own cache. So, HttpCache affects only to manually created $http objects.
+//
+// WARNING - IndexedDB Usage:
+// IndexedDB works both online and offline, allowing for client-side storage of large amounts of structured data,
+// in-order key retrieval, searches over the values stored, and the option to store multiple values per key.
+// With IndexedDB, all calls are asynchronous and all interactions happen within a transaction.
+// Consider Same-origin policy constraints when accessing the IDB. This module creates a standard default IDB for
+// the application domain.
+// In order to make easiest as possible usage of the API two methods have been defined. The below example
+// shows how to use these object to build custom queries to the IDB considering the initialization parameters:
+//  function (param){
+//      var queryBuilder = CacheFactory.getIDBQueryBuilder();
+//      var objStore = CacheFactory.getIDBObjectStore();
+//      var myQuery = queryBuilder.$index(CACHE_CONFIG.IndexedDB_mainIndex).$gt(param).$asc.compile;
+//      objStore.each(myQuery).then(function(cursor){
+//          $scope.key = cursor.key;
+//          $scope.value = cursor.value;
+//      });
+// }
 ////////////////////////////////////////////////////////////////////////////
 
 angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB'])
@@ -20,7 +40,8 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
         '$sessionStorage',
         '$httpProvider',
         '$indexedDBProvider',
-        function ($cacheFactory, $localStorage, $sessionStorage, $httpProvider, $indexedDBProvider) {
+        'CACHE_CONFIG',
+        function ($cacheFactory, $localStorage, $sessionStorage, $httpProvider, $indexedDBProvider, CACHE_CONFIG) {
             var factory = {};
 
             /*
@@ -76,28 +97,21 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
             /*
              @function
              @param
-             @description
+             @description Initializes the default IDB.
              The HTML5 indexedDB feature works both online and offline, allowing for client-side storage of large
              amounts of structured data, in-order key retrieval, searches over the values stored, and the option
              to store multiple values per key.
              IndexedDB offers asynchronous calls and all interactions happen within a transaction.
-             This method initializes a basic cache for data structure storage. Then, controllers of the app using
-             IndexedDB can start to use it. For example:
-             var myObjectStore = $indexedDB.objectStore(CACHE_SERVICE.IndexedDB_objectStore);
-             myObjectStore.insert(
-                 {"ssn": "444-444-222-111",
-                  "name": "John Doe",
-                  "age": 57}
-              ).then(function(e){...});
+             This method initializes a basic cache for data structure storage.
              */
-            factory.setIndexedDBStorage = function (objectStore, keyPathValue, mainIndex, mainIndexUnique, secIndex, secIndexUnique) {
+            factory.setIDBStorage = function (objectStore, keyPathValue, mainIndex, mainIndexUnique, secIndex, secIndexUnique) {
                 /*
-                 The connection method takes the databasename as parameter, the upgradeCallback has
+                 The connection method takes the database name as parameter, the upgradeCallback has
                  3 parameters: function callback(event, database, transaction).
                  For upgrading your db structure, see:
                  https://developer.mozilla.org/en-US/docs/IndexedDB/Using_IndexedDB.
                  */
-                $indexedDBProvider.connection('commonIndexedDB')
+                $indexedDBProvider.connection(CACHE_CONFIG.IndexedDB_objectStore)
                     .upgradeDatabase(myVersion, function (event, db, tx) {
                         var objStore = db.createObjectStore(objectStore, {
                             keyPath: keyPathValue
@@ -108,8 +122,67 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
                         objStore.createIndex('secondary_idx', secIndex, {
                             unique: secIndexUnique
                         });
+                        return objStore;
                     });
             };
+
+            /*
+             @function
+             @param
+             @description Saves a data structure into the default IDB
+             */
+            factory.setDataIntoIDB = function (data, callback){
+                var objectStore = $indexedDB.objectStore(CACHE_CONFIG.IndexedDB_objectStore);
+                objectStore.insert(data).then(callback);
+            };
+
+            /*
+             @function
+             @param
+             @description Gets the entire data structure from the default IDB
+             */
+            factory.getDataStructureFromIDB = function (callback){
+                var objectStore = $indexedDB.objectStore(CACHE_CONFIG.IndexedDB_objectStore);
+                objectStore.getAll().then(callback);
+            };
+
+            /*
+             @function
+             @param
+             @description returns the objectStore object in order the app can use the Query Builder.
+             List of defined functions for ObjectStore (AppIndexedDB module):
+             abort
+             insert
+             upsert
+             delete
+             clear
+             count
+             find
+             getAll
+             each
+             */
+            factory.getIDBObjectStore = function (){
+                return $indexedDB.objectStore(CACHE_CONFIG.IndexedDB_objectStore);
+            }
+
+            /*
+             @function
+             @param
+             @description returns the QueryBuilder object in order to build queries t be passed to the object store.
+             List of defined functions for QueryBuilder (AppIndexedDB module):
+             $lt
+             $gt
+             $lte
+             $gte
+             $eq
+             $between
+             $asc
+             $desc
+             $index
+             */
+            factory.getIDBQueryBuilder = function (){
+                return $indexedDB.queryBuilder();
+            }
 
             /*
              @function
@@ -145,7 +218,7 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
 
 ////////////////////////////////////////////////////////////////////////////
 // COMMON API - 0.1
-// INDEXEDDB MODULE (AppIndexedDB)
+// SECONDARY MODULE (AppIndexedDB)
 ////////////////////////////////////////////////////////////////////////////
 // Angularjs serviceprovider to utilize indexedDB with angular.
 // Normally, and as a recommendation, we should have only one indexedDB per app.

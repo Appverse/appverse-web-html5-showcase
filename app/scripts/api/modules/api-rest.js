@@ -53,21 +53,6 @@ angular.module('AppREST', [
                   return response;
               }
           );
-
-
-/*          service.init = function() {
-              cache = $cacheFactory('http');
-              Restangular.setDefaultHttpFields({cache: cache});
-
-              Restangular.setResponseInterceptor(function(response, operation) {
-                  if (operation === 'put' || operation === 'post' || operation === 'delete') {
-                      cache.removeAll();
-                  }
-                  return response;
-              })
-          }*/
-
-
           RestangularProvider.setRequestInterceptor(REST_CONFIG.RequestInterceptor);
           RestangularProvider.setFullRequestInterceptor(REST_CONFIG.FullRequestInterceptor);
           RestangularProvider.setErrorInterceptor(REST_CONFIG.ErrorInterceptor);

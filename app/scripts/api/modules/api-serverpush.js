@@ -2,7 +2,8 @@
 
 ////////////////////////////////////////////////////////////////////////////
 // COMMON API - 0.1
-// SERVER PUSH CLIENT MODULE (AppServerPush)
+// SERVER PUSH CLIENT
+// PRIMARY MODULE (AppServerPush)
 ////////////////////////////////////////////////////////////////////////////
 // This module handles server data communication when it pushes them to the client.
 // It is based on SocketIO (http://socket.io/). Why?
@@ -30,17 +31,35 @@
 
 angular.module('AppServerPush', [
         'AppSocketIO',
-        'AppCache',
         'AppConfiguration'])
-    .config(['socketProvider', 'CacheFactory', 'SERVERPUSH_CONFIG', 'CACHE_CONFIG',
-        function (socketProvider, CacheFactory, SERVERPUSH_CONFIG, CACHE_CONFIG) {
-
-            var standardSocket = io.connect(SERVERPUSH_CONFIG.BaseUrl, {
-                'resource': SERVERPUSH_CONFIG.Resource
+    .config(['socketProvider', 'SERVERPUSH_CONFIG',
+        function (socketProvider, SERVERPUSH_CONFIG) {
+            /*
+             The $provide service is responsible for telling Angular how to create
+             new injectable things (services).
+             The standardSocket service will be injected in the SocketFactory.
+             Basically it is a socket object with the defined configuration.
+             */
+            $provide.provider('standardSocket', function() {
+                /*
+                Previous configuration of the socket object
+                we are going to use in the module.
+                 */
+                var standardSocket = io.connect(SERVERPUSH_CONFIG.BaseUrl, {
+                    'resource': SERVERPUSH_CONFIG.Resource,
+                    'connect timeout': SERVERPUSH_CONFIG.ConnectTimeout,
+                    'try multiple transports': SERVERPUSH_CONFIG.TryMultipleTransports,
+                    'reconnect': SERVERPUSH_CONFIG.Reconnect,
+                    'reconnection delay': SERVERPUSH_CONFIG.ReconnectionDelay,
+                    'reconnection limit': SERVERPUSH_CONFIG.ReconnectionLimit,
+                    'max reconnection attempts': SERVERPUSH_CONFIG.MaxReconnectionAttempts,
+                    'sync disconnect on unload': SERVERPUSH_CONFIG.SyncDisconnectOnUnload,
+                    'auto connect': SERVERPUSH_CONFIG.AutoConnect,
+                    'flash policy port': SERVERPUSH_CONFIG.FlashPolicyPort,
+                    'force new connection': SERVERPUSH_CONFIG.ForceNewConnection
+                });
+                return socketProvider.ioSocket(standardSocket);
             });
-            socketProvider.ioSocket(standardSocket);
-
-
         }])
     /*
      To make socket error events available across an app, in one of the controllers:
@@ -56,9 +75,9 @@ angular.module('AppServerPush', [
     /*
      * Factory Name: 'SocketFactory'
      * Although Socket.IO exposes an io variable on the window, it's better to encapsulate it
-     * in AngularJS's Dependency Injection system.
-     * So, we'll start by writing a service to wrap the socket object returned by Socket.IO.
-     * This will make it easier to test the app's controllers later.
+     * into the AngularJS's Dependency Injection system.
+     * So, we'll start by writing a factory to wrap the socket object returned by Socket.IO.
+     * This will make easier to test the application's controllers.
      *
      * Notice that the factory wrap each socket callback in $scope.$apply.
      * This tells AngularJS that it needs to check the state of the application and update
@@ -66,24 +85,30 @@ angular.module('AppServerPush', [
      * Internally, $http works in the same way. After some XHR returns, it calls $scope.$apply,
      * so that AngularJS can update its views accordingly.
      */
-    .factory('SocketFactory', ['$rootScope',
-        function ($rootScope) {
-            var socket = io.connect();
+    .factory('SocketFactory', ['$rootScope', 'standardSocket',
+        function ($rootScope, standardSocket) {
+
             return {
+                /*
+                 We handle the data transmission from the server.
+                 */
                 on: function (eventName, callback) {
-                    socket.on(eventName, function () {
+                    standardSocket.on(eventName, function () {
                         var args = arguments;
                         $rootScope.$apply(function () {
-                            callback.apply(socket, args);
+                            callback.apply(standardSocket, args);
                         });
                     });
                 },
+                /*
+                 It sends eventName message to the server so that the data can be sent.
+                 */
                 emit: function (eventName, data, callback) {
-                    socket.emit(eventName, data, function () {
+                    standardSocket.emit(eventName, data, function () {
                         var args = arguments;
                         $rootScope.$apply(function () {
                             if (callback) {
-                                callback.apply(socket, args);
+                                callback.apply(standardSocket, args);
                             }
                         });
                     })
@@ -93,7 +118,10 @@ angular.module('AppServerPush', [
             };
         }]);
 
-
+//////////////////////////////////////////////////////////////////////////////
+// COMMON API - 0.1
+// SECONDARY MODULE (AppSocketIO)
+////////////////////////////////////////////////////////////////////////////
 angular.module('AppSocketIO', []).
     provider('socket', function () {
 
@@ -136,8 +164,6 @@ angular.module('AppSocketIO', []).
                     return socket.removeListener.apply(socket, args);
                 },
 
-                // when socket.on('someEvent', fn (data) { ... }),
-                // call scope.$broadcast('someEvent', data)
                 forward: function (events, scope) {
                     if (events instanceof Array === false) {
                         events = [events];
