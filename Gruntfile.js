@@ -288,13 +288,13 @@ module.exports = function (grunt) {
       styles: {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',
-        dest: '.tmp/styles/',
+        dest: '.tmp/styles',
         src: '{,*/}*.css'
       },
       i18n: {
         expand: true,
         cwd: '<%= yeoman.app %>/bower_components/angular-i18n',
-        dest: '.tmp/i18n/',
+        dest: '.tmp/i18n/angular',
         src: '*.js'
       }
     },
