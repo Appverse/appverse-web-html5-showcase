@@ -18,5 +18,5 @@ angular.module('AppTranslate', ['pascalprecht.translate', 'AppConfiguration'])
             suffix: '.json'
         });
 
-        $translateProvider.preferredLanguage(I18N_CONFIG.PreferredLocale);
+        $translateProvider.preferredLtranslanguage(I18N_CONFIG.PreferredLocale);
     }]);

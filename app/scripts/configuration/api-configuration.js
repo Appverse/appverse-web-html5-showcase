@@ -2,7 +2,8 @@
 
 ////////////////////////////////////////////////////////////////////////////
 // COMMON API - 0.1
-// CONFIGURATION MODULE (AppConfiguration)
+// CONFIGURATION
+// PRIMARY MODULE (AppConfiguration)
 ////////////////////////////////////////////////////////////////////////////
 // It includes constants for all the common API components.
 ////////////////////////////////////////////////////////////////////////////
@@ -28,10 +29,37 @@ All data are auto-explained because their names ;)
 LOGGING MODULE CONFIGURATION
 This section contains basic configuration for the logging module
 in the common API.
+These params do not affect normal usage of $log service.
 */
 .constant('LOGGING_CONFIG', {
+    /*
+    This param enables (if true) sending log messages to server.
+    The server side REST service must record messages from client in order to be analyzed.
+    ALL messages are sent. It is not yet possible select which type of log messages are sent.
+     */
     ServerEnabled: true,
-    EnabledLogLevels: {'log': true, 'error': true, 'debug': true, 'warn': true, 'info': true}
+    /*
+    This preffix will be included at the beginning of each message.
+     */
+    CustomLogPreffix: 'APPLOG',
+    /*
+    Enabled levels will be written in the custom format.
+    This param does not affect to $log service.
+     */
+    EnabledLogLevel: true,
+    EnabledErrorLevel: true,
+    EnabledDebugLevel: true,
+    EnabledWarnLevel: true,
+    EnabledInfoLevel: true,
+    /*
+    Format of the datetime information.
+     */
+    LogDateTimeFormat:'%Y:%M:%d:%h:%m:%s:%z',
+    /*
+    Fields that will be included in the log message if containing information.
+     */
+    LogTextFormat:''
+
 })
 /*
 CACHE MODULE CONFIGURATION
@@ -42,6 +70,7 @@ in the common API.
      /////////////////////////////
      //SCOPE CACHE
      /////////////////////////////
+     ScopeCache_Enabled: true,
      /*
      Max duration in milliseconds of the scope cache
       */
@@ -57,6 +86,7 @@ in the common API.
      //Most of times it is convenient follow a policy for browser storage, using only one of the two types.
      //If you prefer flexibility (the developer makes a choice for each case) do not use the provided API.
      /////////////////////////////
+     BrowserStorageCache_Enabled: true,
      /*
      1 = $localStorage
      2 = $sessionStorage
@@ -65,6 +95,7 @@ in the common API.
      /////////////////////////////
      //$http SERVICE CACHE
      /////////////////////////////
+     HttpCache_Enabled: true,
      /*
      Max duration in milliseconds of the http service cache.
      */
@@ -77,6 +108,7 @@ in the common API.
      /////////////////////////////
      //BROWSER'S INDEXED DB CACHE
      /////////////////////////////
+     IndexedDBCache_Enabled: true,
      /*
      Name of the default object store
       */
@@ -86,22 +118,24 @@ in the common API.
       */
      IndexedDB_keyPath:'messages',
      /*
-     The name of the main index in the indexeddb
+     The name of the main index in the IDB.
+     It matches to the primarily indexed field.
       */
      IndexedDB_mainIndex:'name',
      /*
      The main index can be unique or not. This is the value of this attribute.
       */
-     IndexedDB_mainIndex_isUnique:'false',
+     IndexedDB_mainIndex_isUnique: true,
      /*
-     The name of the secondary index in the indexeddb.
-     It improves searches in the indexeddb.
+     The name of the secondary index in the IDB.
+     It improves searches in the IDB.
+     It matches to the secondarily indexed field.
       */
      IndexedDB_secondaryIndex:'property',
      /*
       The secondary index can be unique or not. This is the value of this attribute.
       */
-     IndexedDB_secondaryIndex_isUnique:'false'
+     IndexedDB_secondaryIndex_isUnique: false
 
 })
 /*
@@ -152,35 +186,35 @@ https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
       defaults to 500 ms
       The initial timeout to start a reconnect, this is increased using an exponential back off algorithm each time a new reconnection attempt has been made.
       */
-     ReconnectionDelay: '',
+     ReconnectionDelay: 1000,
      /*
       reconnection limit
       defaults to Infinity
       The maximum reconnection delay in milliseconds, or Infinity.
       */
-     ReconnectionLimit: '',
+     ReconnectionLimit: 'Infinity',
      /*
       max reconnection attempts
       defaults to 10
       How many times should Socket.IO attempt to reconnect with the server after a a dropped connection. After this we will emit the reconnect_failed event.
       */
-     MaxReconnectionAttempts: '',
+     MaxReconnectionAttempts: 5,
      /*
       sync disconnect on unload
       defaults to false
       Do we need to send a disconnect packet to server when the browser unloads.
       */
-     SyncDisconnectOnUnload: '',
+     SyncDisconnectOnUnload: false,
      /*
       auto connect
       defaults to true
-      When you call io.connect() should Socket.IO automatically establish a connection with the server.
+      When code calls io.connect() should Socket.IO automatically establish a connection with the server.
       */
-     AutoConnect: '',
+     AutoConnect: true,
      /*
       flash policy port
       defaults to 10843
-      If you have Flashsocket enabled, this should match the same port as the server.
+      If the server has Flashsocket enabled, this should match the same port as the server.
       */
      FlashPolicyPort: '',
      /*
@@ -188,7 +222,7 @@ https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
       defaults to false
       Force multiple io.connect() calls to the same server to use different connections.
       */
-     ForceNewConnection: ''
+     ForceNewConnection: false
 })
 /*
 REST MODULE CONFIGURATION
@@ -360,6 +394,10 @@ Future updates of Restangular imply review of this section in order to keep cons
          You can set here if you want to URL Encode IDs or not.
          */
     EncodeIds: true
+})
+.constant('AD_CONFIG', {
+     ConsumerKey: '',
+     ConsumerSecret: ''
 })
 .constant('I18N_CONFIG', {
     PreferredLocale: 'en-US',
