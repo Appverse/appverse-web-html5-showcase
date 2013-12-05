@@ -14,9 +14,11 @@
     "angular-ui-router": "~0.2.0",
     "angular-translate": "~1.1.0",
     "angular-translate-loader-static-files": "~0.1.6",
-    "angular-i18n": "~1.0.8",
+    "angular-i18n" : "~1.0.8",
+    "angular-dynamic-locale" : "~0.0.2",
     "angular-socket-io": "~0.2.0",
-    "ng-oauth": "~0.1.0",
+    "ng-oauth": "",
+    "stacktrace": "~0.5.3",
     "ngstorage": "~0.3.0",
     "restangular": "~1.1.8",
     "modernizr": "~2.6.1"

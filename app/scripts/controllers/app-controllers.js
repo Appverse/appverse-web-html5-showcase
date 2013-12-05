@@ -44,14 +44,15 @@ angular.module('appverseClientIncubatorApp')
                     };
                   })
 
-.controller('translationController', ['$scope', '$translate',
-     function ( $scope, $translate ) {
+.controller('translationController', ['$scope', '$translate', 'tmhDynamicLocale',
+     function ( $scope, $translate, tmhDynamicLocale ) {
 
                     $scope.now = new Date();
-                    $scope.name = 'Alex';
-                    $scope.age = '20';
+                    $scope.name = 'Alicia';
+                    $scope.age = '25';
 
                     $scope.setLocale = function(locale) {
                         $translate.uses(locale);
+                        tmhDynamicLocale.set(locale.toLowerCase());
                     };
                   }]);

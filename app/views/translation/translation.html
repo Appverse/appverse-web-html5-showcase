@@ -1,4 +1,8 @@
-<h2>Translation Demo</h2>
+<p>Select desired locale:</p>
+<button class="btn" ng-click="setLocale('es-ES')">es-ES</button>
+<button class="btn" ng-click="setLocale('en-US')">en-US</button>
+<button class="btn" ng-click="setLocale('ja-JP')">ja-JP</button>
+<button class="btn" ng-click="setLocale('ar-EG')">ar-EG</button>
 
 <h4>Date</h4>
 
@@ -10,17 +14,15 @@
 
 <h4>Number</h4>
 
-<p>{{1000000.000000 | number}}</p>
+<!-- Number should be rounded using locale -->
+<p>{{1200300.456789 | number}}</p>
 
 <h4>Text</h4>
 
-<p>Select desired locale:</p>
-<button class="btn" ng-click="setLocale('es-ES')">es-ES</button>
-<button class="btn" ng-click="setLocale('en-US')">en-US</button>
-
-<br><br>
 <p translate>WELCOME</p>
 
-<p>{{ 'WELCOME_NAME' | translate:'{"name": "Alex"}' }}</p>
+<!-- With values -->
+<p translate translate-values='{"name": "Alex"}'>WELCOME_NAME</p>
 
-<p>{{ 'WELCOME_NAME_AGE' | translate:'{"name": "Alicia", "age": 25 }' }}</p>
+<!-- Using scope variables -->
+<p translate translate-values='{"name": "{{name}}", "age": {{age}} }'>WELCOME_NAME_AGE</p>

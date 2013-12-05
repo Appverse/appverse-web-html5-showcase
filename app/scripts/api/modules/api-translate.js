@@ -9,14 +9,16 @@
 // in the Configuration module.
 ////////////////////////////////////////////////////////////////////////////
 
-angular.module('AppTranslate', ['pascalprecht.translate', 'AppConfiguration'])
-    .config(['$translateProvider', 'I18N_CONFIG',
-        function($translateProvider, I18N_CONFIG) {
+angular.module('AppTranslate', ['pascalprecht.translate', 'AppConfiguration', 'tmh.dynamicLocale'])
+    .config(['$translateProvider', 'I18N_CONFIG', 'tmhDynamicLocaleProvider',
+        function($translateProvider, I18N_CONFIG, tmhDynamicLocaleProvider) {
 
         $translateProvider.useStaticFilesLoader({
             prefix: 'i18n/',
             suffix: '.json'
         });
 
-        $translateProvider.preferredLtranslanguage(I18N_CONFIG.PreferredLocale);
+        $translateProvider.preferredLanguage(I18N_CONFIG.PreferredLocale);
+
+        tmhDynamicLocaleProvider.localeLocationPattern('i18n/angular/angular-locale_{{locale}}.js');
     }]);
