@@ -9,7 +9,7 @@
         <!-- This <li> will only add the 'active' class if 'contacts.detail' or its descendants are active
              AND if it is the link for the active contact (aka contactId) -->
         <li ng-repeat="topic in topics | limitTo:3"
-            ng-class="{ active: $state.includes('topics.detail') && $stateParams.contactId == topic.id }">
+            ng-class="{ active: $state.includes('topics.detail') && $stateParams.topicId == topic.id }">
 
           <!-- Here's a ui-sref that is also providing necessary parameters -->
           <a ui-sref="topics.detail({topicId:topic.id})">{{topic.name}}</a>
