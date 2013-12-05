@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////
 // 3 services
 // A-AUTHENTICATION
-// Protect username and passowrd
+// Protect username and password
 // Manages authentication operations
 // Handles user session
 //
@@ -53,7 +53,7 @@ angular.module('AppSecurity', [
 
         }])
     /*
-     Overview
+     APP AUTHENTICATION (OAuth2: Client Credentials Grant)
 
      The backend offers applications the ability to issue authenticated requests on behalf of the application itself
      (as opposed to on behalf of a specific user). The backend implementation should be based on the Client Credentials Grant.
@@ -75,7 +75,7 @@ angular.module('AppSecurity', [
      |         |                                  |               |
      +---------+                                  +---------------+
      */
-    .factory('AppAuthenticationOnlyFactory', ['AD_CONFIG', 'Restangular',
+    .factory('AppClientCredentialsGrantFactory', ['AD_CONFIG', 'Restangular',
         function (AD_CONFIG, Restangular) {
             var factory = {};
 
@@ -143,4 +143,99 @@ angular.module('AppSecurity', [
         }
 
 
-    ]);
+    ])
+
+
+    /*
+    USER AUTHENTICATION
+
+
+     angular.module('exampleAppModule')
+     .controller('LifeLoggerController', function($scope, AuthenticationModel, AuthenticationService, EventService) {
+         'use strict';
+
+         $scope.authenticationModel = AuthenticationModel;
+
+         $scope.categories = [];
+         $scope.events = [];
+         $scope.labels = [];
+
+         ...
+
+         $scope.login = function() {
+            AuthenticationService.login(false).then(function(authenticationModel) {
+                $scope.authenticationModel = authenticationModel;
+                EventService.loadEvents().then(function(events) {
+                    $scope.events = events;
+                });
+            });
+         };
+     });
+     */
+
+    .service('UserAuthenticationService', function($q, $rootScope, AuthenticationModel) {
+            var authenticationToken = {};
+            var deferred = {};
+
+            this.login = function(initialLogin) {
+                deferred = $q.defer();
+                doLogin(initialLogin);
+                return deferred.promise;
+            };
+
+            var doLogin = function(mode) {
+                var opts = {
+                    // localhost client id (make sure this is set to port 9000 in google api console)
+                    client_id: 'your_client_id.apps.googleusercontent.com',
+                    scope: 'https://www.googleapis.com/auth/userinfo.email',
+                    immediate: mode,
+                    response_type: 'token id_token'
+                };
+                gapi.auth.authorize(opts, handleLogin);
+            };
+
+            var handleLogin = function() {
+                gapi.client.oauth2.userinfo.get().execute(function(response) {
+                    if (!response.code) {
+                        authenticationToken = gapi.auth.getToken();
+                        authenticationToken.access_token = authenticationToken.id_token;
+                        AuthenticationModel.isLoggedIn = true;
+                        AuthenticationModel.authenticationToken = authenticationToken;
+                        $rootScope.$apply(function() {
+                            deferred.resolve(AuthenticationModel);
+                        });
+                    }
+                });
+            };
+    })
+
+    .service('InitializationService', function($q, $rootScope) {
+        this.initialize = function() {
+            var deferred = $q.defer();
+            var apisToLoad = 2;
+
+            var loginCallback = function() {
+                if (--apisToLoad === 0) {
+                    $rootScope.$apply(function() {
+                        // console.log('finished loading up client libraries - should be resolving');
+                        deferred.resolve();
+                    });
+                }
+            };
+
+            gapi.client.load('events', 'v1', loginCallback, 'http://localhost:8888/_ah/api');
+            gapi.client.load('oauth2', 'v2', loginCallback);
+
+            return deferred.promise;
+        };
+    })
+
+    .factory('AuthenticationModel', function() {
+        var authenticationModel = {
+            isLoggedIn: false,
+            appAuthenticationToken: {},
+            authenticationToken: {}
+        };
+
+        return authenticationModel;
+    });
