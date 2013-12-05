@@ -76,7 +76,9 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
     function ($log, Restangular) {
 
         ////////////////////////////////////////////////////////////////////////////////////
-        // ADVICE ABOUT PROMISES
+          // ADVICES ABOUT PROMISES
+          //
+          // 1-PROMISES
         // All Restangular requests return a Promise. Angular's templates
         // are able to handle Promises and they're able to show the promise
         // result in the HTML. So, if the promise isn't yet solved, it shows
@@ -84,6 +86,9 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         // If what we want to do is to edit the object you get and then do a put, in
         // that case, we cannot work with the promise, as we need to change values.
         // If that's the case, we need to assign the result of the promise to a $scope variable.
+          // 2-HANDLING LISTS
+          //The best option for doing CRUD operations with a list, is to actually use the "real" list, and not the promise.
+          // It makes it easy to interact with it.
         ////////////////////////////////////////////////////////////////////////////////////
 
         var factory = {};
@@ -135,20 +140,24 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @param data Item data  to be posted
         @description Returns result code.
         */
-        factory.rest_postItem = function (path, newData) {
-            this.rest_getAll(path).post(newData);
+          factory.rest_postItem = function (path, newData, callback) {
+              this.rest_getAll(path).post(newData).then(callback);
         };
+
 
         /*
         @function
         @param path String with the item URL
         @param data Item data  to be deleted
-        @description Returns result code.
+           @description Deletes an item from a list.
         */
-        factory.rest_deleteItem = function (path, key) {
-            var item = this.rest_getItem(path, key);
-            item.remove();
+          factory.rest_deleteItem = function (path, key, callback) {
+              // Use 'then' to resolve the promise.
+              Restangular.one(path, key).get().then(function(item) {
+                  item.remove().then(callback);
+              })
         };
+
 
         return factory;
     }]);
