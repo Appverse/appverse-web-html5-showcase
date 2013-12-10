@@ -12,20 +12,16 @@ angular.module('appverseClientIncubatorApp')
 
         var path = 'views/topics/topics.json';
 
-        var topics = RESTFactory.rest_getAll(path);
-
-        console.log("topics", topics);
-
         var factory = {};
 
         factory.all = function () {
-            return topics;
+//            console.log(new Date() + " - RESTFactory.rest_getAll");
+            return RESTFactory.rest_getAll(path);
         };
+
         factory.get = function (id) {
-            console.log("factory.get", id);
-            return topics.then(function () {
-                return utils.findById(topics, id);
-            });
+//            console.log(new Date() + " - RESTFactory.rest_getItem", id);
+            return RESTFactory.rest_getItem(path, id);
         };
         return factory;
     }])

@@ -8,10 +8,11 @@
 // It includes constants for all the common API components.
 ////////////////////////////////////////////////////////////////////////////
 
-console.log('AppConfiguration loading');
-
 angular.module('AppConfiguration', [])
-
+    .run(['$log',
+        function ($log) {
+            $log.info('AppConfiguration run');
+        }])
 /*
 PROJECT CONFIGURATION
 This constants can be used to set basic information related to the application.
@@ -54,7 +55,7 @@ These params do not affect normal usage of $log service.
     /*
     Format of the datetime information.
      */
-    LogDateTimeFormat: '%Y:%M:%d:%h:%m:%s:%z',
+    LogDateTimeFormat: '%Y-%M-%d %h:%m:%s:%z',
     /*
     Fields that will be included in the log message if containing information.
      */
@@ -74,12 +75,12 @@ in the common API.
     /*
      Max duration in milliseconds of the scope cache
       */
-    ScopeCache_duration: '10000',
+    ScopeCache_duration: 10000,
     /*
      This param turns the scope cache into a LRU one.
      The cache’s capacity is used together to track available memory.
       */
-    ScopeCache_capacity: '10',
+    ScopeCache_capacity: 10,
     /////////////////////////////
     //BROWSER STORAGE TYPE
     //This sets the preferred browser storage in the app.
@@ -99,12 +100,12 @@ in the common API.
     /*
      Max duration in milliseconds of the http service cache.
      */
-    HttpCache_duration: '100000',
+    HttpCache_duration: 20000,
     /*
      This param turns the http cache into a LRU one.
      The cache’s capacity is used together to track available memory.
      */
-    HttpCache_capacity: '10',
+    HttpCache_capacity: 10,
     /////////////////////////////
     //BROWSER'S INDEXED DB CACHE
     /////////////////////////////
@@ -149,7 +150,7 @@ https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
     /*
      URL of the listened server
       */
-     BaseUrl: 'http://server.com',
+    BaseUrl: 'http://server.com',
     /*
      Port to be listened at the base url.
       */
@@ -247,16 +248,6 @@ Future updates of Restangular imply review of this section in order to keep cons
     Array: Specifies the routes (types) of all elements that should be parentless. For example ['buildings']
     */
     ParentLess: '',
-    /*
-    $http from AngularJS can receive a bunch of parameters like cache, transformRequest and so on.
-    You can set all of those properties in the object sent on this setter so that they will be used
-    in EVERY API call made by Restangular. This is very useful for caching for example.
-    All properties that can be set can be checked here:
-    http://docs.angularjs.org/api/ng.$http#parameters
-    */
-    DefaultHttpFields: {
-        'cache': true
-    },
     /*
     HTTP methods will be validated whether they are cached or not.
     */

@@ -25,20 +25,14 @@
 ////////////////////////////////////////////////////////////////////////////
 
 angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
-    .run(['Restangular', 'CacheFactory', 'REST_CONFIG', 'CACHE_CONFIG',
-        function (Restangular, CacheFactory, REST_CONFIG, CACHE_CONFIG) {
+    .run(['$log', 'Restangular', 'CacheFactory', 'REST_CONFIG',
+        function ($log, Restangular, CacheFactory, REST_CONFIG) {
 
-            console.log('AppREST run');
-
-            /*
-            The cache for http calls
-            */
-            CacheFactory.setDefaultHttpCacheStorage(CACHE_CONFIG.HttpCache_duration, CACHE_CONFIG.HttpCache_capacity);
+            $log.info('AppREST run');
 
             Restangular.setBaseUrl(REST_CONFIG.BaseUrl);
             Restangular.setExtraFields(REST_CONFIG.ExtraFields);
             Restangular.setParentless(REST_CONFIG.Parentless);
-            Restangular.setDefaultHttpFields(REST_CONFIG.DefaultHttpFields);
             Restangular.addElementTransformer(REST_CONFIG.ElementTransformer);
             Restangular.setOnElemRestangularized(REST_CONFIG.OnElemRestangularized);
             Restangular.setResponseInterceptor(
@@ -72,13 +66,13 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
  * findById: Util for finding an object by its 'id' property among an array
  * newRandomKey: Util for returning a randomKey from a collection that also isn't the current key
  */
-.factory('RESTFactory', ['$log', 'Restangular',
-    function ($log, Restangular) {
+.factory('RESTFactory', ['Restangular',
+    function (Restangular) {
 
         ////////////////////////////////////////////////////////////////////////////////////
-          // ADVICES ABOUT PROMISES
-          //
-          // 1-PROMISES
+        // ADVICES ABOUT PROMISES
+        //
+        // 1-PROMISES
         // All Restangular requests return a Promise. Angular's templates
         // are able to handle Promises and they're able to show the promise
         // result in the HTML. So, if the promise isn't yet solved, it shows
@@ -86,9 +80,9 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         // If what we want to do is to edit the object you get and then do a put, in
         // that case, we cannot work with the promise, as we need to change values.
         // If that's the case, we need to assign the result of the promise to a $scope variable.
-          // 2-HANDLING LISTS
-          //The best option for doing CRUD operations with a list, is to actually use the "real" list, and not the promise.
-          // It makes it easy to interact with it.
+        // 2-HANDLING LISTS
+        //The best option for doing CRUD operations with a list, is to actually use the "real" list, and not the promise.
+        // It makes it easy to interact with it.
         ////////////////////////////////////////////////////////////////////////////////////
 
         var factory = {};
@@ -115,9 +109,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @description Returns a unique value.
         */
         factory.rest_getItem = function (path, key) {
-            console.log("RESTFactory rest_getItem:", path);
             return Restangular.one(path, key).get().then(function (data) {
-                console.log("RESTFactory rest_getItem then:", data);
                 return data;
             });
         };
@@ -140,10 +132,9 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @param data Item data  to be posted
         @description Returns result code.
         */
-          factory.rest_postItem = function (path, newData, callback) {
-              this.rest_getAll(path).post(newData).then(callback);
+        factory.rest_postItem = function (path, newData, callback) {
+            this.rest_getAll(path).post(newData).then(callback);
         };
-
 
         /*
         @function
@@ -151,13 +142,20 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @param data Item data  to be deleted
            @description Deletes an item from a list.
         */
-          factory.rest_deleteItem = function (path, key, callback) {
-              // Use 'then' to resolve the promise.
-              Restangular.one(path, key).get().then(function(item) {
-                  item.remove().then(callback);
-              })
+        factory.rest_deleteItem = function (path, key, callback) {
+            // Use 'then' to resolve the promise.
+            Restangular.one(path, key).get().then(function (item) {
+                item.remove().then(callback);
+            });
         };
 
-
         return factory;
-    }]);
+    }])
+    .directive('rest', function () {
+        return {
+            scope: {
+                path2: '=path'
+            },
+            template: 'Name: {{path2}}'
+        };
+    });
