@@ -24,26 +24,27 @@ angular.module('AppLogging', ['AppREST', 'AppConfiguration'])
 ////////////////////// DECORATOR WAY//////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 /*
-     Decorate log
-     The $provide (which provides all angular services) needs 2 parameters to “decorate” something:
-     1) the target service;
-     2) the callback to be executed every time someone asks for the target.
+Decorate log
+The $provide (which provides all angular services) needs 2 parameters to “decorate” something:
+1) the target service;
+2) the callback to be executed every time someone asks for the target.
 
-     This way, we are telling in config time to Angular that every time a service/controller/directive asks
-     for $log instance, Angular will provide the result of the callback. As you can see, we are passing the original
-     $log and formattedLogger (the API implementation) to the callback, and then, he returns a formattedLogger
-     factory instance.
-    */
+This way, we are telling in config time to Angular that every time a service/controller/directive asks
+for $log instance, Angular will provide the result of the callback. As you can see, we are passing the original
+$log and formattedLogger (the API implementation) to the callback, and then, he returns a formattedLogger
+factory instance.
+*/
 .config(["$provide",
     function ($provide) {
-        $provide.decorator("$log", function ($delegate, formattedLogger) {
-            return formattedLogger($delegate);
-        });
+        $provide.decorator("$log", ['$delegate', 'formattedLogger',
+            function ($delegate, formattedLogger) {
+                return formattedLogger($delegate);
+            }]);
     }])
 
 .factory("formattedLogger", ["LOGGING_CONFIG",
     function (LOGGING_CONFIG) {
-        return function ($delegate) {
+        return function (delegatedLog) {
 
             /**
              * @function DateTime
@@ -51,9 +52,10 @@ angular.module('AppLogging', ['AppREST', 'AppConfiguration'])
              * @param format The format of the returned date
              * @description It formats a date
              */
-            function DateTime(date, format) {
-                var date = date || new Date();
-                var format = format || LOGGING_CONFIG.LogDateTimeFormat;
+            function dateTime(date, format) {
+
+                date = date || new Date();
+                format = format || LOGGING_CONFIG.LogDateTimeFormat;
 
                 function pad(value) {
                     return (value.toString().length < 2) ? '0' + value : value;
@@ -84,51 +86,47 @@ angular.module('AppLogging', ['AppREST', 'AppConfiguration'])
             /**
              * @function handleLogMessage
              * @param logLevel
-             * @param callback
              * @description It arranges the log message and send it to the server registry.
              */
-            function handleLogMessage(logLevel, callback) {
+            function handleLogMessage(enable, logLevel, logFunction) {
                 try {
-                    /*
-                    Compose the message
-                     */
-                    if (logLevel === 'warn') {
-                        $delegate.warn(arguments);
-                    } else if (logLevel === 'debug') {
-                        $delegate.debug(arguments);
-                    } else if (logLevel === 'info') {
-                        $delegate.info(arguments);
-                    } else if (logLevel === 'error') {
-                        $delegate.error(arguments);
-                    } else if (logLevel === 'log') {
-                        $delegate.log(arguments);
+
+                    if (!enable) {
+                        return function () {};
                     }
 
-                    var errorMessage = logLevel + "|" + LOGGING_CONFIG.CustomLogPreffix + ": " + DateTime() + "|" + arguments.toString();
-                    console.log(arguments);
-                    console.log(errorMessage);
-                    /*
-                    If sending log messages to server is enabled this is sent via REST.
-                    */
-                    if (LOGGING_CONFIG.ServerEnabled) {
-                        // Log the JavaScript error to the server.
-                        var errorData = angular.toJson({
-                            errorUrl: $window.location.href,
-                            errorMessage: errorMessage,
-                            cause: (cause || "")
-                        });
+                    var errorMessage = logLevel + " | " + LOGGING_CONFIG.CustomLogPreffix + " | ";
+
+                    return function () {
+                        var args = Array.prototype.slice.call(arguments);
+                        if (Object.prototype.toString.call(args[0]) === '[object String]') {
+                            args[0] = errorMessage + dateTime() + " | " + args[0];
+                        } else {
+                            args.push(args[0]);
+                            args[0] = errorMessage + dateTime() + " | ";
+                        }
+                        logFunction.apply(null, args);
+
                         /*
-                         REST context to record log message is needed.
-                         */
-                        //                        RESTFactory.rest_postItem('', errorData);
-                    }
-
+                        If sending log messages to server is enabled this is sent via REST.
+                        */
+                        if (LOGGING_CONFIG.ServerEnabled) {
+                            // Log the JavaScript error to the server.
+                            var errorData = angular.toJson({
+                                errorUrl: window.location.href,
+                                errorMessage: errorMessage,
+                                //                            cause: (cause || "")
+                            });
+                            /*
+                             REST context to record log message is needed.
+                             */
+                            //  RESTFactory.rest_postItem('', errorData);
+                        }
+                    };
                 } catch (loggingError) {
                     // ONLY FOR DEVELOPERS - log the log-failure.
-                    console.warn("Error logging failed");
-                    console.error(loggingError);
+                    throw loggingError;
                 }
-
             }
 
             /*
@@ -140,38 +138,12 @@ angular.module('AppLogging', ['AppREST', 'AppConfiguration'])
             log() Write a log message
             warn() Write a warning message
              */
-            //            for (var prop in obj) {
-            //                if (obj.hasOwnProperty(prop)) {
-            //                    // or if (Object.prototype.hasOwnProperty.call(obj,prop)) for safety...
-            //                    alert("prop: " + prop + " value: " + obj[prop])
-            //                }
-            //            }
-            return {
-                log: function () {
-                    if (LOGGING_CONFIG.EnabledLogLevel) {
-                        handleLogMessage('log');
-                    }
-                },
-                info: function () {
-                    if (LOGGING_CONFIG.EnabledInfoLevel) {
-                        handleLogMessage('info');
-                    }
-                },
-                error: function () {
-                    if (LOGGING_CONFIG.EnabledErrorLevel) {
-                        handleLogMessage('error');
-                    }
-                },
-                warn: function () {
-                    if (LOGGING_CONFIG.EnabledWarnLevel) {
-                        handleLogMessage('warn');
-                    }
-                },
-                debug: function () {
-                    if (LOGGING_CONFIG.EnabledDebugLevel) {
-                        handleLogMessage('debug');
-                    }
-                }
-            };
+            delegatedLog.log = handleLogMessage(LOGGING_CONFIG.EnabledLogLevel, 'LOG', delegatedLog.log);
+            delegatedLog.info = handleLogMessage(LOGGING_CONFIG.EnabledInfoLevel, 'INFO', delegatedLog.info);
+            delegatedLog.error = handleLogMessage(LOGGING_CONFIG.EnabledErrorLevel, 'ERROR', delegatedLog.error);
+            delegatedLog.warn = handleLogMessage(LOGGING_CONFIG.EnabledWarnLevel, 'WARN', delegatedLog.warn);
+            delegatedLog.debug = handleLogMessage(LOGGING_CONFIG.EnabledDebugLevel, 'DEBUG', delegatedLog.debug);
+
+            return delegatedLog;
         };
     }]);

@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-angular.module('COMMONAPI', ['ui.bootstrap', 'ui.router', 'AppConfiguration', 'AppCache', 'AppREST', 'AppSecurity', 'AppTranslate'])
+angular.module('COMMONAPI', ['ui.bootstrap', 'ui.router', 'AppConfiguration', 'AppCache', 'AppLogging', 'AppREST', 'AppSecurity', 'AppTranslate'])
     .run(['$rootScope', '$state', '$stateParams',
         function ($rootScope, $state, $stateParams) {
 
