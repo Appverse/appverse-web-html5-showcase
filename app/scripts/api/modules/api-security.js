@@ -44,15 +44,12 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 
-angular.module('AppSecurity', [
-        'restangular',
-        'AppCache',
-        'AppConfiguration'])
-    .config(['RestangularProvider', 'CacheFactory', 'REST_CONFIG', 'CACHE_CONFIG',
-        function (RestangularProvider, CacheFactory, REST_CONFIG, CACHE_CONFIG) {
-
+angular.module('AppSecurity', ['restangular', 'AppCache', 'AppConfiguration'])
+    .run(['$log', 'Restangular', 'CacheFactory', 'REST_CONFIG', 'CACHE_CONFIG',
+        function ($log, Restangular, CacheFactory, REST_CONFIG, CACHE_CONFIG) {
+            $log.info('AppSecurity run');
         }])
-    /*
+/*
      APP AUTHENTICATION (OAuth2: Client Credentials Grant)
 
      The backend offers applications the ability to issue authenticated requests on behalf of the application itself
@@ -75,78 +72,82 @@ angular.module('AppSecurity', [
      |         |                                  |               |
      +---------+                                  +---------------+
      */
-    .factory('AppClientCredentialsGrantFactory', ['AD_CONFIG', 'Restangular',
-        function (AD_CONFIG, Restangular) {
-            var factory = {};
+.factory('AppClientCredentialsGrantFactory', ['AD_CONFIG', 'Restangular',
+    function (AD_CONFIG, Restangular) {
+        var factory = {};
 
-            /*
+        /*
              @function
              @param
              @param
              @description
              */
-            factory.connectAppOnly = function () {
-                var appToken = function(){
-                    var consumerKey = encodeURIComponent(AD_CONFIG.ConsumerKey);
-                    var consumerSecret = encodeURIComponent(AD_CONFIG.ConsumerSecret);
-                    var tokenCredentials = btoa(consumerKey + ':' + consumerSecret);
+        factory.connectAppOnly = function () {
+            var appToken = function () {
+                var consumerKey = encodeURIComponent(AD_CONFIG.ConsumerKey);
+                var consumerSecret = encodeURIComponent(AD_CONFIG.ConsumerSecret);
+                var tokenCredentials = btoa(consumerKey + ':' + consumerSecret);
 
-                    return tokenCredentials;
-                };
-                var oAuthurl = baseUrl + "oauth2/token";
+                return tokenCredentials;
+            };
+            var oAuthurl = baseUrl + "oauth2/token";
 
-                var headers = {
-                    'Authorization': 'Basic ' + appToken(),
-                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                };
-                $http.defaults.useXDomain = true;
-                delete $http.defaults.headers.common['X-Requested-With'];
-                $http({method: 'POST', url: oAuthurl, headers: headers, data: 'grant_type=client_credentials'}).
-                    success(function(data, status){
-                        scope.status = status;
-                        scope.data = data;
-                    }).
-                    error(function(data, status){
-                        scope.status = status;
-                        scope.data = data || "Request failed";
-                    });
+            var headers = {
+                'Authorization': 'Basic ' + appToken(),
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            };
+            $http.defaults.useXDomain = true;
+            delete $http.defaults.headers.common['X-Requested-With'];
+            $http({
+                method: 'POST',
+                url: oAuthurl,
+                headers: headers,
+                data: 'grant_type=client_credentials'
+            }).
+            success(function (data, status) {
+                scope.status = status;
+                scope.data = data;
+            }).
+            error(function (data, status) {
+                scope.status = status;
+                scope.data = data || "Request failed";
+            });
+        };
+
+        factory.userService = function () {
+            var User = {
+                isLogged: false,
+                username: ''
             };
 
-            factory.userService = function() {
-                var User = {
-                    isLogged: false,
-                    username: ''
-                };
 
-
-                $http(config)
-                    .success(function(data, status, headers, config) {
-                        if (data.status) {
-                            // succefull login
-                            User.isLogged = true;
-                            User.username = data.username;
-                        }
-                        else {
-                            User.isLogged = false;
-                            User.username = '';
-                        }
-                    })
-                    .error(function(data, status, headers, config) {
+            $http(config)
+                .success(function (data, status, headers, config) {
+                    if (data.status) {
+                        // succefull login
+                        User.isLogged = true;
+                        User.username = data.username;
+                    } else {
                         User.isLogged = false;
                         User.username = '';
-                    });
+                    }
+                })
+                .error(function (data, status, headers, config) {
+                    User.isLogged = false;
+                    User.username = '';
+                });
 
-                return User;
-            };
+            return User;
+        };
 
-            return factory;
-        }
+        return factory;
+    }
 
 
     ])
 
 
-    /*
+/*
     USER AUTHENTICATION
 
 
@@ -173,69 +174,69 @@ angular.module('AppSecurity', [
      });
      */
 
-    .service('UserAuthenticationService', function($q, $rootScope, AuthenticationModel) {
-            var authenticationToken = {};
-            var deferred = {};
+.service('UserAuthenticationService', function ($q, $rootScope, AuthenticationModel) {
+    var authenticationToken = {};
+    var deferred = {};
 
-            this.login = function(initialLogin) {
-                deferred = $q.defer();
-                doLogin(initialLogin);
-                return deferred.promise;
-            };
+    this.login = function (initialLogin) {
+        deferred = $q.defer();
+        doLogin(initialLogin);
+        return deferred.promise;
+    };
 
-            var doLogin = function(mode) {
-                var opts = {
-                    // localhost client id (make sure this is set to port 9000 in google api console)
-                    client_id: 'your_client_id.apps.googleusercontent.com',
-                    scope: 'https://www.googleapis.com/auth/userinfo.email',
-                    immediate: mode,
-                    response_type: 'token id_token'
-                };
-                gapi.auth.authorize(opts, handleLogin);
-            };
+    var doLogin = function (mode) {
+        var opts = {
+            // localhost client id (make sure this is set to port 9000 in google api console)
+            client_id: 'your_client_id.apps.googleusercontent.com',
+            scope: 'https://www.googleapis.com/auth/userinfo.email',
+            immediate: mode,
+            response_type: 'token id_token'
+        };
+        gapi.auth.authorize(opts, handleLogin);
+    };
 
-            var handleLogin = function() {
-                gapi.client.oauth2.userinfo.get().execute(function(response) {
-                    if (!response.code) {
-                        authenticationToken = gapi.auth.getToken();
-                        authenticationToken.access_token = authenticationToken.id_token;
-                        AuthenticationModel.isLoggedIn = true;
-                        AuthenticationModel.authenticationToken = authenticationToken;
-                        $rootScope.$apply(function() {
-                            deferred.resolve(AuthenticationModel);
-                        });
-                    }
+    var handleLogin = function () {
+        gapi.client.oauth2.userinfo.get().execute(function (response) {
+            if (!response.code) {
+                authenticationToken = gapi.auth.getToken();
+                authenticationToken.access_token = authenticationToken.id_token;
+                AuthenticationModel.isLoggedIn = true;
+                AuthenticationModel.authenticationToken = authenticationToken;
+                $rootScope.$apply(function () {
+                    deferred.resolve(AuthenticationModel);
                 });
-            };
-    })
+            }
+        });
+    };
+})
 
-    .service('InitializationService', function($q, $rootScope) {
-        this.initialize = function() {
-            var deferred = $q.defer();
-            var apisToLoad = 2;
+.service('InitializationService', function ($q, $rootScope) {
+    this.initialize = function () {
+        var deferred = $q.defer();
+        var apisToLoad = 2;
 
-            var loginCallback = function() {
-                if (--apisToLoad === 0) {
-                    $rootScope.$apply(function() {
-                        // console.log('finished loading up client libraries - should be resolving');
-                        deferred.resolve();
-                    });
-                }
-            };
-
-            gapi.client.load('events', 'v1', loginCallback, 'http://localhost:8888/_ah/api');
-            gapi.client.load('oauth2', 'v2', loginCallback);
-
-            return deferred.promise;
-        };
-    })
-
-    .factory('AuthenticationModel', function() {
-        var authenticationModel = {
-            isLoggedIn: false,
-            appAuthenticationToken: {},
-            authenticationToken: {}
+        var loginCallback = function () {
+            if (--apisToLoad === 0) {
+                $rootScope.$apply(function () {
+                    // console.log('finished loading up client libraries - should be resolving');
+                    deferred.resolve();
+                });
+            }
         };
 
-        return authenticationModel;
-    });
+        gapi.client.load('events', 'v1', loginCallback, 'http://localhost:8888/_ah/api');
+        gapi.client.load('oauth2', 'v2', loginCallback);
+
+        return deferred.promise;
+    };
+})
+
+.factory('AuthenticationModel', function () {
+    var authenticationModel = {
+        isLoggedIn: false,
+        appAuthenticationToken: {},
+        authenticationToken: {}
+    };
+
+    return authenticationModel;
+});

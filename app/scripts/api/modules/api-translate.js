@@ -1,3 +1,5 @@
+'use strict';
+
 ////////////////////////////////////////////////////////////////////////////
 // COMMON API - 0.1
 // INTERNATIONALIZATION MODULE (AppTranslate)
@@ -11,14 +13,14 @@
 
 angular.module('AppTranslate', ['pascalprecht.translate', 'AppConfiguration', 'tmh.dynamicLocale'])
     .config(['$translateProvider', 'I18N_CONFIG', 'tmhDynamicLocaleProvider',
-        function($translateProvider, I18N_CONFIG, tmhDynamicLocaleProvider) {
+        function ($translateProvider, I18N_CONFIG, tmhDynamicLocaleProvider) {
 
-        $translateProvider.useStaticFilesLoader({
-            prefix: 'i18n/',
-            suffix: '.json'
-        });
+            $translateProvider.useStaticFilesLoader({
+                prefix: 'i18n/',
+                suffix: '.json'
+            });
 
-        $translateProvider.preferredLanguage(I18N_CONFIG.PreferredLocale);
+            $translateProvider.preferredLanguage(I18N_CONFIG.PreferredLocale);
 
-        tmhDynamicLocaleProvider.localeLocationPattern('i18n/angular/angular-locale_{{locale}}.js');
-    }]);
+            tmhDynamicLocaleProvider.localeLocationPattern('i18n/angular/angular-locale_{{locale}}.js');
+        }]);
