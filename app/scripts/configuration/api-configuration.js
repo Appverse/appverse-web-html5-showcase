@@ -237,7 +237,7 @@ Future updates of Restangular imply review of this section in order to keep cons
     The base URL for all calls to a given set of REST resources.
     This configuration is related only to calls to the set main url.
     */
-    BaseUrl: 'http://localhost:9000',
+    BaseUrl: '/api/v1',
 
     //These are the fields that you want to save from your parent resources if you need to display them.
     ExtraFields: '',
@@ -344,7 +344,9 @@ Future updates of Restangular imply review of this section in order to keep cons
     each Restangular error response for every request in your AngularJS application in a single place,
     increasing debugging capabilities and hooking security features in a single place.
     */
-    ErrorInterceptor: '',
+    ErrorInterceptor: function(response) {
+        console.log("ErrorInterceptor, server response:", response);
+    },
     /*
     Restangular required 3 fields for every "Restangularized" element. These are:
 
