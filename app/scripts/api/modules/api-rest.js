@@ -25,38 +25,39 @@
 ////////////////////////////////////////////////////////////////////////////
 
 angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
-    .run(['$log', 'Restangular', 'CacheFactory', 'REST_CONFIG',
-        function ($log, Restangular, CacheFactory, REST_CONFIG) {
 
-            $log.info('AppREST run');
+.run(['$log', 'Restangular', 'CacheFactory', 'REST_CONFIG',
+    function ($log, Restangular, CacheFactory, REST_CONFIG) {
 
-            Restangular.setBaseUrl(REST_CONFIG.BaseUrl);
-            Restangular.setExtraFields(REST_CONFIG.ExtraFields);
-            Restangular.setParentless(REST_CONFIG.Parentless);
-            Restangular.addElementTransformer(REST_CONFIG.ElementTransformer);
-            Restangular.setOnElemRestangularized(REST_CONFIG.OnElemRestangularized);
-            Restangular.setResponseInterceptor(
-                function (response) {
-                    for (var operation in REST_CONFIG.NoCacheHttpMethods) {
-                        if (operation === true) {
-                            CacheFactory.removeDefaultHttpCacheStorage();
-                        }
+        $log.info('AppREST run');
+
+        Restangular.setBaseUrl(REST_CONFIG.BaseUrl);
+        Restangular.setExtraFields(REST_CONFIG.ExtraFields);
+        Restangular.setParentless(REST_CONFIG.Parentless);
+        Restangular.addElementTransformer(REST_CONFIG.ElementTransformer);
+        Restangular.setOnElemRestangularized(REST_CONFIG.OnElemRestangularized);
+        Restangular.setResponseInterceptor(
+            function (response) {
+                for (var operation in REST_CONFIG.NoCacheHttpMethods) {
+                    if (operation === true) {
+                        CacheFactory.removeDefaultHttpCacheStorage();
                     }
-                    return response;
                 }
-            );
-            Restangular.setRequestInterceptor(REST_CONFIG.RequestInterceptor);
-            Restangular.setFullRequestInterceptor(REST_CONFIG.FullRequestInterceptor);
-            Restangular.setErrorInterceptor(REST_CONFIG.ErrorInterceptor);
-            Restangular.setRestangularFields(REST_CONFIG.RestangularFields);
-            Restangular.setMethodOverriders(REST_CONFIG.MethodOverriders);
-            Restangular.setDefaultRequestParams(REST_CONFIG.DefaultRequestParams);
-            Restangular.setFullResponse(REST_CONFIG.FullResponse);
-            Restangular.setDefaultHeaders(REST_CONFIG.DefaultHeaders);
-            Restangular.setRequestSuffix(REST_CONFIG.RequestSuffix);
-            Restangular.setUseCannonicalId(REST_CONFIG.UseCannonicalId);
-            Restangular.setEncodeIds(REST_CONFIG.EncodeIds);
-        }])
+                return response;
+            }
+        );
+        Restangular.setRequestInterceptor(REST_CONFIG.RequestInterceptor);
+        Restangular.setFullRequestInterceptor(REST_CONFIG.FullRequestInterceptor);
+        Restangular.setErrorInterceptor(REST_CONFIG.ErrorInterceptor);
+        Restangular.setRestangularFields(REST_CONFIG.RestangularFields);
+        Restangular.setMethodOverriders(REST_CONFIG.MethodOverriders);
+        Restangular.setDefaultRequestParams(REST_CONFIG.DefaultRequestParams);
+        Restangular.setFullResponse(REST_CONFIG.FullResponse);
+        Restangular.setDefaultHeaders(REST_CONFIG.DefaultHeaders);
+        Restangular.setRequestSuffix(REST_CONFIG.RequestSuffix);
+        Restangular.setUseCannonicalId(REST_CONFIG.UseCannonicalId);
+        Restangular.setEncodeIds(REST_CONFIG.EncodeIds);
+    }])
 /*
  * Factory Name: 'RESTConnect'
  * Contains methods for data finding (demo).
@@ -66,8 +67,8 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
  * findById: Util for finding an object by its 'id' property among an array
  * newRandomKey: Util for returning a randomKey from a collection that also isn't the current key
  */
-.factory('RESTFactory', ['Restangular',
-    function (Restangular) {
+.factory('RESTFactory', ['$log', 'Restangular',
+    function ($log, Restangular) {
 
         ////////////////////////////////////////////////////////////////////////////////////
         // ADVICES ABOUT PROMISES
@@ -98,7 +99,8 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         */
         factory.rest_getAll = function (path) {
             return Restangular.all(path).getList().then(function (data) {
-                return data[0];
+                $log.debug('data', data);
+                return data;
             });
         };
 
@@ -140,7 +142,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @function
         @param path String with the item URL
         @param data Item data  to be deleted
-           @description Deletes an item from a list.
+        @description Deletes an item from a list.
         */
         factory.rest_deleteItem = function (path, key, callback) {
             // Use 'then' to resolve the promise.
@@ -151,11 +153,36 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
 
         return factory;
     }])
-    .directive('rest', function () {
+
+.directive('rest', ['$log', 'Restangular',
+    function ($log, Restangular) {
+
         return {
-            scope: {
-                path2: '=path'
-            },
-            template: 'Name: {{path2}}'
+            link: function (scope, element, attrs) {
+
+                var defaultName = 'restData',
+                    loadingSuffix = 'Loading',
+                    errorSuffix = 'Error',
+                    path = attrs.rest || attrs.restPath;
+
+                scope[(attrs.restName || defaultName) + loadingSuffix] = true;
+                element.html(attrs.restLoadingText || "");
+
+                scope.$watch(function () {
+                    return path + ',' + attrs.restName + ',' + attrs.restErrorText + ',' + attrs.restLoadingText;
+                }, function (newVal) {
+                    $log.debug('REST watch newVal:', newVal);
+                    scope[(attrs.restName || defaultName) + errorSuffix] = false;
+                    Restangular.all(path).getList().then(function (data) {
+                        element.html("");
+                        scope[attrs.restName || defaultName] = data;
+                        scope[(attrs.restName || defaultName) + loadingSuffix] = false;
+                    }, function errorCallback() {
+                        element.html(attrs.restErrorText || "");
+                        scope[(attrs.restName || defaultName) + loadingSuffix] = false;
+                        scope[(attrs.restName || defaultName) + errorSuffix] = true;
+                    });
+                });
+            }
         };
-    });
+    }]);
