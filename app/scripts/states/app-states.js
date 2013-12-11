@@ -21,8 +21,8 @@ angular.module('appverseClientIncubatorApp')
 
                 // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
                 // Here we are just setting up some convenience urls.
-                .when('/c?id', '/topics/:id')
-                    .when('/user/:id', '/topics/:id')
+                .when('/t?id', '/topics/:id')
+                    .when('/t/:id', '/topics/:id')
 
 
                 // If the url is ever invalid, e.g. '/asdf', then redirect to '/' aka the home state
@@ -75,18 +75,6 @@ angular.module('appverseClientIncubatorApp')
                     // so this template file will be loaded and then inserted into the ui-view
                     // within index.html.
                     templateUrl: 'views/topics/topics.html',
-
-                    // Use `resolve` to resolve any asynchronous controller dependencies
-                    // *before* the controller is instantiated. In this case, since topics
-                    // returns a promise, the controller will wait until topics.all() is
-                    // resolved before instantiation. Non-promise return values are considered
-                    // to be resolved immediately.
-                    resolve: {
-                        topics: ['topics',
-                            function (topics) {
-                                return topics.all();
-                            }]
-                    },
 
                     // You can pair a controller to your template. There *must* be a template to pair with.
                     // controller: ['$scope', '$state', 'topics', 'utils','TopicsController']
