@@ -7,20 +7,20 @@ angular.module('appverseClientIncubatorApp')
  * This factory contains is RESTful for retrieving topics
  * from data (in this case'topics.json').
  */
-.factory('topics', ['$http', 'RESTFactory',
-    function ($http, RESTFactory, utils) {
+.factory('topics', ['$log', '$http', 'RESTFactory',
+    function ($log, $http, RESTFactory, utils) {
 
         var path = 'views/topics/topics.json';
 
         var factory = {};
 
         factory.all = function () {
-//            console.log(new Date() + " - RESTFactory.rest_getAll");
+            $log.debug("RESTFactory.rest_getAll");
             return RESTFactory.rest_getAll(path);
         };
 
         factory.get = function (id) {
-//            console.log(new Date() + " - RESTFactory.rest_getItem", id);
+            $log.debug("RESTFactory.rest_getItem", id);
             return RESTFactory.rest_getItem(path, id);
         };
         return factory;
