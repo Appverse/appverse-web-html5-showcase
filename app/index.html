@@ -54,7 +54,7 @@
               <li ng-class="{ active: $state.includes('topics') }"><a ui-sref="topics.list">Dev. Topics</a></li>
               <li ng-class="{ active: $state.includes('ui') }"><a ui-sref="ui">Gadgets</a></li>
               <li ng-class="{ active: $state.includes('cache') }"><a ui-sref="cache">Cache</a></li>
-<!--              <li ng-class="{ active: $state.includes('serverpush') }"><a ui-sref="serverpush">Server Messages</a></li>-->
+              <li ng-class="{ active: $state.includes('serverpush') }"><a ui-sref="serverpush">Server Messages</a></li>
               <li ng-class="{ active: $state.includes('translation') }"><a ui-sref="translation">Translation</a></li>
 <!--              <li ng-class="{ active: $state.includes('charts') }"><a ui-sref="charts">Charts</a></li>-->
               <li ng-class="{ active: $state.includes('about') }"><a ui-sref="about">About</a></li>
@@ -107,7 +107,6 @@
         <script src="bower_components/angular-cookies/angular-cookies.js"></script>
         <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
         <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-        <script src="bower_components/angular-socket-io/socket.js"></script>
         <script src="bower_components/ng-oauth/dist/ng-oauth.js"></script>
         <script src="bower_components/ngstorage/ngStorage.js"></script>
         <script src="bower_components/lodash/dist/lodash.underscore.js"></script>
@@ -116,6 +115,11 @@
         <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
         <script src="bower_components/angular-dynamic-locale/src/tmhDinamicLocale.js"></script>
         <script src="bower_components/angular-cache/dist/angular-cache.js"></script>
+
+        <!-- Temporary solution based on CDN. For development purpose only -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+
+        <!--<script src="bower_components/socket.io/lib/socket.js"></script>-->
         <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/api.js -->
@@ -125,7 +129,7 @@
         <script src="scripts/api/modules/api-logging.js"></script>
         <script src="scripts/api/modules/api-detection.js"></script>
         <script src="scripts/api/modules/api-translate.js"></script>
-<!--        <script src="scripts/api/modules/api-serverpush.js"></script>-->
+        <script src="scripts/api/modules/api-serverpush.js"></script>
         <script src="scripts/api/modules/api-security.js"></script>
         <script src="scripts/configuration/api-configuration.js"></script>
         <!-- endbuild -->

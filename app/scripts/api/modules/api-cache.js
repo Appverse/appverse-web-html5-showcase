@@ -307,7 +307,7 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
 
 ////////////////////////////////////////////////////////////////////////////
 // COMMON API - 0.1
-// SECONDARY MODULE (AppIndexedDB)
+// PRIVATE MODULE (AppIndexedDB)
 ////////////////////////////////////////////////////////////////////////////
 // Angularjs serviceprovider to utilize indexedDB with angular.
 // Normally, and as a recommendation, we should have only one indexedDB per app.
