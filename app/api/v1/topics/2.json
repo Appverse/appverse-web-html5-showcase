@@ -1,15 +1,13 @@
 {
     "id": 2,
-    "items": [
-        {
-            "id": "a",
-            "type": "Priority",
-            "value": "high"
-        },
-        {
-            "id": "b",
-            "type": "Assigned PSU Task",
-            "value": "TMENU-11"
-        }
-      ]
+    "name": "Styling",
+    "items": [{
+        "id": "a",
+        "type": "Priority",
+        "value": "medium"
+    }, {
+        "id": "b",
+        "type": "Assigned PSU Task",
+        "value": "TMENU-112"
+    }]
 }
