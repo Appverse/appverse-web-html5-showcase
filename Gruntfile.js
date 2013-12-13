@@ -4,9 +4,12 @@ var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({
     port: LIVERELOAD_PORT
 });
+
 var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
+
+var fs = require('fs');
 
 // # Globbing
 // for performance reasons we're only matching one level down:
@@ -81,7 +84,47 @@ module.exports = function (grunt) {
                     middleware: function (connect) {
                         return [lrSnippet,
                             mountFolder(connect, '.tmp'),
-                            mountFolder(connect, yeomanConfig.app)];
+                            mountFolder(connect, yeomanConfig.app),
+                            function (request, response, next) {
+
+                                console.log("request method: " + JSON.stringify(request.method));
+                                var path = request.url.split('?')[0];
+                                console.log("request url: " + JSON.stringify(request.url));
+                                path = require('path').resolve(__dirname, 'app/' + path);
+
+                                console.log("request path : " + JSON.stringify(path));
+
+                                console.log("request current dir : " + JSON.stringify(__dirname));
+
+                                if ((request.method === 'PUT' || request.method === 'POST') && fs.existsSync(path)) {
+
+                                    console.log('inside put/post');
+
+                                    request.content = '';
+
+                                    request.addListener("data", function (chunk) {
+                                        request.content += chunk;
+                                    });
+
+                                    request.addListener("end", function () {
+                                        console.log("request content: " + JSON.stringify(request.content));
+                                        fs.writeFile(path, request.content, function (err) {
+                                            if (err) {
+                                                throw err;
+                                            }
+                                            console.log('file saved');
+                                            response.end('file was saved');
+                                        });
+                                        //                                        fs.open(path,'r+',function(err,fd){
+                                        //                                            if (err){
+                                        //                                                throw err;
+                                        //                                            }
+                                        //                                        })
+                                    });
+                                } else {
+                                    next();
+                                }
+                            }];
                     }
                 }
             },
