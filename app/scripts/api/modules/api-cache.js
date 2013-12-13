@@ -257,7 +257,7 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
                         cacheFlushInterval: 15000,
 
                         // This cache will sync itself with localStorage
-                        storageMode: 'localStorage',
+//                        storageMode: 'localStorage',
 
                         // Custom implementation of localStorage
                         //storageImpl: myLocalStoragePolyfill,

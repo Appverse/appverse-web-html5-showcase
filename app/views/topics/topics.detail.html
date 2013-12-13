@@ -1,19 +1,19 @@
-<div>
-  <h2>{{topic.name}}</h2>
-  <ul>
+<h2>{{getSelectedTopic().name}}</h2>
+<p rest rest-path="topics/{{$stateParams.topicId}}.json" rest-name="topic" rest-error-text="Topic  <b>{{getSelectedTopic().name}}</b> not found on server."></p>
+<alert ng-show="topicsError || topicError" close="topicsError=false;topicError=false">Error loading topic</alert>
+<ul>
     <li ng-repeat="item in topic.items">
 
-      <!-- 
+        <!--
            Regarding of ui-router, here's another ui-sref directive for links.
            THIS time we are passing parameters
            AND inheriting parameters from active ancestor states. So we don't
            need to resupply the topicId parameter. -->
-      <a ui-sref="topics.detail.item({itemId:item.id})">{{item.type}}</a>
+        <a ui-sref="topics.detail.item({itemId:item.id})">{{item.type}}</a>
     </li>
-  </ul>
-  <div ui-view ng-animate="{enter:'fade-enter'}">
+</ul>
+<div ui-view ng-animate="{enter:'fade-enter'}">
     <!-- Example of default content. This content will be replace as soon as
          this ui-view is populate with a template -->
     <small class="muted">Click on a topic field to view and/or edit it.</small>
-  </div>
 </div>
