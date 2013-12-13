@@ -25,8 +25,8 @@
 ////////////////////////////////////////////////////////////////////////////
 
 angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
-    .run(['$log', 'Restangular', 'CacheFactory', 'REST_CONFIG',
-        function ($log, Restangular, CacheFactory, REST_CONFIG) {
+    .run(['$log', 'Restangular', 'CacheFactory', '$q', '$location', 'PROJECT_DATA','REST_CONFIG',
+        function ($log, Restangular, CacheFactory, $q, $location, PROJECT_DATA, REST_CONFIG) {
 
             $log.info('AppREST run');
 
@@ -36,18 +36,33 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
             Restangular.addElementTransformer(REST_CONFIG.ElementTransformer);
             Restangular.setOnElemRestangularized(REST_CONFIG.OnElemRestangularized);
             Restangular.setResponseInterceptor(
-                function (response) {
-                    for (var operation in REST_CONFIG.NoCacheHttpMethods) {
-                        if (operation === true) {
-                            CacheFactory.removeDefaultHttpCacheStorage();
-                        }
-                    }
-                    return response;
-                }
+                  function(response) {
+                      //If error, Redirect to login view.
+                      if (response.status === 401){
+                          $location.url(PROJECT_DATA.LoginViewPath);
+                          // stop the promise chain
+                          return false;
+                      }
+                       else{
+                           //If correct, remove cache from pre-configured http methods
+                          for (var operation in REST_CONFIG.NoCacheHttpMethods) {
+                               if (operation === true) {
+                                    CacheFactory.removeDefaultHttpCacheStorage();
+                               }
+                          }
+                          return response;
+                      }
+                  }
             );
             Restangular.setRequestInterceptor(REST_CONFIG.RequestInterceptor);
             Restangular.setFullRequestInterceptor(REST_CONFIG.FullRequestInterceptor);
-            Restangular.setErrorInterceptor(REST_CONFIG.ErrorInterceptor);
+            Restangular.setErrorInterceptor(
+                function(response) {
+                    //displayError();
+                    // stop the promise chain
+                    return false;
+                }
+            );
             Restangular.setRestangularFields(REST_CONFIG.RestangularFields);
             Restangular.setMethodOverriders(REST_CONFIG.MethodOverriders);
             Restangular.setDefaultRequestParams(REST_CONFIG.DefaultRequestParams);

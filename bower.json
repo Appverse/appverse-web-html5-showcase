@@ -16,7 +16,6 @@
     "angular-translate-loader-static-files": "~0.1.6",
     "angular-i18n": "~1.0.8",
     "angular-dynamic-locale": "~0.0.2",
-    "angular-socket-io": "~0.2.0",
     "ng-oauth": "",
     "stacktrace": "~0.5.3",
     "ngstorage": "~0.3.0",

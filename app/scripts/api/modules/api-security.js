@@ -49,6 +49,34 @@ angular.module('AppSecurity', ['restangular', 'AppCache', 'AppConfiguration'])
         function ($log, Restangular, CacheFactory, REST_CONFIG, CACHE_CONFIG) {
             $log.info('AppSecurity run');
         }])
+
+
+    .factory('AuthService', ['UserModel',
+        function (UserModel) {
+            var factory = {};
+
+            return factory;
+        }
+    ])
+
+    .factory('UserModel', function () {
+        var authenticationModel = {
+            userName: '',
+            isLoggedIn: false,
+            assignedRoles: '',
+            appAuthenticationToken: {},
+            authenticationToken: {}
+        };
+
+        return authenticationModel;
+    })
+
+    .controller('loginController', ['$scope', '$http', 'AuthService',
+        function(scope, $http, AuthService) {
+
+        }
+    ])
+
 /*
      APP AUTHENTICATION (OAuth2: Client Credentials Grant)
 
@@ -121,11 +149,12 @@ angular.module('AppSecurity', ['restangular', 'AppCache', 'AppConfiguration'])
             };
 
 
-            $http(config)
+            $http(config)//Call the authentication service in backend and check credentials (headers, cookies, token)
                 .success(function (data, status, headers, config) {
                     if (data.status) {
                         // succefull login
                         User.isLogged = true;
+
                         User.username = data.username;
                     } else {
                         User.isLogged = false;
@@ -173,6 +202,8 @@ angular.module('AppSecurity', ['restangular', 'AppCache', 'AppConfiguration'])
          };
      });
      */
+
+
 
 .service('UserAuthenticationService', function ($q, $rootScope, AuthenticationModel) {
     var authenticationToken = {};

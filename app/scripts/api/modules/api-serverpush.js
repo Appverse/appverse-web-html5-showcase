@@ -15,7 +15,7 @@
 // The current release of socket.io is 0.9.10.
 //
 // The module AppServerPush is included in the main module.
-// The module AppSocketIO simply wraps SocketIO API to be used by AppServerPush.
+// The private module AppSocketIO simply wraps SocketIO API to be used by AppServerPush.
 // So, AppServerPush is ready to integrate other Server Push approaches (e.g. Atmosphere) only by including
 // a new module and injecting it to AppServerPush.
 //
@@ -32,35 +32,6 @@
 angular.module('AppServerPush', [
         'AppSocketIO',
         'AppConfiguration'])
-    .config(['socketProvider', 'SERVERPUSH_CONFIG',
-        function (socketProvider, SERVERPUSH_CONFIG) {
-            /*
-             The $provide service is responsible for telling Angular how to create
-             new injectable things (services).
-             The standardSocket service will be injected in the SocketFactory.
-             Basically it is a socket object with the defined configuration.
-             */
-            $provide.provider('standardSocket', function() {
-                /*
-                Previous configuration of the socket object
-                we are going to use in the module.
-                 */
-                var standardSocket = io.connect(SERVERPUSH_CONFIG.BaseUrl, {
-                    'resource': SERVERPUSH_CONFIG.Resource,
-                    'connect timeout': SERVERPUSH_CONFIG.ConnectTimeout,
-                    'try multiple transports': SERVERPUSH_CONFIG.TryMultipleTransports,
-                    'reconnect': SERVERPUSH_CONFIG.Reconnect,
-                    'reconnection delay': SERVERPUSH_CONFIG.ReconnectionDelay,
-                    'reconnection limit': SERVERPUSH_CONFIG.ReconnectionLimit,
-                    'max reconnection attempts': SERVERPUSH_CONFIG.MaxReconnectionAttempts,
-                    'sync disconnect on unload': SERVERPUSH_CONFIG.SyncDisconnectOnUnload,
-                    'auto connect': SERVERPUSH_CONFIG.AutoConnect,
-                    'flash policy port': SERVERPUSH_CONFIG.FlashPolicyPort,
-                    'force new connection': SERVERPUSH_CONFIG.ForceNewConnection
-                });
-                return socketProvider.ioSocket(standardSocket);
-            });
-        }])
     /*
      To make socket error events available across an app, in one of the controllers:
 
@@ -85,45 +56,101 @@ angular.module('AppServerPush', [
      * Internally, $http works in the same way. After some XHR returns, it calls $scope.$apply,
      * so that AngularJS can update its views accordingly.
      */
-    .factory('SocketFactory', ['$rootScope', 'standardSocket',
-        function ($rootScope, standardSocket) {
+    .factory('SocketFactory', ['$rootScope', 'socket',
+        function ($rootScope, socket) {
+            var factory = {};
 
-            return {
-                /*
-                 We handle the data transmission from the server.
-                 */
-                on: function (eventName, callback) {
-                    standardSocket.on(eventName, function () {
-                        var args = arguments;
-                        $rootScope.$apply(function () {
-                            callback.apply(standardSocket, args);
-                        });
+            /*
+             @function
+             @param eventName the name of the event/channel to be listened
+             The communication is bound to rootScope.
+             @param callback The function to be passed as callback.
+             @description Establishes a communication listening an event/channel from server.
+             Use this method for background communication although the current scope is destyroyed.
+             You should cancel communication manually or when the $rootScope object is destroyed.
+             */
+            factory.listen = function (eventName, callback) {
+                socket.on(eventName, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        callback.apply(socket, args);
                     });
-                },
-                /*
-                 It sends eventName message to the server so that the data can be sent.
-                 */
-                emit: function (eventName, data, callback) {
-                    standardSocket.emit(eventName, data, function () {
-                        var args = arguments;
-                        $rootScope.$apply(function () {
-                            if (callback) {
-                                callback.apply(standardSocket, args);
-                            }
-                        });
-                    })
-                }
-                //Note that this service doesn't wrap the entire Socket.IO API
-                // TODO Complete with all socket methods
+                });
             };
+
+            /*
+             @function
+             @param eventName the name of the event/channel to be listened
+             @param scope the scope object to be bound to the listening.
+             The communication will be cancelled when the scope is destroyed.
+             @param callback The function to be passed as callback.
+             @description Establishes a communication listening an event/channel from server.
+             It is bound to a given $scope object.
+             */
+            factory.listenScope = function (eventName, scope, callback) {
+                socket.on(eventName, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        callback.apply(socket, args);
+                    });
+                }).bindTo(scope);
+            };
+
+            /*
+             @function
+             @param eventName the name of the event/channel to be sent to server
+             @param scope the scope object to be bound to the listening.
+             The communication will be cancelled when the scope is destroyed.
+             @param callback The function to be passed as callback.
+             @description Establishes a communication listening an event/channel from server.
+             It is bound to a given $scope object.
+             */
+            factory.sendMessage = function (eventName, data, callback) {
+                socket.emit(eventName, data, function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        if (callback) {
+                            callback.apply(socket, args);
+                        }
+                    });
+                })
+            };
+
+            /*
+             @function
+             @param eventName the name of the event/channel to be sent to server
+             @param scope the scope object to be bound to the listening.
+             The communication will be cancelled when the scope is destroyed.
+             @param callback The function to be passed as callback.
+             @description Establishes a communication listening an event/channel from server.
+             It is bound to a given $scope object.
+             */
+            factory.unsubscribeCommunication = function (callback) {
+                socket.removeListener(function () {
+                    var args = arguments;
+                    $rootScope.$apply(function () {
+                        if (callback) {
+                            callback.apply(socket, args);
+                        }
+                    });
+                })
+            };
+
+            //Note that this service doesn't wrap the entire Socket.IO API
+            // TODO Complete with all socket methods
+
+            return factory;
+
         }]);
+
+
 
 //////////////////////////////////////////////////////////////////////////////
 // COMMON API - 0.1
-// SECONDARY MODULE (AppSocketIO)
+// PRIVATE MODULE (AppSocketIO)
 ////////////////////////////////////////////////////////////////////////////
-angular.module('AppSocketIO', []).
-    provider('socket', function () {
+angular.module('AppSocketIO', ['AppConfiguration']).
+    provider('socket', ['SERVERPUSH_CONFIG', function (SERVERPUSH_CONFIG) {
 
         // when forwarding events, prefix the event name
         var prefix = 'socket:',
@@ -131,8 +158,32 @@ angular.module('AppSocketIO', []).
 
         // expose to provider
         this.$get = function ($rootScope, $timeout) {
+//            console.log('SERVERPUSH_CONFIG.BaseUrl ' + SERVERPUSH_CONFIG.BaseUrl);
+//            console.log('SERVERPUSH_CONFIG.Resource ' + SERVERPUSH_CONFIG.Resource);
+//            console.log('SERVERPUSH_CONFIG.TryMultipleTransports ' + SERVERPUSH_CONFIG.TryMultipleTransports);
+//            console.log('SERVERPUSH_CONFIG.ConnectTimeout ' + SERVERPUSH_CONFIG.ConnectTimeout);
 
-            var socket = ioSocket || io.connect();
+            /*
+            Initialization of the socket object by using params in configuration module.
+            Please read below for configuration detals:
+            * Client configuration: https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO#client
+            * Server configuration: https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO#server
+            */
+            var socket = ioSocket || io.connect(
+                SERVERPUSH_CONFIG.BaseUrl, {
+                    'resource': SERVERPUSH_CONFIG.Resource,
+                    'connect timeout': SERVERPUSH_CONFIG.ConnectTimeout,
+                    'try multiple transports': SERVERPUSH_CONFIG.TryMultipleTransports,
+                    'reconnect': SERVERPUSH_CONFIG.Reconnect,
+                    'reconnection delay': SERVERPUSH_CONFIG.ReconnectionDelay,
+                    'reconnection limit': SERVERPUSH_CONFIG.ReconnectionLimit,
+                    'max reconnection attempts': SERVERPUSH_CONFIG.MaxReconnectionAttempts,
+                    'sync disconnect on unload': SERVERPUSH_CONFIG.SyncDisconnectOnUnload,
+                    'auto connect': SERVERPUSH_CONFIG.AutoConnect,
+                    'flash policy port': SERVERPUSH_CONFIG.FlashPolicyPort,
+                    'force new connection': SERVERPUSH_CONFIG.ForceNewConnection
+                }
+            );
 
             var asyncAngularify = function (callback) {
                 return function () {
@@ -194,4 +245,4 @@ angular.module('AppSocketIO', []).
         this.ioSocket = function (socket) {
             ioSocket = socket;
         };
-    });
+    }]);

@@ -24,7 +24,8 @@ All data are auto-explained because their names ;)
     Company: 'GFT',
     Year: '2013',
     Team: 'GFT Appverse Web',
-    URL: ''
+    URL: '',
+    LoginViewPath: '/login'
 })
 /*
 LOGGING MODULE CONFIGURATION
@@ -150,11 +151,11 @@ https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
     /*
      URL of the listened server
       */
-    BaseUrl: 'http://server.com',
+    BaseUrl: 'http://localhost:3000',
     /*
      Port to be listened at the base url.
       */
-    ListenedPort: '80',
+    ListenedPort: '3000',
     /*
       resource
       defaults to socket.io

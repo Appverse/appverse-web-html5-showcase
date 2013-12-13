@@ -82,11 +82,11 @@ angular.module('appverseClientIncubatorApp')
                     // resolved before instantiation. Non-promise return values are considered
                     // to be resolved immediately.
                     resolve: {
-                        topics: ['topics',
-                            function (topics) {
-                                return topics.all();
-                            }]
-                    },
+                            topics: ['topics',
+                                function (topics) {
+                                    return topics.all();
+                                }]
+                        },
 
                     // You can pair a controller to your template. There *must* be a template to pair with.
                     // controller: ['$scope', '$state', 'topics', 'utils','TopicsController']
@@ -245,13 +245,13 @@ angular.module('appverseClientIncubatorApp')
                     // returns a promise, the controller will wait until topics.all() is
                     // resolved before instantiation. Non-promise return values are considered
                     // to be resolved immediately.
-                    resolve: {
-                        trades: ['trades',
-                            function (trades) {
-                                return trades.all();
-                            }]
-                    },
-                    controller: 'ServerPushController'
+//                    resolve: {
+//                        trades: ['trades',
+//                            function (trades) {
+//                                return trades.all();
+//                            }]
+//                    },
+                    controller: 'serverpushController'
 
                 })
 
