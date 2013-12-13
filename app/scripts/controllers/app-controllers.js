@@ -87,4 +87,123 @@ angular.module('appverseClientIncubatorApp')
             $translate.uses(locale);
             tmhDynamicLocale.set(locale.toLowerCase());
         };
-    }]);
+    }])
+
+    .controller('serverpushController', ['$scope', 'SocketFactory',
+        function ($scope, SocketFactory) {
+            //Checks if the initial stock data set is displayed.
+            var loaded = false;
+
+            $scope.startPush = function () {
+                /*
+                 Initializes communication to server
+                 */
+                SocketFactory.sendMessage('requestData', {});
+
+                /*
+                 Retrieves the initial data set.
+                 The callback is attaching the stock data to the scope.
+                 */
+                SocketFactory.listen('initExchangeData', function (data){
+                    $scope.stocks = data.exchangeData;
+                    loaded = true;
+                });
+
+                /*
+                 Retrieves updates for the data set.
+                 The callback is updating the stock data in the scope.
+                 */
+                SocketFactory.listen('exchangeData', function (deltas){
+                    if (loaded) {
+                        changeValue(deltas);
+
+                        console.log('TP|data.exchangeData.st: ' + deltas.st);
+                        console.log('TP|data.exchangeData.tp: ' + deltas.tp);
+                        console.log('TP|data.exchangeData.tv: ' + deltas.tv);
+
+                        console.log('TP|data.exchangeData.b1p: ' + deltas.b1p);
+                        console.log('TP|data.exchangeData.b2p: ' + deltas.b2p);
+                        console.log('TP|data.exchangeData.b3p: ' + deltas.b3p);
+                        console.log('TP|data.exchangeData.b4p: ' + deltas.b4p);
+                        console.log('TP|data.exchangeData.b5p: ' + deltas.b5p);
+
+                        console.log('TP|data.exchangeData.b1v: ' + deltas.b1v);
+                        console.log('TP|data.exchangeData.b2v: ' + deltas.b2v);
+                        console.log('TP|data.exchangeData.b3v: ' + deltas.b3v);
+                        console.log('TP|data.exchangeData.b4v: ' + deltas.b4v);
+                        console.log('TP|data.exchangeData.b5v: ' + deltas.b5v);
+
+                        console.log('TP|data.exchangeData.a1p: ' + deltas.a1p);
+                        console.log('TP|data.exchangeData.a2p: ' + deltas.a2p);
+                        console.log('TP|data.exchangeData.a3p: ' + deltas.a3p);
+                        console.log('TP|data.exchangeData.a4p: ' + deltas.a4p);
+                        console.log('TP|data.exchangeData.a5p: ' + deltas.a5p);
+
+                        console.log('TP|data.exchangeData.a1v: ' + deltas.a1v);
+                        console.log('TP|data.exchangeData.a2v: ' + deltas.a2v);
+                        console.log('TP|data.exchangeData.a3v: ' + deltas.a3v);
+                        console.log('TP|data.exchangeData.a4v: ' + deltas.a4v);
+                        console.log('TP|data.exchangeData.a5v: ' + deltas.a5v);
+                    }
+                });
+            }
+
+            $scope.endPush = function () {
+                SocketFactory.unsubscribeCommunication();
+            };
+
+            // -----------------
+            // Private helpers
+            // -----------------
+
+            /*
+             Updates the specific stock price/value pair
+             */
+            var changeValue = function (deltas) {
+                // rename user in list of users
+                var i;
+//                    console.log('stock: ' + deltas.st);
+//                    console.log('tp: ' + deltas.tp);
+//                    console.log('tv: ' + deltas.tv);
+                for (i = 0; i < $scope.stocks.length; i++) {
+                    if ($scope.stocks[i].st === deltas.st) {
+                        $scope.stocks[i].tp = deltas.tp;
+                        $scope.stocks[i].tv = deltas.tv;
+
+                        $scope.stocks[i].b1p = deltas.b1p;
+                        $scope.stocks[i].b2p = deltas.b2p;
+                        $scope.stocks[i].b3p = deltas.b3p;
+                        $scope.stocks[i].b4p = deltas.b4p;
+                        $scope.stocks[i].b5p = deltas.b5p;
+
+                        $scope.stocks[i].b1v = deltas.b1v;
+                        $scope.stocks[i].b2v = deltas.b2v;
+                        $scope.stocks[i].b3v = deltas.b3v;
+                        $scope.stocks[i].b4v = deltas.b4v;
+                        $scope.stocks[i].b5v = deltas.b5v;
+
+                        $scope.stocks[i].a1p = deltas.a1p;
+                        $scope.stocks[i].a2p = deltas.a2p;
+                        $scope.stocks[i].a3p = deltas.a3p;
+                        $scope.stocks[i].a4p = deltas.a4p;
+                        $scope.stocks[i].a5p = deltas.a5p;
+
+                        $scope.stocks[i].a1v = deltas.a1v;
+                        $scope.stocks[i].a2v = deltas.a2v;
+                        $scope.stocks[i].a3v = deltas.a3v;
+                        $scope.stocks[i].a4v = deltas.a4v;
+                        $scope.stocks[i].a5v = deltas.a5v;
+                    }
+                }
+
+                //Display update changes
+//                    $scope.stockmessages.push({
+//                        stock: 'chatroom',
+//                        tp: 'The price header is' + tp,
+//                        tv: 'The value ' + tv + ' is now updated to ' + newTv + '.'
+//                    });
+            }
+
+        }]);
+
+
