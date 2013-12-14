@@ -96,11 +96,13 @@ angular.module('appverseClientIncubatorApp')
 
             $scope.startPush = function () {
                 /*
+                 Step 1
                  Initializes communication to server
                  */
                 SocketFactory.sendMessage('requestData', {});
 
                 /*
+                 Step 2
                  Retrieves the initial data set.
                  The callback is attaching the stock data to the scope.
                  */
@@ -110,13 +112,17 @@ angular.module('appverseClientIncubatorApp')
                 });
 
                 /*
+                 Step 3
                  Retrieves updates for the data set.
                  The callback is updating the stock data in the scope.
+                 The listening is bound to the current scope. So, communication
+                 will be closed when the scope is destroyed.
                  */
-                SocketFactory.listen('exchangeData', function (deltas){
+                SocketFactory.listenScope('exchangeData', $scope, function (deltas){
                     if (loaded) {
+                        //Updates values in the table with pushed data
                         changeValue(deltas);
-
+                        /*
                         console.log('TP|data.exchangeData.st: ' + deltas.st);
                         console.log('TP|data.exchangeData.tp: ' + deltas.tp);
                         console.log('TP|data.exchangeData.tv: ' + deltas.tv);
@@ -144,10 +150,15 @@ angular.module('appverseClientIncubatorApp')
                         console.log('TP|data.exchangeData.a3v: ' + deltas.a3v);
                         console.log('TP|data.exchangeData.a4v: ' + deltas.a4v);
                         console.log('TP|data.exchangeData.a5v: ' + deltas.a5v);
+                        */
                     }
                 });
             }
 
+            /*
+             Step 4
+             The user can cancel the pushing from server.
+             */
             $scope.endPush = function () {
                 SocketFactory.unsubscribeCommunication();
             };
@@ -159,12 +170,8 @@ angular.module('appverseClientIncubatorApp')
             /*
              Updates the specific stock price/value pair
              */
-            var changeValue = function (deltas) {
-                // rename user in list of users
+            function changeValue (deltas) {
                 var i;
-//                    console.log('stock: ' + deltas.st);
-//                    console.log('tp: ' + deltas.tp);
-//                    console.log('tv: ' + deltas.tv);
                 for (i = 0; i < $scope.stocks.length; i++) {
                     if ($scope.stocks[i].st === deltas.st) {
                         $scope.stocks[i].tp = deltas.tp;
@@ -195,13 +202,6 @@ angular.module('appverseClientIncubatorApp')
                         $scope.stocks[i].a5v = deltas.a5v;
                     }
                 }
-
-                //Display update changes
-//                    $scope.stockmessages.push({
-//                        stock: 'chatroom',
-//                        tp: 'The price header is' + tp,
-//                        tv: 'The value ' + tv + ' is now updated to ' + newTv + '.'
-//                    });
             }
 
         }]);
