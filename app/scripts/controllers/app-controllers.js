@@ -6,8 +6,10 @@
  */
 angular.module('appverseClientIncubatorApp')
 
-.controller('TopicsController', ['$log', '$scope', '$state', '$stateParams', 'utils',
-    function ($log, $scope, $state, $stateParams, utils) {
+.controller('TopicsController', ['$log', '$scope', '$state', '$stateParams', 'utils', 'RESTFactory',
+    function ($log, $scope, $state, $stateParams, utils, RESTFactory) {
+
+        $scope.alltopics = RESTFactory.readList('topics.json');
 
         $scope.goToRandom = function () {
             if ($scope.topics) {
@@ -33,10 +35,8 @@ angular.module('appverseClientIncubatorApp')
     }])
 
 .controller('TopicDetailsController',
-    function ($scope, $stateParams) {
-        $scope.getSelectedTopic = function () {
-            return $scope.findById($scope.topics, $stateParams.topicId);
-        };
+    function ($log) {
+        $log.debug('TopicDetailsController loading...');
     })
 
 .controller('TopicDetailsItemController',
@@ -57,7 +57,7 @@ angular.module('appverseClientIncubatorApp')
     })
 
 .controller('TopicDetailsItemEditController',
-    function ($log, $scope, $stateParams, $state) {
+    function ($log, $scope, $stateParams, $state, Restangular) {
 
         $scope.getSelectedItem = function () {
             if ($scope.topic) {
@@ -67,6 +67,9 @@ angular.module('appverseClientIncubatorApp')
 
         $scope.done = function () {
             // Go back up. '^' means up one. '^.^' would be up twice, to the grandparent.
+
+            Restangular.copy($scope.topic).put();
+
             $state.go('^', $stateParams);
         };
     })

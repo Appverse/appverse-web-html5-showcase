@@ -7,7 +7,6 @@
     "jquery": "~1.10.2",
     "bootstrap-sass": "~2.3.1",
     "es5-shim": "~2.0.8",
-    "angular-resource": "~1.2.1",
     "angular-cookies": "~1.2.1",
     "angular-sanitize": "~1.2.1",
     "angular-bootstrap": "~0.6.0",
@@ -19,8 +18,7 @@
     "ng-oauth": "",
     "stacktrace": "~0.5.3",
     "ngstorage": "~0.3.0",
-    "restangular": "~1.1.8",
-    "underscore": "~1.5.2",
+    "restangular": "~1.2.0",
     "modernizr": "~2.6.1",
     "angular-cache": "~2.1.1"
   },
@@ -30,7 +28,6 @@
   },
   "resolutions": {
     "angular": "~1.2.1",
-    "angular-resource": "~1.2.1",
     "angular-sanitize": "~1.2.1",
     "angular-cookies": "~1.2.1",
     "jquery": "~1.10.2"
