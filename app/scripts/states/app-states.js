@@ -233,13 +233,13 @@ angular.module('appverseClientIncubatorApp')
                     // returns a promise, the controller will wait until topics.all() is
                     // resolved before instantiation. Non-promise return values are considered
                     // to be resolved immediately.
-                    resolve: {
-                        trades: ['trades',
-                            function (trades) {
-                                return trades.all();
-                            }]
-                    },
-                    controller: 'ServerPushController'
+//                    resolve: {
+//                        trades: ['trades',
+//                            function (trades) {
+//                                return trades.all();
+//                            }]
+//                    },
+                    controller: 'serverPushController'
 
                 })
 
