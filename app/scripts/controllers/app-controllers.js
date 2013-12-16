@@ -6,10 +6,8 @@
  */
 angular.module('appverseClientIncubatorApp')
 
-.controller('TopicsController', ['$log', '$scope', '$state', '$stateParams', 'utils', 'RESTFactory',
-    function ($log, $scope, $state, $stateParams, utils, RESTFactory) {
-
-        $scope.alltopics = RESTFactory.readList('topics.json');
+.controller('TopicsController', ['$log', '$scope', '$state', '$stateParams', 'utils',
+    function ($log, $scope, $state, $stateParams, utils) {
 
         $scope.goToRandom = function () {
             if ($scope.topics) {
@@ -35,8 +33,10 @@ angular.module('appverseClientIncubatorApp')
     }])
 
 .controller('TopicDetailsController',
-    function ($log) {
-        $log.debug('TopicDetailsController loading...');
+    function ($scope, $stateParams) {
+        $scope.getSelectedTopic = function () {
+            return $scope.findById($scope.topics, $stateParams.topicId);
+        };
     })
 
 .controller('TopicDetailsItemController',
@@ -57,7 +57,7 @@ angular.module('appverseClientIncubatorApp')
     })
 
 .controller('TopicDetailsItemEditController',
-    function ($log, $scope, $stateParams, $state, Restangular) {
+    function ($log, $scope, $stateParams, $state) {
 
         $scope.getSelectedItem = function () {
             if ($scope.topic) {
@@ -92,7 +92,7 @@ angular.module('appverseClientIncubatorApp')
         };
     }])
 
-    .controller('serverpushController', ['$scope', 'SocketFactory',
+.controller('serverPushController', ['$scope', 'SocketFactory',
         function ($scope, SocketFactory) {
             //Checks if the initial stock data set is displayed.
             var loaded = false;
@@ -163,11 +163,7 @@ angular.module('appverseClientIncubatorApp')
              Updates the specific stock price/value pair
              */
             var changeValue = function (deltas) {
-                // rename user in list of users
                 var i;
-//                    console.log('stock: ' + deltas.st);
-//                    console.log('tp: ' + deltas.tp);
-//                    console.log('tv: ' + deltas.tv);
                 for (i = 0; i < $scope.stocks.length; i++) {
                     if ($scope.stocks[i].st === deltas.st) {
                         $scope.stocks[i].tp = deltas.tp;
@@ -198,15 +194,6 @@ angular.module('appverseClientIncubatorApp')
                         $scope.stocks[i].a5v = deltas.a5v;
                     }
                 }
-
-                //Display update changes
-//                    $scope.stockmessages.push({
-//                        stock: 'chatroom',
-//                        tp: 'The price header is' + tp,
-//                        tv: 'The value ' + tv + ' is now updated to ' + newTv + '.'
-//                    });
             };
 
-        }]);
-
-
+    }]);
