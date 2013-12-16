@@ -1,6 +1,6 @@
-<h2>{{getSelectedTopic().name}}</h2>
-<p rest rest-path="topics/{{$stateParams.topicId}}.json" rest-name="topic" rest-error-text="Topic  <b>{{getSelectedTopic().name}}</b> not found on server."></p>
-<alert ng-show="topicsError || topicError" close="topicsError=false;topicError=false">Error loading topic</alert>
+<h2>{{topic.name}}</h2>
+<p rest rest-path="topics/{{$stateParams.topicId}}.json" rest-name="topic" rest-loading-text="Loading topic..." rest-error-text="Topic <b>{{topic.name}}</b> not found on server."></p>
+<alert ng-show="topicsError || topicError" class="alert-error" close="topicsError=false;topicError=false">Error loading topic</alert>
 <ul>
     <li ng-repeat="item in topic.items">
 

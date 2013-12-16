@@ -92,16 +92,22 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @function
         @param path String with the item URL
         @description Returns a complete list from a REST resource.
+        */
+        factory.readObject = function (path) {
+            return Restangular.one(path).get().$object;
+        };
+
+        /*
+        @function
+        @param path String with the item URL
+        @description Returns a complete list from a REST resource.
         Use to get data to a scope var. For example:
-            $scope.people = rest_getAll('people');
+            $scope.people = readList('people');
         Then, use the var in templates:
             <li ng-repeat="person in people">{{person.Name}}</li>
         */
-        factory.rest_getAll = function (path) {
-            return Restangular.all(path).getList().then(function (data) {
-                $log.debug('data', data);
-                return data;
-            });
+        factory.readList = function (path) {
+            return Restangular.all(path).getList().$object;
         };
 
         /*
@@ -110,10 +116,8 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @param data Key of the given item
         @description Returns a unique value.
         */
-        factory.rest_getItem = function (path, key) {
-            return Restangular.one(path, key).get().then(function (data) {
-                return data;
-            });
+        factory.readListItem = function (path, key) {
+            return Restangular.one(path, key).get().$object;
         };
 
         /*
@@ -122,10 +126,8 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @param data Array of key with keys of the given items
         @description Returns a list of values from the provided params.
         */
-        factory.rest_getItems = function (path, keys) {
-            return Restangular.several(path, keys).getList().then(function (data) {
-                return data;
-            });
+        factory.readListItems = function (path, keys) {
+            return Restangular.several(path, keys).getList().$object;
         };
 
         /*
@@ -134,8 +136,18 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @param data Item data  to be posted
         @description Returns result code.
         */
-        factory.rest_postItem = function (path, newData, callback) {
-            this.rest_getAll(path).post(newData).then(callback);
+        factory.createListItem = function (path, newData, callback) {
+            Restangular.all(path).post(newData).then(callback);
+        };
+
+        /*
+        @function
+        @param path String with the item URL
+        @param data Item data  to be posted
+        @description Returns result code.
+        */
+        factory.updateObject = function (path, newData, callback) {
+            Restangular.one(path).put(newData).then(callback);
         };
 
         /*
@@ -144,11 +156,22 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         @param data Item data  to be deleted
         @description Deletes an item from a list.
         */
-        factory.rest_deleteItem = function (path, key, callback) {
+        factory.deleteListItem = function (path, key, callback) {
             // Use 'then' to resolve the promise.
             Restangular.one(path, key).get().then(function (item) {
                 item.remove().then(callback);
             });
+        };
+
+        /*
+        @function
+        @param path String with the item URL
+        @param data Item data  to be deleted
+        @description Deletes an item from a list.
+        */
+        factory.deleteObject = function (path, callback) {
+            // Use 'then' to resolve the promise.
+            Restangular.one(path).delete().then(callback);
         };
 
         return factory;
@@ -173,7 +196,8 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
                 }, function (newVal) {
                     $log.debug('REST watch newVal:', newVal);
                     scope[(attrs.restName || defaultName) + errorSuffix] = false;
-                    Restangular.all(path).getList().then(function (data) {
+                    Restangular.one(path).get().then(function (data) {
+                        $log.debug('get data',data);
                         element.html("");
                         scope[attrs.restName || defaultName] = data;
                         scope[(attrs.restName || defaultName) + loadingSuffix] = false;
