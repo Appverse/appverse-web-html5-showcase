@@ -68,7 +68,7 @@ angular.module('appverseClientIncubatorApp')
         $scope.done = function () {
             // Go back up. '^' means up one. '^.^' would be up twice, to the grandparent.
 
-            Restangular.copy($scope.topic).put();
+            Restangular.copy($scope.item).put();
 
             $state.go('^', $stateParams);
         };
@@ -149,7 +149,7 @@ angular.module('appverseClientIncubatorApp')
                         console.log('TP|data.exchangeData.a5v: ' + deltas.a5v);
                     }
                 });
-            }
+            };
 
             $scope.endPush = function () {
                 SocketFactory.unsubscribeCommunication();
@@ -205,7 +205,7 @@ angular.module('appverseClientIncubatorApp')
 //                        tp: 'The price header is' + tp,
 //                        tv: 'The value ' + tv + ' is now updated to ' + newTv + '.'
 //                    });
-            }
+            };
 
         }]);
 
