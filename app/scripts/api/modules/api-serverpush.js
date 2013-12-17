@@ -80,24 +80,6 @@ angular.module('AppServerPush', [
 
             /*
              @function
-             @param eventName the name of the event/channel to be listened
-             @param scope the scope object to be bound to the listening.
-             The communication will be cancelled when the scope is destroyed.
-             @param callback The function to be passed as callback.
-             @description Establishes a communication listening an event/channel from server.
-             It is bound to a given $scope object.
-             */
-            factory.listenScope = function (eventName, scope, callback) {
-                socket.on(eventName, function () {
-                    var args = arguments;
-                    $rootScope.$apply(function () {
-                        callback.apply(socket, args);
-                    });
-                }).bindTo(scope);
-            };
-
-            /*
-             @function
              @param eventName the name of the event/channel to be sent to server
              @param scope the scope object to be bound to the listening.
              The communication will be cancelled when the scope is destroyed.
@@ -118,26 +100,14 @@ angular.module('AppServerPush', [
 
             /*
              @function
-             @param eventName the name of the event/channel to be sent to server
-             @param scope the scope object to be bound to the listening.
-             The communication will be cancelled when the scope is destroyed.
-             @param callback The function to be passed as callback.
-             @description Establishes a communication listening an event/channel from server.
-             It is bound to a given $scope object.
+             The communication will be cancelled without regarding other consideration.
+             No callback is passed.
+             @description Cancels all communications to server.
              */
             factory.unsubscribeCommunication = function (callback) {
-                socket.removeListener(function () {
-                    var args = arguments;
-                    $rootScope.$apply(function () {
-                        if (callback) {
-                            callback.apply(socket, args);
-                        }
-                    });
-                })
+                socket.off(callback());
             };
 
-            //Note that this service doesn't wrap the entire Socket.IO API
-            // TODO Complete with all socket methods
 
             return factory;
 
@@ -158,10 +128,6 @@ angular.module('AppSocketIO', ['AppConfiguration']).
 
         // expose to provider
         this.$get = function ($rootScope, $timeout) {
-//            console.log('SERVERPUSH_CONFIG.BaseUrl ' + SERVERPUSH_CONFIG.BaseUrl);
-//            console.log('SERVERPUSH_CONFIG.Resource ' + SERVERPUSH_CONFIG.Resource);
-//            console.log('SERVERPUSH_CONFIG.TryMultipleTransports ' + SERVERPUSH_CONFIG.TryMultipleTransports);
-//            console.log('SERVERPUSH_CONFIG.ConnectTimeout ' + SERVERPUSH_CONFIG.ConnectTimeout);
 
             /*
             Initialization of the socket object by using params in configuration module.
@@ -198,9 +164,15 @@ angular.module('AppSocketIO', ['AppConfiguration']).
                 socket.on(eventName, asyncAngularify(callback));
             };
 
+            var removeListener = function () {
+                socket.removeAllListeners();
+            };
+
+
             var wrappedSocket = {
                 on: addListener,
                 addListener: addListener,
+                off: removeListener,
 
                 emit: function (eventName, data, callback) {
                     if (callback) {
@@ -210,10 +182,10 @@ angular.module('AppSocketIO', ['AppConfiguration']).
                     }
                 },
 
-                removeListener: function () {
-                    var args = arguments;
-                    return socket.removeListener.apply(socket, args);
-                },
+//                removeListener: function () {
+//                    var args = arguments;
+//                    return socket.removeListener.apply(socket, args);
+//                },
 
                 forward: function (events, scope) {
                     if (events instanceof Array === false) {
