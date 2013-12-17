@@ -3,11 +3,9 @@
     "name": "Styling",
     "items": [{
         "id": "a",
-        "type": "Priority",
-        "value": "medium"
+        "name": "Priority"
     }, {
         "id": "b",
-        "type": "Assigned PSU Task",
-        "value": "TMENU-112"
+        "name": "Assigned PSU Task"
     }]
 }

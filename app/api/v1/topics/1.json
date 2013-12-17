@@ -4,13 +4,11 @@
     "items": [
         {
             "id": "a",
-            "type": "Priority",
-            "value": "high"
+            "name": "Priority"
         },
         {
             "id": "b",
-            "type": "Assigned PSU Task",
-            "value": "TMENU-17"
+            "name": "Assigned PSU Task"
         }
       ]
 }
