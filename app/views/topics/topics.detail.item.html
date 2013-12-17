@@ -1,5 +1,10 @@
 <hr>
-<h4>{{getSelectedItem().type}}
-    <button class="btn" ng-click="edit()">Edit</button>
-</h4>
-<div>{{getSelectedItem().value}}</div>
+<div rest rest-path="topics/{{$stateParams.topicId}}/items" rest-id="{{$stateParams.itemId}}" rest-name="item" />
+<alert ng-show="itemLoading" class="alert-warning">Loading item...</alert>
+<alert ng-show="topicsError || topicError || itemError" class="alert-error">Error loading item.</alert>
+<div ng-hide="topicsError || topicError || itemError || itemLoading">
+    <h4>{{item.name}}
+        <button class="btn" ng-click="edit()">Edit</button>
+    </h4>
+    <div>{{item.value}}</div>
+</div>

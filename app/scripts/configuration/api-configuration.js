@@ -393,7 +393,7 @@ Future updates of Restangular imply review of this section in order to keep cons
     For example, if you need to send the format like /users/123.json you can add that .json
     to the suffix using the setRequestSuffix method
     */
-    RequestSuffix: '',
+    RequestSuffix: '.json',
     /*
     You can set this to either true or false.
     If set to true, then the cannonical ID from the element will be used for URL creation

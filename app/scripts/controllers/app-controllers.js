@@ -89,54 +89,16 @@ angular.module('appverseClientIncubatorApp')
         };
     }])
 
-.controller('serverPushController', ['$scope', '$log', 'SocketFactory',
-    function ($scope, $log, SocketFactory) {
+.controller('serverPushController', ['$scope', 'SocketFactory',
+    function ($scope, SocketFactory) {
         //Checks if the initial stock data set is displayed.
         var loaded = false;
 
-        /*
-        Listening the error event from the serverpush module.
-         */
-        $scope.$on('socket:error', function (eventName, data) {
-            $log.error("Error in socket.io client | Event: " + eventName + ", Data: " + data);
-        });
-
-        /*
-        Listening the destroy event of the current scope.
-        So, communication is bound to the current scope and ends when the scope is destroyed.
-         */
-        $scope.$on('$destroy', function (event) {
-            SocketFactory.unsubscribeCommunication(function(s) {
-                $log.debug("Disconnected from server when the scope was destroyed: " + s);
-            });
-        });
-
-        /*
-        This function starts communication with server:
-        1-requestData sends handshake to server as first communication
-        2-initExchangeData populates the table
-        3-exchangeData retrieves pushed data from server with changes into the table
-         */
         $scope.startPush = function () {
-            /*
-            Optional
-             It stops communication after 10 seconds
-             */
-//            setInterval(
-//                function(){
-//                    SocketFactory.unsubscribeCommunication(function() {
-//                        $log.debug("Disconnected from server after 10 seconds.");
-//                    });
-//                },10000);
-
-
             /*
              Initializes communication to server
              */
-            SocketFactory.sendMessage('requestData', {}, function() {
-                console.log("Requested Data to server.");
-            });
-
+            SocketFactory.sendMessage('requestData', {});
 
             /*
              Retrieves the initial data set.
@@ -156,42 +118,38 @@ angular.module('appverseClientIncubatorApp')
                     changeValue(deltas);
 
                     console.log('TP|data.exchangeData.st: ' + deltas.st);
-//                    console.log('TP|data.exchangeData.tp: ' + deltas.tp);
-//                    console.log('TP|data.exchangeData.tv: ' + deltas.tv);
-//
-//                    console.log('TP|data.exchangeData.b1p: ' + deltas.b1p);
-//                    console.log('TP|data.exchangeData.b2p: ' + deltas.b2p);
-//                    console.log('TP|data.exchangeData.b3p: ' + deltas.b3p);
-//                    console.log('TP|data.exchangeData.b4p: ' + deltas.b4p);
-//                    console.log('TP|data.exchangeData.b5p: ' + deltas.b5p);
-//
-//                    console.log('TP|data.exchangeData.b1v: ' + deltas.b1v);
-//                    console.log('TP|data.exchangeData.b2v: ' + deltas.b2v);
-//                    console.log('TP|data.exchangeData.b3v: ' + deltas.b3v);
-//                    console.log('TP|data.exchangeData.b4v: ' + deltas.b4v);
-//                    console.log('TP|data.exchangeData.b5v: ' + deltas.b5v);
-//
-//                    console.log('TP|data.exchangeData.a1p: ' + deltas.a1p);
-//                    console.log('TP|data.exchangeData.a2p: ' + deltas.a2p);
-//                    console.log('TP|data.exchangeData.a3p: ' + deltas.a3p);
-//                    console.log('TP|data.exchangeData.a4p: ' + deltas.a4p);
-//                    console.log('TP|data.exchangeData.a5p: ' + deltas.a5p);
-//
-//                    console.log('TP|data.exchangeData.a1v: ' + deltas.a1v);
-//                    console.log('TP|data.exchangeData.a2v: ' + deltas.a2v);
-//                    console.log('TP|data.exchangeData.a3v: ' + deltas.a3v);
-//                    console.log('TP|data.exchangeData.a4v: ' + deltas.a4v);
-//                    console.log('TP|data.exchangeData.a5v: ' + deltas.a5v);
+                    console.log('TP|data.exchangeData.tp: ' + deltas.tp);
+                    console.log('TP|data.exchangeData.tv: ' + deltas.tv);
+
+                    console.log('TP|data.exchangeData.b1p: ' + deltas.b1p);
+                    console.log('TP|data.exchangeData.b2p: ' + deltas.b2p);
+                    console.log('TP|data.exchangeData.b3p: ' + deltas.b3p);
+                    console.log('TP|data.exchangeData.b4p: ' + deltas.b4p);
+                    console.log('TP|data.exchangeData.b5p: ' + deltas.b5p);
+
+                    console.log('TP|data.exchangeData.b1v: ' + deltas.b1v);
+                    console.log('TP|data.exchangeData.b2v: ' + deltas.b2v);
+                    console.log('TP|data.exchangeData.b3v: ' + deltas.b3v);
+                    console.log('TP|data.exchangeData.b4v: ' + deltas.b4v);
+                    console.log('TP|data.exchangeData.b5v: ' + deltas.b5v);
+
+                    console.log('TP|data.exchangeData.a1p: ' + deltas.a1p);
+                    console.log('TP|data.exchangeData.a2p: ' + deltas.a2p);
+                    console.log('TP|data.exchangeData.a3p: ' + deltas.a3p);
+                    console.log('TP|data.exchangeData.a4p: ' + deltas.a4p);
+                    console.log('TP|data.exchangeData.a5p: ' + deltas.a5p);
+
+                    console.log('TP|data.exchangeData.a1v: ' + deltas.a1v);
+                    console.log('TP|data.exchangeData.a2v: ' + deltas.a2v);
+                    console.log('TP|data.exchangeData.a3v: ' + deltas.a3v);
+                    console.log('TP|data.exchangeData.a4v: ' + deltas.a4v);
+                    console.log('TP|data.exchangeData.a5v: ' + deltas.a5v);
                 }
             });
         }
 
         $scope.endPush = function () {
-            $log.debug("The user has tried to stop server push communication.");
-            SocketFactory.unsubscribeCommunication(function() {
-                $log.debug("Disconnected from server for pushing purposes.");
-            });
-
+            SocketFactory.unsubscribeCommunication();
         };
 
         // -----------------
@@ -205,7 +163,6 @@ angular.module('appverseClientIncubatorApp')
             var i;
             for (i = 0; i < $scope.stocks.length; i++) {
                 if ($scope.stocks[i].st === deltas.st) {
-
                     $scope.stocks[i].tp = deltas.tp;
                     $scope.stocks[i].tv = deltas.tv;
 

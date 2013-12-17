@@ -59,13 +59,9 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         Restangular.setEncodeIds(REST_CONFIG.EncodeIds);
     }])
 /*
- * Factory Name: 'RESTConnect'
+ * Factory Name: 'RESTFactory'
  * Contains methods for data finding (demo).
- * This module provides basic quick standard access to a REST API.
- * For a more flexible
- *
- * findById: Util for finding an object by its 'id' property among an array
- * newRandomKey: Util for returning a randomKey from a collection that also isn't the current key
+ * This module provides basic quick standard access to a REST API.K
  */
 .factory('RESTFactory', ['$log', 'Restangular',
     function ($log, Restangular) {
@@ -196,8 +192,16 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
                 }, function (newVal) {
                     $log.debug('REST watch newVal:', newVal);
                     scope[(attrs.restName || defaultName) + errorSuffix] = false;
-                    Restangular.one(path).get().then(function (data) {
-                        $log.debug('get data',data);
+
+                    var object;
+                    if (attrs.restId) {
+                        object = Restangular.one(path, attrs.restId);
+                    } else {
+                        object = Restangular.one(path);
+                    }
+
+                    object.get().then(function (data) {
+                        $log.debug('get data', data);
                         element.html("");
                         scope[attrs.restName || defaultName] = data;
                         scope[(attrs.restName || defaultName) + loadingSuffix] = false;

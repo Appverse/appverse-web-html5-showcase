@@ -82,7 +82,16 @@ module.exports = function (grunt) {
             livereload: {
                 options: {
                     middleware: function (connect) {
-                        return [lrSnippet,
+                        return [function (request, response, next) {
+                                if (request.url.indexOf('/api') !== -1) {
+                                    setTimeout(function () {
+                                        next();
+                                    }, 1000);
+                                } else {
+                                    next();
+                                }
+                            },
+                            lrSnippet,
                             mountFolder(connect, '.tmp'),
                             mountFolder(connect, yeomanConfig.app),
                             function (request, response, next) {

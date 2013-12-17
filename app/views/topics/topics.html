@@ -9,14 +9,15 @@
 
                 <!-- This <li> will only add the 'active' class if 'contacts.detail' or its descendants are active
              AND if it is the link for the active contact (aka contactId) -->
-                <li rest rest-path="topics.json" rest-name="topics" rest-method="post" />
-                <alert ng-show="topicsError" class="alert-error" close="topicsError=false">Error loading topics</alert>
+                <div rest rest-path="topics.json" rest-name="topics" />
+                <alert ng-show="topicsLoading">Loading...</alert>
+                <alert ng-show="topicsError" class="alert-error">Error loading topics</alert>
                 <li ng-repeat="topic in topics | limitTo:3" ng-class="{ active: $state.includes('topics.detail') && $stateParams.topicId == topic.id }">
 
                     <!-- Here's a ui-sref that is also providing necessary parameters -->
                     <a ui-sref="topics.detail({topicId:topic.id})">{{topic.name}}</a>
                 </li>
-                <h6>(Retrieved using rest directive)</h6>
+                <small>(Retrieved using rest directive)</small>
             </ul>
             <hr>
             <button class="btn" ng-click="goToRandom()">Show a random topic</button>
