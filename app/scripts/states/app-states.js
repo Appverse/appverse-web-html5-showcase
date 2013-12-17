@@ -219,29 +219,6 @@ angular.module('appverseClientIncubatorApp')
 
                 })
 
-                ////////////////////////////////
-                // SECTION: Server Push Demo  //
-                ////////////////////////////////
-                .state('serverpush', {
-
-                    abstract: false,
-                    url: '/serverpush',
-                    templateUrl: 'views/demo/serverpush/stockmarket.html',
-                    // Use `resolve` to resolve any asynchronous controller dependencies
-                    // *before* the controller is instantiated. In this case, since topics
-                    // returns a promise, the controller will wait until topics.all() is
-                    // resolved before instantiation. Non-promise return values are considered
-                    // to be resolved immediately.
-                    /*resolve: {
-                        trades: ['trades',
-                            function (trades) {
-                                return trades.all();
-                            }]
-                    },*/
-                    controller: 'serverPushController'
-
-                })
-
                 ///////////////////
                 // SECTION: CACHE //
                 ///////////////////
@@ -250,6 +227,28 @@ angular.module('appverseClientIncubatorApp')
                     url: '/cache',
                     templateUrl: 'views/cache/cache.html',
                     controller: 'cacheController'
+                })
+
+                ///////////////////
+                // SECTION: Detection //
+                ///////////////////
+                .state('detection', {
+
+                    url: '/detection',
+                    templateUrl: 'views/detection/detection.html',
+                    controller: 'detectionController'
+                })
+
+                ////////////////////////////////
+                // SECTION: Server Push Demo  //
+                ////////////////////////////////
+                .state('serverpush', {
+
+                    abstract: false,
+                    url: '/serverpush',
+                    templateUrl: 'views/demo/serverpush/stockmarket.html',
+                    controller: 'serverPushController'
+
                 })
 
                 //////////////////////////

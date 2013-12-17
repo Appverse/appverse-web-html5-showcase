@@ -54,6 +54,7 @@
               <li ng-class="{ active: $state.includes('topics') }"><a ui-sref="topics.list">Dev. Topics</a></li>
               <li ng-class="{ active: $state.includes('ui') }"><a ui-sref="ui">Gadgets</a></li>
               <li ng-class="{ active: $state.includes('cache') }"><a ui-sref="cache">Cache</a></li>
+              <li ng-class="{ active: $state.includes('detection') }"><a ui-sref="detection">Detection</a></li>
               <li ng-class="{ active: $state.includes('serverpush') }"><a ui-sref="serverpush">Server Messages</a></li>
               <li ng-class="{ active: $state.includes('translation') }"><a ui-sref="translation">Translation</a></li>
 <!--              <li ng-class="{ active: $state.includes('charts') }"><a ui-sref="charts">Charts</a></li>-->
@@ -132,6 +133,7 @@
         <script src="scripts/api/modules/api-security.js"></script>
         <script src="scripts/api/directives/rest-directives.js"></script>
         <script src="scripts/configuration/api-configuration.js"></script>
+        <script src="js/unity.js"></script>
         <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/app.js -->
@@ -139,6 +141,7 @@
         <script src="scripts/controllers/topics-controllers.js"></script>
         <script src="scripts/controllers/gadgets-controllers.js"></script>
         <script src="scripts/controllers/cache-controllers.js"></script>
+        <script src="scripts/controllers/detection-controllers.js"></script>
         <script src="scripts/controllers/servermessages-controllers.js"></script>
         <script src="scripts/controllers/translation-controllers.js"></script>
         <script src="scripts/factories/app-factory.js"></script>
