@@ -137,8 +137,7 @@ angular.module('appverseClientIncubatorApp')
 
                         // So this one is targeting the unnamed view within the parent state's template.
                         '': {
-                            templateUrl: 'views/topics/topics.detail.html',
-                            controller: 'TopicDetailsController'
+                            templateUrl: 'views/topics/topics.detail.html'
                         },
 
                         // This one is targeting the ui-view="hint" within the unnamed root, aka index.html.
