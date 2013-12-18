@@ -224,9 +224,24 @@ angular.module('appverseClientIncubatorApp')
                 ///////////////////
                 .state('cache', {
 
+                    abstract: true,
                     url: '/cache',
                     templateUrl: 'views/cache/cache.html',
                     controller: 'cacheController'
+                })
+
+                .state('cache.state1', {
+
+                    url: '/state1',
+                    templateUrl: 'views/cache/cache.state1.html',
+                    controller: 'cacheState1Controller'
+                })
+
+                .state('cache.state2', {
+
+                    url: '/state2',
+                    templateUrl: 'views/cache/cache.state2.html',
+                    controller: 'cacheState2Controller'
                 })
 
                 ///////////////////

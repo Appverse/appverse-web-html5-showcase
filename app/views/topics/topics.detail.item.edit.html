@@ -1,12 +1,10 @@
 <hr>
-<div rest rest-path="topics/{{$stateParams.topicId}}/items" rest-id="{{$stateParams.itemId}}" rest-name="itemEdit" />
-<alert ng-show="itemEditLoading">Loading item...</alert>
-<alert ng-show="itemEditError" class="alert-error">Error loading item.</alert>
-<div ng-hide="itemEditLoading || itemEditError">
-    <h4>{{itemEdit.name}}
+<div cache="item" />
+<!--<div ng-hide="itemEditLoading || itemEditError">-->
+    <h4>{{item.name}}
         <button class="btn" ng-click="done()">Done</button>
     </h4>
     <div>
-        <input type="text" ng-model="itemEdit.value" />
+        <input type="text" ng-model="item.value" />
     </div>
-</div>
+<!--</div>-->

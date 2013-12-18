@@ -1,1 +1,13 @@
-Cache Demo
+<h4>Cache Demo</h4>
+<ul class="nav nav-tabs">
+    <li ng-class="{ active: $state.includes('cache.state1') }">
+        <a ui-sref=".state1">State 1</a>
+    </li>
+    <li ng-class="{ active: $state.includes('cache.state2') }">
+        <a ui-sref=".state2">State 2</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" ui-view></div>
+</div>

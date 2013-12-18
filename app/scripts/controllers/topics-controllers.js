@@ -41,12 +41,13 @@ angular.module('appverseClientIncubatorApp')
     function ($log, $scope, $stateParams, $state, Restangular) {
 
         $scope.done = function () {
-            // Go back up. '^' means up one. '^.^' would be up twice, to the grandparent.
 
-            $log.debug("putting item", $scope.itemEdit);
+            $log.debug("Updating item", $scope.item);
 
-            Restangular.copy($scope.itemEdit).put();
+            Restangular.copy($scope.item).put().then(function () {
 
-            $state.go('^', $stateParams);
+                // Go back up. '^' means up one. '^.^' would be up twice, to the grandparent.
+                $state.go('^', $stateParams);
+            });
         };
     });
