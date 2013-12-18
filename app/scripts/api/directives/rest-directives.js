@@ -14,16 +14,19 @@ angular.module('AppREST')
                 var defaultName = 'restData',
                     loadingSuffix = 'Loading',
                     errorSuffix = 'Error',
+                    name = attrs.restName || defaultName,
                     path = attrs.rest || attrs.restPath;
 
-                scope[(attrs.restName || defaultName) + loadingSuffix] = true;
+                $log.debug('rest directive');
+
+                scope[name + loadingSuffix] = true;
                 element.html(attrs.restLoadingText || "");
 
-                scope.$watch(function () {
-                    return path + ',' + attrs.restName + ',' + attrs.restErrorText + ',' + attrs.restLoadingText;
-                }, function (newVal) {
-                    $log.debug('REST watch newVal:', newVal);
-                    scope[(attrs.restName || defaultName) + errorSuffix] = false;
+                scope.$watchCollection(function () {
+                    return [path, name, attrs.restErrorText, attrs.restLoadingText];
+                }, function (newCollection, oldCollection, scope) {
+                    $log.debug('REST watch ' + name + ':', newCollection);
+                    scope[name + errorSuffix] = false;
 
                     var object;
                     if (attrs.restId) {
@@ -35,12 +38,12 @@ angular.module('AppREST')
                     object.get().then(function (data) {
                         $log.debug('get data', data);
                         element.html("");
-                        scope[attrs.restName || defaultName] = data;
-                        scope[(attrs.restName || defaultName) + loadingSuffix] = false;
+                        scope[name] = data;
+                        scope[name + loadingSuffix] = false;
                     }, function errorCallback() {
                         element.html(attrs.restErrorText || "");
-                        scope[(attrs.restName || defaultName) + loadingSuffix] = false;
-                        scope[(attrs.restName || defaultName) + errorSuffix] = true;
+                        scope[name + loadingSuffix] = false;
+                        scope[name + errorSuffix] = true;
                     });
                 });
             }

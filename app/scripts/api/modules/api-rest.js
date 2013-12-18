@@ -34,20 +34,37 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         Restangular.setBaseUrl(REST_CONFIG.BaseUrl);
         Restangular.setExtraFields(REST_CONFIG.ExtraFields);
         Restangular.setParentless(REST_CONFIG.Parentless);
-        Restangular.addElementTransformer(REST_CONFIG.ElementTransformer);
+        var transformer;
+        for (var i = 0; i < REST_CONFIG.ElementTransformer.length; i++) {
+            $log.debug('Adding transformer');
+            transformer = REST_CONFIG.ElementTransformer[i];
+            Restangular.addElementTransformer(transformer.route, transformer.transformer);
+        }
         Restangular.setOnElemRestangularized(REST_CONFIG.OnElemRestangularized);
         Restangular.setResponseInterceptor(
-            function (response) {
-                for (var operation in REST_CONFIG.NoCacheHttpMethods) {
-                    if (operation === true) {
-                        CacheFactory.removeDefaultHttpCacheStorage();
+            function (data, operation, what, url, response) {
+
+                var cache = CacheFactory.getHttpCache();
+
+                if (cache) {
+                    if (REST_CONFIG.NoCacheHttpMethods[operation] === true) {
+                        cache.removeAll();
+                    } else if (operation === 'put') {
+                        cache.put(response.config.url, response.config.data);
                     }
                 }
-                return response;
+
+                return data;
             }
         );
-        Restangular.setRequestInterceptor(REST_CONFIG.RequestInterceptor);
-        Restangular.setFullRequestInterceptor(REST_CONFIG.FullRequestInterceptor);
+        if (typeof REST_CONFIG.RequestInterceptor === 'function') {
+            $log.debug('Setting RequestInterceptor');
+            Restangular.setRequestInterceptor(REST_CONFIG.RequestInterceptor);
+        }
+        if (typeof REST_CONFIG.FullRequestInterceptor === 'function') {
+            $log.debug('Setting FullRequestInterceptor');
+            Restangular.setFullRequestInterceptor(REST_CONFIG.FullRequestInterceptor);
+        }
         Restangular.setErrorInterceptor(REST_CONFIG.ErrorInterceptor);
         Restangular.setRestangularFields(REST_CONFIG.RestangularFields);
         Restangular.setMethodOverriders(REST_CONFIG.MethodOverriders);

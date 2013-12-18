@@ -72,7 +72,6 @@ in the common API.
     /////////////////////////////
     //SCOPE CACHE
     /////////////////////////////
-    ScopeCache_Enabled: true,
     /*
      Max duration in milliseconds of the scope cache
       */
@@ -235,30 +234,37 @@ Future updates of Restangular imply review of this section in order to keep cons
  */
 .constant('REST_CONFIG', {
     /*
-    The base URL for all calls to a given set of REST resources.
-    This configuration is related only to calls to the set main url.
+    The base URL for all calls to your API.
+    For example if your URL for fetching accounts is http://example.com/api/v1/accounts, then your baseUrl is /api/v1.
+    The default baseUrl is an empty string which resolves to the same url that AngularJS is running, so you can also set an absolute url like http://api.example.com/api/v1 if you need do set another domain.
     */
     BaseUrl: '/api/v1',
 
-    //These are the fields that you want to save from your parent resources if you need to display them.
-    ExtraFields: '',
+    /*
+    These are the fields that you want to save from your parent resources if you need to display them.
+    By default this is an Empty Array which will suit most cases.
+    */
+    ExtraFields: [],
+
     /*
     Use this property to control whether Restangularized elements to have a parent or not.
     This method accepts 2 parameters:
     Boolean: Specifies if all elements should be parentless or not
     Array: Specifies the routes (types) of all elements that should be parentless. For example ['buildings']
     */
-    ParentLess: '',
+    ParentLess: false,
+
     /*
     HTTP methods will be validated whether they are cached or not.
     */
     NoCacheHttpMethods: {
         'get': false,
         'post': true,
-        'put': true,
+        'put': false,
         'delete': true,
         'option': false
     },
+
     /*
     This is a hook. After each element has been "restangularized" (Added the new methods from Restangular),
     the corresponding transformer will be called if it fits.
@@ -272,7 +278,8 @@ Future updates of Restangular imply review of this section in order to keep cons
     if it's a collection or not (true | false):
     addElementTransformer(route, isCollection, transformer)
     */
-    ElementTransformer: '',
+    ElementTransformer: [],
+
     /*
     This is a hook. After each element has been "restangularized" (Added the new methods from Restangular),
     this will be called. It means that if you receive a list of objects in one call, this method will be called
@@ -288,22 +295,7 @@ Future updates of Restangular imply review of this section in order to keep cons
     OnElemRestangularized: function (elem) {
         return elem;
     },
-    /*
-    The responseInterceptor is called after we get each response from the server.
-    It's a function that receives this arguments:
 
-    @param data: The data received got from the server
-    @param operation: The operation made. It'll be the HTTP method used except for a GET which returns a list of element which will return getList so that you can distinguish them.
-    @param what: The model that's being requested. It can be for example: accounts, buildings, etc.
-    @param url: The relative URL being requested. For example: /api/v1/accounts/123
-    @param response: Full server response including headers
-    @param deferred: The deferred promise for the request.
-
-    Some of the use cases of the responseInterceptor are handling wrapped responses and enhancing
-    response elements with more methods among others.
-    The responseInterceptor must return the restangularized data element.
-    */
-    ResponseInterceptor: '',
     /*
     The requestInterceptor is called before sending any data to the server.
     It's a function that must return the element to be requested.
@@ -314,9 +306,8 @@ Future updates of Restangular imply review of this section in order to keep cons
     @param what: The model that's being requested. It can be for example: accounts, buildings, etc.
     @param url: The relative URL being requested. For example: /api/v1/accounts/123
     */
-    RequestInterceptor: function (element) {
-        return element;
-    },
+    RequestInterceptor: null,
+
     /*
     The fullRequestInterceptor is similar to the requestInterceptor but more powerful.
     It lets you change the element, the request parameters and the headers as well.
@@ -327,13 +318,8 @@ Future updates of Restangular imply review of this section in order to keep cons
     element: The element to send
     httpConfig: The httpConfig to call with
     */
-    FullRequestInterceptor: function (element, headers, params) {
-        return {
-            element: element,
-            headers: headers,
-            params: params
-        };
-    },
+    FullRequestInterceptor: null,
+
     /*
     The errorInterceptor is called whenever there's an error.
     It's a function that receives the response as a parameter.
@@ -345,9 +331,10 @@ Future updates of Restangular imply review of this section in order to keep cons
     each Restangular error response for every request in your AngularJS application in a single place,
     increasing debugging capabilities and hooking security features in a single place.
     */
-    ErrorInterceptor: function(response) {
+    ErrorInterceptor: function (response) {
         console.log("ErrorInterceptor, server response:", response);
     },
+
     /*
     Restangular required 3 fields for every "Restangularized" element. These are:
 
@@ -363,13 +350,18 @@ Future updates of Restangular imply review of this section in order to keep cons
     All of these fields except for id and selfLink are handled by Restangular, so most of the time you won't change them.
     You can configure the name of the property that will be binded to all of this fields by setting restangularFields property.
     */
-    RestangularFields: '',
+    RestangularFields: {
+        id: 'id',
+        route: 'route'
+    },
+
     /*
     You can now Override HTTP Methods. You can set here the array of methods to override.
     All those methods will be sent as POST and Restangular will add an X-HTTP-Method-Override
     header with the real HTTP method we wanted to do.
     */
-    MethodOverriders: '',
+    MethodOverriders: [],
+
     /*
     You can set default Query parameters to be sent with every request and every method.
     Additionally, if you want to configure request params per method, you can use
@@ -377,23 +369,29 @@ Future updates of Restangular imply review of this section in order to keep cons
     For example RestangularProvider.requestParams.get = {single: true}.
     Supported method to configure are: remove, get, post, put, common (all).
     */
-    DefaultRequestParams: '',
+    DefaultRequestParams: {},
+
     /*
     You can set fullResponse to true to get the whole response every time you do any request.
     The full response has the restangularized data in the data field,
     and also has the headers and config sent. By default, it's set to false.
     */
     FullResponse: false,
+
     /*
     You can set default Headers to be sent with every request.
+    Example:
+    DefaultHeaders: {'Content-Type': 'application/json'}
     */
-    DefaultHeaders: '',
+    DefaultHeaders: {},
+
     /*
     If all of your requests require to send some suffix to work, you can set it here.
     For example, if you need to send the format like /users/123.json you can add that .json
     to the suffix using the setRequestSuffix method
     */
     RequestSuffix: '.json',
+
     /*
     You can set this to either true or false.
     If set to true, then the cannonical ID from the element will be used for URL creation
@@ -403,6 +401,7 @@ Future updates of Restangular imply review of this section in order to keep cons
     If set to false, it'll use the new ID assigned to the element.
     */
     UseCannonicalId: false,
+
     /*
     You can set here if you want to URL Encode IDs or not.
     */
