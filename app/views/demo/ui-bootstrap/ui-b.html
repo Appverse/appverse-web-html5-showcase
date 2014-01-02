@@ -2,7 +2,7 @@
     <p class="lead">Alert</p>
     <div ng-controller="AlertDemoCtrl">
       <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-      <button class='btn' ng-click="addAlert()">Add Alert</button>
+      <button class="btn" ng-click="addAlert()">Add Alert</button>
     </div>
 
     <hr/>
@@ -55,8 +55,6 @@
                     </li>
                 </ul>
                 Selected: <b>{{ selected.item }}</b>
-                //<input type="text" name="titleData" id="titleData" class="form-control" ng-model="input.title">
-            </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" ng-click="ok()">OK</button>
                 <button class="btn btn-warning" ng-click="cancel()">Cancel</button>

@@ -91,7 +91,7 @@ angular.module('appverseClientIncubatorApp')
         $scope.items = ['patata1', 'patata2'];
 
         $scope.open = function () {
-            var ModalInstanceCtrl = function ($scope, $modalInstance, items, input) {
+            var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
 
                 //        $scope.input = {};
                 //        $scope.ok = function () {
