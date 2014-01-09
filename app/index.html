@@ -2,9 +2,11 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
 
-  <head>
+<head>
     <title ng-bind="$state.current.name">Appverse Web HTML5 Incubator</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,7 +23,8 @@
 
 </head>
 <!--Include the module with the app scope-->
-  <body ng-app="appverseClientIncubatorApp">
+
+<body ng-app="appverseClientIncubatorApp">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -37,35 +40,49 @@
      You can place here your views in the ui-view points.
     -->
     <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-          <div class="container">
+        <div class="navbar-inner">
+            <div class="container">
 
-            <!-- ui-sref is a directive from ui-router for linking a state location with an anchor link.
+                <!-- ui-sref is a directive from ui-router for linking a state location with an anchor link.
                  We should almost always use ui-sref instead of href on our links when we want
                  then to navigate to a state. When this link is clicked it will take the application
                  to the 'home' state. Behind the scenes the directive also adds the correct href attr
                  and url. -->
-            <a class="brand" ui-sref="home">Appverse Web HTML5</a>
-            <ul class="nav">
+                <a class="brand" ui-sref="home">Appverse Web HTML5</a>
+                <ul class="nav">
 
-            <!-- Here you can see ui-sref in action again. Also notice the use of $state.includes, which
+                    <!-- Here you can see ui-sref in action again. Also notice the use of $state.includes, which
                  will set the links to 'active' if, for example on the first link, 'contacts' or any of
                  its descendant states are activated. -->
-              <li ng-class="{ active: $state.includes('topics') }"><a ui-sref="topics.list">Dev. Topics</a></li>
-              <li ng-class="{ active: $state.includes('ui') }"><a ui-sref="ui">Gadgets</a></li>
-              <li ng-class="{ active: $state.includes('cache') }"><a ui-sref="cache.state1">Cache</a></li>
-              <li ng-class="{ active: $state.includes('detection') }"><a ui-sref="detection">Detection</a></li>
-              <li ng-class="{ active: $state.includes('serverpush') }"><a ui-sref="serverpush">Server Messages</a></li>
-              <li ng-class="{ active: $state.includes('translation') }"><a ui-sref="translation">Translation</a></li>
-<!--              <li ng-class="{ active: $state.includes('charts') }"><a ui-sref="charts">Charts</a></li>-->
-              <li ng-class="{ active: $state.includes('about') }"><a ui-sref="about">About</a></li>
-            </ul>
+                    <li ng-class="{ active: $state.includes('topics') }">
+                        <a ui-sref="topics.list">Dev. Topics</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('ui') }">
+                        <a ui-sref="ui">Gadgets</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('cache') }">
+                        <a ui-sref="cache.state1">Cache</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('detection') }">
+                        <a ui-sref="detection">Detection</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('serverpush') }">
+                        <a ui-sref="serverpush">Server Messages</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('translation') }">
+                        <a ui-sref="translation">Translation</a>
+                    </li>
+                    <!--              <li ng-class="{ active: $state.includes('charts') }"><a ui-sref="charts">Charts</a></li>-->
+                    <li ng-class="{ active: $state.includes('about') }">
+                        <a ui-sref="about">About</a>
+                    </li>
+                </ul>
 
-            <!-- Here is a named ui-view (ui-view="hint"). ui-views don't have to be named, but we'll be populate this
+                <!-- Here is a named ui-view (ui-view="hint"). ui-views don't have to be named, but we'll be populate this
                  on from various different child states and we want a name to help us target. -->
-            <p ui-view="hint" class="navbar-text pull-left"></p>
-          </div>
-      </div>
+                <p ui-view="hint" class="navbar-text pull-left"></p>
+            </div>
+        </div>
     </div>
 
     <!-- MAIN INSERTION POINT
@@ -79,76 +96,78 @@
     <div ui-view class="container" style="margin-top:60px" ng-animate="{enter:'fade-enter'}"></div>
 
 
-        <!-- build:js scripts/external.js -->
-        <script src="bower_components/jquery/jquery.js"></script>
-        <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/modernizr/modernizr.js"></script>
-        <!-- endbuild -->
+    <!-- build:js scripts/external.js -->
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
 
-        <!-- build:js scripts/uibootstrap.js -->
-        <script src="bower_components/bootstrap-sass/js/bootstrap-affix.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-alert.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-dropdown.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-tooltip.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-modal.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-transition.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-button.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-popover.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-typeahead.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-carousel.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-scrollspy.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-collapse.js"></script>
-        <script src="bower_components/bootstrap-sass/js/bootstrap-tab.js"></script>
-        <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
-        <!-- endbuild -->
+    <!-- build:js scripts/uibootstrap.js -->
+    <script src="bower_components/bootstrap-sass/js/bootstrap-affix.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-alert.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-dropdown.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-tooltip.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-modal.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-transition.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-button.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-popover.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-typeahead.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-carousel.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-scrollspy.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-collapse.js"></script>
+    <script src="bower_components/bootstrap-sass/js/bootstrap-tab.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+    <!-- endbuild -->
 
-        <!-- build:js scripts/modules.js -->
-        <script src="bower_components/angular-resource/angular-resource.js"></script>
-        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-        <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-        <script src="bower_components/ng-oauth/dist/ng-oauth.js"></script>
-        <script src="bower_components/ngstorage/ngStorage.js"></script>
-        <script src="bower_components/lodash/dist/lodash.underscore.js"></script>
-        <script src="bower_components/restangular/src/restangular.js"></script>
-        <script src="bower_components/angular-translate/angular-translate.js"></script>
-        <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
-        <script src="bower_components/angular-dynamic-locale/src/tmhDinamicLocale.js"></script>
-        <script src="bower_components/angular-cache/dist/angular-cache.js"></script>
+    <!-- build:js scripts/modules.js -->
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/ng-oauth/dist/ng-oauth.js"></script>
+    <script src="bower_components/ngstorage/ngStorage.js"></script>
+    <script src="bower_components/lodash/dist/lodash.underscore.js"></script>
+    <script src="bower_components/restangular/src/restangular.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+    <script src="bower_components/angular-dynamic-locale/src/tmhDinamicLocale.js"></script>
+    <script src="bower_components/angular-cache/dist/angular-cache.js"></script>
 
-        <!-- Temporary solution based on CDN. For development purpose only -->
-        <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+    <!-- Temporary solution based on CDN. For development purpose only -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 
-        <!--<script src="bower_components/socket.io/lib/socket.js"></script>-->
-        <!-- endbuild -->
+    <!--<script src="bower_components/socket.io/lib/socket.js"></script>-->
+    <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/api.js -->
-        <script src="scripts/api/modules/api-main.js"></script>
-        <script src="scripts/api/modules/api-cache.js"></script>
-        <script src="scripts/api/modules/api-rest.js"></script>
-        <script src="scripts/api/modules/api-logging.js"></script>
-        <script src="scripts/api/modules/api-detection.js"></script>
-        <script src="scripts/api/modules/api-translate.js"></script>
-        <script src="scripts/api/modules/api-serverpush.js"></script>
-        <script src="scripts/api/modules/api-security.js"></script>
-        <script src="scripts/api/directives/cache-directives.js"></script>
-        <script src="scripts/api/directives/rest-directives.js"></script>
-        <script src="scripts/configuration/api-configuration.js"></script>
-        <script src="js/appverse.js"></script>
-        <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/api.js -->
+    <!--    <script src="js/appverse.js"></script>-->
+    <script src="scripts/api/configuration/default-conf.js"></script>
+    <script src="scripts/api/modules/api-cache.js"></script>
+    <script src="scripts/api/modules/api-configuration.js"></script>
+    <script src="scripts/api/modules/api-detection.js"></script>
+    <script src="scripts/api/modules/api-logging.js"></script>
+    <script src="scripts/api/modules/api-main.js"></script>
+    <script src="scripts/api/modules/api-rest.js"></script>
+    <script src="scripts/api/modules/api-security.js"></script>
+    <script src="scripts/api/modules/api-serverpush.js"></script>
+    <script src="scripts/api/modules/api-translate.js"></script>
+    <script src="scripts/api/directives/cache-directives.js"></script>
+    <script src="scripts/api/directives/rest-directives.js"></script>
+    <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/app.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/topics-controllers.js"></script>
-        <script src="scripts/controllers/gadgets-controllers.js"></script>
-        <script src="scripts/controllers/cache-controllers.js"></script>
-        <script src="scripts/controllers/detection-controllers.js"></script>
-        <script src="scripts/controllers/servermessages-controllers.js"></script>
-        <script src="scripts/controllers/translation-controllers.js"></script>
-        <script src="scripts/factories/app-factory.js"></script>
-        <script src="scripts/states/app-states.js"></script>
-        <!-- endbuild -->
+    <!-- build:js({.tmp,app}) scripts/app.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/topics-controllers.js"></script>
+    <script src="scripts/controllers/gadgets-controllers.js"></script>
+    <script src="scripts/controllers/cache-controllers.js"></script>
+    <script src="scripts/controllers/detection-controllers.js"></script>
+    <script src="scripts/controllers/servermessages-controllers.js"></script>
+    <script src="scripts/controllers/translation-controllers.js"></script>
+    <script src="scripts/factories/app-factory.js"></script>
+    <script src="scripts/states/app-states.js"></script>
+    <!-- endbuild -->
 </body>
+
 </html>
 
 
