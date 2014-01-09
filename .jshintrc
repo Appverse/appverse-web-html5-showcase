@@ -1,6 +1,7 @@
 {
   "node": true,
   "browser": true,
+  "jquery": true,
   "esnext": true,
   "bitwise": true,
   "curly": true,
