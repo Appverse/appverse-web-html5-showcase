@@ -1,8 +1,8 @@
 <div class="span6">
     <p class="lead">Alert</p>
     <div ng-controller="AlertDemoCtrl">
-      <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-      <button class="btn" ng-click="addAlert()">Add Alert</button>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <button class="btn" ng-click="addAlert()">Add Alert</button>
     </div>
 
     <hr/>
@@ -12,7 +12,7 @@
         <button class="btn" ng-click="uidemoCollapsed = !uidemoCollapsed">Toggle collapse</button>
         <hr>
         <div collapse="uidemoCollapsed">
-             <div class="well well-large">Some content</div>
+            <div class="well well-large">Some content</div>
         </div>
     </div>
 
@@ -21,7 +21,8 @@
     <p class="lead">Date Picker</p>
     <div ng-controller="DatepickerDemoCtrl">
         <div class="well well-large">
-            Selected date is: <em>{{dt | date:'fullDate' }}</em>
+            Selected date is:
+            <em>{{dt | date:'fullDate' }}</em>
         </div>
 
         <hr/>
@@ -31,10 +32,12 @@
         <hr/>
         <div class="form-horizontal">
             <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt" is-open="opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" />
-            <button class="btn" ng-click="open()"><i class="icon-calendar"></i></button>
+            <button class="btn" ng-click="open()">
+                <i class="icon-calendar"></i>
+            </button>
         </div>
 
-       <hr/>
+        <hr/>
         <button class="btn btn-small btn-inverse" ng-click="today()">Today</button>
         <button class="btn btn-small btn-inverse" ng-click="dt = '2009-08-24'">2009-08-24</button>
         <button class="btn btn-small btn-success" ng-click="toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
@@ -42,7 +45,9 @@
         <button class="btn btn-small" ng-click="toggleMin()" tooltip="After today restriction">Min date</button>
     </div>
 
-    <hr/><hr/>
+    <hr/>
+    <hr/>
+    <p class="lead">Modal</p>
     <div ng-controller="ModalDemoCtrl">
         <script type="text/ng-template" id="myModalContent.html">
             <div class="modal-header">
@@ -65,9 +70,9 @@
         <div ng-show="selected">Selection from a modal: {{ selected }}</div>
     </div>
 
-    <div>
-           <hr/>
-           <p class="lead">And many others..</p>
-    </div>
+
+    <hr/>
+    <p class="lead">And many others..</p>
+
 
 </div>
