@@ -12,15 +12,22 @@
 ////////////////////////////////////////////////////////////////////////////
 
 angular.module('AppTranslate', ['pascalprecht.translate', 'AppConfiguration', 'tmh.dynamicLocale'])
-    .config(['$translateProvider', 'I18N_CONFIG', 'tmhDynamicLocaleProvider',
+
+.config(['$translateProvider', 'I18N_CONFIG', 'tmhDynamicLocaleProvider',
         function ($translateProvider, I18N_CONFIG, tmhDynamicLocaleProvider) {
 
-            $translateProvider.useStaticFilesLoader({
-                prefix: 'i18n/',
-                suffix: '.json'
-            });
+        $translateProvider.useStaticFilesLoader({
+            prefix: 'i18n/',
+            suffix: '.json'
+        });
 
-            $translateProvider.preferredLanguage(I18N_CONFIG.PreferredLocale);
+        $translateProvider.preferredLanguage(I18N_CONFIG.PreferredLocale);
 
-            tmhDynamicLocaleProvider.localeLocationPattern('i18n/angular/angular-locale_{{locale}}.js');
-        }]);
+        tmhDynamicLocaleProvider.localeLocationPattern('i18n/angular/angular-locale_{{locale}}.js');
+    }])
+
+.run(['$log',
+    function ($log) {
+
+        $log.info('AppTranslate run');
+    }]);
