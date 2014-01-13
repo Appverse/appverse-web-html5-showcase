@@ -43,18 +43,24 @@ angular.module('AppServerPush', [
     .run(function (socket) {
         socket.forward('error');
     })
-    /*
-     * Factory Name: 'SocketFactory'
+    /**
+     * @ngdoc object
+     * @name SocketFactory
+     * @requires $rootScope
+     * @requires socket
+     *
+     * @description
      * Although Socket.IO exposes an io variable on the window, it's better to encapsulate it
      * into the AngularJS's Dependency Injection system.
      * So, we'll start by writing a factory to wrap the socket object returned by Socket.IO.
      * This will make easier to test the application's controllers.
-     *
      * Notice that the factory wrap each socket callback in $scope.$apply.
      * This tells AngularJS that it needs to check the state of the application and update
      * the templates if there was a change after running the callback passed to it by using dirty checking.
      * Internally, $http works in the same way. After some XHR returns, it calls $scope.$apply,
      * so that AngularJS can update its views accordingly.
+     *
+     * @param none
      */
     .factory('SocketFactory', ['$rootScope', 'socket',
         function ($rootScope, socket) {
