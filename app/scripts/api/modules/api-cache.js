@@ -40,6 +40,12 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
             $log.info('AppCache run');
 
             /* Initializes the different caches with params in configuration. */
+            if (CACHE_CONFIG.ScopeCache_Enabled) {
+                CacheFactory.initializeScopeCache(
+                    CACHE_CONFIG.ScopeCache_duration,
+                    CACHE_CONFIG.ScopeCache_capacity
+                );
+            }
 
             if (CACHE_CONFIG.BrowserStorageCache_Enabled) {
                 CacheFactory.setBrowserStorage(
@@ -54,16 +60,16 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
                     CACHE_CONFIG.HttpCache_capacity);
             }
 
-            //            if (CACHE_CONFIG.IndexedDBCache_Enabled) {
-            //                CacheFactory.setIndexedDBStorage(
-            //                    CACHE_CONFIG.IndexedDB_objectStore,
-            //                    CACHE_CONFIG.IndexedDB_keyPath,
-            //                    CACHE_CONFIG.IndexedDB_mainIndex,
-            //                    CACHE_CONFIG.IndexedDB_mainIndex_isUnique,
-            //                    CACHE_CONFIG.IndexedDB_secondaryIndex,
-            //                    CACHE_CONFIG.IndexedDB_secondaryIndex_isUnique
-            //                );
-            //            }
+            if (CACHE_CONFIG.IndexedDBCache_Enabled) {
+                //                CacheFactory.setIndexedDBStorage(
+                //                    CACHE_CONFIG.IndexedDB_objectStore,
+                //                    CACHE_CONFIG.IndexedDB_keyPath,
+                //                    CACHE_CONFIG.IndexedDB_mainIndex,
+                //                    CACHE_CONFIG.IndexedDB_mainIndex_isUnique,
+                //                    CACHE_CONFIG.IndexedDB_secondaryIndex,
+                //                    CACHE_CONFIG.IndexedDB_secondaryIndex_isUnique
+                //                );
+            }
         }])
     .factory('CacheFactory', [
         '$angularCacheFactory',
@@ -74,15 +80,13 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
         'CACHE_CONFIG',
         function ($angularCacheFactory, $localStorage, $sessionStorage, $http, $indexedDB, CACHE_CONFIG) {
 
-            var factory = {
-                _scopeCache: null,
-                _httpCache: null
-            };
+            var factory = {};
 
             /*
              @function
              @param duration  items expire after this time.
              @param capacity  turns the cache into LRU (Least Recently Used) cache.
+             If you don't want $http's default cache to store every response.
              @description getScopeCache is the singleton that CacheFactory manages as a local cache created with
              $angularCacheFactory, which is what we return from the service. Then, we can inject this into any controller we
              want and it will always return the same values.
@@ -95,19 +99,27 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
              {void} removeAll() — Removes all cached values.
              {void} destroy() — Removes references to this cache from $angularCacheFactory.
              */
-            factory.setScopeCache = function (duration, capacity) {
-                factory._scopeCache = $angularCacheFactory('scopeDataCache', {
+            var _scopeDataCache;
+            factory.initializeScopeCache = function (duration, capacity) {
+                _scopeDataCache = $angularCacheFactory('scopeDataCache', {
                     maxAge: duration,
                     capacity: capacity
                 });
-                return factory._scopeCache;
+                return _scopeDataCache;
             };
-
-            factory.getScopeCache = function () {
-                return factory._scopeCache || factory.setScopeCache(CACHE_CONFIG.ScopeCache_duration,
-                    CACHE_CONFIG.ScopeCache_capacity);
+            
+            factory.setScopeCache = function (id, data) {
+                _scopeDataCache.put(id, data)
+            }
+            
+            factory.getScopeCache = function (id) {
+                return _scopeDataCache.get(id);
             };
-
+            
+            factory.removeScopeCache = function (id) {
+                return _scopeDataCache.remove(id);
+            };
+            
             /*
              @function
              @param type Type of storage ( 1 local | 2 session).
