@@ -7,8 +7,8 @@ angular.module('appverseClientIncubatorApp')
  * This factory contains is RESTful for retrieving topics
  * from data (in this case'topics.json').
  */
-.factory('topics', ['$log', '$http', 'RESTFactory',
-    function ($log, $http, RESTFactory, utils) {
+.factory('topics', ['$log', 'RESTFactory',
+    function ($log, RESTFactory) {
 
         var path = 'views/topics/topics.json';
 
