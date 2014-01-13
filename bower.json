@@ -15,7 +15,6 @@
     "angular-translate-loader-static-files": "~0.1.6",
     "angular-i18n": "~1.0.8",
     "angular-dynamic-locale": "~0.0.2",
-    "ng-oauth": "",
     "ngstorage": "~0.3.0",
     "restangular": "~1.2.0",
     "modernizr": "~2.6.1",
