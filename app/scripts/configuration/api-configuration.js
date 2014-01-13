@@ -39,7 +39,7 @@ These params do not affect normal usage of $log service.
     The server side REST service must record messages from client in order to be analyzed.
     ALL messages are sent. It is not yet possible select which type of log messages are sent.
      */
-    ServerEnabled: true,
+    ServerEnabled: false,
     /*
     This preffix will be included at the beginning of each message.
      */
@@ -414,4 +414,54 @@ Future updates of Restangular imply review of this section in order to keep cons
     .constant('I18N_CONFIG', {
         PreferredLocale: 'en-US',
         DetectLocale: true
-    });
+    })
+    
+  /*
+  * SECURITY SECTION
+  * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
+  */
+    .constant('SECURITY_OAUTH', {
+        oauth2_endpoint: 'lelylam',
+        clientID: '',
+        profile: 'http://api.lelylan.com/me',
+        scope: 'resources',
+        scopeURL: 'http://people.lelylan.com',
+        scope_authorizePath: '/oauth/authorize',
+        scope_tokenPath:'/oauth/token',
+        scope_flow: 'implicit',
+        scope_view: 'standard',
+        scope_storage: 'none',
+        scope_template: 'views/demo/security/oauth_default.html',
+        redirectURL: 'http://localhost:9000',
+        storage: 'cookies'
+    })
+
+/*
+  * GOOGLE AUTHENTICATION
+  */
+    .constant('GOOGLE_AUTH', {
+        clientID: '75169325484-8cn28d7o3dre61052o8jajfsjlnrh53i.apps.googleusercontent.com',
+        scopeURL: 'https://www.googleapis.com/auth/plus.login',
+        requestvisibleactionsURL: 'http://schemas.google.com/AddActivity',
+        theme: 'dark',
+        cookiepolicy: 'single_host_origin',
+        revocationURL: 'https://accounts.google.com/o/oauth2/revoke?token='
+    })
+    
+    /*
+     * 
+     */
+    .constant('AUTHORIZATION_DATA', {
+        roles: ['user','admin','editor'],
+        users: ['Jesus de Diego'],
+        userRoleMatrix: [{
+                'user': 'Jesus de Diego', 
+                'roles': ['user','admin']
+                },
+                {
+                'user': 'Antoine Charnoz', 
+                'roles': ['user','admin']
+         }],
+         routesThatDontRequireAuth: ['/home'],
+         routesThatRequireAdmin: ['/about']
+    })
