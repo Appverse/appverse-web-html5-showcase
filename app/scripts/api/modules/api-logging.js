@@ -41,7 +41,16 @@ factory instance.
                 return formattedLogger($delegate);
             }]);
     }])
-
+/**
+ * @ngdoc object
+ * @name formattedLogger
+ * @requires LOGGING_CONFIG
+ *
+ * @description
+ * Captures the $log service and decorate it.
+ *
+ * @param {object} delegatedLog
+ */
 .factory("formattedLogger", ["LOGGING_CONFIG",
     function (LOGGING_CONFIG) {
         return function (delegatedLog) {
@@ -50,7 +59,9 @@ factory instance.
              * @function DateTime
              * @param date The date to be formatted
              * @param format The format of the returned date
-             * @description It formats a date
+             *
+             * @description
+             * It formats a date
              */
             function dateTime(date, format) {
 
@@ -85,8 +96,12 @@ factory instance.
 
             /**
              * @function handleLogMessage
-             * @param logLevel
-             * @description It arranges the log message and send it to the server registry.
+             * @param enable Is enabled in configuration
+             * @param logLevel Configures maximumm log level
+             * @param logFunction Explicit method from delegatedLog
+             *
+             * @description
+             * It arranges the log message and send it to the server registry.
              */
             function handleLogMessage(enable, logLevel, logFunction) {
                 try {
@@ -114,14 +129,16 @@ factory instance.
                             // Log the JavaScript error to the server.
                             var errorData = angular.toJson({
                                 errorUrl: window.location.href,
-                                errorMessage: errorMessage,
-                                //                            cause: (cause || "")
+                                errorMessage: errorMessage
                             });
                             /*
                              REST context to record log message is needed.
+                             No return data is required.
                              */
-                            //  RESTFactory.rest_postItem('', errorData);
-                        }
+                            RESTFactory.createListItem(LOGGING_CONFIG.LogServerEndpoint, errorData, function(){
+                                $log.debug('Log Message sent to server from ' + errorUrl);
+                            });
+                        };
                     };
                 } catch (loggingError) {
                     // ONLY FOR DEVELOPERS - log the log-failure.
@@ -138,10 +155,10 @@ factory instance.
             log() Write a log message
             warn() Write a warning message
              */
-            delegatedLog.log = handleLogMessage(LOGGING_CONFIG.EnabledLogLevel, 'LOG  ', delegatedLog.log);
-            delegatedLog.info = handleLogMessage(LOGGING_CONFIG.EnabledInfoLevel, 'INFO ', delegatedLog.info);
+            delegatedLog.log = handleLogMessage(LOGGING_CONFIG.EnabledLogLevel, 'LOG', delegatedLog.log);
+            delegatedLog.info = handleLogMessage(LOGGING_CONFIG.EnabledInfoLevel, 'INFO', delegatedLog.info);
             delegatedLog.error = handleLogMessage(LOGGING_CONFIG.EnabledErrorLevel, 'ERROR', delegatedLog.error);
-            delegatedLog.warn = handleLogMessage(LOGGING_CONFIG.EnabledWarnLevel, 'WARN ', delegatedLog.warn);
+            delegatedLog.warn = handleLogMessage(LOGGING_CONFIG.EnabledWarnLevel, 'WARN', delegatedLog.warn);
             delegatedLog.debug = handleLogMessage(LOGGING_CONFIG.EnabledDebugLevel, 'DEBUG', delegatedLog.debug);
 
             return delegatedLog;
