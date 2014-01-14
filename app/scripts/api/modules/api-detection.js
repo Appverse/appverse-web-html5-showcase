@@ -36,49 +36,47 @@ angular.module('AppDetection', [])
             return this;
         };
 
-        function addConfigFromModule(moduleName, url) {
+        function addConfigFromJSON(jsonUrl) {
 
-            if (url) {
-                $.ajax({
-                    async: false,
-                    url: url,
-                    dataType: "script"
-                });
-            }
+            var ajaxResponse = $.ajax({
+                async: false,
+                url: jsonUrl,
+                dataType: "json"
+            });
 
-            var configTempQueue = angular.module(moduleName)._invokeQueue;
+            var jsonData = JSON.parse(ajaxResponse.responseText);
 
-            angular.forEach(configTempQueue, function (element) {
+            angular.forEach(jsonData, function (constantObject, constantName) {
+                var appConfigObject = appConfigTemp[constantName];
 
-                var constantName = element[2][0];
-                var constantObject = element[2][1];
-                var existingObject = appConfigurationQueue[constantName];
-
-                if (existingObject) {
+                if (appConfigObject) {
                     angular.forEach(constantObject, function (propertyValue, propertyName) {
-                        existingObject[propertyName] = propertyValue;
+                        appConfigObject[propertyName] = propertyValue;
                     });
-                    appConfigurationQueue[constantName] = existingObject;
+                    appConfigTemp[constantName] = appConfigObject;
                 } else {
-                    appConfigurationQueue[constantName] = constantObject;
+                    appConfigTemp[constantName] = constantObject;
                 }
             });
         }
 
-        var appConfigurationQueue = {};
+        var appConfigTemp = {};
 
-        addConfigFromModule('ConfigDefault');
+        angular.forEach(angular.module('AppConfigDefault')._invokeQueue, function (element) {
+            appConfigTemp[element[2][0]] = element[2][1];
+        });
 
         if (this.hasAppverseMobile) {
-            addConfigFromModule('ConfigAppverseMobile', 'scripts/api/configuration/appversemobile-conf.js');
+            addConfigFromJSON('configuration/appversemobile-conf.json');
         } else if (this.isMobileBrowser) {
-            addConfigFromModule('ConfigMobileBrowser', 'scripts/api/configuration/mobilebrowser-conf.js');
+            addConfigFromJSON('configuration/mobilebrowser-conf.json');
         }
+
+        addConfigFromJSON('configuration/environment-conf.json');
 
         var appConfiguration = angular.module('AppConfiguration');
 
-        angular.forEach(appConfigurationQueue, function (propertyValue, propertyName) {
-
+        angular.forEach(appConfigTemp, function (propertyValue, propertyName) {
             appConfiguration.constant(propertyName, propertyValue);
         });
     });
