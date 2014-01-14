@@ -434,7 +434,7 @@ Future updates of Restangular imply review of this section in order to keep cons
   * SECURITY SECTION
   * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
   */.constant('SECURITY_GENERAL', {
-        securityEnabled: true
+        securityEnabled: false
     })
     .constant('SECURITY_OAUTH', {
         oauth2_endpoint: 'lelylam',
