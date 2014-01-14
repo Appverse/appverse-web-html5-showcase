@@ -36,14 +36,14 @@ angular.module('appverseClientIncubatorApp')
       },
       "cookiepolicy": GOOGLE_AUTH.cookiepolicy
     };
-    //$log.debug('LOGIN STATUS IN CACHE: ' + CacheFactory.getScopeCache('login_status'));
-    if(CacheFactory.getScopeCache('login_status')){
-        $scope.loginStatus =  CacheFactory.getScopeCache('login_status');
-        $scope.profile = CacheFactory.getScopeCache('userProfile');
+
+    //$log.debug('LOGIN STATUS IN CACHE: ' + CacheFactory._scopeCache.get('login_status'));
+    if(CacheFactory._scopeCache.get('login_status')){
+        $scope.loginStatus =  CacheFactory._scopeCache.get('login_status');
+        $scope.profile = CacheFactory._scopeCache.get('userProfile');
     }else{
         $scope.loginStatus =  'Not connected';
     }
-    
     
     /**
      * 
@@ -58,8 +58,6 @@ angular.module('appverseClientIncubatorApp')
 	    if (authResult['error'] == undefined) {
                 $scope.loginStatus = 'connected'
                 $scope.$apply();
-                
-                //$log.info('User succesfully logged.');
 
 		var request = gapi.client.plus.people.get( {'userId' : 'me'} );
 		request.execute( function(profile) {
@@ -88,13 +86,10 @@ angular.module('appverseClientIncubatorApp')
                         //$log.debug('Roles list for the user ' + profile.displayName + ': ' + roles);
                         var currentUser = new User(profile.displayName, roles, authResult['access_token'], true);
                         AuthenticationService.login(currentUser)
-                    
-                        var cache = CacheFactory.setBrowserStorage(2);
-                        //$log.debug('+++++++++USER IN CACHE| ' + cache.currentUser.print());
                         
-                        CacheFactory.setIdScopeCache('login_status', 'connected');
-                        CacheFactory.setIdScopeCache('userProfile', profile);
-                        //$log.debug('CONTENT IN SCOPE CACHE: ' + CacheFactory.getScopeCache('login_status'));
+                        CacheFactory._scopeCache.put('login_status', 'connected');
+                        CacheFactory._scopeCache.put('userProfile', profile);
+                        //$log.debug('CONTENT IN SCOPE CACHE: ' + CacheFactory._scopeCache.get('login_status'));
                         
                         $scope.profile = profile;
 			$scope.$apply();
@@ -111,8 +106,6 @@ angular.module('appverseClientIncubatorApp')
               };
               $scope.loginStatus = 'Not Connected';
               $scope.loginMessage = 'Login failed: ' + authResult['error'];
-              //AuthenticationService.logOut();
-              //$scope.apply();
             }
       	})
     }
@@ -131,12 +124,12 @@ angular.module('appverseClientIncubatorApp')
           contentType: 'application/json',
           dataType: 'jsonp',
           success: function(result) {
-            $log.debug("User disconnected");
-            CacheFactory.setIdScopeCache('login_status', 'Not connected');
+            $log.debug("Disconnecting user..");
+            CacheFactory._scopeCache.put('login_status', 'Not connected');
             AuthenticationService.logOut();
             $scope.loginStatus = 'Not connected'
             $scope.$apply();
-            $log.debug("User disconnected..end");
+            $log.debug("User disconnected and erased from cache");
           },
           error: function(e) {
             $log.error("Error when trying disconnecting from Google: " + e);

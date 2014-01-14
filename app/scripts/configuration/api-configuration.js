@@ -73,6 +73,7 @@ in the common API.
     //SCOPE CACHE
     /////////////////////////////
     ScopeCache_Enabled: true,
+    DefaultScopeCacheName: 'commonApiScopeDataCache',
     /*
      Max duration in milliseconds of the scope cache
       */
@@ -82,6 +83,7 @@ in the common API.
      The cache’s capacity is used together to track available memory.
       */
     ScopeCache_capacity: 10,
+    
     /////////////////////////////
     //BROWSER STORAGE TYPE
     //This sets the preferred browser storage in the app.
@@ -94,6 +96,17 @@ in the common API.
      2 = $sessionStorage
       */
     BrowserStorage_type: '1',
+    DefaultBrowserCacheName: 'commonApiBrowserCache',
+    // Items added to this cache expire after 15 minutes.
+    MaxAge: 900000, 
+    // This cache will clear itself every hour.
+    CacheFlushInterval: 3600000, 
+    // Items will be deleted from this cache right when they expire.
+    DeleteOnExpire: 'aggressive', 
+    //Constant for the literal
+    SessionBrowserStorage: 'sessionStorage', 
+    //Constant for the literal
+    LocalBrowserStorage: 'localStorage',
     /////////////////////////////
     //$http SERVICE CACHE
     /////////////////////////////

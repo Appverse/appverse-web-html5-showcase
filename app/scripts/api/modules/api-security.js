@@ -509,7 +509,6 @@ angular.module('AppSecurity', [
   return {
 
     login: function (user) {
-      // this method could be used to call the API and set the user instead of taking it in the function params
       UserService.setCurrentUser(user);
     },
 
@@ -522,7 +521,7 @@ angular.module('AppSecurity', [
     },
     
     logOut: function () {
-     UserService.currentUser = null;
+     UserService.setCurrentUser (null);
     }
     
   };
@@ -531,24 +530,23 @@ angular.module('AppSecurity', [
 .factory('UserService', ['$log', 'CacheFactory',
         function ($log, CacheFactory) {
     
-  var cache = CacheFactory.setBrowserStorage(2);
   
   return {
       setCurrentUser: function (loggedUser) {
-        cache.currentUser  = loggedUser;
+        CacheFactory._browserCache.currentUser  = loggedUser;
       },
       
       getCurrentUser: function () {
-          return cache.currentUser;
+          return CacheFactory._browserCache.currentUser;
       },
       
       checkRoleInUser: function(role){
 //          $log.debug("ROLE REQUIRED: " + role);
-//          $log.debug("USER: " + cache.currentUser.name);
-//          $log.debug("ROLES: " + cache.currentUser.roles);
+//          $log.debug("USER: " + CacheFactory._browserCache.currentUser.name);
+//          $log.debug("ROLES: " + CacheFactory._browserCache.currentUser.roles);
           
-          if(cache.currentUser){
-              if($.inArray(role, cache.currentUser.roles)!= -1){
+          if(CacheFactory._browserCache.currentUser){
+              if($.inArray(role, CacheFactory._browserCache.currentUser.roles)!= -1){
                   return true;
               }else{
                   return false;
@@ -561,6 +559,13 @@ angular.module('AppSecurity', [
   }
 }]);
 
+/**
+ * @function
+ * @param name String with the name of the user.
+ * @param roles array of strings with roles of the user
+ * @param token String with the token from oauth server
+ * @param isLogged Boolean
+ */
 function User(name, roles, token, isLogged){
     this.name = name;
     //Array
