@@ -72,6 +72,7 @@ in the common API.
     /////////////////////////////
     //SCOPE CACHE
     /////////////////////////////
+    ScopeCache_Enabled: true,
     /*
      Max duration in milliseconds of the scope cache
       */

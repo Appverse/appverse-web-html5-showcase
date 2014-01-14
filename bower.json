@@ -25,9 +25,6 @@
     "angular-scenario": "~1.0.8"
   },
   "resolutions": {
-    "angular": "~1.2.1",
-    "angular-sanitize": "~1.2.1",
-    "angular-cookies": "~1.2.1",
-    "jquery": "~1.10.2"
+    "angular": "~1.2.1"
   }
 }

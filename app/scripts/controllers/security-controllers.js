@@ -17,8 +17,8 @@ angular.module('appverseClientIncubatorApp')
  * GooglePlusLoginCtrl is controller to handle Google+ authentication.
  * 
  */
-.controller('GooglePlusLoginCtrl', ['$scope', '$log', 'GOOGLE_AUTH', 'AUTHORIZATION_DATA', 'AuthenticationService', 'UserService', 'CacheFactory',
-    function($scope, $log, GOOGLE_AUTH, AUTHORIZATION_DATA, AuthenticationService, UserService, CacheFactory) {
+.controller('GooglePlusLoginCtrl', ['$scope', '$log', 'GOOGLE_AUTH', 'AUTHORIZATION_DATA', 'AuthenticationService', 'CacheFactory',
+    function($scope, $log, GOOGLE_AUTH, AUTHORIZATION_DATA, AuthenticationService, CacheFactory) {
 //    $log.debug('GOOGLE_AUTH.scopeURL: ' + GOOGLE_AUTH.scopeURL);
 //    $log.debug('GOOGLE_AUTH.requestvisibleactionsURL: ' + GOOGLE_AUTH.requestvisibleactionsURL);
 //    $log.debug('GOOGLE_AUTH.clientID: ' + GOOGLE_AUTH.clientID);
@@ -92,8 +92,8 @@ angular.module('appverseClientIncubatorApp')
                         var cache = CacheFactory.setBrowserStorage(2);
                         //$log.debug('+++++++++USER IN CACHE| ' + cache.currentUser.print());
                         
-                        CacheFactory.setScopeCache('login_status', 'connected');
-                        CacheFactory.setScopeCache('userProfile', profile);
+                        CacheFactory.setIdScopeCache('login_status', 'connected');
+                        CacheFactory.setIdScopeCache('userProfile', profile);
                         //$log.debug('CONTENT IN SCOPE CACHE: ' + CacheFactory.getScopeCache('login_status'));
                         
                         $scope.profile = profile;
@@ -132,7 +132,7 @@ angular.module('appverseClientIncubatorApp')
           dataType: 'jsonp',
           success: function(result) {
             $log.debug("User disconnected");
-            CacheFactory.setScopeCache('login_status', 'Not connected');
+            CacheFactory.setIdScopeCache('login_status', 'Not connected');
             AuthenticationService.logOut();
             $scope.loginStatus = 'Not connected'
             $scope.$apply();

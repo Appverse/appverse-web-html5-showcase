@@ -80,7 +80,10 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
         'CACHE_CONFIG',
         function ($angularCacheFactory, $localStorage, $sessionStorage, $http, $indexedDB, CACHE_CONFIG) {
 
-            var factory = {};
+            var factory = {
+                _scopeCache: null,
+                _httpCache: null
+            };
 
             /*
              @function
@@ -108,15 +111,22 @@ angular.module('AppCache', ['ng', 'ngStorage', 'AppConfiguration', 'AppIndexedDB
                 return _scopeDataCache;
             };
             
-            factory.setScopeCache = function (id, data) {
+            
+            
+            factory.getScopeCache = function () {
+                return factory._scopeCache || factory.setScopeCache(CACHE_CONFIG.ScopeCache_duration,
+                    CACHE_CONFIG.ScopeCache_capacity);
+            };
+            
+            factory.setIdScopeCache = function (id, data) {
                 _scopeDataCache.put(id, data)
             }
             
-            factory.getScopeCache = function (id) {
+            factory.getIdScopeCache = function (id) {
                 return _scopeDataCache.get(id);
             };
             
-            factory.removeScopeCache = function (id) {
+            factory.removeIdScopeCache = function (id) {
                 return _scopeDataCache.remove(id);
             };
             
