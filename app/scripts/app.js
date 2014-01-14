@@ -3,8 +3,8 @@
 angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
 
 
-.run(['$rootScope', '$location', '$log', 'AuthenticationService', 'UserService', 'AUTHORIZATION_DATA', 
-    function ($rootScope, $location, $log, AuthenticationService, UserService, AUTHORIZATION_DATA) {
+.run(['$rootScope', '$location', '$log', 'AuthenticationService', 'UserService', 'AUTHORIZATION_DATA', 'SECURITY_GENERAL',
+    function ($rootScope, $location, $log, AuthenticationService, UserService, AUTHORIZATION_DATA, SECURITY_GENERAL) {
 
   /**
    * @function
@@ -50,32 +50,33 @@ angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
    *  Information: https://github.com/angular-ui/ui-router/wiki
    */
   $rootScope.$on('$stateChangeStart', function (ev, to, toParams, from, fromParams) {
-    $log.debug('to: ' + to);
-    // if route requires auth and user is not logged in
-    //$log.debug('$location.url(): ' + $location.url());
-    $log.debug('to.url: ' + to.url);
-    $log.debug('routeClean: ' + routeClean(to.url));
-    $log.debug('AuthenticationService.isLoggedIn: ' + AuthenticationService.isLoggedIn());
+    if(SECURITY_GENERAL.securityEnabled){
+        $log.debug('to: ' + to);
+        // if route requires auth and user is not logged in
+        //$log.debug('$location.url(): ' + $location.url());
+        $log.debug('to.url: ' + to.url);
+        $log.debug('routeClean: ' + routeClean(to.url));
+        $log.debug('AuthenticationService.isLoggedIn: ' + AuthenticationService.isLoggedIn());
 
-    if (routeClean(to.url) == false){
-        if (AuthenticationService.isLoggedIn() == true) {
-          if(UserService.checkRoleInUser('admin') == false){
-              //$log.debug('ROUTE NOT CLEAN AND USER LOGGED WITH BAD ROLE');
-              //$log.debug('IS ROLE? ' + UserService.checkRoleInUser('admin'));
-              alert("YOU DO NOT HAVE THE NEEDED ROLE.");
-              ev.preventDefault();
-              //$location.path('/error');
-          }
-        }else{
-            $log.debug('ROUTE NOT CLEAN AND USER NOT LOGGED');
-            $log.debug('User is not logged and is rediercted to main page (REDIRECTION!!!!!!!!)');
-            //Use event.preventDefault() to prevent the transition from happening.
-            ev.preventDefault();
-            // Redirects back to main page
-            $location.path('/home');
-        }  
+        if (routeClean(to.url) == false){
+            if (AuthenticationService.isLoggedIn() == true) {
+              if(UserService.checkRoleInUser('admin') == false){
+                  //$log.debug('ROUTE NOT CLEAN AND USER LOGGED WITH BAD ROLE');
+                  //$log.debug('IS ROLE? ' + UserService.checkRoleInUser('admin'));
+                  alert("YOU DO NOT HAVE THE NEEDED ROLE.");
+                  ev.preventDefault();
+                  //$location.path('/error');
+              }
+            }else{
+                $log.debug('ROUTE NOT CLEAN AND USER NOT LOGGED');
+                $log.debug('User is not logged and is rediercted to main page (REDIRECTION!!!!!!!!)');
+                //Use event.preventDefault() to prevent the transition from happening.
+                ev.preventDefault();
+                // Redirects back to main page
+                $location.path('/home');
+            }  
+        }
     }
-   
   });
 }])
 
