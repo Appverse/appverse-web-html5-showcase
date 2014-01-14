@@ -2,7 +2,9 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
 
   <head>
     <title ng-bind="$state.current.name">Appverse Web HTML5 Incubator</title>
@@ -21,6 +23,7 @@
 
 </head>
 <!--Include the module with the app scope-->
+
   <body ng-app="appverseClientIncubatorApp">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -51,14 +54,28 @@
             <!-- Here you can see ui-sref in action again. Also notice the use of $state.includes, which
                  will set the links to 'active' if, for example on the first link, 'contacts' or any of
                  its descendant states are activated. -->
-              <li ng-class="{ active: $state.includes('topics') }"><a ui-sref="topics.list">Dev. Topics</a></li>
-              <li ng-class="{ active: $state.includes('ui') }"><a ui-sref="ui">Gadgets</a></li>
-              <li ng-class="{ active: $state.includes('cache') }"><a ui-sref="cache.state1">Cache</a></li>
-              <li ng-class="{ active: $state.includes('detection') }"><a ui-sref="detection">Detection</a></li>
-              <li ng-class="{ active: $state.includes('serverpush') }"><a ui-sref="serverpush">Server Messages</a></li>
-              <li ng-class="{ active: $state.includes('translation') }"><a ui-sref="translation">Translation</a></li>
+                    <li ng-class="{ active: $state.includes('topics') }">
+                        <a ui-sref="topics.list">Dev. Topics</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('ui') }">
+                        <a ui-sref="ui">Gadgets</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('cache') }">
+                        <a ui-sref="cache.state1">Cache</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('detection') }">
+                        <a ui-sref="detection">Detection</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('serverpush') }">
+                        <a ui-sref="serverpush">Server Messages</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('translation') }">
+                        <a ui-sref="translation">Translation</a>
+                    </li>
 <!--              <li ng-class="{ active: $state.includes('charts') }"><a ui-sref="charts">Charts</a></li>-->
-              <li ng-class="{ active: $state.includes('about') }"><a ui-sref="about">About</a></li>
+                    <li ng-class="{ active: $state.includes('about') }">
+                        <a ui-sref="about">About</a>
+                    </li>
             </ul>
 
             <!-- Here is a named ui-view (ui-view="hint"). ui-views don't have to be named, but we'll be populate this
@@ -123,19 +140,19 @@
         <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/api.js -->
+    <!--    <script src="js/appverse.js"></script>-->
+    <script src="scripts/api/modules/api-cache.js"></script>
+    <script src="scripts/api/modules/api-configuration.js"></script>
+    <script src="scripts/api/modules/api-detection.js"></script>
+    <script src="scripts/api/modules/api-logging.js"></script>
         <script src="scripts/api/modules/api-main.js"></script>
-        <script src="scripts/api/modules/api-cache.js"></script>
         <script src="scripts/api/modules/api-rest.js"></script>
-        <script src="scripts/api/modules/api-logging.js"></script>
-        <script src="scripts/api/modules/api-detection.js"></script>
+    <script src="scripts/api/modules/api-security.js"></script>
+    <script src="scripts/api/modules/api-serverpush.js"></script>
         <script src="scripts/api/modules/api-translate.js"></script>
-        <script src="scripts/api/modules/api-serverpush.js"></script>
-        <script src="scripts/api/modules/api-security.js"></script>
         <script src="scripts/api/modules/api-utils.js"></script>
         <script src="scripts/api/directives/cache-directives.js"></script>
         <script src="scripts/api/directives/rest-directives.js"></script>
-        <script src="scripts/configuration/api-configuration.js"></script>
-        <script src="js/appverse.js"></script>
         <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/app.js -->
@@ -151,6 +168,7 @@
         <script src="scripts/states/app-states.js"></script>
         <!-- endbuild -->
 </body>
+
 </html>
 
 

@@ -7,12 +7,17 @@
 ////////////////////////////////////////////////////////////////////////////
 // It includes constants for all the common API components.
 ////////////////////////////////////////////////////////////////////////////
+//
+angular.module('AppConfiguration', ['AppDetection'])
 
-angular.module('AppConfiguration', [])
     .run(['$log',
         function ($log) {
+
             $log.info('AppConfiguration run');
-        }])
+    }]);
+
+angular.module('AppConfigDefault', [])
+
 /*
 PROJECT CONFIGURATION
 This constants can be used to set basic information related to the application.
@@ -27,6 +32,7 @@ All data are auto-explained because their names ;)
     URL: '',
     LoginViewPath: '/login'
 })
+
 /*
 LOGGING MODULE CONFIGURATION
 This section contains basic configuration for the logging module
@@ -61,8 +67,8 @@ These params do not affect normal usage of $log service.
     Fields that will be included in the log message if containing information.
      */
     LogTextFormat: ''
-
 })
+
 /*
 CACHE MODULE CONFIGURATION
 This section contains basic configuration for the several types of cache handled by the cache module
@@ -151,8 +157,8 @@ in the common API.
       The secondary index can be unique or not. This is the value of this attribute.
       */
     IndexedDB_secondaryIndex_isUnique: false
-
 })
+
 /*
 SERVER PUSH MODULE CONFIGURATION
 This section contains the configuration for the server push module.
@@ -239,6 +245,7 @@ https://github.com/LearnBoost/Socket.IO/wiki/Configuring-Socket.IO
       */
     ForceNewConnection: false
 })
+
 /*
 REST MODULE CONFIGURATION
 This section contains the ccnfiguration for the REST module.
@@ -421,10 +428,12 @@ Future updates of Restangular imply review of this section in order to keep cons
     */
     EncodeIds: true
 })
+
     .constant('AD_CONFIG', {
         ConsumerKey: '',
         ConsumerSecret: ''
     })
+
     .constant('I18N_CONFIG', {
         PreferredLocale: 'en-US',
         DetectLocale: true

@@ -29,9 +29,7 @@
 // That is the reason it is not a dependency handled by bower.
 ////////////////////////////////////////////////////////////////////////////
 
-angular.module('AppServerPush', [
-        'AppSocketIO',
-        'AppConfiguration'])
+angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
     /*
      To make socket error events available across an app, in one of the controllers:
 
@@ -40,9 +38,11 @@ angular.module('AppServerPush', [
             ...
      });
      */
-    .run(function (socket) {
+.run(['$log', 'socket',
+    function ($log, socket) {
+        $log.info('AppServerPush run');
         socket.forward('error');
-    })
+    }])
     /**
      * @ngdoc object
      * @name SocketFactory
@@ -101,7 +101,7 @@ angular.module('AppServerPush', [
                             callback.apply(socket, args);
                         }
                     });
-                })
+            });
             };
 
             /*
@@ -119,14 +119,14 @@ angular.module('AppServerPush', [
 
         }]);
 
-
-
 //////////////////////////////////////////////////////////////////////////////
 // COMMON API - 0.1
 // PRIVATE MODULE (AppSocketIO)
 ////////////////////////////////////////////////////////////////////////////
 angular.module('AppSocketIO', ['AppConfiguration']).
-    provider('socket', ['SERVERPUSH_CONFIG', function (SERVERPUSH_CONFIG) {
+
+provider('socket', ['SERVERPUSH_CONFIG',
+    function (SERVERPUSH_CONFIG) {
 
         // when forwarding events, prefix the event name
         var prefix = 'socket:',

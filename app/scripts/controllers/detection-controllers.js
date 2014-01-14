@@ -6,9 +6,9 @@
  */
 angular.module('appverseClientIncubatorApp')
 
-.controller('detectionController', ['$log', '$scope', 'DetectionFactory',
-    function ($log, $scope, DetectionFactory) {
+.controller('detectionController', ['$log', '$scope', 'Detection',
+    function ($log, $scope, Detection) {
         $log.debug('detectionController loading');
 
-        $scope.detect = DetectionFactory;
+        $scope.detect = Detection;
     }]);
