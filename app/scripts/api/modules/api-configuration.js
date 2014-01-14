@@ -10,10 +10,10 @@
 //
 angular.module('AppConfiguration', ['AppDetection'])
 
-    .run(['$log',
+.run(['$log',
         function ($log) {
 
-            $log.info('AppConfiguration run');
+        $log.info('AppConfiguration run');
     }]);
 
 angular.module('AppConfigDefault', [])
@@ -89,7 +89,7 @@ in the common API.
      The cache’s capacity is used together to track available memory.
       */
     ScopeCache_capacity: 10,
-    
+
     /////////////////////////////
     //BROWSER STORAGE TYPE
     //This sets the preferred browser storage in the app.
@@ -104,13 +104,13 @@ in the common API.
     BrowserStorage_type: '1',
     DefaultBrowserCacheName: 'commonApiBrowserCache',
     // Items added to this cache expire after 15 minutes.
-    MaxAge: 900000, 
+    MaxAge: 900000,
     // This cache will clear itself every hour.
-    CacheFlushInterval: 3600000, 
+    CacheFlushInterval: 3600000,
     // Items will be deleted from this cache right when they expire.
-    DeleteOnExpire: 'aggressive', 
+    DeleteOnExpire: 'aggressive',
     //Constant for the literal
-    SessionBrowserStorage: 'sessionStorage', 
+    SessionBrowserStorage: 'sessionStorage',
     //Constant for the literal
     LocalBrowserStorage: 'localStorage',
     /////////////////////////////
@@ -429,64 +429,68 @@ Future updates of Restangular imply review of this section in order to keep cons
     EncodeIds: true
 })
 
-    .constant('AD_CONFIG', {
-        ConsumerKey: '',
-        ConsumerSecret: ''
-    })
+.constant('AD_CONFIG', {
+    ConsumerKey: '',
+    ConsumerSecret: ''
+})
 
-    .constant('I18N_CONFIG', {
-        PreferredLocale: 'en-US',
-        DetectLocale: true
-    })
-    
-  /*
-  * SECURITY SECTION
-  * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
-  */.constant('SECURITY_GENERAL', {
-        securityEnabled: false
-    })
-    .constant('SECURITY_OAUTH', {
-        oauth2_endpoint: 'lelylam',
-        clientID: '',
-        profile: 'http://api.lelylan.com/me',
-        scope: 'resources',
-        scopeURL: 'http://people.lelylan.com',
-        scope_authorizePath: '/oauth/authorize',
-        scope_tokenPath:'/oauth/token',
-        scope_flow: 'implicit',
-        scope_view: 'standard',
-        scope_storage: 'none',
-        scope_template: 'views/demo/security/oauth_default.html',
-        redirectURL: 'http://localhost:9000',
-        storage: 'cookies'
-    })
+.constant('I18N_CONFIG', {
+    PreferredLocale: 'en-US',
+    DetectLocale: true
+})
 
 /*
-  * GOOGLE AUTHENTICATION
-  */
-    .constant('GOOGLE_AUTH', {
-        clientID: '75169325484-8cn28d7o3dre61052o8jajfsjlnrh53i.apps.googleusercontent.com',
-        scopeURL: 'https://www.googleapis.com/auth/plus.login',
-        requestvisibleactionsURL: 'http://schemas.google.com/AddActivity',
-        theme: 'dark',
-        cookiepolicy: 'single_host_origin',
-        revocationURL: 'https://accounts.google.com/o/oauth2/revoke?token='
-    })
-    
-    /*
-     * 
-     */
-    .constant('AUTHORIZATION_DATA', {
-        roles: ['user','admin','editor'],
-        users: ['Jesus de Diego'],
-        userRoleMatrix: [{
-                'user': 'Jesus de Diego', 
-                'roles': ['user','admin']
-                },
-                {
-                'user': 'Antoine Charnoz', 
-                'roles': ['user','admin']
-         }],
-         routesThatDontRequireAuth: ['/home'],
-         routesThatRequireAdmin: ['/about']
-    })
+ * SECURITY SECTION
+ * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
+ */
+.constant('SECURITY_GENERAL', {
+    securityEnabled: false
+})
+
+.constant('SECURITY_OAUTH', {
+    oauth2_endpoint: 'lelylam',
+    clientID: '',
+    profile: 'http://api.lelylan.com/me',
+    scope: 'resources',
+    scopeURL: 'http://people.lelylan.com',
+    scope_authorizePath: '/oauth/authorize',
+    scope_tokenPath: '/oauth/token',
+    scope_flow: 'implicit',
+    scope_view: 'standard',
+    scope_storage: 'none',
+    scope_template: 'views/demo/security/oauth_default.html',
+    redirectURL: 'http://localhost:9000',
+    storage: 'cookies'
+})
+
+/*
+ * GOOGLE AUTHENTICATION
+ */
+.constant('GOOGLE_AUTH', {
+    clientID: '75169325484-8cn28d7o3dre61052o8jajfsjlnrh53i.apps.googleusercontent.com',
+    scopeURL: 'https://www.googleapis.com/auth/plus.login',
+    requestvisibleactionsURL: 'http://schemas.google.com/AddActivity',
+    theme: 'dark',
+    cookiepolicy: 'single_host_origin',
+    revocationURL: 'https://accounts.google.com/o/oauth2/revoke?token='
+})
+
+/*
+ *
+ */
+.constant('AUTHORIZATION_DATA', {
+    roles: ['user', 'admin', 'editor'],
+    users: ['Jesus de Diego'],
+    userRoleMatrix: [
+        {
+            'user': 'Jesus de Diego',
+            'roles': ['user', 'admin']
+        },
+        {
+            'user': 'Antoine Charnoz',
+            'roles': ['user', 'admin']
+        }
+    ],
+    routesThatDontRequireAuth: ['/home'],
+    routesThatRequireAdmin: ['/about']
+});

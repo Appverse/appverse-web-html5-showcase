@@ -135,7 +135,7 @@ factory instance.
                              REST context to record log message is needed.
                              No return data is required.
                              */
-                            RESTFactory.createListItem(LOGGING_CONFIG.LogServerEndpoint, errorData, function(){
+                            RESTFactory.createListItem(LOGGING_CONFIG.LogServerEndpoint, errorData, function () {
                                 $log.debug('Log Message sent to server from ' + errorUrl);
                             });
                         };
