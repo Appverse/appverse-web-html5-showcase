@@ -53,16 +53,9 @@ angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
     if(SECURITY_GENERAL.securityEnabled){
         $log.debug('to: ' + to);
         // if route requires auth and user is not logged in
-        //$log.debug('$location.url(): ' + $location.url());
-        $log.debug('to.url: ' + to.url);
-        $log.debug('routeClean: ' + routeClean(to.url));
-        $log.debug('AuthenticationService.isLoggedIn: ' + AuthenticationService.isLoggedIn());
-
         if (routeClean(to.url) == false){
             if (AuthenticationService.isLoggedIn() == true) {
               if(UserService.checkRoleInUser('admin') == false){
-                  //$log.debug('ROUTE NOT CLEAN AND USER LOGGED WITH BAD ROLE');
-                  //$log.debug('IS ROLE? ' + UserService.checkRoleInUser('admin'));
                   alert("YOU DO NOT HAVE THE NEEDED ROLE.");
                   ev.preventDefault();
                   //$location.path('/error');

@@ -169,6 +169,7 @@ angular.module('appverseClientIncubatorApp')
     //  }
     }else{
         $scope.loginStatus =  'Security not enabled';
+        $log.debug('SECURITY NOT ENABLED. LoginStatus values is: ' + $scope.loginStatus);
     }
     
     

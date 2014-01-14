@@ -520,8 +520,8 @@ angular.module('AppSecurity', [
       }
     },
     
-    logOut: function () {
-     UserService.setCurrentUser (null);
+    logOut: function (user) {
+     UserService.removeUser (user);
     }
     
   };
@@ -538,6 +538,12 @@ angular.module('AppSecurity', [
       
       getCurrentUser: function () {
           return CacheFactory._browserCache.currentUser;
+      },
+      
+      removeUser: function (loggedUser){
+          CacheFactory._browserCache.currentUser  = null;
+          CacheFactory._scopeCache.put('login_status', 'Not connected');
+          CacheFactory._scopeCache.put('userProfile', null);
       },
       
       checkRoleInUser: function(role){
