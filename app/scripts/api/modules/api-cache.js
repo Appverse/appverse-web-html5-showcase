@@ -104,15 +104,15 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'AppIndexedDB', 'jmdobry.a
              {void} removeAll() — Removes all cached values.
              {void} destroy() — Removes references to this cache from $angularCacheFactory.
              */
-//            var _scopeDataCache;
-//            factory.setScopeCache = function (duration, capacity) {
-//                _scopeDataCache = $angularCacheFactory('scopeDataCache', {
-//                    maxAge: duration,
-//                    capacity: capacity
-//                });
-//                return _scopeDataCache;
-//            };
-//            
+            //            var _scopeDataCache;
+            //            factory.setScopeCache = function (duration, capacity) {
+            //                _scopeDataCache = $angularCacheFactory('scopeDataCache', {
+            //                    maxAge: duration,
+            //                    capacity: capacity
+            //                });
+            //                return _scopeDataCache;
+            //            };
+            //
             factory.setScopeCache = function (duration, capacity) {
                 factory._scopeCache = $angularCacheFactory(CACHE_CONFIG.DefaultScopeCacheName, {
                     maxAge: duration,
@@ -125,14 +125,14 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'AppIndexedDB', 'jmdobry.a
                 return factory._scopeCache || factory.setScopeCache(CACHE_CONFIG.ScopeCache_duration,
                     CACHE_CONFIG.ScopeCache_capacity);
             };
-            
+
             /**
              @function
              @param type Type of storage ( 1 local | 2 session).
              @param maxAgeInit
              @param cacheFlushIntervalInit
              @param deleteOnExpireInit
-            
+
              @description This object makes Web Storage working in the Angular Way.
              By default, web storage allows you 5-10MB of space to work with, and your data is stored locally
              on the device rather than passed back-and-forth with each request to the server.
@@ -151,16 +151,16 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'AppIndexedDB', 'jmdobry.a
                 var browserStorageType = CACHE_CONFIG.LocalBrowserStorage;
                 if (type === 2) {
                     browserStorageType = CACHE_CONFIG.SessionBrowserStorage;
-                } 
+                }
                 factory._browserCache = $angularCacheFactory(CACHE_CONFIG.DefaultBrowserCacheName, {
                     maxAge: maxAgeInit,
                     cacheFlushInterval: cacheFlushIntervalInit,
                     deleteOnExpire: deleteOnExpireInit,
                     storageMode: browserStorageType
                 });
-                
+
                 return factory._browserCache;
-            }
+            };
 
 
             /*

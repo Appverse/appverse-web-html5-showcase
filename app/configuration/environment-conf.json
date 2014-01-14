@@ -1,6 +1,6 @@
 {
     "LOGGING_CONFIG": {
-        "ServerEnabled": false,
+        "ServerEnabled": true,
         "EnabledLogLevel": true,
         "EnabledErrorLevel": true,
         "EnabledDebugLevel": true,

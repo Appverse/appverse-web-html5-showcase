@@ -46,6 +46,7 @@ These params do not affect normal usage of $log service.
     ALL messages are sent. It is not yet possible select which type of log messages are sent.
      */
     ServerEnabled: false,
+    LogServerEndpoint: 'http://localhost:9000/log',
     /*
     This preffix will be included at the beginning of each message.
      */

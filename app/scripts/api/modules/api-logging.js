@@ -110,36 +110,34 @@ factory instance.
                         return function () {};
                     }
 
-                    var errorMessage = logLevel + " | " + LOGGING_CONFIG.CustomLogPreffix + " | ";
+                    var logMessage = logLevel + " | " + LOGGING_CONFIG.CustomLogPreffix + " | ";
 
                     return function () {
                         var args = Array.prototype.slice.call(arguments);
                         if (Object.prototype.toString.call(args[0]) === '[object String]') {
-                            args[0] = errorMessage + dateTime() + " | " + args[0];
+                            args[0] = logMessage + dateTime() + " | " + args[0];
                         } else {
                             args.push(args[0]);
-                            args[0] = errorMessage + dateTime() + " | ";
+                            args[0] = logMessage + dateTime() + " | ";
                         }
                         logFunction.apply(null, args);
 
-                        /*
-                        If sending log messages to server is enabled this is sent via REST.
-                        */
                         if (LOGGING_CONFIG.ServerEnabled) {
-                            // Log the JavaScript error to the server.
-                            var errorData = angular.toJson({
-                                errorUrl: window.location.href,
-                                errorMessage: errorMessage
-                            });
-                            /*
-                             REST context to record log message is needed.
-                             No return data is required.
-                             */
-                            RESTFactory.createListItem(LOGGING_CONFIG.LogServerEndpoint, errorData, function () {
-                                $log.debug('Log Message sent to server from ' + errorUrl);
-                            });
-                        };
+                            var logData = {
+                                logUrl: window.location.href,
+                                logMessage: args[0]
+                            };
+
+                            if (args.length === 2) {
+                                logData.logMessage += ' ' + JSON.stringify(args[1]);
+                            }
+
+                            //                            console.log('Log Message sent to server ' + LOGGING_CONFIG.LogServerEndpoint + ' :', logData);
+
+                            $.post(LOGGING_CONFIG.LogServerEndpoint, JSON.stringify(logData));
+                        }
                     };
+
                 } catch (loggingError) {
                     // ONLY FOR DEVELOPERS - log the log-failure.
                     throw loggingError;
@@ -147,7 +145,7 @@ factory instance.
             }
 
             /*
-            Our calls depend on the $log service methods(http://docs.angularjs.org/api/ng.$log)
+            Our calls depend on the $log service methods (http://docs.angularjs.org/api/ng.$log)
 
             debug() Write a debug message
             error() Write an error message
@@ -155,10 +153,10 @@ factory instance.
             log() Write a log message
             warn() Write a warning message
              */
-            delegatedLog.log = handleLogMessage(LOGGING_CONFIG.EnabledLogLevel, 'LOG', delegatedLog.log);
-            delegatedLog.info = handleLogMessage(LOGGING_CONFIG.EnabledInfoLevel, 'INFO', delegatedLog.info);
+            delegatedLog.log = handleLogMessage(LOGGING_CONFIG.EnabledLogLevel, 'LOG  ', delegatedLog.log);
+            delegatedLog.info = handleLogMessage(LOGGING_CONFIG.EnabledInfoLevel, 'INFO ', delegatedLog.info);
             delegatedLog.error = handleLogMessage(LOGGING_CONFIG.EnabledErrorLevel, 'ERROR', delegatedLog.error);
-            delegatedLog.warn = handleLogMessage(LOGGING_CONFIG.EnabledWarnLevel, 'WARN', delegatedLog.warn);
+            delegatedLog.warn = handleLogMessage(LOGGING_CONFIG.EnabledWarnLevel, 'WARN ', delegatedLog.warn);
             delegatedLog.debug = handleLogMessage(LOGGING_CONFIG.EnabledDebugLevel, 'DEBUG', delegatedLog.debug);
 
             return delegatedLog;

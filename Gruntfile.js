@@ -98,15 +98,15 @@ module.exports = function (grunt) {
                             function (request, response, next) {
 
                                 console.log("request method: " + JSON.stringify(request.method));
-                                var path = request.url.split('?')[0];
+                                var rawpath = request.url.split('?')[0];
                                 console.log("request url: " + JSON.stringify(request.url));
-                                path = require('path').resolve(__dirname, 'app/' + path);
+                                var path = require('path').resolve(__dirname, 'app/' + rawpath);
 
                                 console.log("request path : " + JSON.stringify(path));
 
                                 console.log("request current dir : " + JSON.stringify(__dirname));
 
-                                if ((request.method === 'PUT' || request.method === 'POST') && fs.existsSync(path)) {
+                                if ((request.method === 'PUT' || request.method === 'POST')) {
 
                                     console.log('inside put/post');
 
@@ -118,22 +118,38 @@ module.exports = function (grunt) {
 
                                     request.addListener("end", function () {
                                         console.log("request content: " + JSON.stringify(request.content));
-                                        fs.writeFile(path, request.content, function (err) {
-                                            if (err) {
-                                                throw err;
-                                            }
-                                            console.log('file saved');
-                                            response.end('file was saved');
-                                        });
-                                        //                                        fs.open(path,'r+',function(err,fd){
-                                        //                                            if (err){
-                                        //                                                throw err;
-                                        //                                            }
-                                        //                                        })
+
+                                        if (fs.existsSync(path)) {
+
+                                            fs.writeFile(path, request.content, function (err) {
+                                                if (err) {
+                                                    throw err;
+                                                }
+                                                console.log('file saved');
+                                                response.end('file was saved');
+                                            });
+                                            return;
+                                        }
+
+                                        if (request.url === '/log') {
+
+                                            var filePath = 'server/log/server.log';
+
+                                            var logData = JSON.parse(request.content);
+
+                                            fs.appendFile(filePath, logData.logUrl + '\n' + logData.logMessage + '\n', function (err) {
+                                                if (err) {
+                                                    throw err;
+                                                }
+                                                console.log('log saved');
+                                                response.end('log was saved');
+                                            });
+                                            return;
+                                        }
                                     });
-                                } else {
-                                    next();
+                                    return;
                                 }
+                                next();
                             }];
                     }
                 }
