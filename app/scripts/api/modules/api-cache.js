@@ -150,18 +150,8 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'AppIndexedDB', 'jmdobry.a
              */
 
             factory.setBrowserStorage = function (type, maxAgeInit, cacheFlushIntervalInit, deleteOnExpireInit, verifyIntegrityInit) {
-                
-                $log.debug('type: ' + type);
-                $log.debug('maxAgeInit: ' + maxAgeInit);
-                $log.debug('cacheFlushIntervalInit: ' + cacheFlushIntervalInit);
-                $log.debug('deleteOnExpireInit: ' + deleteOnExpireInit);
 
-//                var browserStorageType = CACHE_CONFIG.LocalBrowserStorage;
-//                if (type === 2) {
-//                    browserStorageType = CACHE_CONFIG.SessionBrowserStorage;
-//                }
                 var browserStorageType = CACHE_CONFIG.SessionBrowserStorage;
-                $log.debug('browserStorageType: ' + browserStorageType);
                 
                 factory._browserCache = $angularCacheFactory(CACHE_CONFIG.DefaultBrowserCacheName, {
                     maxAge: maxAgeInit,
