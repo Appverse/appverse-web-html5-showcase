@@ -102,7 +102,7 @@ in the common API.
      1 = $localStorage
      2 = $sessionStorage
       */
-    BrowserStorage_type: '1',
+    BrowserStorage_type: '2',
     DefaultBrowserCacheName: 'commonApiBrowserCache',
     // Items added to this cache expire after 15 minutes.
     MaxAge: 900000,
@@ -114,6 +114,15 @@ in the common API.
     SessionBrowserStorage: 'sessionStorage',
     //Constant for the literal
     LocalBrowserStorage: 'localStorage',
+    //Constant for the literal
+    NoBrowserStorage: 'none',
+    /*
+     * Specify whether to verify integrity of data saved in localStorage on every operation. 
+     * If true, angular-cache will perform a full sync with localStorage on every operation. 
+     * Increases reliability of data synchronization, but may incur a performance penalty. 
+     * Has no effect if storageMode is set to "none".
+     */
+    VerifyIntegrity: false,
     /////////////////////////////
     //$http SERVICE CACHE
     /////////////////////////////
@@ -130,7 +139,7 @@ in the common API.
     /////////////////////////////
     //BROWSER'S INDEXED DB CACHE
     /////////////////////////////
-    IndexedDBCache_Enabled: true,
+    IndexedDBCache_Enabled: false,
     /*
      Name of the default object store
       */
@@ -445,7 +454,7 @@ Future updates of Restangular imply review of this section in order to keep cons
  * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
  */
 .constant('SECURITY_GENERAL', {
-    securityEnabled: false
+    securityEnabled: true
 })
 
 .constant('SECURITY_OAUTH', {
@@ -465,22 +474,33 @@ Future updates of Restangular imply review of this section in order to keep cons
 })
 
 /*
- * GOOGLE AUTHENTICATION
- */
-.constant('GOOGLE_AUTH', {
-    clientID: '75169325484-8cn28d7o3dre61052o8jajfsjlnrh53i.apps.googleusercontent.com',
-    scopeURL: 'https://www.googleapis.com/auth/plus.login',
-    requestvisibleactionsURL: 'http://schemas.google.com/AddActivity',
-    theme: 'dark',
-    cookiepolicy: 'single_host_origin',
-    revocationURL: 'https://accounts.google.com/o/oauth2/revoke?token='
-})
+  * GOOGLE AUTHENTICATION
+  */
+    .constant('GOOGLE_AUTH', {
+        clientID: '75169325484-8cn28d7o3dre61052o8jajfsjlnrh53i.apps.googleusercontent.com',
+        scopeURL: 'https://www.googleapis.com/auth/plus.login',
+        requestvisibleactionsURL: 'http://schemas.google.com/AddActivity',
+        theme: 'dark',
+        cookiepolicy: 'single_host_origin',
+        revocationURL: 'https://accounts.google.com/o/oauth2/revoke?token=',
+        /*
+         * Policy about token renewal:
+         * revocation: if the token is invalid the user is fordec to logout and warned.
+         * manual_renovation: the user is warned about the token validity. Renewal is proposed.
+         * automatic_renovation: the token is automatically renewed.
+         */
+        revocation: 'revocation',
+        manual_renovation: 'manual_renovation',
+        automatic_renovation: 'automatic_renovation',
+        tokenRenewalPolicy: this.automatic_renovation
+    })
 
 /*
  *
  */
 .constant('AUTHORIZATION_DATA', {
     roles: ['user', 'admin', 'editor'],
+    adminRoles: ['admin', 'editor'],
     users: ['Jesus de Diego'],
     userRoleMatrix: [
         {

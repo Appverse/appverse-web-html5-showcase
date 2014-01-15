@@ -117,10 +117,9 @@ angular.module('AppSecurity', [
 //  $locationProvider.html5Mode(true).hashPrefix('!');
 //}])
 
-
 /**
  * @ngdoc object
- * @name AccessToken
+ * @name Oauth_AccessToken
  * @requires $location
  * @requires $cookies
  *
@@ -153,13 +152,11 @@ angular.module('AppSecurity', [
    * Sets and returns the access token taking it from the fragment URI or eventually
    * from the cookies. Use `AccessToken.init()` to load (at boot time) the access token.
    */
-
   factory.set = function(scope) {
     setTokenFromString(scope);    // take the token from the query string and eventually save it in the cookies
     setTokenFromCookies(scope);   // take the from the cookies
     return token
   }
-
 
   /**
    * @function 
@@ -167,7 +164,6 @@ angular.module('AppSecurity', [
    * @description
    *  Delete the access token and remove the cookies.
    */
-
   factory.destroy = function(scope) {
     token = null;
     delete $cookies[scope.client];
@@ -180,7 +176,6 @@ angular.module('AppSecurity', [
    * @description
    * Tells when the access token is expired.
    */
-
   factory.expired = function() {
     return (token && token.expires_at && token.expires_at < new Date())
   }
@@ -309,14 +304,10 @@ angular.module('AppSecurity', [
 }])
 
 
-
-
-
-
 /**
  * @ngdoc object
- * @name Endpoint
- * @requires AccessToken
+ * @name Oauth_Endpoint
+ * @requires Oauth_AccessToken
  * @requires $location
  *
  * @description
@@ -351,7 +342,6 @@ angular.module('AppSecurity', [
    *3-User authorizes your app, then exchange the request token for an access token. 
    */
   factory.set = function(scope) {
-      //TODO
       url = scope.site +
             scope.authorizePath +
             '?response_type=token' + '&' +
@@ -373,7 +363,6 @@ angular.module('AppSecurity', [
     return url;
   }
 
-
   /**
    * @function
    * @description
@@ -390,9 +379,9 @@ angular.module('AppSecurity', [
 
 /**
  * @ngdoc object
- * @name RequestWrapper
- * @requires AccessToken
- * @requires Endpoint
+ * @name Oauth_RequestWrapper
+ * @requires Oauth_AccessToken
+ * @requires Oauth_Endpoint
  * @requires $http
  *
  * @description
@@ -459,13 +448,10 @@ angular.module('AppSecurity', [
 }])
 
 
-
-
-
 /**
  * @ngdoc object
- * @name Profile
- * @requires RequestWrapper
+ * @name Oauth_Profile
+ * @requires Oauth_RequestWrapper
  * @requires $resource
  * @requires SECURITY_OAUTH
  *
@@ -484,34 +470,99 @@ angular.module('AppSecurity', [
 }])
 
 
-/***************************************************************/
-        
-.factory('RoleService', function ($http) {
+/**
+ * @ngdoc object
+ * @name RoleService
+ * @requires $log
+ * @requires AUTHORIZATION_DATA
+ * @requires CacheFactory
+ *
+ * @description
+ * Manages user's roles.
+ *
+ * @param none
+ */    
+.factory('RoleService', ['$log','AUTHORIZATION_DATA', 'CacheFactory', 
+    function ($log, AUTHORIZATION_DATA, CacheFactory) {
 
-  var adminRoles = ['admin', 'editor'];
-  var otherRoles = ['user'];
 
   return {
-    validateRoleAdmin: function (currentUser) {
-      return currentUser ? _.contains(adminRoles, currentUser.role) : false;
+    /**
+     * @function
+     * @param {User} user
+     * @returns {User}
+     * @description Check if the passed user has a role in the adminsitrator family
+     */
+    validateRoleAdmin: function () {
+        
+      var roles = CacheFactory._browserCache.currentUser.roles
+      var result;
+      if(roles && AUTHORIZATION_DATA.adminRoles){
+          for(var j=0; j < AUTHORIZATION_DATA.adminRoles.length; j++){
+              if(_.contains(roles, AUTHORIZATION_DATA.adminRoles[j])){
+                  result = true;
+                  break;
+              }else{
+                  result = false;
+              }
+          }
+          return result;
+      }else{
+          return false;
+      }
     },
-
-    validateRoleOther: function (currentUser) {
-      return currentUser ? _.contains(otherRoles, currentUser.role) : false;
+    /**
+     * @function
+     * @param {User} user
+     * @returns {User}
+     * @description Check if the passed user has a given role
+     */
+    validateRoleInUserOther: function (role) {
+        if(CacheFactory._browserCache.currentUser){
+            var user = CacheFactory._browserCache.currentUser;
+            return _.contains(role, user.roles);
+        }else{
+            return false;
+        }
+      
     }
   };
-})
+}])
 
+/**
+ * @ngdoc object
+ * @name AuthenticationService
+ * @requires UserService
+ *
+ * @description
+ * Exposes some useful methods for apps developers.
+ *
+ * @param none
+ */  
 .factory('AuthenticationService', ['UserService', function (UserService) {
 
   'use strict';
 
   return {
-
-    login: function (user) {
+    /**
+     * @function
+     * @param {String} name
+     * @param {Array} roles
+     * @param {String} token
+     * @param {Boolean} isLogged
+     * @returns {none}
+     * @description Sets the new logged user
+     */
+    login: function (name, roles, token, isLogged) {
+      var user = new User(name, roles, token, isLogged);
       UserService.setCurrentUser(user);
     },
 
+    /**
+     * @function
+     * @returns {boolean}
+     * @description Check if the user is logged
+     */
     isLoggedIn: function () {
       if(UserService.getCurrentUser()){
           return true;
@@ -520,6 +571,12 @@ angular.module('AppSecurity', [
       }
     },
     
+    /**
+     * @function
+     * @param {User} Current user
+     * @returns {boolean}
+     * @description Removes the current user from the app
+     */
     logOut: function (user) {
      UserService.removeUser (user);
     }
@@ -527,13 +584,28 @@ angular.module('AppSecurity', [
   };
 }])
 
+
+/**
+ * @ngdoc object
+ * @name UserService
+ * @requires $log
+ * @requires CacheFactory
+ *
+ * @description
+ * Handles the user in the app.
+ *
+ * @param none
+ */  
 .factory('UserService', ['$log', 'CacheFactory',
         function ($log, CacheFactory) {
     
   
   return {
       setCurrentUser: function (loggedUser) {
-        CacheFactory._browserCache.currentUser  = loggedUser;
+          $log.debug('Setting new user:');
+          $log.debug(loggedUser.print());
+          CacheFactory._browserCache.currentUser  = loggedUser;
+          $log.debug('New user has been stored to cache.');
       },
       
       getCurrentUser: function () {
@@ -544,24 +616,7 @@ angular.module('AppSecurity', [
           CacheFactory._browserCache.currentUser  = null;
           CacheFactory._scopeCache.put('login_status', 'Not connected');
           CacheFactory._scopeCache.put('userProfile', null);
-      },
-      
-      checkRoleInUser: function(role){
-//          $log.debug("ROLE REQUIRED: " + role);
-//          $log.debug("USER: " + CacheFactory._browserCache.currentUser.name);
-//          $log.debug("ROLES: " + CacheFactory._browserCache.currentUser.roles);
-          
-          if(CacheFactory._browserCache.currentUser){
-              if($.inArray(role, CacheFactory._browserCache.currentUser.roles)!= -1){
-                  return true;
-              }else{
-                  return false;
-              }
-          }else{
-              $log.error("User not found!");
-              return false;
-          }
-       }
+      }
   }
 }]);
 
@@ -571,6 +626,7 @@ angular.module('AppSecurity', [
  * @param roles array of strings with roles of the user
  * @param token String with the token from oauth server
  * @param isLogged Boolean
+ * @description Encapsulates information about the user in the app.
  */
 function User(name, roles, token, isLogged){
     this.name = name;

@@ -62,18 +62,12 @@ angular.module('appverseClientIncubatorApp')
                     var request = gapi.client.plus.people.get( {'userId' : 'me'} );
                     request.execute( function(profile) {
 
-                            /*
-                             * The authenticated user is set by using the UserService.
-                             */
+                            //We find out the roles for the user
                             var roles = new Array();
-                             //$log.debug('profile.displayName: ' +profile.displayName);
-                             //$log.debug('AUTHORIZATION_DATA.userRoleMatrix.longitud: ' + AUTHORIZATION_DATA.userRoleMatrix.length);
 
                             for(var i = 0; i < AUTHORIZATION_DATA.userRoleMatrix.length; i++) {
-                                //$log.debug('AUTHORIZATION_DATA.userRoleMatrix.user: ' + AUTHORIZATION_DATA.userRoleMatrix[i].user);
                                 if(AUTHORIZATION_DATA.userRoleMatrix[i].user === profile.displayName){
                                     var counter=0;
-                                    //$log.debug('FOUND ROLES: ' + AUTHORIZATION_DATA.userRoleMatrix[i].roles.length);
                                     for (var y = 0; y < AUTHORIZATION_DATA.userRoleMatrix[i].roles.length; y++){
                                         roles[counter] = AUTHORIZATION_DATA.userRoleMatrix[i].roles[y];
                                         counter++;
@@ -82,14 +76,11 @@ angular.module('appverseClientIncubatorApp')
                                 }
                             }
 
-
-                            //$log.debug('Roles list for the user ' + profile.displayName + ': ' + roles);
-                            var currentUser = new User(profile.displayName, roles, authResult['access_token'], true);
-                            AuthenticationService.login(currentUser)
+                            //The authenticated user is set by using the AuthenticationService.
+                            AuthenticationService.login(profile.displayName, roles, authResult['access_token'], true);
 
                             CacheFactory._scopeCache.put('login_status', 'connected');
                             CacheFactory._scopeCache.put('userProfile', profile);
-                            //$log.debug('CONTENT IN SCOPE CACHE: ' + CacheFactory._scopeCache.get('login_status'));
 
                             $scope.profile = profile;
                             $scope.$apply();
@@ -120,7 +111,7 @@ angular.module('appverseClientIncubatorApp')
              $.ajax({
               type: 'GET',
               url: GOOGLE_AUTH.revocationURL + gapi.auth.getToken().access_token,
-              async: false,
+              async: true,
               contentType: 'application/json',
               dataType: 'jsonp',
               success: function(result) {
@@ -136,6 +127,64 @@ angular.module('appverseClientIncubatorApp')
               }
             });
         };
+
+        /**
+         * @function
+         * @param accessToken
+         * @description Validates the passed access token. The TokenInfo endpoint will respond with a JSON array
+         * that describes the token or an error. Below is a table of the fields included in the non-error case:
+         * audience:	The application that is the intended target of the token.
+         * scope:	The space-delimited set of scopes that the user consented to.
+         * userid:	This field is only present if the profile scope was present in the request.
+         * The value of this field is an immutable identifier for the logged-in user, and may be used when creating
+         * and managing user sessions in your application. This identifier is the same regardless of the client ID.
+         * This provides the ability to correlate profile information across multiple applications in the same
+         * organization.
+         * expires_in:	The number of seconds left in the lifetime of the token.
+         */
+        $scope.validateToken = function(accessToken) {
+            $log.debug('Validating user token: ' + accessToken);
+            $.ajax({
+                type: 'GET',
+                url: 'https://www.googleapis.com/oauth2/v1/tokeninfo',
+                async: true,
+                contentType: 'application/json',
+                dataType: 'jsonp',
+                params: {
+                    access_token: accessToken.token,
+                    callback: 'JSON_CALLBACK'
+                },
+                success: function(result) {
+                    // The token is still valid.
+                    $log.debug('The log is still valid.');
+                },
+                error: function(e) {
+                    // The token is not valid anymore
+                    $log.debug('The log is not yet valid. Token renewal policy must be applied.');
+                    if(GOOGLE_AUTH.tokenRenewalPolicy == GOOGLE_AUTH.automatic_renovation){
+                        //TODO renewal
+                    }else if(GOOGLE_AUTH.tokenRenewalPolicy == GOOGLE_AUTH.manual_renovation){
+                        var r = confirm("The access token is invalid. Do you wish renew it?");
+                        var x;
+                        if (r == true){
+                            x = "Yes";
+                        }else{
+                            x = "No";
+                        }
+                        $log.debug("The answer to token renewal was: " + x);
+                        //TODO renewal
+                    }else if(GOOGLE_AUTH.tokenRenewalPolicy == GOOGLE_AUTH.revocation){
+                        $log.debug("Disconnecting user..");
+                        CacheFactory._scopeCache.put('login_status', 'Not connected');
+                        AuthenticationService.logOut();
+                        $scope.loginStatus = 'Not connected'
+                        $scope.$apply();
+                        $log.debug("User disconnected and erased from cache");
+                    }
+                }
+            });
+        };
+
 
     //    $scope.loadTimeLine = function() {
     //         var request = gapi.client.plus.activities.list({'userId' : 'me'});
@@ -169,7 +218,7 @@ angular.module('appverseClientIncubatorApp')
     //  }
     }else{
         $scope.loginStatus =  'Security not enabled';
-        $log.debug('SECURITY NOT ENABLED. LoginStatus values is: ' + $scope.loginStatus);
+        //$log.debug('SECURITY NOT ENABLED. LoginStatus values is: ' + $scope.loginStatus);
     }
     
     
