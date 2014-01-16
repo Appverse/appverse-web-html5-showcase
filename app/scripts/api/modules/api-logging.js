@@ -18,7 +18,7 @@
 // add a server-side communication aspect to it.
 ////////////////////////////////////////////////////////////////////////////
 
-angular.module('AppLogging', ['AppREST', 'AppConfiguration'])
+angular.module('AppLogging', ['AppREST', 'AppConfiguration', 'AppDetection'])
 
 //////////////////////////////////////////////////////////////////////////////////////
 ////////////////////// DECORATOR WAY//////////////////////////////////
@@ -51,8 +51,8 @@ factory instance.
  *
  * @param {object} delegatedLog
  */
-.factory("formattedLogger", ["LOGGING_CONFIG",
-    function (LOGGING_CONFIG) {
+.factory("formattedLogger", ["LOGGING_CONFIG", "Detection",
+    function (LOGGING_CONFIG, Detection) {
         return function (delegatedLog) {
 
             /**
@@ -133,8 +133,9 @@ factory instance.
                             }
 
                             //                            console.log('Log Message sent to server ' + LOGGING_CONFIG.LogServerEndpoint + ' :', logData);
-
-                            $.post(LOGGING_CONFIG.LogServerEndpoint, JSON.stringify(logData));
+                            if (Detection.isOnline) {
+                                $.post(LOGGING_CONFIG.LogServerEndpoint, JSON.stringify(logData));
+                            }
                         }
                     };
 

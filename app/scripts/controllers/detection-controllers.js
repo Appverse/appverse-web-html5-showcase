@@ -11,4 +11,7 @@ angular.module('appverseClientIncubatorApp')
         $log.debug('detectionController loading');
 
         $scope.detect = Detection;
+
+        Detection.testOnlineStatus();
+        Detection.testBandwidth();
     }]);

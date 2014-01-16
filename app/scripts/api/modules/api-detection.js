@@ -7,10 +7,58 @@
 
 angular.module('AppDetection', [])
 
-.run(['$log',
-    function ($log) {
+.run(['$log', 'Detection', '$rootScope', '$window',
+    function ($log, Detection, $rootScope, $window) {
 
         $log.info('AppDetection run');
+
+        $window.addEventListener("online", function () {
+            $log.debug('detectionController online');
+            Detection.isOnline = true;
+            $rootScope.$digest();
+        }, true);
+
+        $window.addEventListener("offline", function () {
+            $log.debug('detectionController offline');
+            Detection.isOnline = false;
+            $rootScope.$digest();
+        }, true);
+
+
+        $window.applicationCache.addEventListener("error", function () {
+            $log.debug("Error fetching manifest: a good chance we are offline");
+        });
+
+        window.addEventListener("goodconnection", function () {
+            $log.debug('detectionController goodconnection');
+            Detection.isOnline = true;
+            $rootScope.$digest();
+        });
+
+        window.addEventListener("connectiontimeout", function () {
+            $log.debug('detectionController connectiontimeout');
+            Detection.isOnline = false;
+            $rootScope.$digest();
+        });
+
+        window.addEventListener("connectionerror", function () {
+            $log.debug('detectionController connectionerror');
+            Detection.isOnline = false;
+            $rootScope.$digest();
+        });
+
+        window.addEventListener("onBandwidthStart", function () {
+            $log.debug('detectionController onBandwidthStart');
+            Detection.bandwidthStartTime = new Date();
+        });
+
+        window.addEventListener("onBandwidthEnd", function (e) {
+            $log.debug('detectionController onBandwidthEnd');
+            var contentLength = parseInt(e.data.getResponseHeader('Content-Length'), 10);
+            var delay = new Date() - Detection.bandwidthStartTime;
+            Detection.bandwidth = parseInt((contentLength / 1024) / (delay / 1000));
+            $rootScope.$digest();
+        });
     }])
 
 .provider('Detection',
@@ -31,6 +79,80 @@ angular.module('AppDetection', [])
         } else {
             this.isMobileBrowser = false;
         }
+
+        var fireEvent = function (name, data) {
+            var e = document.createEvent("Event");
+            e.initEvent(name, true, true);
+            e.data = data;
+            window.dispatchEvent(e);
+        };
+
+        var fetch = function (url, callback) {
+            var xhr = new XMLHttpRequest();
+
+            var noResponseTimer = setTimeout(function () {
+                xhr.abort();
+                fireEvent("connectiontimeout", {});
+            }, 5000);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+
+                if (xhr.status === 200) {
+                    fireEvent("goodconnection", {});
+                    clearTimeout(noResponseTimer);
+                    if (callback) {
+                        callback(xhr.responseText);
+                    }
+                } else {
+                    fireEvent("connectionerror", {});
+                }
+            };
+            xhr.open("GET", url);
+            xhr.send();
+        };
+
+        this.isOnline = window.navigator.onLine;
+        this.isPollingOnlineStatus = false;
+
+        this.testOnlineStatus = function () {
+            fetch("resources/detection/ping.json");
+        };
+
+        this.startPollingOnlineStatus = function (interval) {
+            this.isPollingOnlineStatus = setInterval(this.testOnlineStatus, interval);
+        };
+
+        this.stopPollingOnlineStatus = function () {
+            clearInterval(this.isPollingOnlineStatus);
+            this.isPollingOnlineStatus = false;
+        };
+
+        this.bandwidth = 0;
+        this.isPollingBandwidth = false;
+
+        this.testBandwidth = function () {
+            var jsonUrl = "resources/detection/bandwidth.json";
+            fireEvent("onBandwidthStart");
+            var ajaxResponse = $.ajax({
+                cache: false,
+                async: false,
+                url: jsonUrl,
+                dataType: "json"
+            });
+            fireEvent("onBandwidthEnd", ajaxResponse);
+        };
+
+        this.startPollingBandwidth = function (interval) {
+            this.isPollingBandwidth = setInterval(this.testBandwidth, interval);
+        };
+
+        this.stopPollingBandwidth = function () {
+            clearInterval(this.isPollingBandwidth);
+            this.isPollingBandwidth = false;
+        };
 
         this.$get = function () {
             return this;
@@ -67,12 +189,12 @@ angular.module('AppDetection', [])
         });
 
         if (this.hasAppverseMobile) {
-            addConfigFromJSON('configuration/appversemobile-conf.json');
+            addConfigFromJSON('resources/configuration/appversemobile-conf.json');
         } else if (this.isMobileBrowser) {
-            addConfigFromJSON('configuration/mobilebrowser-conf.json');
+            addConfigFromJSON('resources/configuration/mobilebrowser-conf.json');
         }
 
-        addConfigFromJSON('configuration/environment-conf.json');
+        addConfigFromJSON('resources/configuration/environment-conf.json');
 
         var appConfiguration = angular.module('AppConfiguration');
 

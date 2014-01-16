@@ -17,13 +17,13 @@ angular.module('AppTranslate', ['pascalprecht.translate', 'AppConfiguration', 't
         function ($translateProvider, I18N_CONFIG, tmhDynamicLocaleProvider) {
 
         $translateProvider.useStaticFilesLoader({
-            prefix: 'i18n/',
+            prefix: 'resources/i18n/',
             suffix: '.json'
         });
 
         $translateProvider.preferredLanguage(I18N_CONFIG.PreferredLocale);
 
-        tmhDynamicLocaleProvider.localeLocationPattern('i18n/angular/angular-locale_{{locale}}.js');
+        tmhDynamicLocaleProvider.localeLocationPattern('resources/i18n/angular/angular-locale_{{locale}}.js');
     }])
 
 .run(['$log',
