@@ -1,0 +1,21 @@
+CACHE MANIFEST
+
+CACHE:
+index.html
+styles/main.css
+http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js
+bower_components/jquery/jquery.js
+bower_components/angular/angular.js
+bower_components/angular-bootstrap/ui-bootstrap.js
+bower_components/lodash/dist/lodash.underscore.js
+bower_components/modernizr/modernizr.js
+bower_components/angular-dynamic-locale/src/tmhDinamicLocale.js
+#scripts/api/modules/api-detection.js
+views/cache/cache.html
+views/cache/cache.state1.html
+views/cache/cache.state2.html
+#scripts/controllers/topics-controllers.js
+#scripts/controllers/translation-controllers.js
+
+NETWORK:
+*
