@@ -52,7 +52,8 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'AppIndexedDB', 'jmdobry.a
                     CACHE_CONFIG.BrowserStorage_type,
                     CACHE_CONFIG.MaxAge,
                     CACHE_CONFIG.CacheFlushInterval,
-                    CACHE_CONFIG.DeleteOnExpire
+                    CACHE_CONFIG.DeleteOnExpire,
+                    CACHE_CONFIG.VerifyIntegrity
                 );
             }
 
@@ -79,7 +80,8 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'AppIndexedDB', 'jmdobry.a
         '$http',
         '$indexedDB',
         'CACHE_CONFIG',
-        function ($angularCacheFactory, $http, $indexedDB, CACHE_CONFIG) {
+        '$log',
+        function ($angularCacheFactory, $http, $indexedDB, CACHE_CONFIG, $log) {
 
             var factory = {
                 _scopeCache: null,
@@ -147,16 +149,16 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'AppIndexedDB', 'jmdobry.a
              {void} $reset() - Clears the Storage in one go.
              */
 
-            factory.setBrowserStorage = function (type, maxAgeInit, cacheFlushIntervalInit, deleteOnExpireInit) {
-                var browserStorageType = CACHE_CONFIG.LocalBrowserStorage;
-                if (type === 2) {
-                    browserStorageType = CACHE_CONFIG.SessionBrowserStorage;
-                }
+            factory.setBrowserStorage = function (type, maxAgeInit, cacheFlushIntervalInit, deleteOnExpireInit, verifyIntegrityInit) {
+
+                var browserStorageType = CACHE_CONFIG.SessionBrowserStorage;
+                
                 factory._browserCache = $angularCacheFactory(CACHE_CONFIG.DefaultBrowserCacheName, {
                     maxAge: maxAgeInit,
                     cacheFlushInterval: cacheFlushIntervalInit,
                     deleteOnExpire: deleteOnExpireInit,
-                    storageMode: browserStorageType
+                    storageMode: browserStorageType,
+                    verifyIntegrity: verifyIntegrityInit
                 });
 
                 return factory._browserCache;

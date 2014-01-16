@@ -3,8 +3,8 @@
 angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
 
 
-.run(['$rootScope', '$location', '$log', 'AuthenticationService', 'UserService', 'AUTHORIZATION_DATA', 'SECURITY_GENERAL',
-    function ($rootScope, $location, $log, AuthenticationService, UserService, AUTHORIZATION_DATA, SECURITY_GENERAL) {
+.run(['$rootScope', '$location', '$log', 'AuthenticationService', 'RoleService', 'AUTHORIZATION_DATA', 'SECURITY_GENERAL',
+    function ($rootScope, $location, $log, AuthenticationService, RoleService, AUTHORIZATION_DATA, SECURITY_GENERAL) {
 
   /**
    * @function
@@ -55,7 +55,7 @@ angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
         // if route requires auth and user is not logged in
         if (routeClean(to.url) == false){
             if (AuthenticationService.isLoggedIn() == true) {
-              if(UserService.checkRoleInUser('admin') == false){
+              if(RoleService.validateRoleAdmin() == false){
                   alert("YOU DO NOT HAVE THE NEEDED ROLE.");
                   ev.preventDefault();
                   //$location.path('/error');

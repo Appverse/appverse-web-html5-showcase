@@ -1,6 +1,6 @@
 {
     "LOGGING_CONFIG": {
-        "ServerEnabled": true,
+        "ServerEnabled": false,
         "EnabledLogLevel": true,
         "EnabledErrorLevel": true,
         "EnabledDebugLevel": true,
@@ -13,7 +13,7 @@
         "ScopeCache_duration": 10000,
         "ScopeCache_capacity": 10,
         "BrowserStorageCache_Enabled": true,
-        "BrowserStorage_type": "1",
+        "BrowserStorage_type": "2",
         "HttpCache_Enabled": true,
         "HttpCache_duration": 20000,
         "HttpCache_capacity": 10,
