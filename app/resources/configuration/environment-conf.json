@@ -17,13 +17,7 @@
         "HttpCache_Enabled": true,
         "HttpCache_duration": 20000,
         "HttpCache_capacity": 10,
-        "IndexedDBCache_Enabled": true,
-        "IndexedDB_objectStore": "structuredCache",
-        "IndexedDB_keyPath": "messages",
-        "IndexedDB_mainIndex": "name",
-        "IndexedDB_mainIndex_isUnique": true,
-        "IndexedDB_secondaryIndex": "property",
-        "IndexedDB_secondaryIndex_isUnique": false
+        "IndexedDBCache_Enabled": true
     },
     "SERVERPUSH_CONFIG": {
         "BaseUrl": "http://localhost:3000",

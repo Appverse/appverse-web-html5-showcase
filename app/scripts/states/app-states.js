@@ -243,6 +243,13 @@ angular.module('appverseClientIncubatorApp')
                     templateUrl: 'views/cache/cache.state2.html',
                     controller: 'cacheState2Controller'
                 })
+                
+                .state('cache.idb', {
+
+                    url: '/idb',
+                    templateUrl: 'views/cache/cache.idb.html',
+                    controller: 'cacheIDBController'
+                })
 
                 ///////////////////
                 // SECTION: Detection //
