@@ -48,7 +48,10 @@
                  then to navigate to a state. When this link is clicked it will take the application
                  to the 'home' state. Behind the scenes the directive also adds the correct href attr
                  and url. -->
-                <a class="brand" ui-sref="home">Appverse Web HTML5</a>
+                <a class="brand" ui-sref="home">Appverse Web HTML5
+                <img src="http://www.w3.org/html/logo/badge/html5-badge-h-connectivity-css3-device-storage.png" width="115" height="32" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Device Access, and Offline &amp; Storage" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Device Access, and Offline &amp; Storage">
+                </a>
+
                 <ul class="nav">
 
                     <!-- Here you can see ui-sref in action again. Also notice the use of $state.includes, which
@@ -76,8 +79,11 @@
                     <li ng-class="{ active: $state.includes('about') }">
                         <a ui-sref="about">About</a>
                     </li>
+                    
                 </ul>
-
+                
+                
+                
                 <!-- Here is a named ui-view (ui-view="hint"). ui-views don't have to be named, but we'll be populate this
                  on from various different child states and we want a name to help us target. -->
                 <p ui-view="hint" class="navbar-text pull-left"></p>
