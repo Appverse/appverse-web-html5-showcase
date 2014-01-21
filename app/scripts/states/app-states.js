@@ -21,8 +21,8 @@ angular.module('appverseClientIncubatorApp')
 
                 // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
                 // Here we are just setting up some convenience urls.
-//                .when('/t?id', '/topics/:id')
-//                    .when('/t/:id', '/topics/:id')
+                //                .when('/t?id', '/topics/:id')
+                //                    .when('/t/:id', '/topics/:id')
 
 
                 // If the url is ever invalid, e.g. '/asdf', then redirect to '/' aka the home state
@@ -252,6 +252,16 @@ angular.module('appverseClientIncubatorApp')
                     url: '/detection',
                     templateUrl: 'views/detection/detection.html',
                     controller: 'detectionController'
+                })
+
+                ///////////////////
+                // SECTION: Mobile //
+                ///////////////////
+                .state('mobile', {
+
+                    url: '/mobile',
+                    templateUrl: 'views/mobile/mobile.html',
+                    controller: 'mobileController'
                 })
 
                 ////////////////////////////////
