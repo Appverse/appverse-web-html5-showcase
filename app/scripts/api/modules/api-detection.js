@@ -24,7 +24,6 @@ angular.module('AppDetection', [])
             $rootScope.$digest();
         }, true);
 
-
         $window.applicationCache.addEventListener("error", function () {
             $log.debug("Error fetching manifest: a good chance we are offline");
         });
@@ -57,7 +56,9 @@ angular.module('AppDetection', [])
             var contentLength = parseInt(e.data.getResponseHeader('Content-Length'), 10);
             var delay = new Date() - Detection.bandwidthStartTime;
             Detection.bandwidth = parseInt((contentLength / 1024) / (delay / 1000));
-            $rootScope.$digest();
+            setTimeout(function () {
+                $rootScope.$digest();
+            });
         });
     }])
 
@@ -78,6 +79,31 @@ angular.module('AppDetection', [])
             this.isMobileBrowser = true;
         } else {
             this.isMobileBrowser = false;
+        }
+
+        if (this.hasAppverseMobile || this.isMobileBrowser) {
+            $.ajax({
+                async: false,
+                url: "bower_components/angular-touch/angular-touch.js",
+                dataType: 'script'
+            });
+            $.ajax({
+                async: false,
+                url: "bower_components/angular-animate/angular-animate.js",
+                dataType: 'script'
+            });
+            $.ajax({
+                async: false,
+                url: "bower_components/angular-route/angular-route.js",
+                dataType: 'script'
+            });
+            $.ajax({
+                async: false,
+                url: "scripts/api/angular-jqm.js",
+                dataType: 'script'
+            });
+        } else {
+            angular.module('jqm', []);
         }
 
         var fireEvent = function (name, data) {
