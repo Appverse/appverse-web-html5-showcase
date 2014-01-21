@@ -17,7 +17,11 @@
     "angular-dynamic-locale": "~0.0.2",
     "restangular": "~1.2.0",
     "modernizr": "~2.6.1",
-    "angular-cache": "~2.1.1"
+    "angular-cache": "~2.1.1",
+    "angular-animate": "~1.2.9",
+    "angular-touch": "~1.2.9",
+    "angular-route": "~1.2.9",
+    "ngstorage": "~0.3.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.0.8",
