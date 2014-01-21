@@ -15,6 +15,7 @@
     "angular-translate-loader-static-files": "~0.1.6",
     "angular-i18n": "~1.0.8",
     "angular-dynamic-locale": "~0.0.2",
+    "angular-resource": "~1.2.1",
     "restangular": "~1.2.0",
     "modernizr": "~2.6.1",
     "angular-cache": "~2.1.1",

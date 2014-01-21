@@ -143,30 +143,27 @@ in the common API.
     /*
      Name of the default object store
       */
-    IndexedDB_objectStore: 'structuredCache',
+    IndexedDB_name: 'DefaultIDBCache',
     /*
-     The key name for the default path
+     The version for the version (mandatory)
       */
-    IndexedDB_keyPath: 'messages',
+    IndexedDB_version: 1,
     /*
-     The name of the main index in the IDB.
-     It matches to the primarily indexed field.
-      */
-    IndexedDB_mainIndex: 'name',
-    /*
-     The main index can be unique or not. This is the value of this attribute.
-      */
-    IndexedDB_mainIndex_isUnique: true,
-    /*
-     The name of the secondary index in the IDB.
-     It improves searches in the IDB.
-     It matches to the secondarily indexed field.
-      */
-    IndexedDB_secondaryIndex: 'property',
-    /*
-      The secondary index can be unique or not. This is the value of this attribute.
-      */
-    IndexedDB_secondaryIndex_isUnique: false
+     * The options for the db. 
+     * The default structure is defined as id/name pairs.
+     * It is possible to add more indexes:
+     * indexes : [{ name : 'indexName', unique : 'true/false' },{},...]
+     */
+    IndexedDB_options: [
+            {
+                storeName: 'structure-of-items',
+                keyPath: 'id',
+                indexes: [
+                    { name: 'name', unique: false }
+                ]
+            }
+     ]
+
 })
 
 /*
@@ -454,7 +451,7 @@ Future updates of Restangular imply review of this section in order to keep cons
  * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
  */
 .constant('SECURITY_GENERAL', {
-    securityEnabled: true
+    securityEnabled: false
 })
 
 .constant('SECURITY_OAUTH', {
