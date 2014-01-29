@@ -32,7 +32,7 @@ angular.module('appverseClientIncubatorApp')
 .controller('CollapseDemoCtrl',
     function ($scope) {
         //UI Demo Page
-        $scope.uidemoCollapsed = false;
+        $scope.uidemoCollapsed = true;
         //Landing Page
         $scope.routingCollapsed = true;
         $scope.stylingCollapsed = true;
