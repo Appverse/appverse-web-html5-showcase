@@ -1,23 +1,31 @@
 $iconSpritePath:"../images/glyphicons-halflings.png";
  $iconWhiteSpritePath:"../images/glyphicons-halflings-white.png";
 
-/* Import specific css here */
 
+/* Import specific css here */
 @import "bootstrap-sass/lib/bootstrap";
+
+
+/*
+http://getbootstrap.com/2.3.2/components.html#navbar
+Add .navbar-fixed-top and remember to account for the hidden area underneath it by adding at least 40px padding to the <body>. Be sure to add this after the core Bootstrap CSS and before the optional responsive CSS.
+*/
+body {
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
 @import "bootstrap-sass/lib/responsive";
 @import "fade";
 
-/* Put main CSS here */
 
-html,
-body {
-    margin: 20px;
-}
+/* Put main CSS here */
 body {
     background: #fafafa;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
 }
+
 .hero-unit {
     margin: 50px auto 0 auto;
     width: 900px;
@@ -28,11 +36,57 @@ body {
     border-radius: 6px;
     padding: 60px;
 }
+
 .hero-unit h1 {
     font-size: 60px;
     line-height: 1;
     letter-spacing: -1px;
 }
+
 .trade-button {
     width: 24px;
+}
+
+/* Bootstrap navbar */
+div.navbar-inner {
+    padding: 0 !important;
+}
+
+/* Navbar title */
+a.brand {
+    margin-left: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 10px !important;
+}
+
+/* HTML5 logo */
+a.brand img {
+    width: 95px;
+    margin-top: -5px;
+}
+
+/* Slide effect */
+.myslide.ng-enter,
+.myslide.ng-leave {
+    position: absolute;
+    transition: .3s linear all;
+}
+
+.myslide.ng-enter {
+    left: 100%;
+    width: 100%;
+}
+
+.myslide.ng-enter-active {
+    transform: translateX(-100%);
+}
+
+.myslide.ng-leave {
+    //    left: 0;
+
+}
+
+.myslide.ng-leave-active {
+    transform: translateX(-100%);
 }
