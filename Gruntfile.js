@@ -252,7 +252,7 @@ module.exports = function (grunt) {
             dist: {
                 files: {
                     src: [
-                        '<%= yeoman.dist %>/scripts/{,*/}*.js',
+                        '<%= yeoman.dist %>/scripts/*.js',
                         '<%= yeoman.dist %>/styles/{,*/}*.css',
                         '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
                         '<%= yeoman.dist %>/styles/fonts/*'
@@ -338,9 +338,15 @@ module.exports = function (grunt) {
                     src: [
                         '*.{ico,png,txt}',
                         '.htaccess',
-                        'bower_components/**/*',
+                        'api/**',
+                        'bower_components/angular-touch/angular-touch.js',
+                        'bower_components/angular-animate/angular-animate.js',
+                        'bower_components/angular-route/angular-route.js',
+                        'scripts/api/angular-jqm.js',
                         'images/{,*/}*.{gif,webp}',
-                        'styles/fonts/*'
+                        'resources/**',
+                        'styles/fonts/*',
+                        'styles/images/*'
                     ]
                 }, {
                     expand: true,
@@ -348,6 +354,13 @@ module.exports = function (grunt) {
                     dest: '<%= yeoman.dist %>/images',
                     src: [
                         'generated/*'
+                    ]
+                }, {
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/bower_components/angular-i18n',
+                    dest: '<%= yeoman.dist %>/resources/i18n/angular',
+                    src: [
+                        '*.js'
                     ]
                 }]
             },
@@ -440,7 +453,7 @@ module.exports = function (grunt) {
         'karma'
     ]);
 
-    grunt.registerTask('build', [
+    grunt.registerTask('dist', [
         'clean:dist',
         'useminPrepare',
         'concurrent:dist',
@@ -452,7 +465,10 @@ module.exports = function (grunt) {
         'cssmin',
         'uglify',
         'rev',
-        'usemin'
+        'usemin',
+        'connect:dist',
+        'open',
+        'watch'
     ]);
 
     grunt.registerTask('default', [
