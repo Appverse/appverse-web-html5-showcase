@@ -215,8 +215,7 @@ angular.module('appverseClientIncubatorApp')
 
                     abstract: false,
                     url: '/ui',
-                    templateUrl: 'views/demo/ui-bootstrap/ui-b.html',
-
+                    templateUrl: 'views/demo/ui-bootstrap/ui-b.html'
                 })
 
                 ///////////////////
@@ -243,7 +242,7 @@ angular.module('appverseClientIncubatorApp')
                     templateUrl: 'views/cache/cache.state2.html',
                     controller: 'cacheState2Controller'
                 })
-                
+
                 .state('cache.idb', {
 
                     url: '/idb',
@@ -304,12 +303,12 @@ angular.module('appverseClientIncubatorApp')
                     templateProvider: ['$timeout',
                         function ($timeout) {
                             return $timeout(function () {
-                                return '<p class="lead">Appverse Web HTML5 Resources</p><ul>' +
+                                return '<div class="container"><p class="lead">Appverse Web HTML5 Resources</p><ul>' +
                                     '<li><a href="https://jdediego@appverse.gftlabs.com/git/scm/ahi/html5-incubator.git">Source for the Incubator</a></li>' +
                                     '<li><a href="http://appverse.github.io/appverse-web/">Appverse Web Main Page</a></li>' +
                                     '<li><a href="">Quick Start</a> (Coming soon)</li>' +
                                     '<li><a href="">API Reference</a> (Coming soon)</li>' +
-                                    '</ul>';
+                                    '</ul></div>';
                             }, 100);
                         }]
                 });
