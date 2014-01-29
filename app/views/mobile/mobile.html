@@ -1,31 +1,32 @@
-<h4>jQuery Mobile Demo</h4>
+<div class="container" scrolly-scroll>
+    <p class="lead">jQuery Mobile Demo</p>
 
-<h5>Buttons</h5>
-<button jqm-button jqm-theme="a" inline="true" class="btn">Theme a</button>
-<button jqm-button jqm-theme="b" inline="true" class="btn">Theme b</button>
-<button jqm-button jqm-theme="c" inline="true" class="btn">Theme c</button>
-<button jqm-button jqm-theme="d" inline="true" class="btn">Theme d</button>
-<button jqm-button jqm-theme="e" inline="true" class="btn">Theme e</button>
+    <h5>Buttons</h5>
+    <button jqm-button jqm-theme="a" inline="true" class="btn">Theme a</button>
+    <button jqm-button jqm-theme="b" inline="true" class="btn">Theme b</button>
+    <button jqm-button jqm-theme="c" inline="true" class="btn">Theme c</button>
+    <button jqm-button jqm-theme="d" inline="true" class="btn">Theme d</button>
+    <button jqm-button jqm-theme="e" inline="true" class="btn">Theme e</button>
 
-<h5>Checkbox</h5>
-<label ng-hide="isMobile" class="checkbox">{{cbLabel='I accept the terms and conditions of the contract.'}}
-    <input type="checkbox" ng-model="myCheckbox">
-</label>
-<div ng-show="isMobile" jqm-checkbox ng-model="myCheckbox">{{cbLabel}}
-</div>
-<pre>Checkbox value: {{myCheckbox===true}}</pre>
-
-<h5>Text Input</h5>
-<p jqm-fieldcontain>
-    <label class="ui-input-text" for="myinput">Input label</label>
-    <div jqm-input-wrapper>
-        <input jqm-input-text clear-btn="true" id="myinput" ng-model="$root.myText" placeholder="Please enter some text...">
+    <h5>Checkbox</h5>
+    <label ng-hide="isMobile" class="checkbox">{{cbLabel='I accept the terms and conditions of the contract.'}}
+        <input type="checkbox" ng-model="myCheckbox">
+    </label>
+    <div ng-show="isMobile" jqm-checkbox ng-model="myCheckbox">{{cbLabel}}
     </div>
-</p>
-<pre>Input value: {{$root.myText}}</pre>
+    <pre>Checkbox value: {{myCheckbox===true}}</pre>
 
-<h5>List + filter</h5>
-<div ng-init="friends = [
+    <h5>Text Input</h5>
+    <p jqm-fieldcontain>
+        <label class="ui-input-text" for="myinput">Input label</label>
+        <div jqm-input-wrapper>
+            <input jqm-input-text clear-btn="true" id="myinput" ng-model="$root.myText" placeholder="Please enter some text...">
+        </div>
+    </p>
+    <pre>Input value: {{$root.myText}}</pre>
+
+    <h5>List + filter</h5>
+    <div ng-init="friends = [
       {name:'John'},
       {name:'Jessie'},
       {name:'Johanna'},
@@ -37,36 +38,37 @@
       {name:'Patrick'},
       {name:'Samantha'}
     ]">
-    <div jqm-input-wrapper>
-        <input jqm-input-text clear-btn="true" type="search" ng-model="$root.q" placeholder="Filter friends..." />
+        <div jqm-input-wrapper>
+            <input jqm-input-text clear-btn="true" type="search" ng-model="$root.q" placeholder="Filter friends..." />
+        </div>
+        <ul jqm-listview inset="true" class="example-animate-container">
+            <li jqm-li-link class="animate-repeat" ng-repeat="friend in friends | filter:$root.q">
+                {{friend.name}}
+            </li>
+        </ul>
     </div>
-    <ul jqm-listview inset="true" class="example-animate-container">
-        <li jqm-li-link class="animate-repeat" ng-repeat="friend in friends | filter:$root.q">
-            {{friend.name}}
-        </li>
-    </ul>
-</div>
 
-<h5>Animation</h5>
-<p>
-    <button jqm-button class="btn" ng-click="isShown=!isShown">{{isShown?'Slide out':'Slide in'}}</button>
-    <pre ng-show="isShown" class="slide" style="width: 200px;">Sliding animation!</pre>
-</p>
+    <h5>Animation</h5>
+    <p>
+        <button jqm-button class="btn" ng-click="isShown=!isShown">{{isShown?'Slide out':'Slide in'}}</button>
+        <pre ng-show="isShown" class="slide" style="width: 200px;">Sliding animation!</pre>
+    </p>
 
-<h5>Toggle</h5>
-<button jqm-button class="btn" ng-model="single" btn-checkbox>
-    Single Toggle
-</button>
-<p>
-    <pre>Toggle value: {{single===true}}</pre>
-</p>
-
-<h5>Radio buttons</h5>
-<div jqm-controlgroup type="horizontal" class="btn-group">
-    <button jqm-button jqm-theme="a" class="btn" ng-repeat="d in ['Left','Center','Right']" ng-model="$root.myAlign" btn-radio="d">
-        {{d}}
+    <h5>Toggle</h5>
+    <button jqm-button class="btn" ng-model="single" btn-checkbox>
+        Single Toggle
     </button>
+    <p>
+        <pre>Toggle value: {{single===true}}</pre>
+    </p>
+
+    <h5>Radio buttons</h5>
+    <div jqm-controlgroup type="horizontal" class="btn-group">
+        <button jqm-button jqm-theme="a" class="btn" ng-repeat="d in ['Left','Center','Right']" ng-model="$root.myAlign" btn-radio="d">
+            {{d}}
+        </button>
+    </div>
+    <p>
+        <pre style="text-align:{{$root.myAlign}};">Sample text</pre>
+    </p>
 </div>
-<p>
-    <pre style="text-align:{{$root.myAlign}};">Sample text</pre>
-</p>

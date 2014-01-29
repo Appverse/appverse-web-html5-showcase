@@ -1,4 +1,4 @@
-<div class="span6">
+<div class="container" scrolly-scroll>
     <p class="lead">Alert</p>
     <div ng-controller="AlertDemoCtrl">
         <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
@@ -8,14 +8,12 @@
     <hr/>
     <p class="lead">Collapse</p>
     <div ng-controller="CollapseDemoCtrl">
-
         <button class="btn" ng-click="uidemoCollapsed = !uidemoCollapsed">Toggle collapse</button>
-        <hr>
+        <p/>
         <div collapse="uidemoCollapsed">
             <div class="well well-large">Some content</div>
         </div>
     </div>
-
 
     <hr/>
     <p class="lead">Date Picker</p>
@@ -25,11 +23,11 @@
             <em>{{dt | date:'fullDate' }}</em>
         </div>
 
-        <hr/>
-        <div class="well well-small pull-left" ng-model="dt">
+        <p/>
+        <div class="well well-small" ng-model="dt">
             <datepicker min="minDate" show-weeks="showWeeks"></datepicker>
         </div>
-        <hr/>
+        <p/>
         <div class="form-horizontal">
             <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt" is-open="opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" />
             <button class="btn" ng-click="open()">
@@ -37,7 +35,7 @@
             </button>
         </div>
 
-        <hr/>
+        <p/>
         <button class="btn btn-small btn-inverse" ng-click="today()">Today</button>
         <button class="btn btn-small btn-inverse" ng-click="dt = '2009-08-24'">2009-08-24</button>
         <button class="btn btn-small btn-success" ng-click="toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
@@ -45,7 +43,6 @@
         <button class="btn btn-small" ng-click="toggleMin()" tooltip="After today restriction">Min date</button>
     </div>
 
-    <hr/>
     <hr/>
     <p class="lead">Modal</p>
     <div ng-controller="ModalDemoCtrl">
@@ -67,12 +64,11 @@
         </script>
 
         <button class="btn" ng-click="open()">Open a modal window!</button>
+        <p/>
         <div ng-show="selected">Selection from a modal: {{ selected }}</div>
     </div>
 
-
     <hr/>
     <p class="lead">And many others..</p>
-
 
 </div>

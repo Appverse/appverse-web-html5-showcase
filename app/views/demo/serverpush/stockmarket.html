@@ -1,4 +1,4 @@
-<div>
+<div class="container">
     <p class="lead">Server Push Demo</p>
     <p>
         In this demo values from the dummy stockmarket application are generated in server and then sent to the client application.
@@ -9,120 +9,120 @@
     <p>
         So, the user is notified of changes in a real-time basis.
     </p>
-    <table class="table table-bordered table-condensed" >
+    <table class="table table-bordered table-condensed">
         <thead>
-        <tr>
-            <th>Stock</th>
-            <th>BID5</th>
-            <th>BID4</th>
-            <th>BID3</th>
-            <th>BID2</th>
-            <th>BID1</th>
-            <th>Trade</th>
-            <th>ASK1</th>
-            <th>ASK2</th>
-            <th>ASK3</th>
-            <th>ASK4</th>
-            <th>ASK5</th>
-        </tr>
-        <tr>
-        </tr>
+            <tr>
+                <th>Stock</th>
+                <th>BID5</th>
+                <th>BID4</th>
+                <th>BID3</th>
+                <th>BID2</th>
+                <th>BID1</th>
+                <th>Trade</th>
+                <th>ASK1</th>
+                <th>ASK2</th>
+                <th>ASK3</th>
+                <th>ASK4</th>
+                <th>ASK5</th>
+            </tr>
+            <tr>
+            </tr>
         </thead>
         <tbody class="stock-data" ng-repeat="stock in stocks">
 
-        <td>
-            <span class="badge badge-inverse">{{ stock.st }}</span>
-        </td>
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}b5p">{{ stock.b5p }}</div>
-                </strong>
-                <div id="{{ stock.st }}b5v">{{ stock.b5p }}</div>
-            </a>
-        </td>
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}b4p">{{ stock.b4p }}</div>
-                </strong>
-                <div id="{{ stock.st }}b4v">{{ stock.b4p }}</div>
-            </a>
-        </td>
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}b3p">{{ stock.b3p }}</div>
-                </strong>
-                <div id="{{ stock.st }}b3v">{{ stock.b3p }}</div>
-            </a>
-        </td>
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}b2p">{{ stock.b2p }}</div>
-                </strong>
-                <div id="{{ stock.st }}b2v">{{ stock.b2p }}</div>
-            </a>
-        </td>
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}b1p">{{ stock.b1p }}</div>
-                </strong>
-                <div id="{{ stock.st }}b1v">{{ stock.b1p }}</div>
-            </a>
-        </td>
+            <td>
+                <span class="badge badge-inverse">{{ stock.st }}</span>
+            </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}b5p">{{ stock.b5p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}b5v">{{ stock.b5p }}</div>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}b4p">{{ stock.b4p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}b4v">{{ stock.b4p }}</div>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}b3p">{{ stock.b3p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}b3v">{{ stock.b3p }}</div>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}b2p">{{ stock.b2p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}b2v">{{ stock.b2p }}</div>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}b1p">{{ stock.b1p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}b1v">{{ stock.b1p }}</div>
+                </a>
+            </td>
 
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}tp">{{ stock.tp }}</div>
-                </strong>
-                <div id="{{ stock.st }}tv">{{ stock.tv }}</div>
-            </a>
-        </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}tp">{{ stock.tp }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}tv">{{ stock.tv }}</div>
+                </a>
+            </td>
 
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}a1p">{{ stock.a1p }}</div>
-                </strong>
-                <div id="{{ stock.st }}a1v">{{ stock.a1v }}</div>
-            </a>
-        </td>
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}a2p">{{ stock.a2p }}</div>
-                </strong>
-                <div id="{{ stock.st }}a2v">{{ stock.a2v }}</div>
-            </a>
-        </td>
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}a3p">{{ stock.a3p }}</div>
-                </strong>
-                <div id="{{ stock.st }}a3v">{{ stock.a3v }}</div>
-            </a>
-        </td>
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}a4p">{{ stock.a4p }}</div>
-                </strong>
-                <div id="{{ stock.st }}a4v">{{ stock.a4v }}</div>
-            </a>
-        </td>
-        <td>
-            <a class="btn btn-primary btn-mini trade-button">
-                <strong>
-                    <div id="{{ stock.st }}a5p">{{ stock.a5p }}</div>
-                </strong>
-                <div id="{{ stock.st }}a5v">{{ stock.a5v }}</div>
-            </a>
-        </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}a1p">{{ stock.a1p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}a1v">{{ stock.a1v }}</div>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}a2p">{{ stock.a2p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}a2v">{{ stock.a2v }}</div>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}a3p">{{ stock.a3p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}a3v">{{ stock.a3v }}</div>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}a4p">{{ stock.a4p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}a4v">{{ stock.a4v }}</div>
+                </a>
+            </td>
+            <td>
+                <a class="btn btn-primary btn-mini trade-button">
+                    <strong>
+                        <div id="{{ stock.st }}a5p">{{ stock.a5p }}</div>
+                    </strong>
+                    <div id="{{ stock.st }}a5v">{{ stock.a5v }}</div>
+                </a>
+            </td>
         </tbody>
 
     </table>
@@ -130,8 +130,7 @@
 
 
     <div>
-        <button  class="btn btn-info btn-primary" ng-click="startPush()">Start data pushing from server</button>
-        <button  class="btn btn-info btn-primary" ng-click="endPush()">Stop data pushing from server</button>
+        <button class="btn btn-info btn-primary" ng-click="startPush()">Start data pushing from server</button>
+        <button class="btn btn-info btn-primary" ng-click="endPush()">Stop data pushing from server</button>
     </div>
-
 </div>

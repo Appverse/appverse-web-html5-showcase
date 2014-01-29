@@ -1,32 +1,35 @@
-<div class="row">
-    <div class="span3">
-        <div class="pa-sidebar well well-small">
-            <ul class="nav nav-list">
-                <li ng-class="{ active: $state.includes('topics.list') }">
-                    <a ui-sref="topics.list">Topics in development!</a>
-                </li>
-                <li class="nav-header">We're working on..</li>
+<div class="container">
+    <p class="lead">REST Demo</p>
+    <div class="row">
+        <div class="span3">
+            <div class="pa-sidebar well well-small">
+                <ul class="nav nav-list">
+                    <li ng-class="{ active: $state.includes('topics.list') }">
+                        <a ui-sref="topics.list">Topics in development!</a>
+                    </li>
+                    <li class="nav-header">We're working on..</li>
 
-                <!-- This <li> will only add the 'active' class if 'contacts.detail' or its descendants are active
+                    <!-- This <li> will only add the 'active' class if 'contacts.detail' or its descendants are active
              AND if it is the link for the active contact (aka contactId) -->
-                <div rest rest-path="topics.json" rest-name="topics" />
-                <alert ng-show="topicsLoading">Loading...</alert>
-                <alert ng-show="topicsError" class="alert-error">Error loading topics</alert>
-                <li ng-repeat="topic in topics | limitTo:3" ng-class="{ active: $state.includes('topics.detail') && $stateParams.topicId == topic.id }">
+                    <div rest rest-path="topics.json" rest-name="topics"></div>
+                    <alert ng-show="topicsLoading">Loading...</alert>
+                    <alert ng-show="topicsError" class="alert-error">Error loading topics</alert>
+                    <li ng-repeat="topic in topics | limitTo:3" ng-class="{ active: $state.includes('topics.detail') && $stateParams.topicId == topic.id }">
 
-                    <!-- Here's a ui-sref that is also providing necessary parameters -->
-                    <a ui-sref="topics.detail({topicId:topic.id})">{{topic.name}}</a>
-                </li>
-                <small>(Retrieved using rest directive)</small>
-            </ul>
-            <hr>
-            <button class="btn" ng-click="goToRandom()">Show a random topic</button>
+                        <!-- Here's a ui-sref that is also providing necessary parameters -->
+                        <a ui-sref="topics.detail({topicId:topic.id})">{{topic.name}}</a>
+                    </li>
+                    <small>(Retrieved using rest directive)</small>
+                </ul>
+                <hr>
+                <button class="btn" ng-click="goToRandom()">Show a random topic</button>
 
-            <!-- Another named view -->
-            <div ui-view="menuTip"></div>
+                <!-- Another named view -->
+                <div ui-view="menuTip" autoscroll="false"></div>
+            </div>
         </div>
-    </div>
 
-    <!-- Our unnamed main ui-view for this template -->
-    <div ui-view class="span9" ng-animate="{enter:'fade-enter'}"></div>
+        <!-- Our unnamed main ui-view for this template -->
+        <div ui-view class="span9" autoscroll="false"></div>
+    </div>
 </div>
