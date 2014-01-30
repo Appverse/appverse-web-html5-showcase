@@ -1,34 +1,35 @@
 {
-    "name": "appverseHTML5Incubator",
-    "version": "0.0.1",
-    "dependencies": {
-        "angular": "1.2.1",
-        "json3": "3.2.4",
-        "jquery": "1.10.2",
-        "bootstrap-sass": "2.3.1",
-        "es5-shim": "2.0.8",
-        "angular-cookies": "1.2.1",
-        "angular-sanitize": "1.2.1",
-        "angular-bootstrap": "0.6.0",
-        "angular-ui-router": "0.2.8-bowratic-tedium",
-        "angular-translate": "1.1.0",
-        "angular-translate-loader-static-files": "0.1.6",
-        "angular-i18n": "1.0.8",
-        "angular-dynamic-locale": "0.0.2",
-        "angular-resource": "1.2.1",
-        "restangular": "1.2.0",
-        "modernizr": "2.6.1",
-        "angular-cache": "2.1.1",
-        "angular-animate": "1.2.1",
-        "angular-touch": "1.2.1",
-        "angular-route": "1.2.1",
-        "ngstorage": "0.3.0"
-    },
-    "devDependencies": {
-        "angular-mocks": "1.0.8",
-        "angular-scenario": "1.0.8"
-    },
-    "resolutions": {
-        "angular": "1.2.1"
-    }
+  "name": "appverseHTML5Incubator",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "1.2.1",
+    "json3": "3.2.4",
+    "jquery": "1.10.2",
+    "bootstrap-sass": "2.3.1",
+    "es5-shim": "2.0.8",
+    "angular-cookies": "1.2.1",
+    "angular-sanitize": "1.2.1",
+    "angular-bootstrap": "0.6.0",
+    "angular-ui-router": "0.2.8-bowratic-tedium",
+    "angular-translate": "1.1.0",
+    "angular-translate-loader-static-files": "0.1.6",
+    "angular-i18n": "1.0.8",
+    "angular-dynamic-locale": "0.0.2",
+    "angular-resource": "1.2.1",
+    "restangular": "1.2.0",
+    "modernizr": "2.6.1",
+    "angular-cache": "2.1.1",
+    "angular-animate": "1.2.1",
+    "angular-touch": "1.2.1",
+    "angular-route": "1.2.1"
+  },
+  "devDependencies": {
+    "angular-mocks": "1.0.8",
+    "angular-scenario": "1.0.8"
+  },
+  "resolutions": {
+    "angular": "1.2.1",
+    "angular-translate": "1.1.0",
+    "jquery": "1.10.2"
+  }
 }
