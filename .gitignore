@@ -6,3 +6,4 @@ app/bower_components
 /nbproject
 /.idea/
 .sonar/
+coverage/

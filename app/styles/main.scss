@@ -52,6 +52,14 @@ div.navbar-inner {
     padding: 0 !important;
 }
 
+/* Fix scrolling above navbar */
+@media (max-width: 979px) {
+    .navbar-fixed-top,
+    .navbar-fixed-bottom {
+        position: relative;
+    }
+}
+
 /* Navbar title */
 a.brand {
     margin-left: 0 !important;
@@ -75,16 +83,10 @@ a.brand img {
 
 .myslide.ng-enter {
     left: 100%;
-    width: 100%;
 }
 
 .myslide.ng-enter-active {
     transform: translateX(-100%);
-}
-
-.myslide.ng-leave {
-    //    left: 0;
-
 }
 
 .myslide.ng-leave-active {

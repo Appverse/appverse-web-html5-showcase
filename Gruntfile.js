@@ -62,6 +62,10 @@ module.exports = function (grunt) {
                     '{.tmp,<%= yeoman.app %>}/configuration/**/*.json',
                     '<%= yeoman.app %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
+            },
+            karma: {
+                files: ['app/scripts/**/*.js', 'test/unit/**/*.js'],
+                tasks: ['karma:unit:run']
             }
         },
         autoprefixer: {
@@ -159,6 +163,7 @@ module.exports = function (grunt) {
                 options: {
                     middleware: function (connect) {
                         return [mountFolder(connect, '.tmp'),
+                            mountFolder(connect, yeomanConfig.app),
                             mountFolder(connect, 'test')];
                     }
                 }
@@ -387,7 +392,8 @@ module.exports = function (grunt) {
             test: [
                 'coffee',
                 'compass',
-                'copy:styles'
+                'copy:styles',
+                'copy:i18n'
             ],
             dist: [
                 'coffee',
@@ -401,7 +407,7 @@ module.exports = function (grunt) {
         karma: {
             unit: {
                 configFile: 'karma.conf.js',
-                singleRun: true
+                background: true
             }
         },
         cdnify: {
@@ -430,6 +436,9 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-karma');
+
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
             return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
@@ -451,6 +460,11 @@ module.exports = function (grunt) {
         'autoprefixer',
         'connect:test',
         'karma'
+    ]);
+
+    grunt.registerTask('devmode', [
+        'karma:unit',
+        'watch:karma'
     ]);
 
     grunt.registerTask('dist', [
