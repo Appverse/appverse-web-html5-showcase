@@ -433,11 +433,18 @@ module.exports = function (grunt) {
                     ]
                 }
             }
+        },
+        jsdoc: {
+            dist: {
+                src: ['app/scripts/api/modules/*.js', 'app/scripts/api/directives/*.js'],
+                dest: 'doc'
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-jsdoc');
 
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
@@ -465,6 +472,10 @@ module.exports = function (grunt) {
     grunt.registerTask('devmode', [
         'karma:unit',
         'watch:karma'
+    ]);
+
+    grunt.registerTask('doc', [
+        'jsdoc:dist'
     ]);
 
     grunt.registerTask('dist', [
