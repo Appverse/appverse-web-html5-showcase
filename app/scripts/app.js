@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('appverseClientIncubatorApp', ['COMMONAPI','plunker'])
+angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
 
 
 .run(['$rootScope', '$location', '$log', 'AuthenticationService', 'RoleService', 'AUTHORIZATION_DATA', 'SECURITY_GENERAL',
