@@ -179,6 +179,9 @@ module.exports = function (grunt) {
         open: {
             server: {
                 url: 'http://localhost:<%= connect.options.port %>'
+            },
+            doc: {
+                url: 'http://127.0.0.1:8000'
             }
         },
         clean: {
@@ -434,17 +437,48 @@ module.exports = function (grunt) {
                 }
             }
         },
-        jsdoc: {
-            dist: {
-                src: ['app/scripts/api/modules/*.js', 'app/scripts/api/directives/*.js'],
-                dest: 'doc'
-            }
+        docular: {
+            groups: [
+                {
+                    groupTitle: 'Appverse HTML5',
+                    groupId: 'appverse',
+                    groupIcon: 'icon-beer',
+                    sections: [
+                        {
+                            id: "commonapi",
+                            title: "Common API",
+                            showSource: true,
+                            scripts: ["app/scripts/api/modules", "app/scripts/api/directives"
+                            ],
+                            docs: [],
+                            rank: {}
+                        }
+                    ]
+                }, {
+                    groupTitle: 'Angular jQM',
+                    groupId: 'angular-jqm',
+                    groupIcon: 'icon-mobile',
+                    sections: [
+                        {
+                            id: "jqmapi",
+                            title: "API",
+                            showSource: true,
+                            scripts: ["app/scripts/api/angular-jqm.js"
+                            ],
+                            docs: [],
+                            rank: {}
+                        }
+                    ]
+                }
+            ],
+            showDocularDocs: false,
+            showAngularDocs: true
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-jsdoc');
+    grunt.loadNpmTasks('grunt-docular');
 
     grunt.registerTask('server', function (target) {
         if (target === 'dist') {
@@ -475,7 +509,9 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('doc', [
-        'jsdoc:dist'
+        'docular',
+        'open:doc',
+        'docular-server'
     ]);
 
     grunt.registerTask('dist', [
