@@ -33,3 +33,103 @@
         <div ui-view class="span9" autoscroll="false"></div>
     </div>
 </div>
+
+
+<!-- Code Highlight -->
+<div class="container">
+    <div class="col-md-12" ng-controller="PlunkerCtrl">
+        <p class="lead"><h3>Review the code..</h3></p>
+        <div class="pull-right">
+            <button class="btn btn-info" id="plunk-btn" ng-click="edit('1.2.8', '3.0.3', '0.10.0', 'alert')">
+                <i class="glyphicon glyphicon-edit"></i> Edit in plunker</button>
+        </div>
+        <tabset>
+            <tab heading="Markup">
+                <div plunker-content="markup">
+                    <pre ng-non-bindable>
+                        <code data-language="html">
+                            &lt;div class="container">
+                            &lt;p class="lead">REST Demo&lt;/p>
+                            &lt;div class="row">
+                            &lt;div class="span3">
+                            &lt;div class="pa-sidebar well well-small">
+                            &lt;ul class="nav nav-list">
+                            &lt;li ng-class="{ active: $state.includes('topics.list') }">
+                            &lt;a ui-sref="topics.list">Topics in development!&lt;/a>
+                            &lt;/li>
+                            &lt;li class="nav-header">We're working on..&lt;/li>
+
+                            &lt;!-- This &lt;li> will only add the 'active' class if 'contacts.detail' or its descendants are active
+                            AND if it is the link for the active contact (aka contactId) -->
+                            &lt;div rest rest-path="topics.json" rest-name="topics">&lt;/div>
+                            &lt;alert ng-show="topicsLoading">Loading...&lt;/alert>
+                            &lt;alert ng-show="topicsError" class="alert-error">Error loading topics&lt;/alert>
+                            &lt;li ng-repeat="topic in topics | limitTo:3" ng-class="{ active: $state.includes('topics.detail') && $stateParams.topicId == topic.id }">
+
+                            &lt;!-- Here's a ui-sref that is also providing necessary parameters -->
+                            &lt;a ui-sref="topics.detail({topicId:topic.id})">{{topic.name}}&lt;/a>
+                            &lt;/li>
+                            &lt;small>(Retrieved using rest directive)&lt;/small>
+                            &lt;/ul>
+                            &lt;hr>
+                            &lt;button class="btn" ng-click="goToRandom()">Show a random topic&lt;/button>
+
+                            &lt;!-- Another named view -->
+                            &lt;div ui-view="menuTip" autoscroll="false">&lt;/div>
+                            &lt;/div>
+                            &lt;/div>
+
+                            &lt;!-- Our unnamed main ui-view for this template -->
+                            &lt;div ui-view class="span9" autoscroll="false">&lt;/div>
+                            &lt;/div>
+                            &lt;/div>
+                        </code>
+				</pre>
+                </div>
+            </tab>
+            <tab heading="JavaScript">
+                <div plunker-content="javascript">
+                    <pre ng-non-bindable>
+                        <code data-language="javascript">
+.controller('TopicsController', ['$log', '$scope', '$state', '$stateParams', 'utils', 'RESTFactory',
+    function ($log, $scope, $state, $stateParams, utils, RESTFactory) {
+        $scope.alltopics = RESTFactory.readList('topics');
+        $scope.goToRandom = function () {
+            if ($scope.topics) {
+                var randId = utils.newRandomKey($scope.topics, 'id', $state.params.topicId);
+                // $state.go() can be used as a high level convenience method
+                // for activating a state programmatically.
+                $state.go('topics.detail', {
+                     topicId: randId
+                });
+            } else {
+                $scope.topicsError = true;
+            }
+         };
+    }])
+    .controller('TopicDetailsItemController',
+        function ($scope, $stateParams, $state) {
+            $scope.edit = function () {
+                // Here we show off go's ability to navigate to a relative state. Using '^' to go upwards
+                // and '.' to go down, you can navigate to any relative state (ancestor or descendant).
+                // Here we are going down to the child state 'edit' (full name of 'topics.detail.item.edit')
+                $state.go('.edit', $stateParams);
+            };
+        })
+    .controller('TopicDetailsItemEditController',
+         function ($log, $scope, $stateParams, $state, Restangular) {
+               $scope.done = function () {
+                     $log.debug("Updating item", $scope.item);
+                     Restangular.copy($scope.item).put().then(function () {
+                        // Go back up. '^' means up one. '^.^' would be up twice, to the grandparent.
+                         $state.go('^', $stateParams);
+                     });
+               };
+         });
+                        </code>
+					</pre>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

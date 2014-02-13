@@ -19,3 +19,61 @@
         <button ng-show="detect.isPollingBandwidth" class="btn" ng-click="detect.stopPollingBandwidth()">Stop Polling</button>
     </p>
 </div>
+
+<!-- Code Highlight -->
+<div class="container">
+    <div class="col-md-12" ng-controller="PlunkerCtrl">
+        <p class="lead"><h3>Review the code..</h3></p>
+        <div class="pull-right">
+            <button class="btn btn-info" id="plunk-btn" ng-click="edit('1.2.8', '3.0.3', '0.10.0', 'alert')">
+                <i class="glyphicon glyphicon-edit"></i> Edit in plunker</button>
+        </div>
+        <tabset>
+            <tab heading="Markup">
+                <div plunker-content="markup">
+                    <pre ng-non-bindable>
+                        <code data-language="html">
+                            &lt;div class="container">
+                            &lt;p class="lead">Detection Demo&lt;/p>
+                            &lt;h5>Device&lt;/h5>
+                            &lt;p>Appverse Mobile detected:
+                            &lt;span class="{{detect.hasAppverseMobile?'text-success':'text-error'}}">{{detect.hasAppverseMobile}}&lt;/span>
+                            &lt;/p>
+                            &lt;p>Mobile Browser detected:
+                            &lt;span class="{{detect.isMobileBrowser?'text-success':'text-error'}}">{{detect.isMobileBrowser}}&lt;/span>
+                            &lt;/p>
+                            &lt;h5>Network&lt;/h5>
+                            &lt;p>Offline/Online detected:
+                            &lt;span class="{{detect.isOnline?'text-success':'text-error'}}">{{detect.isOnline?'Online':'Offline'}}&lt;/span>
+                            &lt;button ng-hide="detect.isPollingOnlineStatus" class="btn" ng-click="detect.startPollingOnlineStatus(3000)">Start Polling&lt;/button>
+                            &lt;button ng-show="detect.isPollingOnlineStatus" class="btn" ng-click="detect.stopPollingOnlineStatus()">Stop Polling&lt;/button>
+                            &lt;/p>
+                            &lt;p>Bandwidth detected:
+                            &lt;span>{{detect.bandwidth}} Kbytes/s&lt;/span>
+                            &lt;button ng-hide="detect.isPollingBandwidth" class="btn" ng-click="detect.startPollingBandwidth(3000)">Start Polling&lt;/button>
+                            &lt;button ng-show="detect.isPollingBandwidth" class="btn" ng-click="detect.stopPollingBandwidth()">Stop Polling&lt;/button>
+                            &lt;/p>
+                            &lt;/div>
+
+                        </code>
+				</pre>
+                </div>
+            </tab>
+            <tab heading="JavaScript">
+                <div plunker-content="javascript">
+                    <pre ng-non-bindable>
+                        <code data-language="javascript">
+.controller('detectionController', ['$log', '$scope', 'Detection',
+    function ($log, $scope, Detection) {
+        $log.debug('detectionController loading');
+        $scope.detect = Detection;
+        Detection.testOnlineStatus();
+        Detection.testBandwidth();
+    }]);
+                        </code>
+					</pre>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

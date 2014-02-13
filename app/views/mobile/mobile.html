@@ -72,3 +72,34 @@
         <pre style="text-align:{{$root.myAlign}};">Sample text</pre>
     </p>
 </div>
+
+<!-- Code Highlight -->
+<div class="container">
+    <div class="col-md-12" ng-controller="PlunkerCtrl">
+        <p class="lead"><h3>Review the code..</h3></p>
+        <div class="pull-right">
+            <button class="btn btn-info" id="plunk-btn" ng-click="edit('1.2.8', '3.0.3', '0.10.0', 'alert')">
+                <i class="glyphicon glyphicon-edit"></i> Edit in plunker</button>
+        </div>
+        <tabset>
+            <tab heading="Markup">
+                <div plunker-content="markup">
+                    <pre ng-non-bindable>
+                        <code data-language="html">
+
+                        </code>
+				</pre>
+                </div>
+            </tab>
+            <tab heading="JavaScript">
+                <div plunker-content="javascript">
+                    <pre ng-non-bindable>
+                        <code data-language="javascript">
+
+                        </code>
+					</pre>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

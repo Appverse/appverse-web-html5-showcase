@@ -29,3 +29,74 @@
     <!-- Using scope variables -->
     <p translate translate-values='{"name": "{{name}}", "age": {{age}} }'>WELCOME_NAME_AGE</p>
 </div>
+
+
+<!-- Code Highlight -->
+<div class="container">
+    <div class="col-md-12" ng-controller="PlunkerCtrl">
+        <p class="lead"><h3>Review the code..</h3></p>
+        <div class="pull-right">
+            <button class="btn btn-info" id="plunk-btn" ng-click="edit('1.2.8', '3.0.3', '0.10.0', 'alert')">
+                <i class="glyphicon glyphicon-edit"></i> Edit in plunker</button>
+        </div>
+        <tabset>
+            <tab heading="Markup">
+                <div plunker-content="markup">
+                    <pre ng-non-bindable>
+                        <code data-language="html">
+                            &lt;div class="container">
+                            &lt;p class="lead">Translation Demo&lt;/p>
+                            &lt;p>Select desired locale:&lt;/p>
+                            &lt;button class="btn" ng-click="setLocale('es-ES')">es-ES&lt;/button>
+                            &lt;button class="btn" ng-click="setLocale('en-US')">en-US&lt;/button>
+                            &lt;button class="btn" ng-click="setLocale('ja-JP')">ja-JP&lt;/button>
+                            &lt;button class="btn" ng-click="setLocale('ar-EG')">ar-EG&lt;/button>
+
+                            &lt;h4>Date&lt;/h4>
+
+                            &lt;p>{{now | date:'fullDate'}}&lt;/p>
+
+                            &lt;h4>Currency&lt;/h4>
+
+                            &lt;p>{{100 | currency}}&lt;/p>
+
+                            &lt;h4>Number&lt;/h4>
+
+                            &lt;!-- Number should be rounded using locale -->
+                            &lt;p>{{1200300.456789 | number}}&lt;/p>
+
+                            &lt;h4>Text&lt;/h4>
+
+                            &lt;p translate>WELCOME&lt;/p>
+
+                            &lt;!-- With values -->
+                            &lt;p translate translate-values='{"name": "Alex"}'>WELCOME_NAME&lt;/p>
+
+                            &lt;!-- Using scope variables -->
+                            &lt;p translate translate-values='{"name": "{{name}}", "age": {{age}} }'>WELCOME_NAME_AGE&lt;/p>
+                            &lt;/div>
+                        </code>
+				</pre>
+                </div>
+            </tab>
+            <tab heading="JavaScript">
+                <div plunker-content="javascript">
+                    <pre ng-non-bindable>
+                        <code data-language="javascript">
+.controller('translationController', ['$scope', '$translate', 'tmhDynamicLocale',
+     function ($scope, $translate, tmhDynamicLocale) {
+        $scope.now = new Date();
+        $scope.name = 'Alicia';
+        $scope.age = '25';
+        $scope.setLocale = function (locale) {
+            $translate.uses(locale);
+            tmhDynamicLocale.set(locale.toLowerCase());
+        };
+      }]);
+                        </code>
+					</pre>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>

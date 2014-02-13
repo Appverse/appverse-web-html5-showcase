@@ -165,3 +165,97 @@
 
     </div>
 </div>
+
+<!-- Code Highlight -->
+<div class="container">
+    <div class="col-md-12" ng-controller="PlunkerCtrl">
+        <p class="lead"><h3>Review the code..</h3></p>
+        <div class="pull-right">
+            <button class="btn btn-info" id="plunk-btn" ng-click="edit('1.2.8', '3.0.3', '0.10.0', 'alert')">
+                <i class="glyphicon glyphicon-edit"></i> Edit in plunker</button>
+        </div>
+        <tabset>
+            <tab heading="Markup">
+                <div plunker-content="markup">
+                    <pre ng-non-bindable>
+                        <code data-language="html">
+&lt;div ng-controller="GooglePlusLoginCtrl" ng-cloak>
+   &lt;div id="gConnect" ng-hide="loginStatus == 'connected'">
+        &lt;div id="gButton" />
+   &lt;/div>
+   &lt;p class="lead">User Status: &#123;&#123; loginStatus &#125;&#125;&lt;/p>
+   &lt;div id="authOps" ng-show="loginStatus == 'connected'">
+        &lt;p class="lead">User Profile&lt;/p>
+        &lt;div>
+            &lt;img ng-src="profile.image.url" />
+            &lt;p>&#123;&#123; profile.displayName &#125;&#125;&lt;/p>
+            &lt;p>&#123;&#123; profile.eMail &#125;&#125;&lt;/p>
+        &lt;/div>
+        &lt;button ng-click="logout()">Disconnect&lt;/button>
+   &lt;/div>
+&lt;/div>
+                        </code>
+				</pre>
+                </div>
+            </tab>
+            <tab heading="JavaScript">
+                <div plunker-content="javascript">
+                    <pre ng-non-bindable>
+                        <code data-language="javascript">
+gapi.signin.render('gButton', parameters);
+$scope.onSignInCallback = function (authResult) {
+gapi.client.load('plus', 'v1', function () {
+    if (authResult['error'] == undefined) {
+        $scope.loginStatus = 'connected'
+        $scope.$apply();
+
+        var request = gapi.client.plus.people.get({
+            'userId' : 'me'
+        });
+
+        request.execute(function (profile) {
+            //We find out the roles for the user
+            var roles = new Array();
+
+            for (var i = 0; i < AUTHORIZATION_DATA.userRoleMatrix.length; i++) {
+                if (AUTHORIZATION_DATA.userRoleMatrix[i].user === profile.displayName) {
+                    var counter = 0;
+                    for (var y = 0; y < AUTHORIZATION_DATA.userRoleMatrix[i].roles.length; y++) {
+                        roles[counter] = AUTHORIZATION_DATA.userRoleMatrix[i].roles[y];
+                        counter++;
+                    }
+                    break;
+                }
+            }
+
+             //The authenticated user is set by using the AuthenticationService.
+             AuthenticationService.login(profile.displayName, roles, authResult['access_token'], true);
+
+             CacheFactory._scopeCache.put('login_status', 'connected');
+             CacheFactory._scopeCache.put('userProfile', profile);
+
+             $scope.profile = profile;
+             $scope.$apply();
+        });
+    } else if (authResult['error']) {
+        // There was an error.
+        // Possible error codes:
+        //   "access_denied" - User denied access to your app
+        //   "immediate_failed" - Could not automatially log in the user
+        if (authResult['error'] == 'immediate_failed') {
+            $log.error('There was an error when connecting to Google+: Could not automatically log in the user.');
+        } else if (authResult['error'] == 'access_denied') {
+            $log.error('There was an error when connecting to Google+: User denied access to your app.');
+        };
+        $scope.loginStatus = 'Not Connected';
+        $scope.loginMessage = 'Login failed: ' + authResult['error'];
+    }
+})
+}
+                        </code>
+				</pre>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+</div>
