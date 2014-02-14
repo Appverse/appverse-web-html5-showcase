@@ -79,6 +79,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         Restangular.setUseCannonicalId(REST_CONFIG.UseCannonicalId);
         Restangular.setEncodeIds(REST_CONFIG.EncodeIds);
     }])
+
 /**
  * @ngdoc service
  * @name AppREST.factory:RESTFactory

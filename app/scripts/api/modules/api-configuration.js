@@ -1,13 +1,12 @@
 'use strict';
 
-////////////////////////////////////////////////////////////////////////////
-// COMMON API - 0.1
-// CONFIGURATION
-// PRIMARY MODULE (AppConfiguration)
-////////////////////////////////////////////////////////////////////////////
-// It includes constants for all the common API components.
-////////////////////////////////////////////////////////////////////////////
-//
+/**
+ * @ngdoc module
+ * @name AppConfiguration
+ * @requires AppDetection
+ * @description
+ * It includes constants for all the common API components.
+ */
 angular.module('AppConfiguration', ['AppDetection'])
 
 .run(['$log',
@@ -117,9 +116,9 @@ in the common API.
     //Constant for the literal
     NoBrowserStorage: 'none',
     /*
-     * Specify whether to verify integrity of data saved in localStorage on every operation. 
-     * If true, angular-cache will perform a full sync with localStorage on every operation. 
-     * Increases reliability of data synchronization, but may incur a performance penalty. 
+     * Specify whether to verify integrity of data saved in localStorage on every operation.
+     * If true, angular-cache will perform a full sync with localStorage on every operation.
+     * Increases reliability of data synchronization, but may incur a performance penalty.
      * Has no effect if storageMode is set to "none".
      */
     VerifyIntegrity: false,
@@ -149,20 +148,23 @@ in the common API.
       */
     IndexedDB_version: 1,
     /*
-     * The options for the db. 
+     * The options for the db.
      * The default structure is defined as id/name pairs.
      * It is possible to add more indexes:
      * indexes : [{ name : 'indexName', unique : 'true/false' },{},...]
      */
     IndexedDB_options: [
-            {
-                storeName: 'structure-of-items',
-                keyPath: 'id',
-                indexes: [
-                    { name: 'name', unique: false }
-                ]
-            }
-     ]
+        {
+            storeName: 'structure-of-items',
+            keyPath: 'id',
+            indexes: [
+                {
+                    name: 'name',
+                    unique: false
+                }
+            ]
+        }
+    ]
 
 })
 
@@ -471,26 +473,26 @@ Future updates of Restangular imply review of this section in order to keep cons
 })
 
 /*
-  * GOOGLE AUTHENTICATION
-  */
-    .constant('GOOGLE_AUTH', {
-        clientID: '75169325484-8cn28d7o3dre61052o8jajfsjlnrh53i.apps.googleusercontent.com',
-        scopeURL: 'https://www.googleapis.com/auth/plus.login',
-        requestvisibleactionsURL: 'http://schemas.google.com/AddActivity',
-        theme: 'dark',
-        cookiepolicy: 'single_host_origin',
-        revocationURL: 'https://accounts.google.com/o/oauth2/revoke?token=',
-        /*
-         * Policy about token renewal:
-         * revocation: if the token is invalid the user is fordec to logout and warned.
-         * manual_renovation: the user is warned about the token validity. Renewal is proposed.
-         * automatic_renovation: the token is automatically renewed.
-         */
-        revocation: 'revocation',
-        manual_renovation: 'manual_renovation',
-        automatic_renovation: 'automatic_renovation',
-        tokenRenewalPolicy: this.automatic_renovation
-    })
+ * GOOGLE AUTHENTICATION
+ */
+.constant('GOOGLE_AUTH', {
+    clientID: '75169325484-8cn28d7o3dre61052o8jajfsjlnrh53i.apps.googleusercontent.com',
+    scopeURL: 'https://www.googleapis.com/auth/plus.login',
+    requestvisibleactionsURL: 'http://schemas.google.com/AddActivity',
+    theme: 'dark',
+    cookiepolicy: 'single_host_origin',
+    revocationURL: 'https://accounts.google.com/o/oauth2/revoke?token=',
+    /*
+     * Policy about token renewal:
+     * revocation: if the token is invalid the user is fordec to logout and warned.
+     * manual_renovation: the user is warned about the token validity. Renewal is proposed.
+     * automatic_renovation: the token is automatically renewed.
+     */
+    revocation: 'revocation',
+    manual_renovation: 'manual_renovation',
+    automatic_renovation: 'automatic_renovation',
+    tokenRenewalPolicy: this.automatic_renovation
+})
 
 /*
  *

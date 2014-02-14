@@ -3,6 +3,7 @@
 /**
  * @ngdoc module
  * @name AppCache
+ * @requires AppConfiguration
  * @description
  * The Cache module includes several types of cache.
  *
@@ -83,7 +84,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
 
 /**
  * @ngdoc service
- * @name AppCache.factory:CacheFactory
+ * @name AppCache.service:CacheFactory
  * @requires $angularCacheFactory
  * @requires $http
  * @requires CACHE_CONFIG
@@ -101,8 +102,8 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
 
         /**
          * @ngdoc method
-         * @name AppCache.factory:CacheFactory#setScopeCache
-         * @methodOf AppCache.factory:CacheFactory
+         * @name AppCache.service:CacheFactory#setScopeCache
+         * @methodOf AppCache.service:CacheFactory
          * @param {number} duration Items expire after this time.
          * @param {number} capacity Turns the cache into LRU (Least Recently Used) cache. If you don't want $http's default cache to store every response.
          * @description Configure the scope cache.
@@ -117,8 +118,8 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
 
         /**
          * @ngdoc method
-         * @name AppCache.factory:CacheFactory#getScopeCache
-         * @methodOf AppCache.factory:CacheFactory
+         * @name AppCache.service:CacheFactory#getScopeCache
+         * @methodOf AppCache.service:CacheFactory
          * @description getScopeCache is the singleton that CacheFactory manages as a local cache created with $angularCacheFactory, which is what we return from the service. Then, we can inject this into any controller we want and it will always return the same values.
          *
          * The newly created cache object has the following set of methods:
@@ -141,26 +142,31 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
         };
 
         /**
-             @function
-             @param type Type of storage ( 1 local | 2 session).
-             @param maxAgeInit
-             @param cacheFlushIntervalInit
-             @param deleteOnExpireInit
-
-             @description This object makes Web Storage working in the Angular Way.
-             By default, web storage allows you 5-10MB of space to work with, and your data is stored locally
-             on the device rather than passed back-and-forth with each request to the server.
-             Web storage is useful for storing small amounts of key/value data and preserving functionality
-             online and offline.
-             With web storage, both the keys and values are stored as strings.
-
-             We can store anything except those not supported by JSON:
-             Infinity, NaN - Will be replaced with null.
-             undefined, Function - Will be removed.
-             The returned object supports the following set of methods:
-             {void} $reset() - Clears the Storage in one go.
-             */
-
+         * @ngdoc method
+         * @name AppCache.service:CacheFactory#setBrowserStorage
+         * @methodOf AppCache.service:CacheFactory
+         * @param {number} type Type of storage ( 1 local | 2 session).
+         * @param {number} maxAgeInit .
+         * @param {number} cacheFlushIntervalInit .
+         * @param {boolean} deleteOnExpireInit .
+         *
+         * @description
+         * This object makes Web Storage working in the Angular Way.
+         *
+         * By default, web storage allows you 5-10MB of space to work with, and your data is stored locally on the device rather than passed back-and-forth with each request to the server.
+         * Web storage is useful for storing small amounts of key/value data and preserving functionality online and offline.
+         *
+         * With web storage, both the keys and values are stored as strings.
+         *
+         * We can store anything except those not supported by JSON:
+         *
+         * Infinity, NaN - Will be replaced with null.
+         *
+         * undefined, Function - Will be removed.
+         *
+         * The returned object supports the following set of methods:
+         * {void} $reset() - Clears the Storage in one go.
+         */
         factory.setBrowserStorage = function (type, maxAgeInit, cacheFlushIntervalInit, deleteOnExpireInit, verifyIntegrityInit) {
 
             var browserStorageType = CACHE_CONFIG.SessionBrowserStorage;
@@ -291,10 +297,9 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
          * @name AppCache.service:IDB#openDB
          * @methodOf AppCache.service:IDB
          * @function
-         * @param {string} dbName
-         * @param {int} version
-         * @param {array} options
-         * @returns {undefined}
+         * @param {string} dbName .
+         * @param {int} version .
+         * @param {array} options .
          * @description Initializes an IndexedDB on the browser
          */
         this.openDB = function (dbName, version, options) {
