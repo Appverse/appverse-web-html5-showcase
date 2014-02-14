@@ -1,28 +1,32 @@
 'use strict';
 
-////////////////////////////////////////////////////////////////////////////
-// COMMON API - 0.1
-// INTEGRATED REST CLIENT MODULE (AppREST)
-////////////////////////////////////////////////////////////////////////////
-// The Integrated REST module includes communication.
-// It is based on Restangular.
-// Params configuration are set in app-configuration file as constants.
-//
-// SERVICES CLIENT CONFIGURATION
-// The common API includes configuration for one set of REST resources client (1 base URL).
-// This is the most common approach in the most of projects.
-// In order to build several sets of REST resources (several base URLs) you should
-// create scoped configurations. Please, review the below snnipet:
-/*
- var MyRestangular = Restangular.withConfig(function(RestangularConfigurer) {
- RestangularConfigurer.setDefaultHeaders({'X-Auth': 'My Name'})
- });
-
- MyRestangular.one('place', 12).get();
+/**
+ * @ngdoc module
+ * @name AppREST
+ * @description
+ *
+ * The Integrated REST module includes communication.
+ *
+ * It is based on Restangular.
+ *
+ * Params configuration are set in app-configuration file as constants.
+ *
+ * SERVICES CLIENT CONFIGURATION
+ *
+ * The common API includes configuration for one set of REST resources client (1 base URL).
+ * This is the most common approach in the most of projects.
+ * In order to build several sets of REST resources (several base URLs) you should
+ * create scoped configurations. Please, review the below snippet:
+ *
+ * var MyRestangular = Restangular.withConfig(function(RestangularConfigurer) {
+ * RestangularConfigurer.setDefaultHeaders({'X-Auth': 'My Name'})
+ * });
+ *
+ * MyRestangular.one('place', 12).get();
+ *
+ * The MyRestangular object has scoped properties of the Restangular on with a different
+ * configuration.
  */
-// The MyRestangular object has scoped properties of the Restangular on with a different
-// configuration.
-////////////////////////////////////////////////////////////////////////////
 
 angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
 
@@ -75,10 +79,14 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         Restangular.setUseCannonicalId(REST_CONFIG.UseCannonicalId);
         Restangular.setEncodeIds(REST_CONFIG.EncodeIds);
     }])
-/*
- * Factory Name: 'RESTFactory'
+/**
+ * @ngdoc service
+ * @name AppREST.factory:RESTFactory
+ * @requires $log
+ * @requires Restangular
+ * @description
  * Contains methods for data finding (demo).
- * This module provides basic quick standard access to a REST API.K
+ * This module provides basic quick standard access to a REST API.
  */
 .factory('RESTFactory', ['$log', 'Restangular',
     function ($log, Restangular) {
@@ -101,11 +109,14 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
 
         var factory = {};
 
-        /*
-        @function
-        @param path String with the item URL
-        @description Returns a complete list from a REST resource.
-        */
+        /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#readObject
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @description Returns a complete list from a REST resource.
+         * @returns {object} List of values
+         */
         factory.readObject = function (path) {
             return Restangular.one(path).get().$object;
         };
