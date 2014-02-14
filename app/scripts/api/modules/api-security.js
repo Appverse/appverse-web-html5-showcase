@@ -99,7 +99,25 @@
 // CONFIGURATION: SECURITY_OAUTH
 //////////////////////////////////////////////////////////////////////////////
 
-// App libraries
+/**
+* @ngdoc module
+* @name AppSecurity
+* @description
+* 3 services:
+* 
+*  A-AUTHENTICATION
+*  Protect username and password
+*  Manages authentication operations
+*  Handles user session
+*  
+* B-REMOTE COMMUNICATION AUTHORIZATION HANDLING
+*  Based on OAuth 2.0 integration (RFC 6749, October 2012).
+*  It handles token for the current user session.
+*  
+* C-INTERNAL AUTHORIZATION
+*  It handles access to site sections
+*  Includes roles management and rights checking
+*/
 angular.module('AppSecurity', [
   'ngCookies', // Angular support for cookies
   'restangular', // Common API Module: REST comm
@@ -119,11 +137,10 @@ angular.module('AppSecurity', [
 //}])
 
 /**
- * @ngdoc object
- * @name Oauth_AccessToken
+ * @ngdoc service
+ * @name AppSecurity.factory:Oauth_AccessToken
  * @requires $location
  * @requires $cookies
- *
  * @description
  * OAuth access token service.
  * Management of the access token.
@@ -136,34 +153,39 @@ angular.module('AppSecurity', [
 
 
         /**
-         * @function
-         * @description
-         * Returns the access token.
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#get
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @description Returns the access token.
+         * @returns {object} The user token from the oauth server
          */
-
         factory.get = function () {
             return token
-        }
+        };
 
 
         /**
-         * @function
-         * @param scope Object with fields from directive
-         * @description
-         * Sets and returns the access token taking it from the fragment URI or eventually
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#set
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
+         * @description Sets and returns the access token taking it from the fragment URI or eventually
          * from the cookies. Use `AccessToken.init()` to load (at boot time) the access token.
+         * @returns {object} The user token from the oauth server
          */
         factory.set = function (scope) {
             setTokenFromString(scope); // take the token from the query string and eventually save it in the cookies
             setTokenFromCookies(scope); // take the from the cookies
             return token
-        }
+        };
 
         /**
-         * @function
-         * @param scope Object with fields from directive
-         * @description
-         *  Delete the access token and remove the cookies.
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#destroy
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
+         * @description Delete the access token and remove the cookies.
+         * @returns {object} The user token from the oauth server
          */
         factory.destroy = function (scope) {
             token = null;
@@ -173,9 +195,11 @@ angular.module('AppSecurity', [
 
 
         /**
-         * @function
-         * @description
-         * Tells when the access token is expired.
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#expired
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @description Tells when the access token is expired.
+         * @returns {boolean} True or false if the token is expired
          */
         factory.expired = function () {
             return (token && token.expires_at && token.expires_at < new Date())
@@ -186,8 +210,10 @@ angular.module('AppSecurity', [
         /////////////////////////////Private methods///////////////////////////////////
 
         /**
-         * @function
-         * @param scope Object with fields from directive
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setTokenFromString
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
          * @description
          * Get the access token from a string and save it
          */
@@ -202,10 +228,13 @@ angular.module('AppSecurity', [
 
 
         /**
-         * @function
-         * @param hash
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#getTokenFromString
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} hash The initial string
          * @description
          * Parse the fragment URI into an object
+         * @returns {object} The value of the token 
          */
         function getTokenFromString(hash) {
             var splitted = hash.split('&');
@@ -225,8 +254,10 @@ angular.module('AppSecurity', [
 
 
         /**
-         * @function
-         * @param scope Object with fields from directive
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setTokenFromCookies
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
          * @description
          * Set the access token from the cookies.
          * Returns the access token only when the storage attribute is set to 'cookies'.
@@ -241,10 +272,12 @@ angular.module('AppSecurity', [
         }
 
 
-        /**
-         * @function
-         * @param scope Object with fields from directive
-         * @param params
+         /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setTokenInCookies
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
+         * @param {object} params with token value hash
          * @description
          * Save the access token into a cookie identified by the application ID
          * Save the access token only when the storage attribute is set to 'cookies'.
@@ -259,11 +292,14 @@ angular.module('AppSecurity', [
 
 
         /**
-         * @function
-         * @param params
-         * @param scope Object with fields from directive
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setToken
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} params The object with the token
+         * @param {object} scope The current scope
          * @description
-         * Set the access token.
+         * Set the access token in cookies.
+         * @returns {object} The token value
          */
         function setToken(params, scope) {
             token = token || {} // init the token
@@ -275,8 +311,10 @@ angular.module('AppSecurity', [
         };
 
 
-        /**
-         * @function
+       /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setExpiresAt
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
          * @description
          * Set the access token expiration date (useful for refresh logics)
          */
@@ -290,13 +328,15 @@ angular.module('AppSecurity', [
 
 
         /**
-         * @function
-         * @param scope Object with fields from directive
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#removeFragment
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
          * @description
          * Remove the fragment URI
          */
-        //TODO we need to let the fragment live if it's not the access token
         function removeFragment(scope) {
+            //TODO we need to let the fragment live if it's not the access token
             $location.hash('');
         }
 
@@ -306,11 +346,10 @@ angular.module('AppSecurity', [
 
 
 /**
- * @ngdoc object
- * @name Oauth_Endpoint
- * @requires Oauth_AccessToken
+ * @ngdoc service
+ * @name AppSecurity.factory:Oauth_Endpoint
+ * @requires AppSecurity.factory:Oauth_AccessToken
  * @requires $location
- *
  * @description
  * OAuth Endpoint service.
  * Contains one factory managing the authorization's (endpoint) URL.
@@ -322,12 +361,7 @@ angular.module('AppSecurity', [
         var url;
 
 
-        /**
-         * @function
-         * @param scope Object with fields from directive
-         * @description
-         * Defines the authorization URL with correct attributes.
-         */
+        
         //TODO Check against other oauth providers (linkedin, twitter).
 
         /*
@@ -342,6 +376,16 @@ angular.module('AppSecurity', [
          *https://www.google.com/accounts/OAuthAuthorizeToken?scope=http%3A%2F%2Fwww.google.com%2Fm8%2Ffeeds&oauth_token=REQUEST_TOKEN&oauth_callback=http%3A%2F%2Fwww.mysite.com%2Fcallback
          *3-User authorizes your app, then exchange the request token for an access token.
          */
+        
+
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_Endpoint#set
+         * @methodOf AppSecurity.factory:Oauth_Endpoint
+         * @param {object} scope The current scope
+         * @description Defines the authorization URL with correct attributes.
+         * @returns {String} The URL for the oauth endpoint
+         */
         factory.set = function (scope) {
             url = scope.site +
                 scope.authorizePath +
@@ -354,20 +398,22 @@ angular.module('AppSecurity', [
             return url;
         }
 
-
         /**
-         * @function
-         * @description
-         * Returns the authorization URL
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_Endpoint#get
+         * @methodOf AppSecurity.factory:Oauth_Endpoint
+         * @description Returns the authorization URL.
+         * @returns {String} The URL for the oauth endpoint
          */
         factory.get = function () {
             return url;
         }
 
         /**
-         * @function
-         * @description
-         * Redirects the app to the authorization URL
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_Endpoint#redirect
+         * @methodOf AppSecurity.factory:Oauth_Endpoint
+         * @description Redirects the app to the authorization URL.
          */
         factory.redirect = function () {
             window.location.replace(url);
@@ -379,10 +425,10 @@ angular.module('AppSecurity', [
 
 
 /**
- * @ngdoc object
- * @name Oauth_RequestWrapper
- * @requires Oauth_AccessToken
- * @requires Oauth_Endpoint
+ * @ngdoc service
+ * @name AppSecurity.factory:Oauth_RequestWrapper
+ * @requires AppSecurity.factory:Oauth_AccessToken
+ * @requires AppSecurity.factory:Oauth_Endpoint
  * @requires $http
  *
  * @description
@@ -396,11 +442,15 @@ angular.module('AppSecurity', [
 
 
         /**
-         * @function
-         * @description
-         * Wrap every request
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_RequestWrapper#wrap
+         * @methodOf AppSecurity.factory:Oauth_RequestWrapper
+         * @param {object} resource Array with resources
+         * @param {object} actions Array with actions
+         * @param {object} options Array with options
+         * @description Wraps every request.
+         * @returns {object} the request wrapped resource
          */
-
         factory.wrap = function (resource, actions, options) {
             var wrappedResource = resource;
             for (var i = 0; i < actions.length; i++) {
@@ -414,11 +464,13 @@ angular.module('AppSecurity', [
 
 
         /**
-         * @function
-         * @param resource
-         * @param action
-         * @description
-         * Verify if the access token exists and based on it set or unset the header request
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_RequestWrapper#request
+         * @methodOf AppSecurity.factory:Oauth_RequestWrapper
+         * @param {object} resource The resource
+         * @param {object} action The action
+         * @description Verify if the access token exists and based on it set or unset the header request.
+         * @returns {string} the request resource
          */
         function request(resource, action) {
             resource['_' + action] = resource[action];
@@ -435,11 +487,12 @@ angular.module('AppSecurity', [
         };
 
 
-        /**
-         * @function
-         * @param token
-         * @description
-         * Set the oauth request header
+         /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_RequestWrapper#setAuthorizationHeader
+         * @methodOf AppSecurity.factory:Oauth_RequestWrapper
+         * @param {string} token The token avlue from the oauth server
+         * @description Set the oauth request header
          */
         function setAuthorizationHeader(token) {
             if (token)
@@ -454,9 +507,9 @@ angular.module('AppSecurity', [
 
 
 /**
- * @ngdoc object
- * @name Oauth_Profile
- * @requires Oauth_RequestWrapper
+ * @ngdoc service
+ * @name AppSecurity.factory:Oauth_Profile
+ * @requires AppSecurity.factory:Oauth_RequestWrapper
  * @requires $resource
  * @requires SECURITY_OAUTH
  *
@@ -474,12 +527,11 @@ angular.module('AppSecurity', [
 
 
 /**
- * @ngdoc object
- * @name RoleService
+ * @ngdoc service
+ * @name AppSecurity.factory:RoleService
  * @requires $log
- * @requires AUTHORIZATION_DATA
- * @requires CacheFactory
- *
+ * @requires AppConfiguration.constant:AUTHORIZATION_DATA
+ * @requires AppCache.factory:CacheFactory
  * @description
  * Manages user's roles.
  */
@@ -488,12 +540,14 @@ angular.module('AppSecurity', [
 
 
         return {
-            /**
-             * @function
-             * @param {User} user
-             * @returns {User}
-             * @description Check if the passed user has a role in the adminsitrator family
-             */
+
+           /**
+            * @ngdoc method
+            * @name AppSecurity.factory:RoleService#validateRoleAdmin
+            * @methodOf AppSecurity.factory:RoleService
+            * @description Check if the passed user has a role in the adminsitrator family
+            * @returns {boolean} True if the role of the usder has admin previleges
+            */
             validateRoleAdmin: function () {
 
                 var roles = CacheFactory._browserCache.currentUser.roles
@@ -512,12 +566,15 @@ angular.module('AppSecurity', [
                     return false;
                 }
             },
-            /**
-             * @function
-             * @param {User} user
-             * @returns {User}
-             * @description Check if the passed user has a given role
-             */
+
+           /**
+            * @ngdoc method
+            * @name AppSecurity.factory:RoleService#validateRoleInUserOther
+            * @methodOf AppSecurity.factory:RoleService
+            * @param {string} role The role to be validated
+            * @description Check if the passed user has a given role
+            * @returns {boolean} True if the user has that role
+            */
             validateRoleInUserOther: function (role) {
                 if (CacheFactory._browserCache.currentUser) {
                     var user = CacheFactory._browserCache.currentUser;
@@ -531,10 +588,9 @@ angular.module('AppSecurity', [
 }])
 
 /**
- * @ngdoc object
- * @name AuthenticationService
- * @requires UserService
- *
+ * @ngdoc service
+ * @name AppSecurity.factory:AuthenticationService
+ * @requires AppSecurity.factory:UserService
  * @description
  * Exposes some useful methods for apps developers.
  */
@@ -544,25 +600,31 @@ angular.module('AppSecurity', [
         'use strict';
 
         return {
-            /**
-             * @function
-             * @param {String} name
-             * @param {Array} roles
-             * @param {String} token
-             * @param {Boolean} isLogged
-             * @returns {none}
-             * @description Sets the new logged user
-             */
+
+           /**
+            * @ngdoc method
+            * @name AppSecurity.factory:AuthenticationService#login
+            * @methodOf AppSecurity.factory:AuthenticationService
+            * @param {string} name Name of the user
+            * @param {object} roles Set of roles of the user as array
+            * @param {string} token The token from the oauth server
+            * @param {boolean} isLogged If the user is logged or not
+            * @param {string} role The role to be validated
+            * @description Sets the new logged user
+            */
             login: function (name, roles, token, isLogged) {
                 var user = new User(name, roles, token, isLogged);
                 UserService.setCurrentUser(user);
             },
 
-            /**
-             * @function
-             * @returns {boolean}
-             * @description Check if the user is logged
-             */
+           /**
+            * @ngdoc method
+            * @name AppSecurity.factory:AuthenticationService#isLoggedIn
+            * @methodOf AppSecurity.factory:AuthenticationService
+            * @param {string} role The role to be validated
+            * @description Check if the user is logged
+            * @returns {boolean}  true if is already logged
+            */
             isLoggedIn: function () {
                 if (UserService.getCurrentUser()) {
                     return true;
@@ -571,12 +633,13 @@ angular.module('AppSecurity', [
                 }
             },
 
-            /**
-             * @function
-             * @param {User} Current user
-             * @returns {boolean}
-             * @description Removes the current user from the app
-             */
+           /**
+            * @ngdoc method
+            * @name AppSecurity.factory:AuthenticationService#logOut
+            * @methodOf AppSecurity.factory:AuthenticationService
+            * @param {AppSecurity.global:User} user The User object to be logged out
+            * @description Removes the current user from the app
+            */
             logOut: function (user) {
                 UserService.removeUser(user);
             }
@@ -586,11 +649,10 @@ angular.module('AppSecurity', [
 
 
 /**
- * @ngdoc object
- * @name UserService
+ * @ngdoc service
+ * @name AppSecurity.factory:UserService
  * @requires $log
- * @requires CacheFactory
- *
+ * @requires AppCache.factory:CacheFactory
  * @description
  * Handles the user in the app.
  */
@@ -599,17 +661,39 @@ angular.module('AppSecurity', [
 
 
         return {
+
+           /**
+            * @ngdoc method
+            * @name AppSecurity.factory:UserService#setCurrentUser
+            * @methodOf AppSecurity.factory:UserService
+            * @param {AppSecurity.global:User} loggedUser The currently logged user
+            * @description Writes the current user in cache ('currentUser').
+            */
             setCurrentUser: function (loggedUser) {
                 $log.debug('Setting new user:');
                 $log.debug(loggedUser.print());
                 CacheFactory._browserCache.currentUser = loggedUser;
                 $log.debug('New user has been stored to cache.');
             },
-
+            
+           /**
+            * @ngdoc method
+            * @name AppSecurity.factory:UserService#getCurrentUser
+            * @methodOf AppSecurity.factory:UserService
+            * @description Retrieves the current user from cache ('currentUser').
+            * @returns {AppSecurity.global:User} The currently logged user
+            */
             getCurrentUser: function () {
                 return CacheFactory._browserCache.currentUser;
             },
 
+           /**
+            * @ngdoc method
+            * @name AppSecurity.factory:UserService#removeUser
+            * @methodOf AppSecurity.factory:UserService
+            * @param {AppSecurity.global:User} loggedUser The currently logged user
+            * @description Removes the current user from the app, including cache.
+            */
             removeUser: function (loggedUser) {
                 CacheFactory._browserCache.currentUser = null;
                 CacheFactory._scopeCache.put('login_status', 'Not connected');
@@ -623,12 +707,9 @@ angular.module('AppSecurity', [
 
 
 /**
- * @function
- * @param name String with the name of the user.
- * @param roles array of strings with roles of the user
- * @param token String with the token from oauth server
- * @param isLogged Boolean
- * @description Encapsulates information about the user in the app.
+ * @doc function
+ * @name AppSecurity.global:User
+ * @description Set of fields with main user data: name, roles, token, islogged.
  */
 function User(name, roles, token, isLogged) {
     this.name = name;

@@ -3,12 +3,13 @@
 angular.module('AppSecurity')
 
 /**
- * @ngdoc object
- * @name oauth
- * @requires SECURITY_OAUTH
- * @requires Oauth_AccessToken
- * @requires Oauth_Endpoint
- * @requires Oauth_Profile
+ * @ngdoc directive
+ * @name AppSecurity.directive:oauth
+ * @restrict A
+ * @requires AppConfiguration.constant:SECURITY_OAUTH
+ * @requires AppSecurity.factory:Oauth_AccessToken
+ * @requires AppSecurity.factory:Oauth_Endpoint
+ * @requires AppSecurity.factory:Oauth_Profile
  * @requires $location
  * @requires $rootScope
  * @requires $compile
@@ -20,16 +21,21 @@ angular.module('AppSecurity')
  * You can use the directive with or without data in the directive declaration.
  * If data are not included they will be loaded from configuration files.
  * Data in declaration overwrites data from configuration files.
- * Usage without data:
- * <oauth ng-cloak> Sign In</oauth>
- * Usage with data:
-        <oauth ng-cloak
+ * 
+ * 
+ * @example
+ <example module="AppSecurity">
+    <file name="index.html">
+        <p>OAuth test</p>
+<oauth ng-cloak
           site="[OAUTH SERVER URL]"
           client="[CLIENT_ID]"
           redirect="[CLIENT APP URL]"
           scope="[scope|resources|URL]"
           profile="[User Info URL]"
           storage="[none|cookies]">Sign In</oauth>
+    </file>
+</example>
 
  * Note ng-cloak directive (http://docs.angularjs.org/api/ng.directive:ngCloak)
  * is used to prevent the Angular html template from being briefly displayed by

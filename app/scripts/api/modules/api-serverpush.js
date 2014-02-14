@@ -29,6 +29,42 @@
 // That is the reason it is not a dependency handled by bower.
 ////////////////////////////////////////////////////////////////////////////
 
+/**
+* @ngdoc module
+* @name AppServerPush
+* @description
+* This module handles server data communication when it pushes them to the client.
+* 
+* It is now based on SocketIO (http://socket.io/). Why?
+* 
+* Using WebSockets is a modern, bidirectional protocol that enables an interactive communication
+* session between the browser and a server. Its main current drawback is
+* that implementation is generally only available in the latest browsers. However, by
+* using Socket.IO, this low level detail is abstracted away and we, as programmers,
+* are relieved of the need to write browser-specific code.
+* 
+* The current release of socket.io is 0.9.10.
+* 
+* The module AppServerPush is included in the main module.
+* 
+* The private module AppSocketIO simply wraps SocketIO API to be used by AppServerPush.
+* 
+* So, AppServerPush is ready to integrate other Server Push approaches (e.g. Atmosphere) only by including
+* a new module and injecting it to AppServerPush.
+
+
+* NOTE ABOUT CLIENT DEPENDENCIES WITH SOCKET.IO
+* The Socket.IO server will handle serving the correct version of the Socket.IO client library;
+* 
+* We should not be using one from elsewhere on the Internet. From the top example on http://socket.io/:
+* 
+*  <script src="/socket.io/socket.io.js"></script>
+*  
+* This works because we wrap our HTTP server in Socket.IO (see the example at How To Use) and it intercepts
+* requests for /socket.io/socket.io.js and sends the appropriate response automatically.
+* 
+* That is the reason it is not a dependency handled by bower.
+*/
 angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
 /*
      To make socket error events available across an app, in one of the controllers:
@@ -44,8 +80,8 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
         socket.forward('error');
     }])
 /**
- * @ngdoc object
- * @name SocketFactory
+ * @ngdoc service
+ * @name AppServerPush.factory:SocketFactory
  * @requires $rootScope
  * @requires socket
  *
@@ -121,8 +157,21 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
 // COMMON API - 0.1
 // PRIVATE MODULE (AppSocketIO)
 ////////////////////////////////////////////////////////////////////////////
+
+/**
+* @ngdoc module
+* @name AppSocketIO
+* @description
+* Private module implementing SocketIO
+*/
 angular.module('AppSocketIO', ['AppConfiguration']).
 
+/**
+* @ngdoc provider
+* @name AppSocketIO.provider:socket
+* @description
+* provides SocketIO client object from pre-existing configuration in application.
+*/
 provider('socket', ['SERVERPUSH_CONFIG',
     function (SERVERPUSH_CONFIG) {
 
