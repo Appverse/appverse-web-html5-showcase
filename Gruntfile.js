@@ -504,7 +504,7 @@ module.exports = function (grunt) {
             'concurrent:server',
             'autoprefixer',
             'connect:livereload',
-            'open',
+            'open:server',
             'watch'
         ]);
     });
@@ -543,7 +543,10 @@ module.exports = function (grunt) {
         'rev',
         'usemin',
         'connect:dist',
-        'open',
+        'docular',
+        'connect:doc',
+        'open:server',
+        'open:doc',
         'watch'
     ]);
 
