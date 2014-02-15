@@ -5,36 +5,15 @@
 // SERVER PUSH CLIENT
 // PRIMARY MODULE (AppServerPush)
 ////////////////////////////////////////////////////////////////////////////
-// This module handles server data communication when it pushes them to the client.
-// It is based on SocketIO (http://socket.io/). Why?
-// Using WebSockets is a modern, bidirectional protocol that enables an interactive communication
-// session between the browser and a server. Its main current drawback is
-// that implementation is generally only available in the latest browsers. However, by
-// using Socket.IO, this low level detail is abstracted away and we, as programmers,
-// are relieved of the need to write browser-specific code.
-// The current release of socket.io is 0.9.10.
-//
-// The module AppServerPush is included in the main module.
-// The private module AppSocketIO simply wraps SocketIO API to be used by AppServerPush.
-// So, AppServerPush is ready to integrate other Server Push approaches (e.g. Atmosphere) only by including
-// a new module and injecting it to AppServerPush.
-//
-//////////////////////////////////////////////////////////////////////////////
-// NOTE ABOUT CLIENT DEPENDENCIES WITH SOCKET.IO
-// The Socket.IO server will handle serving the correct version of the Socket.IO client library;
-// We should not be using one from elsewhere on the Internet. From the top example on http://socket.io/:
-//  <script src="/socket.io/socket.io.js"></script>
-// This works because we wrap our HTTP server in Socket.IO (see the example at How To Use) and it intercepts
-// requests for /socket.io/socket.io.js and sends the appropriate response automatically.
-// That is the reason it is not a dependency handled by bower.
-////////////////////////////////////////////////////////////////////////////
+
 
 /**
 * @ngdoc module
 * @name AppServerPush
 * @description
-* This module handles server data communication when it pushes them to the client.
-*
+* This module handles server data communication when it pushes them to the client 
+* exposing the factory SocketFactory, which is an API for instantiating sockets 
+* that are integrated with Angular's digest cycle.
 * It is now based on SocketIO (http://socket.io/). Why?
 *
 * Using WebSockets is a modern, bidirectional protocol that enables an interactive communication
@@ -51,9 +30,10 @@
 *
 * So, AppServerPush is ready to integrate other Server Push approaches (e.g. Atmosphere) only by including
 * a new module and injecting it to AppServerPush.
-
-
+* 
+* 
 * NOTE ABOUT CLIENT DEPENDENCIES WITH SOCKET.IO
+* 
 * The Socket.IO server will handle serving the correct version of the Socket.IO client library;
 *
 * We should not be using one from elsewhere on the Internet. From the top example on http://socket.io/:
@@ -100,11 +80,13 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
         function ($rootScope, socket) {
         var factory = {};
 
-        /*
-             @function
-             @param eventName the name of the event/channel to be listened
+        /**
+             @ngdoc method
+             @name AppServerPush.factory:SocketFactory#listen
+             @methodOf AppServerPush.factory:SocketFactory
+             @param {string} eventName The name of the event/channel to be listened
              The communication is bound to rootScope.
-             @param callback The function to be passed as callback.
+             @param {object} callback The function to be passed as callback.
              @description Establishes a communication listening an event/channel from server.
              Use this method for background communication although the current scope is destyroyed.
              You should cancel communication manually or when the $rootScope object is destroyed.
@@ -118,12 +100,14 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
             });
         };
 
-        /*
-             @function
-             @param eventName the name of the event/channel to be sent to server
-             @param scope the scope object to be bound to the listening.
+        /**
+             @ngdoc method
+             @name AppServerPush.factory:SocketFactory#sendMessage
+             @methodOf AppServerPush.factory:SocketFactory
+             @param {string} eventName The name of the event/channel to be sent to server
+             @param {object} scope The scope object to be bound to the listening.
              The communication will be cancelled when the scope is destroyed.
-             @param callback The function to be passed as callback.
+             @param {object} callback The function to be passed as callback.
              @description Establishes a communication listening an event/channel from server.
              It is bound to a given $scope object.
              */
@@ -138,11 +122,13 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
             });
         };
 
-        /*
-             @function
+        /**
+             @ngdoc method
+             @name AppServerPush.factory:SocketFactory#unsubscribeCommunication
+             @methodOf AppServerPush.factory:SocketFactory
+             @param {object} callback The function to be passed as callback.
+             @description Cancels all communications to server. 
              The communication will be cancelled without regarding other consideration.
-             No callback is passed.
-             @description Cancels all communications to server.
              */
         factory.unsubscribeCommunication = function (callback) {
             socket.off(callback());
@@ -162,17 +148,35 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
  * @ngdoc module
  * @name AppSocketIO
  * @description
- * Private module implementing SocketIO
+ * Private module implementing SocketIO. It provides the common API module AppServerpush
+ * with the socket object wrapping the SocketIO client. This is initializated according 
+ * to the pre-existing external configuration.
  */
-angular.module('AppSocketIO', ['AppConfiguration']).
+angular.module('AppSocketIO', ['AppConfiguration'])
 
 /**
- * @ngdoc service
- * @name AppSocketIO.service:socket
+ * @ngdoc provider
+ * @name AppSocketIO.provider:socket
  * @description
- * provides SocketIO client object from pre-existing configuration in application.
+ * This provider provides the appserverpush module with the SocketIO client object from pre-existing configuration in application.
+ *  
+ * This object helps the common API module  making  easier to add/remove listeners in a way that works with AngularJS's scope.
+ * 
+ * socket.on / socket.addListener: Takes an event name and callback. Works just like the method of the same name from Socket.IO.
+ * 
+ * socket.removeListener: Takes an event name and callback. Works just like the method of the same name from Socket.IO.
+ * 
+ * socket.emit: sends a message to the server. Optionally takes a callback.
+ * Works just like the method of the same name from Socket.IO.
+ * 
+ * socket.forward: allows you to forward the events received by Socket.IO's socket to AngularJS's event system. 
+ * You can then listen to the event with $scope.$on. By default, socket-forwarded events are namespaced with socket:.
+ * The first argument is a string or array of strings listing the event names to be forwarded. 
+ * The second argument is optional, and is the scope on which the events are to be broadcast. 
+ * If an argument is not provided, it defaults to $rootScope. 
+ * As a reminder, broadcasted events are propagated down to descendant scopes.
  */
-provider('socket', ['SERVERPUSH_CONFIG',
+ .provider('socket', ['SERVERPUSH_CONFIG',
     function (SERVERPUSH_CONFIG) {
 
         // when forwarding events, prefix the event name
