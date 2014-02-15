@@ -705,12 +705,15 @@ angular.module('AppSecurity', [
 
 
 
-
 /**
- * @doc function
- * @name AppSecurity.global:User
- * @description Set of fields with main user data: name, roles, token, islogged.
- */
+  * @doc function
+  * @name AppSecurity.global:User
+  * @param {string} name The name of the user to be registered
+  * @param {object} roles Array with the list of assigned roles
+  * @param {string} token The provided encrypted oauth token
+  * @param {boolean} isLogged The user is logged or not
+  * @description Entity with main data about a user to be handled by the module
+  */
 function User(name, roles, token, isLogged) {
     this.name = name;
     //Array

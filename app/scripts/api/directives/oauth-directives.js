@@ -5,7 +5,7 @@ angular.module('AppSecurity')
 /**
  * @ngdoc directive
  * @name AppSecurity.directive:oauth
- * @restrict A
+ * @restrict B
  * @requires AppConfiguration.constant:SECURITY_OAUTH
  * @requires AppSecurity.factory:Oauth_AccessToken
  * @requires AppSecurity.factory:Oauth_Endpoint
@@ -27,13 +27,14 @@ angular.module('AppSecurity')
  <example module="AppSecurity">
     <file name="index.html">
         <p>OAuth test</p>
-<oauth ng-cloak
-          site="[OAUTH SERVER URL]"
-          client="[CLIENT_ID]"
-          redirect="[CLIENT APP URL]"
-          scope="[scope|resources|URL]"
-          profile="[User Info URL]"
-          storage="[none|cookies]">Sign In</oauth>
+        <oauth ng-cloak
+            site="http://myoauthserver.com"
+            client="e72c43c75adc9665e4d4c13354c41f337d5a2e439d3da1243bb47e39745f435c"
+            redirect="http://localhost:9000"
+            scope="resources"
+            profile="http://myoauthserver.com/me"
+            storage="cookies">Sign In
+        </oauth>
     </file>
 </example>
 
