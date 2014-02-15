@@ -183,18 +183,14 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
         };
 
 
-        /*
-             @function
-             @param duration items expire after this time.
-             @param capacity  turns the cache into LRU (Least Recently Used) cache.
-             If you don't want $http's default cache to store every response.
-             @description getScopeCache is the singleton that CacheFactory manages
-             as a local cache created with $angularCacheFactory, which is what we return
-             from the service. We can inject this into any controller we
-             want and it will always return the same values.
-             @description
-             Your can retrieve the currently cached data: var cachedData =
-             */
+        /**
+         * @ngdoc method
+         * @name AppCache.service:CacheFactory#setDefaultHttpCacheStorage
+         * @methodOf AppCache.service:CacheFactory
+         * @param {number} duration items expire after this time.
+         * @param {string} capacity  turns the cache into LRU (Least Recently Used) cache.
+         * @description Default cache configuration for $http service
+         */
         factory.setDefaultHttpCacheStorage = function (maxAge, capacity) {
 
             var cacheId = 'MyHttpAngularCache';
@@ -256,7 +252,14 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             $http.defaults.cache = factory._httpCache;
             return factory._httpCache;
         };
-
+        
+        /**
+         * @ngdoc method
+         * @name AppCache.service:CacheFactory#getHttpCache
+         * @methodOf AppCache.service:CacheFactory
+         * @description Returns the httpcache object in factory
+         * @returns httpcache object
+         */
         factory.getHttpCache = function () {
             return factory._httpCache;
         };
@@ -270,7 +273,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
  * @ngdoc service
  * @name AppCache.service:IDB
  * @description
- * AngularJS service to utilize indexedDB with angular.
+ * This service has been planned to be used as HTML5's indexedDB specification with the commonAPI.
  *
  * Normally, and as a recommendation, we should have only one indexedDB per app.
  * <pre>
@@ -397,7 +400,15 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             $log.debug('idb test');
         };
 
-
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#indexComplies
+         * @methodOf AppCache.service:IDB
+         * @param {string} actual Real index.
+         * @param {string} expected Expected index.
+         * @description Checks if the indexes complaint
+         * @returns {boolean} True if both indexes are equal
+         */
         function indexComplies(actual, expected) {
             return ['keyPath', 'unique', 'multiEntry'].every(function (key) {
                 // IE10 returns undefined for no multiEntry
@@ -407,8 +418,15 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 return expected[key] === actual[key];
             });
         }
-
-        // a quick and simple wrapper for getting the transaction store with an optional mode
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#getTransactionStore
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @param {string} mode Current mode of the idb.
+         * @description A quick and simple wrapper for getting the transaction store with an optional mode
+         * @returns {object} The object store
+         */
         this.getTransactionStore = function (storeName, mode) {
             if (!(this.db instanceof IDBDatabase)) {
                 $log.debug('db', this, this.db);
@@ -421,7 +439,16 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 return this.db.transaction(storeName, mode).objectStore(storeName);
             }
         };
-
+        
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#getItemOnIndex
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @param {string} index The index of the search.
+         * @param {string} key The key of the item.
+         * @description Retrieves one item of the idb from its key and a given index
+         */
         this.getItemOnIndex = function (storeName, index, key) {
             var boundKeyRange = IDBKeyRange.only(key);
 
@@ -439,7 +466,16 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             };
             cursorRequest.onerror = self.failure;
         };
-
+        
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#getItemsOnIndex
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @param {string} index The index of the search.
+         * @param {string} key The key of the item.
+         * @description Retrieves a list of items of the idb from their key and a given index
+         */
         this.getItemsOnIndex = function (storeName, index, key) {
             var boundKeyRange = IDBKeyRange.only(key);
 
@@ -460,7 +496,17 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             };
             cursorRequest.onerror = self.failure;
         };
-
+        
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#getItemsOnIndexWithTransaction
+         * @methodOf AppCache.service:IDB
+         * @param {object} transaction The transaction operation of the object.
+         * @param {string} storeName The asssigned name of the store object.
+         * @param {string} index The index of the search.
+         * @param {string} key The key of the item.
+         * @description Retrieves a list of items of the idb from their key and a given index
+         */
         this.getItemsOnIndexWithTransaction = function (transaction, storeName, index, key) {
             var boundKeyRange = IDBKeyRange.only(key);
 
@@ -482,7 +528,14 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             cursorRequest.onerror = self.failure;
         };
 
-        // for simple get requests by key
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#getItem
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @param {string} key The key of the item.
+         * @description Retrieves one item for simple get requests by key
+         */
         this.getItem = function (storeName, key) {
             var getRequest = this.getTransactionStore(storeName).get(key);
 
@@ -492,7 +545,15 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             getRequest.onerror = self.failure;
         };
 
-        // we're just going to get everything from a given data store
+
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#getInit
+         * @methodOf AppCache.service:IDB
+         * @param {object} transaction The transaction operation of the object.
+         * @param {string} storeName The asssigned name of the store object.
+         * @description Just going to get everything from a given data store
+         */
         this.getInit = function (transaction, storeName) {
             var objectStore = transaction.objectStore(storeName);
             var results = [];
@@ -510,7 +571,14 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             objectStore.onerror = self.failure;
         };
 
-        // similar to getInit, but we don't have a transaction to pass in
+
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#getAll
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @description Similar to getInit, but we don't have a transaction to pass in
+         */
         this.getAll = function (storeName) {
             var objectStore = this.getTransactionStore(storeName);
             var results = [];
@@ -528,6 +596,14 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             objectStore.onerror = self.failure;
         };
 
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#remove
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @param {string} key The key of the object
+         * @description Removes an item from its key
+         */
         this.remove = function (storeName, key) {
             var request = this.getTransactionStore(storeName, "readwrite").delete(key);
             request.onsuccess = function () {
@@ -536,6 +612,16 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             request.onerror = self.failure;
         };
 
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#removeItemsOnIndex
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @param {string} index The provided index
+         * @param {string} key 
+         * @param {string} key_path
+         * @description Remove a set of items from key path
+         */
         this.removeItemsOnIndex = function (storeName, index, key, key_path) {
             var boundKeyRange = IDBKeyRange.only(key);
 
@@ -558,7 +644,14 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             cursorRequest.onerror = self.failure;
         };
 
-
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#put
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @param {object} data Item to be inserted.
+         * @description Similar to getInit, but we don't have a transaction to pass in
+         */
         this.put = function (storeName, data) {
             $log.debug('IDB put');
             var request = this.getTransactionStore(storeName, "readwrite").put(data);
@@ -568,6 +661,13 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             request.onerror = self.failure;
         };
 
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#removeAll
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @description Remove all items form the given store object
+         */
         this.removeAll = function (storeName) {
             $log.debug('IDB put');
             var request = this.getTransactionStore(storeName, "readwrite").clear();
@@ -578,7 +678,14 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
         };
 
 
-        // data should be an array of objects to be inserted
+        /**
+         * @ngdoc method
+         * @name AppCache.service:IDB#batchInsert
+         * @methodOf AppCache.service:IDB
+         * @param {string} storeName The asssigned name of the store object.
+         * @param {object} data Objects to be inserted.
+         * @description Data should be an array of objects
+         */
         this.batchInsert = function (storeName, data) {
             $log.debug('IDB batchInsert');
             var objectStore = this.getTransactionStore(storeName, "readwrite");
