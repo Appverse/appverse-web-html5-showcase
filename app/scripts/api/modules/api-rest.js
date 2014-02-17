@@ -123,64 +123,92 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         };
 
         /*
-        @function
-        @param path String with the item URL
-        @description Returns a complete list from a REST resource.
-        Use to get data to a scope var. For example:
+         * Returns a complete list from a REST resource.
+            Use to get data to a scope var. For example:
             $scope.people = readList('people');
-        Then, use the var in templates:
+            Then, use the var in templates:
             <li ng-repeat="person in people">{{person.Name}}</li>
-        */
+         */
+       /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#readList
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @description Returns a complete list from a REST resource.
+         * @returns {object} List of values
+         */
         factory.readList = function (path) {
             return Restangular.all(path).getList().$object;
         };
 
-        /*
-        @function
-        @param path String with the item URL
-        @param data Key of the given item
-        @description Returns a unique value.
-        */
+       /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#readListItem
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @param {String} key The item key
+         * @description Returns a unique value.
+         * @returns {object} An item value
+         */
         factory.readListItem = function (path, key) {
             return Restangular.one(path, key).get().$object;
         };
 
-        /*
-        @function
-        @param path String with the item URL
-        @param data Array of key with keys of the given items
-        @description Returns a list of values from the provided params.
-        */
+
+        /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#readListItems
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @param {String} keys The item keys array
+         * @description Returns a unique value.
+         * @returns {object} List of values
+         */
         factory.readListItems = function (path, keys) {
             return Restangular.several(path, keys).getList().$object;
         };
 
-        /*
-        @function
-        @param path String with the item URL
-        @param data Item data  to be posted
-        @description Returns result code.
-        */
+
+       /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#createListItem
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @param {object} newData The item to be created
+         * @param {object} callback The function for callbacking
+         * @description Returns result code.
+         * @returns {object} The created item
+         */
         factory.createListItem = function (path, newData, callback) {
             Restangular.all(path).post(newData).then(callback);
         };
 
-        /*
-        @function
-        @param path String with the item URL
-        @param data Item data  to be posted
-        @description Returns result code.
-        */
+
+        /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#updateObject
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @param {object} newData The item to be updated
+         * @param {object} callback The function for callbacking
+         * @description Returns result code.
+         * @returns {object} The updated item
+         */
         factory.updateObject = function (path, newData, callback) {
             Restangular.one(path).put(newData).then(callback);
         };
 
-        /*
-        @function
-        @param path String with the item URL
-        @param data Item data  to be deleted
-        @description Deletes an item from a list.
-        */
+
+        /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#deleteListItem
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @param {object} key The item key to be deleted
+         * @param {object} callback The function for callbacking
+         * @description Deletes an item from a list.
+         * @returns {object} The deleted item
+         */
         factory.deleteListItem = function (path, key, callback) {
             // Use 'then' to resolve the promise.
             Restangular.one(path, key).get().then(function (item) {
@@ -188,12 +216,16 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
             });
         };
 
-        /*
-        @function
-        @param path String with the item URL
-        @param data Item data  to be deleted
-        @description Deletes an item from a list.
-        */
+
+       /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#deleteObject
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @param {object} callback The function for callbacking
+         * @description Deletes an item from a list.
+         * @returns {object} The deleted item
+         */
         factory.deleteObject = function (path, callback) {
             // Use 'then' to resolve the promise.
             Restangular.one(path).delete().then(callback);
