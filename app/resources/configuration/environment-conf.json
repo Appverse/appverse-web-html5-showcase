@@ -67,5 +67,17 @@
     "I18N_CONFIG": {
         "PreferredLocale": "en-US",
         "DetectLocale": true
+    },
+    "WEBSOCKETS_CONFIG": {
+        "WsUrl": "ws://echo.websocket.org",
+        "WS_CONNECTED": "Websocket connected",
+        "WS_DISCONNECTED": "Websocket disconnected",
+        "WS_CONNECTING": "Connecting Websocket...",
+        "WS_CLOSED": "Websocket connection closed",
+        "WS_CLOSING": "Websocket connection closing...",
+        "WS_OPEN": "Websocket connection is open",
+        "WS_UNKNOWN": "Websocket status is unknown",
+        "WS_FAILED_CONNECTION": "Failed to open a Websocket connection",
+        "WS_NOT_SUPPORTED": "HTML5 Websockets specification is not supported in this browser."
     }
 }

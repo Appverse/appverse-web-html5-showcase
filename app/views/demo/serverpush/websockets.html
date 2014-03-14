@@ -1,0 +1,90 @@
+<div class="container">
+    
+      <div id="main">
+        
+        <h1>Websockets Demo</h1>
+        <p class="bodytext">
+            This demo will let you do an HTML5 WebSocket test against an echo server.
+        </p>
+        
+        <div ng-show="wsSupported" id="webSocketSupp">
+          <div style="float: left;">
+            <img src="images/check.png" width="36" height="36" align="absmiddle">
+          </div>
+          <div style="float: left; width: 600px; margin-left: 10px; position:relative; top: 8px;">
+            This browser supports WebSockets.
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        
+        <div ng-hide="wsSupported" id="noWebSocketSupp">
+          <div style="float: left;">
+            <img src="images/cross.png" width="36" height="36" align="absmiddle">
+          </div>
+          <div style="float: left; width: 600px; margin-left: 10px;">
+            <p>Uh-oh, the browser you're using doesn't have native support for WebSocket. That means you can't run this demo.</p>
+            <p>The following link lists the browsers that support WebSockets:</p>
+            <p><a href="http://caniuse.com/#feat=websockets">http://caniuse.com/#feat=websockets</a></p>
+          </div>
+        </div>
+        <br>
+        <div id="echo">
+          <div id="echo-config" style="float: left;">
+            <strong>Location: {{endpointURL}}</strong> Status: {{status}}<br>
+            <button class="btn btn-info btn-primary" ng-click="connect()">Connect</button>
+            <button class="btn btn-info btn-primary" ng-click="disconnect()">Disconnect</button>
+            <br>
+            <br>
+            <strong>Message:</strong><br>
+           
+            <form class="form-inline">
+                <input type="text" ng-model="text" placeholder="input message to send" class="message"></input>
+                <br>
+                <button ng-click="send()" class="btn btn-info btn-primary">Send</button>
+            </form>
+          </div>
+            
+          <div>
+                <table class="table table-striped">
+                    <tr ng-repeat="message in messages">
+                      <td>{{message}}</td>
+                    </tr>
+                </table>
+          </div>
+            
+<!--          <div id="echo-log" style="float: left; margin-left: 20px; padding-left: 20px; width: 350px; border-left: solid 1px #cccccc;"> <strong>Log:</strong>
+            <div id="consoleLog"></div>
+            <button id="clearLogBut" style="position: relative; top: 3px;">Clear log</button>
+          </div>
+            -->
+        </div>
+        
+        
+        
+        
+        
+        <pre>
+        <p><strong>Instructions:</strong></p>
+        <table class="instructions" cellspacing="0px" cellpadding="2px">
+          <tr>
+            <td valign="top" nowrap>Step 1: &nbsp;</td>
+            <td valign="top">Press the <strong>Connect</strong> button.</td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap>Step 2: &nbsp;</td>
+            <td valign="top">Once connected, enter a message and press the <strong>Send</strong> button. The output will appear in the <strong>Log</strong> section. You can change the message and send again multiple times. </td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap>Step 3: &nbsp;</td>
+            <td valign="top">Press the <strong>Disconnect</strong> button.</td>
+          </tr>
+          <tr>
+            <td valign="top" nowrap>Note: &nbsp;</td>
+            <td valign="top">In some environments the WebSocket connection may fail due to intermediary firewalls, proxies, routers, etc. In that case take advantage of WebSocket's secure capability and check<strong> Use secure WebSocket (TLS)</strong>. Even if you have no issues you can still feel free to test using a secure connection.</td>
+          </tr>
+        </table>
+        </pre>
+
+      </div> <!-- #main -->
+    
+</div> <!-- #main-container -->

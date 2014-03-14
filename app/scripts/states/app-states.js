@@ -281,6 +281,15 @@ angular.module('appverseClientIncubatorApp')
                     controller: 'serverPushController'
 
                 })
+                
+                .state('websockets', {
+
+                    abstract: false,
+                    url: '/websockets',
+                    templateUrl: 'views/demo/serverpush/websockets.html',
+                    controller: 'websocketsController'
+
+                })
 
                 //////////////////////////
                 // SECTION: Translation //

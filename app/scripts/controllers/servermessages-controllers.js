@@ -153,4 +153,89 @@ angular.module('appverseClientIncubatorApp')
             }
         };
 
-    }]);
+    }])
+
+.controller('websocketsController', ['$scope', '$log', 'WebSocketFactory', 'WEBSOCKETS_CONFIG',
+        function ($scope, $log, WebSocketFactory, WEBSOCKETS_CONFIG) {
+            
+            $scope.endpointURL = WEBSOCKETS_CONFIG.WsUrl;
+            $scope.connStatus;
+            $scope.messages = [];
+            $scope.wsSupported = Modernizr.websockets;
+            $scope.status = WebSocketFactory.statusAsText();
+ 
+            WebSocketFactory.subscribe(function(message) {
+              $scope.messages.push(message);
+              $scope.$apply();
+            });
+
+            /**
+            @ngdoc method
+            @name AppServerPush.factory:WebSocketFactory#connect
+            @methodOf AppServerPush.factory:WebSocketFactory
+            @param {string} itemId The id of the item 
+            @description Establishes a connection to the swebsocket endpoint.
+            */
+            $scope.connect = function() {
+              WebSocketFactory.connect();
+            }
+            
+            
+            $scope.send = function() {
+              WebSocketFactory.send($scope.text);
+              $scope.text = "";
+              
+              $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
+            }
+            
+            /**
+            @ngdoc method
+            @name AppServerPush.factory:WebSocketFactory#disconnect
+            @methodOf AppServerPush.factory:WebSocketFactory
+            @param {string} itemId The id of the item 
+            @description Close the WebSocket connection.
+            */
+            $scope.disconnect = function () {
+                WebSocketFactory.disconnect();
+                
+                $log.debug("Disconnected from the websockets peer server.");
+            };
+  
+            $scope.$watch("status", WebSocketFactory.statusAsText());
+            
+            
+            
+//            $scope.connect = function () {
+//                WebSocketFactory.connect();
+//                
+//                 if(WebSocketFactory.statusAsText() === WEBSOCKETS_CONFIG.OPEN){
+//                    $log.debug("Connected to the websockets peer server | Status: " + WebSocketFactory.statusAsText());
+//                 }else{
+//                     $log.debug("Failed connection to the websockets peer server | Status: " + WebSocketFactory.statusAsText());
+//                 }
+//                 $scope.connStatus = WebSocketFactory.statusAsText();
+//            };
+//            
+//            $scope.send = function (message) {
+//                if(WebSocketFactory.statusAsText() === WEBSOCKETS_CONFIG.OPEN){
+//                    WebSocketFactory.sendMessage(message);
+//                    
+//                    $log.debug("Sent message '" + message + "' to websockets peer server.");
+//                }else{
+//                    $log.debug("We are not connected to the websockets peer server!!!");
+//                }
+//            };
+//            
+//            $scope.receive = function (message){
+//                
+//            }
+//            
+//            $scope.disconnect = function () {
+//                WebSocketFactory.disconnect();
+//                
+//                $log.debug("Disconnected from the websockets peer server.");
+//            };
+            
+            
+
+}]);

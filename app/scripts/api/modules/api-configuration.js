@@ -513,4 +513,30 @@ Future updates of Restangular imply review of this section in order to keep cons
     ],
     routesThatDontRequireAuth: ['/home'],
     routesThatRequireAdmin: ['/about']
+})
+
+/*
+WEBSOCKETS MODULE CONFIGURATION
+*/
+.constant('WEBSOCKETS_CONFIG', {
+    /*
+     URL of the listened server
+      */
+    Host: window.location.hostname,
+    AppPath: window.location.pathname.split('/')[1],
+    Context: '/services/websocket/statistics/get/cpuload',
+    Port: 8000,
+    SslPort: 8443,
+    //WsUrl: 'ws://' + Host + ':'+ Port +'/' + AppPath + '/' + Context,
+    WsUrl: "ws://echo.websocket.org",
+    SslWsUrl: 'wss://' + Host + ':'+ Port +'/' + AppPath + '/' + Context,
+    WS_CONNECTED: 'Websocket connected',
+    WS_DISCONNECTED: 'Websocket disconnected',
+    WS_CONNECTING: 'Connecting Websocket...',
+    WS_CLOSED: 'Websocket connection closed',
+    WS_CLOSING: 'Websocket connection closing...',
+    WS_OPEN: 'Websocket connection is open',
+    WS_UNKNOWN: 'Websocket status is unknown',
+    WS_FAILED_CONNECTION: 'Failed to open a Websocket connection',
+    WS_NOT_SUPPORTED: 'HTML5 Websockets specification is not supported in this browser.'
 });
