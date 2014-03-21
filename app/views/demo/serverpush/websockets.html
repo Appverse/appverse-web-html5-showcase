@@ -22,23 +22,25 @@
             <img src="images/cross.png" width="36" height="36" align="absmiddle">
           </div>
           <div style="float: left; width: 600px; margin-left: 10px;">
-            <p>Uh-oh, the browser you're using doesn't have native support for WebSocket. That means you can't run this demo.</p>
-            <p>The following link lists the browsers that support WebSockets:</p>
-            <p><a href="http://caniuse.com/#feat=websockets">http://caniuse.com/#feat=websockets</a></p>
+            <p>Uh-oh, the browser you are using does not have native support for WebSockets. That means you cannot run this demo.</p>
+            <p>The <a href="http://caniuse.com/#feat=websockets">following link</a> lists the browsers that support WebSockets.</p>
           </div>
         </div>
         <br>
         <div id="echo">
           <div id="echo-config" style="float: left;">
-            <strong>Location: {{endpointURL}}</strong> Status: {{status}}<br>
+            Location: {{endpointURL}}
+            <br>
+            Status: {{status}}<br>
             <button class="btn btn-info btn-primary" ng-click="connect()">Connect</button>
             <button class="btn btn-info btn-primary" ng-click="disconnect()">Disconnect</button>
             <br>
             <br>
+<!--            <strong>DATA: {{ data }}</strong><br>-->
             <strong>Message:</strong><br>
            
             <form class="form-inline">
-                <input type="text" ng-model="text" placeholder="input message to send" class="message"></input>
+                <input type="text" ng-model="text" placeholder="input message to send" class="message" />
                 <br>
                 <button ng-click="send()" class="btn btn-info btn-primary">Send</button>
             </form>
@@ -52,11 +54,6 @@
                 </table>
           </div>
             
-<!--          <div id="echo-log" style="float: left; margin-left: 20px; padding-left: 20px; width: 350px; border-left: solid 1px #cccccc;"> <strong>Log:</strong>
-            <div id="consoleLog"></div>
-            <button id="clearLogBut" style="position: relative; top: 3px;">Clear log</button>
-          </div>
-            -->
         </div>
         
         
@@ -64,25 +61,25 @@
         
         
         <pre>
-        <p><strong>Instructions:</strong></p>
-        <table class="instructions" cellspacing="0px" cellpadding="2px">
-          <tr>
-            <td valign="top" nowrap>Step 1: &nbsp;</td>
-            <td valign="top">Press the <strong>Connect</strong> button.</td>
-          </tr>
-          <tr>
-            <td valign="top" nowrap>Step 2: &nbsp;</td>
-            <td valign="top">Once connected, enter a message and press the <strong>Send</strong> button. The output will appear in the <strong>Log</strong> section. You can change the message and send again multiple times. </td>
-          </tr>
-          <tr>
-            <td valign="top" nowrap>Step 3: &nbsp;</td>
-            <td valign="top">Press the <strong>Disconnect</strong> button.</td>
-          </tr>
-          <tr>
-            <td valign="top" nowrap>Note: &nbsp;</td>
-            <td valign="top">In some environments the WebSocket connection may fail due to intermediary firewalls, proxies, routers, etc. In that case take advantage of WebSocket's secure capability and check<strong> Use secure WebSocket (TLS)</strong>. Even if you have no issues you can still feel free to test using a secure connection.</td>
-          </tr>
-        </table>
+            <p><strong>Instructions:</strong></p>
+            <table class="instructions" cellspacing="0px" cellpadding="2px">
+              <tr>
+                <td valign="top" nowrap>Step 1: &nbsp;</td>
+                <td valign="top">Press the <strong>Connect</strong> button.</td>
+              </tr>
+              <tr>
+                <td valign="top" nowrap>Step 2: &nbsp;</td>
+                <td valign="top">Once connected, enter a message and press the <strong>Send</strong> button. The output will appear in the <strong>Log</strong> section. You can change the message and send again multiple times. </td>
+              </tr>
+              <tr>
+                <td valign="top" nowrap>Step 3: &nbsp;</td>
+                <td valign="top">Press the <strong>Disconnect</strong> button.</td>
+              </tr>
+              <tr>
+                <td valign="top" nowrap>Note: &nbsp;</td>
+                <td valign="top">In some environments the WebSocket connection may fail due to intermediary firewalls, proxies, routers, etc. In that case take advantage of WebSocket's secure capability and check<strong> Use secure WebSocket (TLS)</strong>. Even if you have no issues you can still feel free to test using a secure connection.</td>
+              </tr>
+            </table>
         </pre>
 
       </div> <!-- #main -->

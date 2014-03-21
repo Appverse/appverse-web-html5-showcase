@@ -163,12 +163,17 @@ angular.module('appverseClientIncubatorApp')
             $scope.messages = [];
             $scope.wsSupported = Modernizr.websockets;
             $scope.status = WebSocketFactory.statusAsText();
+            
+            function updateStatus(){
+                $scope.status = WebSocketFactory.statusAsText();
+            };
  
             WebSocketFactory.subscribe(function(message) {
-              $scope.messages.push(message);
-              $scope.$apply();
+                $scope.messages.push(message);
+                updateStatus();
+                $scope.$apply();
             });
-
+            
             /**
             @ngdoc method
             @name AppServerPush.factory:WebSocketFactory#connect
@@ -177,15 +182,22 @@ angular.module('appverseClientIncubatorApp')
             @description Establishes a connection to the swebsocket endpoint.
             */
             $scope.connect = function() {
-              WebSocketFactory.connect();
+                WebSocketFactory.connect();
+                updateStatus();
+                $log.debug("Connected TO the websockets peer server.");
             }
             
             
             $scope.send = function() {
-              WebSocketFactory.send($scope.text);
-              $scope.text = "";
-              
-              $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
+                 WebSocketFactory.send($scope.text);
+                 $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
+
+//                if($scope.status != WEBSOCKETS_CONFIG.WS_CONNECTED){
+//                    WebSocketFactory.send($scope.text);
+//                    $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
+//                }else{
+//                    $log.debug("The message cannot be sent. Disconnected from ws server.");
+//                }
             }
             
             /**
@@ -197,45 +209,227 @@ angular.module('appverseClientIncubatorApp')
             */
             $scope.disconnect = function () {
                 WebSocketFactory.disconnect();
-                
-                $log.debug("Disconnected from the websockets peer server.");
+                updateStatus();
+                $log.debug("Disconnected FROM the websockets peer server.");
             };
-  
-            $scope.$watch("status", WebSocketFactory.statusAsText());
+
+            $scope.$watch('status', function(newValue, oldValue) {
+                $scope.status = newValue;
+                $log.debug('OLD STATUS' + oldValue);
+                $log.debug('NEW STATUS' + newValue);
+            });
             
-            
-            
-//            $scope.connect = function () {
-//                WebSocketFactory.connect();
-//                
-//                 if(WebSocketFactory.statusAsText() === WEBSOCKETS_CONFIG.OPEN){
-//                    $log.debug("Connected to the websockets peer server | Status: " + WebSocketFactory.statusAsText());
-//                 }else{
-//                     $log.debug("Failed connection to the websockets peer server | Status: " + WebSocketFactory.statusAsText());
-//                 }
-//                 $scope.connStatus = WebSocketFactory.statusAsText();
-//            };
-//            
-//            $scope.send = function (message) {
-//                if(WebSocketFactory.statusAsText() === WEBSOCKETS_CONFIG.OPEN){
-//                    WebSocketFactory.sendMessage(message);
-//                    
-//                    $log.debug("Sent message '" + message + "' to websockets peer server.");
-//                }else{
-//                    $log.debug("We are not connected to the websockets peer server!!!");
-//                }
-//            };
-//            
-//            $scope.receive = function (message){
-//                
-//            }
-//            
-//            $scope.disconnect = function () {
-//                WebSocketFactory.disconnect();
-//                
-//                $log.debug("Disconnected from the websockets peer server.");
-//            };
             
             
 
+}])
+
+.controller('websocketsControllerAsync', ['$scope', '$log', 'WebSocketFactoryAsync', 'WEBSOCKETS_CONFIG',
+        function ($scope, $log, WebSocketFactoryAsync, WEBSOCKETS_CONFIG) {
+            
+            $scope.endpointURL = WEBSOCKETS_CONFIG.WsUrl;
+            $scope.connStatus;
+            $scope.messages = [];
+            $scope.wsSupported = Modernizr.websockets;
+            $scope.status = WebSocketFactoryAsync.statusAsText();
+            
+            
+            function updateStatus(){
+                if(WebSocketFactoryAsync.statusAsText()){
+                    $scope.status = WebSocketFactoryAsync.statusAsText()
+                }else{
+                    $scope.status = 'Connected';
+                }
+                
+            };
+ 
+            WebSocketFactoryAsync.subscribe(function(message) {
+                $scope.messages.push(message);
+                updateStatus();
+                $scope.$apply();
+            });
+            
+            
+            /**
+            @ngdoc method
+            @name AppServerPush.factory:WebSocketFactory#connect
+            @methodOf AppServerPush.factory:WebSocketFactory
+            @param {string} itemId The id of the item 
+            @description Establishes a connection to the swebsocket endpoint.
+            */
+            $scope.connect = function() {
+                WebSocketFactoryAsync.connect();
+                updateStatus();
+                $log.debug("Connected TO the websockets peer server.");
+            }
+            
+            
+            $scope.send = function() {
+                 WebSocketFactoryAsync.send($scope.text);
+                 $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
+
+//                if($scope.status != WEBSOCKETS_CONFIG.WS_CONNECTED){
+//                    WebSocketFactory.send($scope.text);
+//                    $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
+//                }else{
+//                    $log.debug("The message cannot be sent. Disconnected from ws server.");
+//                }
+            }
+            
+            /**
+            @ngdoc method
+            @name AppServerPush.factory:WebSocketFactory#disconnect
+            @methodOf AppServerPush.factory:WebSocketFactory
+            @param {string} itemId The id of the item 
+            @description Close the WebSocket connection.
+            */
+            $scope.disconnect = function () {
+                WebSocketFactoryAsync.disconnect();
+                updateStatus();
+                $log.debug("Disconnected FROM the websockets peer server.");
+            };
+
+            $scope.$watch('status', function(newValue, oldValue) {
+                $scope.status = newValue;
+//                $log.debug('OLD STATUS' + oldValue);
+//                $log.debug('NEW STATUS' + newValue);
+            });
+            $scope.data = WebSocketFactoryAsync.subscribe();
+            
+            
+
+}])
+
+
+.controller('cpuController', ['$scope', '$log', 'WEBSOCKETS_CONFIG',
+        function ($scope, $log, WEBSOCKETS_CONFIG) {
+            var ws;
+            $scope.showButton = true;
+            $scope.wsSupported = Modernizr.websockets;
+            
+            $scope.stats = function(){
+                    $scope.showButton = false;
+                    //Making loading spinner disappear
+                    $('#load_statistics_loading').hide();
+                    $('#load_statistics_content').show();
+
+                    var options = {
+                        series: {
+                            shadowSize: 1
+                        },
+                        lines: {
+                            show: true,
+                            lineWidth: 0.5,
+                            fill: true,
+                            fillColor: {
+                                colors: [{
+                                    opacity: 0.1
+                                }, {
+                                    opacity: 1
+                                }
+                                ]
+                            }
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100,
+                            tickFormatter: function (v) {
+                                return v + "%";
+                            }
+                        },
+                        xaxis: {
+                            show: false
+                        },
+                        colors: ["#6ef146"],
+                        grid: {
+                            tickColor: "#a8a3a3",
+                            borderWidth: 0
+                        }
+                    };
+
+                    var data = [];
+                    var totalPoints = 250;
+
+                    // random data generator for plot charts
+
+                    function getRandomData() {
+                        if (data.length > 0) data = data.slice(1);
+                        // do a random walk
+                        while (data.length < totalPoints) {
+                            var prev = data.length > 0 ? data[data.length - 1] : 50;
+                            var y = 0;
+                            if (y < 0) y = 0;
+                            if (y > 100) y = 100;
+                            data.push(0);
+                        }
+                        // zip the generated y values with the x values
+                        var res = [];
+                        for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
+                        return res;
+                    }
+
+                    var updateInterval = 30;
+
+                    var plot = $.plot($("#load_statistics"), [getRandomData()], options);
+
+                    function connect() {
+                        var target = WEBSOCKETS_CONFIG.WS_CPU_URL;
+                        if ('WebSocket' in window) {
+                            ws = new WebSocket(target);
+                        } else if ('MozWebSocket' in window) {
+                            ws = new MozWebSocket(target);
+                        } else {
+                            //alert('WebSocket is not supported by this browser.');
+                            $log.warning('WebSocket is not supported by this browser.');
+                            return;
+                        }
+                        ws.onopen = function () {
+                            echo();
+                        };
+
+                        ws.onmessage = function (event) {
+                            a= JSON.parse(event.data);
+                            var res = plot.getData();
+                            while(res.length<249){
+                                res.push([0,0]);
+                            }
+                            while(res.length>250){
+                                res.shift();
+                            }
+                            for (var i = 0; i <a.data.length; ++i){
+                                res.push([i, a.data[i].value]);
+                            }
+                            plot.setData([res]);
+                            plot.draw();
+                        };
+
+                        ws.onclose = function () {
+                            if (ws != null) {
+                                ws.close();
+                                ws = null;
+                            }
+                        };
+                    }
+
+                    function echo() {
+                        if (ws != null) {
+                            ws.send('');
+                        } else {
+                            alert('WebSocket connection not established, please connect.');
+                        }
+                    }
+
+                    function update() {
+                        plot.setData([getRandomData()]);
+                        plot.draw();
+                        setTimeout(update, updateInterval);
+                    }
+                    connect();
+                
+
+//                return {
+//                    init: drawCPULoad
+//                };
+            };
+            
 }]);

@@ -282,12 +282,21 @@ angular.module('appverseClientIncubatorApp')
 
                 })
                 
-                .state('websockets', {
+//                .state('websockets', {
+//
+//                    abstract: false,
+//                    url: '/websockets',
+//                    templateUrl: 'views/demo/serverpush/websockets.html',
+//                    controller: 'websocketsController'
+//
+//                })
+                
+                .state('cpu', {
 
                     abstract: false,
-                    url: '/websockets',
-                    templateUrl: 'views/demo/serverpush/websockets.html',
-                    controller: 'websocketsController'
+                    url: '/cpu',
+                    templateUrl: 'views/demo/serverpush/cpu.html',
+                    controller: 'cpuController'
 
                 })
 

@@ -1,0 +1,82 @@
+<link href="styles/cpustyle.css" rel="stylesheet" type="text/css"/>
+
+<div class="container">
+        <!-- START BODY CONTENT -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="portlet box blue">
+                            <div class="portlet-title">
+                                <div class="caption"><i class="icon-cogs"></i>WebSockets Demo</div>
+                            </div>
+
+                            <div class="portlet-body">
+                                <div class="portlet solid bordered light-grey">
+                                    <div class="portlet-title">
+                                        <div class="caption"><i class="icon-signal"></i>CPU Load</div>
+                                        
+                                    </div>
+                                    <div class="portlet-body">
+
+                                        <div ng-show="wsSupported" id="webSocketSupp">
+                                            <div style="float: left;">
+                                              <img src="images/check.png" width="36" height="36" align="absmiddle">
+                                            </div>
+                                            <div style="float: left; width: 600px; margin-left: 10px; position:relative; top: 8px;">
+                                              This browser supports WebSockets.
+                                            </div>
+                                            <div class="clearfix"></div>
+                                          </div>
+
+                                          <div ng-hide="wsSupported" id="noWebSocketSupp">
+                                            <div style="float: left;">
+                                              <img src="images/cross.png" width="36" height="36" align="absmiddle">
+                                            </div>
+                                            <div style="float: left; width: 600px; margin-left: 10px;">
+                                              <p>Uh-oh, the browser you are using does not have native support for WebSockets. That means you cannot run this demo.</p>
+                                              <p>The <a href="http://caniuse.com/#feat=websockets">following link</a> lists the browsers that support WebSockets.</p>
+                                            </div>
+                                          </div>
+                                          <div ng-hide="showButton == false">
+                                            <button class="btn btn-info btn-primary" ng-click="stats()" >Start</button>
+                                          </div>
+
+
+                                        <div id="load_statistics_content" class="display-none">
+                                            <div class="btn-toolbar margin-bottom-10">
+                                                <div class="tools">
+                                                    <div class="btn-group pull-right" data-toggle="buttons-radio">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="load_statistics" class="chart" style="max-height: 150px"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <pre>
+            <p><strong>Instructions:</strong></p>
+            <table class="instructions" cellspacing="0px" cellpadding="2px">
+              <tr>
+                <td valign="top" nowrap>Step 1: &nbsp;</td>
+                <td valign="top">Press the <strong>Start</strong> button.</td>
+              </tr>
+              <tr>
+                <td valign="top" nowrap>Step 2: &nbsp;</td>
+                <td valign="top">Once connected, you will see the CPU load in the graphic.</td>
+              </tr>
+              <tr>
+                <td valign="top" nowrap>Note: &nbsp;</td>
+                <td valign="top">In some environments the WebSocket connection may fail due to intermediary firewalls, proxies, routers, etc. In that case take advantage of WebSocket's secure capability and check<strong> Use secure WebSocket (TLS)</strong>. Even if you have no issues you can still feel free to test using a secure connection.</td>
+              </tr>
+            </table>
+        </pre>
+        <!-- END BODY CONTENT-->
+</div>
