@@ -388,7 +388,7 @@ angular.module('appverseClientIncubatorApp')
                         };
 
                         ws.onmessage = function (event) {
-                            a= JSON.parse(event.data);
+                            var a= JSON.parse(event.data);
                             var res = plot.getData();
                             while(res.length<249){
                                 res.push([0,0]);
