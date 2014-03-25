@@ -155,7 +155,7 @@ angular.module('appverseClientIncubatorApp')
 
     }])
 
-.controller('websocketsController', ['$scope', '$log', 'WebSocketFactory', 'WEBSOCKETS_CONFIG',
+.controller('wsController_ECHO', ['$scope', '$log', 'WebSocketFactory', 'WEBSOCKETS_CONFIG',
         function ($scope, $log, WebSocketFactory, WEBSOCKETS_CONFIG) {
             
             $scope.endpointURL = WEBSOCKETS_CONFIG.WsUrl;
@@ -163,6 +163,8 @@ angular.module('appverseClientIncubatorApp')
             $scope.messages = [];
             $scope.wsSupported = Modernizr.websockets;
             $scope.status = WebSocketFactory.statusAsText();
+            $scope.wsIsSupportedMessage = WEBSOCKETS_CONFIG.WS_SUPPORTED;
+            $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;
             
             function updateStatus(){
                 $scope.status = WebSocketFactory.statusAsText();
@@ -191,13 +193,6 @@ angular.module('appverseClientIncubatorApp')
             $scope.send = function() {
                  WebSocketFactory.send($scope.text);
                  $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
-
-//                if($scope.status != WEBSOCKETS_CONFIG.WS_CONNECTED){
-//                    WebSocketFactory.send($scope.text);
-//                    $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
-//                }else{
-//                    $log.debug("The message cannot be sent. Disconnected from ws server.");
-//                }
             }
             
             /**
@@ -224,88 +219,14 @@ angular.module('appverseClientIncubatorApp')
 
 }])
 
-.controller('websocketsControllerAsync', ['$scope', '$log', 'WebSocketFactoryAsync', 'WEBSOCKETS_CONFIG',
-        function ($scope, $log, WebSocketFactoryAsync, WEBSOCKETS_CONFIG) {
-            
-            $scope.endpointURL = WEBSOCKETS_CONFIG.WsUrl;
-            $scope.connStatus;
-            $scope.messages = [];
-            $scope.wsSupported = Modernizr.websockets;
-            $scope.status = WebSocketFactoryAsync.statusAsText();
-            
-            
-            function updateStatus(){
-                if(WebSocketFactoryAsync.statusAsText()){
-                    $scope.status = WebSocketFactoryAsync.statusAsText()
-                }else{
-                    $scope.status = 'Connected';
-                }
-                
-            };
- 
-            WebSocketFactoryAsync.subscribe(function(message) {
-                $scope.messages.push(message);
-                updateStatus();
-                $scope.$apply();
-            });
-            
-            
-            /**
-            @ngdoc method
-            @name AppServerPush.factory:WebSocketFactory#connect
-            @methodOf AppServerPush.factory:WebSocketFactory
-            @param {string} itemId The id of the item 
-            @description Establishes a connection to the swebsocket endpoint.
-            */
-            $scope.connect = function() {
-                WebSocketFactoryAsync.connect();
-                updateStatus();
-                $log.debug("Connected TO the websockets peer server.");
-            }
-            
-            
-            $scope.send = function() {
-                 WebSocketFactoryAsync.send($scope.text);
-                 $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
 
-//                if($scope.status != WEBSOCKETS_CONFIG.WS_CONNECTED){
-//                    WebSocketFactory.send($scope.text);
-//                    $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
-//                }else{
-//                    $log.debug("The message cannot be sent. Disconnected from ws server.");
-//                }
-            }
-            
-            /**
-            @ngdoc method
-            @name AppServerPush.factory:WebSocketFactory#disconnect
-            @methodOf AppServerPush.factory:WebSocketFactory
-            @param {string} itemId The id of the item 
-            @description Close the WebSocket connection.
-            */
-            $scope.disconnect = function () {
-                WebSocketFactoryAsync.disconnect();
-                updateStatus();
-                $log.debug("Disconnected FROM the websockets peer server.");
-            };
-
-            $scope.$watch('status', function(newValue, oldValue) {
-                $scope.status = newValue;
-//                $log.debug('OLD STATUS' + oldValue);
-//                $log.debug('NEW STATUS' + newValue);
-            });
-            $scope.data = WebSocketFactoryAsync.subscribe();
-            
-            
-
-}])
-
-
-.controller('cpuController', ['$scope', '$log', 'WEBSOCKETS_CONFIG',
-        function ($scope, $log, WEBSOCKETS_CONFIG) {
+.controller('wsController_CPU', ['$scope', '$log', 'WebSocketFactory', 'WEBSOCKETS_CONFIG',
+        function ($scope, $log, WebSocketFactory, WEBSOCKETS_CONFIG) {
             var ws;
             $scope.showButton = true;
             $scope.wsSupported = Modernizr.websockets;
+            $scope.wsIsSupportedMessage = WEBSOCKETS_CONFIG.WS_SUPPORTED;
+            $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;
             
             $scope.stats = function(){
                     $scope.showButton = false;
@@ -351,7 +272,6 @@ angular.module('appverseClientIncubatorApp')
                     var totalPoints = 250;
 
                     // random data generator for plot charts
-
                     function getRandomData() {
                         if (data.length > 0) data = data.slice(1);
                         // do a random walk
@@ -368,49 +288,29 @@ angular.module('appverseClientIncubatorApp')
                         return res;
                     }
 
-                    var updateInterval = 30;
+                    //var updateInterval = 30;
+                    var updateInterval = WEBSOCKETS_CONFIG.WS_CPU_INTERVAL;
 
                     var plot = $.plot($("#load_statistics"), [getRandomData()], options);
-
-                    function connect() {
-                        var target = WEBSOCKETS_CONFIG.WS_CPU_URL;
-                        if ('WebSocket' in window) {
-                            ws = new WebSocket(target);
-                        } else if ('MozWebSocket' in window) {
-                            ws = new MozWebSocket(target);
-                        } else {
-                            //alert('WebSocket is not supported by this browser.');
-                            $log.warning('WebSocket is not supported by this browser.');
-                            return;
+                    
+                    WebSocketFactory.subscribe(function(message) {
+                        var a= JSON.parse(event.data);
+                        var res = plot.getData();
+                        while(res.length<249){
+                            res.push([0,0]);
                         }
-                        ws.onopen = function () {
-                            echo();
-                        };
+                        while(res.length>250){
+                            res.shift();
+                        }
+                        for (var i = 0; i <a.data.length; ++i){
+                            res.push([i, a.data[i].value]);
+                        }
+                        plot.setData([res]);
+                        plot.draw();
 
-                        ws.onmessage = function (event) {
-                            var a= JSON.parse(event.data);
-                            var res = plot.getData();
-                            while(res.length<249){
-                                res.push([0,0]);
-                            }
-                            while(res.length>250){
-                                res.shift();
-                            }
-                            for (var i = 0; i <a.data.length; ++i){
-                                res.push([i, a.data[i].value]);
-                            }
-                            plot.setData([res]);
-                            plot.draw();
-                        };
-
-                        ws.onclose = function () {
-                            if (ws != null) {
-                                ws.close();
-                                ws = null;
-                            }
-                        };
-                    }
-
+                        //$scope.$apply();
+                    });
+            
                     function echo() {
                         if (ws != null) {
                             ws.send('');
@@ -424,12 +324,9 @@ angular.module('appverseClientIncubatorApp')
                         plot.draw();
                         setTimeout(update, updateInterval);
                     }
-                    connect();
+                    WebSocketFactory.connect(WEBSOCKETS_CONFIG.WS_CPU_URL);
                 
 
-//                return {
-//                    init: drawCPULoad
-//                };
             };
             
 }]);

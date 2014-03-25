@@ -159,16 +159,25 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
             @param {string} itemId The id of the item 
             @description Establishes a connection to a swebsocket endpoint.
         */
-        factory.connect = function() {
+        factory.connect = function(url) {
              
             if(factory.ws) { 
                 return; 
             };
 
-            var ws = new WebSocket(WEBSOCKETS_CONFIG.WsUrl);
-
-            ws.onopen = function() {
-              factory.callback(WEBSOCKETS_CONFIG.WS_CONNECTED);
+            var ws;
+            if ('WebSocket' in window) {
+                ws = new WebSocket(url);
+            } else if ('MozWebSocket' in window) {
+                ws = new MozWebSocket(url);
+            }
+            ws.onopen = function () {
+                if (ws != null) {
+                    ws.send('');
+                    factory.callback(WEBSOCKETS_CONFIG.WS_CONNECTED);
+                } else {
+                    factory.callback(WEBSOCKETS_CONFIG.WS_DISCONNECTED);
+                 }
             };
 
             ws.onerror = function() {
@@ -177,6 +186,13 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
 
             ws.onmessage = function(message) {
               factory.callback(message.data);
+            };
+            
+            ws.onclose = function () {
+                if (ws != null) {
+                    ws.close();
+                    ws = null;
+                }
             };
 
             factory.ws = ws;
@@ -252,216 +268,11 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
                             return WEBSOCKETS_CONFIG.WS_UNKNOWN;
                     }
         };
+        
 
         return factory;
-}])
-
-
-/**
- * @ngdoc service
- * @name AppServerPush.factory:WebSocketServiceAsync
- * @requires $log
- * @requires $window
- * @requires WEBSOCKETS_CONFIG
- *
- * @description
- */   
-.factory('WebSocketFactoryAsync', ['$q', '$rootScope', '$log', 'WEBSOCKETS_CONFIG',
-    function($q, $rootScope, $log, WEBSOCKETS_CONFIG) {
- 
-    var factory = {}; // Object to return for the service
-    var callbacks = {}; // Keep all pending requests here until they get responses
-    var currentCallbackId = 0; // Create a unique callback ID to map requests to responses
-    var ws = null; // Initialize our websocket variable
-    var connectStatus = false; // Is the websocket connected?
-    var authStatus = false; // Are we authorized?
-    var disconnects = 0; // How many times have we disconnected and retried (used for calculating retry wait)
-    var retryWaitMax = 120; // Maximum amount of time to wait for a re-connect attempt
-    var pendingRequests = []; // Any requests coming in before we connect are stored and run when connected
- 
-        factory.connect = function(address) {
-            $log.debug('Connecting to websocket...');
-            var ws = new WebSocket(WEBSOCKETS_CONFIG.WsUrl);
-
-            ws.onopen = function() {
-                $log.debug('Socket has been opened!');
-                //factory.callback(WEBSOCKETS_CONFIG.WS_CONNECTED);
-                connectStatus
-                connectStatus = true;
-                //PubSub.broadcast('socket_connect', {});
-                authorize();
-            };
-
-            ws.onmessage = function(message) {
-                //listener(JSON.parse(message.data));
-                //listener(message.data);
-                factory.callback(message.data);
-            };
-            
-            ws.onerror = function() {
-                //factory.callback(WEBSOCKETS_CONFIG.WS_FAILED_CONNECTION);
-            };
-
-            ws.onclose = function() {
-               $log.debug('Socket has closed');
-                connectStatus = false;
-                //PubSub.broadcast('socket_close', {});
-                disconnects++;
-                var retryWait = Math.pow(2, disconnects);
-                if(retryWait > retryWaitMax) {
-                  disconnects--;
-                  retryWait = retryWaitMax;
-                }
-                $log.debug('Retrying in ' + retryWait + ' seconds...');
-                setTimeout(factory.connect, retryWait * 1000);
-            };
-
-            factory.ws = ws;
-
-        };
-    
-        /**
-            @ngdoc method
-            @name AppServerPush.factory:WebSocketFactory#disconnect
-            @methodOf AppServerPush.factory:WebSocketFactory
-            @param {string} itemId The id of the item 
-            @description Close the WebSocket connection.
-        */
-        factory.disconnect = function() {
-            factory.ws.close();
-        };
-        
-        /**
-            @ngdoc method
-            @name AppServerPush.factory:WebSocketFactory#send
-            @methodOf AppServerPush.factory:WebSocketFactory
-            @param {object} message Message payload in JSON format. 
-            @description Send a message to the ws server.
-        */
-        factory.send = function(message) {
-          //factory.ws.send(message);
-        };
-        
-        /**
-        * Subscribe to a freeswitch event
-        * @param  {String} eventName
-        * @return {Promise}
-        */
-        factory.subscribe = function(eventName) {
-            var request = {
-              type: 'subscribe',
-              event_name: eventName
-            };
-            // Storing in a variable for clarity on what sendRequest returns
-            var promise = sendRequest(request);
-            return promise;
-        };
-        
-        
-        /**
-            @ngdoc method
-            @name AppServerPush.factory:WebSocketFactory#statusAsText
-            @methodOf AppServerPush.factory:WebSocketFactory
-            @param {string} itemId The id of the item 
-            @description Returns WebSocket connection status as text.
-        */
-        factory.statusAsText = function() {
-                    var readyState = factory.status();
-                    if (readyState == WebSocket.CONNECTING){
-                            return WEBSOCKETS_CONFIG.CONNECTING;
-                    } else if (readyState == WebSocket.OPEN){
-                            return WEBSOCKETS_CONFIG.OPEN;
-                    } else if (readyState == WebSocket.CLOSING){
-                            return WEBSOCKETS_CONFIG.WS_CLOSING;
-                    } else if (readyState == WebSocket.CLOSED){
-                            return WEBSOCKETS_CONFIG.WS_CLOSED;
-                    } else {
-                            return WEBSOCKETS_CONFIG.WS_UNKNOWN;
-                    }
-        };
-        
-        /**
-            @ngdoc method
-            @name AppServerPush.factory:WebSocketFactory#status
-            @methodOf AppServerPush.factory:WebSocketFactory
-            @param {string} itemId The id of the item 
-            @description WebSocket connection status.
-        */
-        factory.status = function() {
-            if (factory.ws == null || angular.isUndefined(factory.ws)){
-                return WebSocket.CLOSED;
-            }
-            return factory.ws.readyState;
-        };
-    
-    
-    
-    
-    function authorize(user, password) {
-      var creds = user + password;
-      authStatus = true;
-      //PubSub.broadcast('socket_authorize', creds);
-      return true;
-    };
- 
-    function sendRequest(request) {
-        var defer = $q.defer();
-        var callbackId = getCallbackId();
-        callbacks[callbackId] = {
-          time: new Date(),
-          cb:defer
-        };
-        request.callback_id = callbackId;
-        if(!connectStatus) {
-          $log.debug('Saving request until connected');
-          pendingRequests.push(request);
-        }
-        else {
-          $log.debug('Sending request', request);
-          ws.send(JSON.stringify(request));
-        }
-        return defer.promise;
-    };
- 
-    function listener(data) {
-        var messageObj = data;
-        $log.debug('Received data from websocket: ', messageObj);
-        // If an object exists with callback_id in our callbacks object, resolve it
-        if(callbacks.hasOwnProperty(messageObj.callback_id)) {
-          $log.debug("NO");
-          $log.debug(callbacks[messageObj.callback_id]);
-          $rootScope.$apply(callbacks[messageObj.callback_id].cb.resolve(messageObj.data));
-          delete callbacks[messageObj.callbackID];
-        }
-        else if(messageObj.hasOwnProperty('Event-Name')) {
-            $log.debug("messageObj: " + messageObj);
-          //PubSub.broadcast(messageObj['Event-Name'], messageObj);
-        }else{
-            $log.debug("SI");
-            //factory.callback(data);
-        }
-    };
-    
-    // This creates a new callback ID for a request
-    function getCallbackId() {
-      currentCallbackId += 1;
-      if(currentCallbackId > 10000) {
-        currentCallbackId = 0;
-      }
-      return currentCallbackId;
-    };
- 
-
-    
- 
-    //factory.connect();
- 
-    return factory;
-        
-        
-        
-    
 }]);
+
 
 
 

@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/jquery.mobile.css">
     <link rel="stylesheet" href="styles/angular-jqm.css">
+    <link rel="stylesheet" href="styles/cpustyle.css">
     <!-- endbuild -->
 
 </head>
@@ -82,11 +83,8 @@
                     <li ng-class="{ active: $state.includes('serverpush') }">
                         <a ui-sref="serverpush">Server Push</a>
                     </li>
-<!--                     <li ng-class="{ active: $state.includes('websockets') }">
-                        <a ui-sref="websockets">WS</a>
-                    </li>-->
-                    <li ng-class="{ active: $state.includes('cpu') }">
-                        <a ui-sref="cpu">CPU</a>
+                    <li ng-class="{ active: $state.includes('websockets') }">
+                        <a ui-sref="websockets">Websockets</a>
                     </li>
                     <li ng-class="{ active: $state.includes('translation') }">
                         <a ui-sref="translation">Translation</a>
@@ -114,16 +112,16 @@
     <div ui-view class="myslide" autoscroll="false"></div>
 
     <script src="https://plus.google.com/js/client:plusone.js"></script>
+    
     <!-- build:js scripts/external.js -->
     <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/modernizr/modernizr.js"></script>
-    
-    <script src="api/lib/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="api/lib/jquery.cookie.min.js"></script>
-    <script src="api/lib/jquery.flot.resize.min.js"></script>
-    <script src="api/lib/jquery.flot.time.min.js"></script>
-    <script src="api/lib/jquery.flot.min.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="bower_components/jquery-cookie/jquery.cookie.js"></script>
+    <script src="bower_components/jquery-flot/jquery.flot.js"></script>
+    <script src="bower_components/jquery-flot/jquery.flot.resize.js"></script>
+    <script src="bower_components/jquery-flot/jquery.flot.time.js"></script>
     <!-- endbuild -->
 
     <!-- build:js scripts/uibootstrap.js -->

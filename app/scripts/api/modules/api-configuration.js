@@ -519,17 +519,10 @@ Future updates of Restangular imply review of this section in order to keep cons
 WEBSOCKETS MODULE CONFIGURATION
 */
 .constant('WEBSOCKETS_CONFIG', {
-    /*
-     URL of the listened server
-      */
-    Host: window.location.hostname,
-    AppPath: window.location.pathname.split('/')[1],
-    Context: '/services/websocket/statistics/get/cpuload',
-    Port: 8000,
-    SslPort: 8443,
-    //WsUrl: 'ws://' + Host + ':'+ Port +'/' + AppPath + '/' + Context,
-    WsUrl: "ws://echo.websocket.org",
-    SslWsUrl: 'wss://' + Host + ':'+ Port +'/' + AppPath + '/' + Context,
+
+    WS_ECHO_URL: "ws://echo.websocket.org",
+    WS_CPU_URL: "ws://localhost:8080/websocket/services/websocket/statistics/get/cpuload",
+    WS_CPU_INTERVAL: 30,
     WS_CONNECTED: 'Websocket connected',
     WS_DISCONNECTED: 'Websocket disconnected',
     WS_CONNECTING: 'Connecting Websocket...',
@@ -538,5 +531,6 @@ WEBSOCKETS MODULE CONFIGURATION
     WS_OPEN: 'Websocket connection is open',
     WS_UNKNOWN: 'Websocket status is unknown',
     WS_FAILED_CONNECTION: 'Failed to open a Websocket connection',
-    WS_NOT_SUPPORTED: 'HTML5 Websockets specification is not supported in this browser.'
+    WS_NOT_SUPPORTED: 'HTML5 Websockets specification is not supported in this browser.',
+    WS_SUPPORTED: 'HTML5 Websockets specification is supported in this browser.'
 });

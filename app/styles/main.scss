@@ -57,9 +57,19 @@ div.navbar-inner {
     .navbar-fixed-top,
     .navbar-fixed-bottom {
         position: relative;
+
     }
 }
+//START BLOCK FOR SECTION HEADER
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  position: relative;
+}
 
+.navbar-fixed-top {
+  margin-bottom: 20px;
+}
+//END
 /* Navbar title */
 a.brand {
     margin-left: 0 !important;
