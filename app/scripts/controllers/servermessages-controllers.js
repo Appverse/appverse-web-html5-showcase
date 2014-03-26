@@ -294,19 +294,22 @@ angular.module('appverseClientIncubatorApp')
                     var plot = $.plot($("#load_statistics"), [getRandomData()], options);
                     
                     WebSocketFactory.subscribe(function(message) {
-                        var a= JSON.parse(event.data);
-                        var res = plot.getData();
-                        while(res.length<249){
-                            res.push([0,0]);
+                        if(event.data && JSON){
+                            var a= JSON.parse(event.data);
+                            var res = plot.getData();
+                            while(res.length<249){
+                                res.push([0,0]);
+                            }
+                            while(res.length>250){
+                                res.shift();
+                            }
+                            for (var i = 0; i <a.data.length; ++i){
+                                res.push([i, a.data[i].value]);
+                            }
+                            plot.setData([res]);
+                            plot.draw();
                         }
-                        while(res.length>250){
-                            res.shift();
-                        }
-                        for (var i = 0; i <a.data.length; ++i){
-                            res.push([i, a.data[i].value]);
-                        }
-                        plot.setData([res]);
-                        plot.draw();
+                        
 
                         //$scope.$apply();
                     });
