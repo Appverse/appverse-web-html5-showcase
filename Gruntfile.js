@@ -194,7 +194,7 @@ module.exports = function (grunt) {
                 url: 'http://localhost:<%= connect.options.port %>'
             },
             doc: {
-                url: 'http://localhost:3000'
+                url: 'http://appverse.gftlabs.com:3000'
             }
         },
         clean: {
