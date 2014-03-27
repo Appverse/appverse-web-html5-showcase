@@ -182,7 +182,7 @@ module.exports = function (grunt) {
             },
             doc: {
                 options: {
-                    port: 9001,
+                    port: 3000,
                     middleware: function (connect) {
                         return [mountFolder(connect, yeomanConfig.doc)];
                     }
@@ -194,7 +194,7 @@ module.exports = function (grunt) {
                 url: 'http://localhost:<%= connect.options.port %>'
             },
             doc: {
-                url: 'http://localhost:9001'
+                url: 'http://localhost:3000'
             }
         },
         clean: {
@@ -495,9 +495,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-docular');
 
     grunt.registerTask('server', function (target) {
-        if (target === 'dist') {
-            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
-        }
+//        if (target === 'dist') {
+//            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+//        }
 
         grunt.task.run([
             'clean:server',
@@ -544,10 +544,10 @@ module.exports = function (grunt) {
         'usemin',
         'connect:dist',
         'docular',
-        'connect:doc',
-        'open:server',
-        'open:doc',
-        'watch'
+        //'connect:doc',
+        //'open:server',
+        //'open:doc',
+        //'watch'
     ]);
 
     grunt.registerTask('default', [
