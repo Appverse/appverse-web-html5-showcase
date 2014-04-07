@@ -22,6 +22,7 @@
     "grunt-rev": "~0.1.0",
     "grunt-open": "~0.2.0",
     "grunt-concurrent": "~0.3.0",
+    "grunt-shell": "~0.2.2",
     "load-grunt-tasks": "~0.1.0",
     "connect-livereload": "~0.2.0",
     "grunt-google-cdn": "~0.2.0",
@@ -39,7 +40,8 @@
     "karma-phantomjs-launcher": "~0.1.0",
     "karma": "~0.10.2",
     "karma-ng-html2js-preprocessor": "~0.1.0",
-    "karma-coverage": "~0.1.4"
+    "karma-coverage": "~0.1.4",
+    "grunt-docular": "~0.1.2"
   },
   "engines": {
     "node": ">=0.8.0"

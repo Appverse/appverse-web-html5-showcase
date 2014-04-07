@@ -24,7 +24,8 @@ module.exports = function (grunt) {
     // configurable paths
     var yeomanConfig = {
         app: 'app',
-        dist: 'dist'
+        dist: 'dist',
+        doc: 'doc'
     };
 
     try {
@@ -66,6 +67,14 @@ module.exports = function (grunt) {
             karma: {
                 files: ['app/scripts/**/*.js', 'test/unit/**/*.js'],
                 tasks: ['karma:unit:run']
+            },
+            doc: {
+                files: ['{.tmp,<%= yeoman.app %>}/scripts/**/*.js'],
+                tasks: ['docular', 'open:doc']
+            },
+            docServer: {
+                files: ['{.tmp,<%= yeoman.app %>}/scripts/**/*.js'],
+                tasks: ['docular', 'open:docServer']
             }
         },
         autoprefixer: {
@@ -77,6 +86,17 @@ module.exports = function (grunt) {
                     src: '{,*/}*.css',
                     dest: '.tmp/styles/'
                 }]
+            }
+        },
+        shell: {
+            options : {
+              stdout: true
+            },
+            npm_install: {
+              command: 'npm install'
+            },
+            bower_install: {
+              command: 'app/bower_components'
             }
         },
         connect: {
@@ -174,11 +194,33 @@ module.exports = function (grunt) {
                         return [mountFolder(connect, yeomanConfig.dist)];
                     }
                 }
+            },
+            doc: {
+                options: {
+                    port: 9001,
+                    middleware: function (connect) {
+                        return [mountFolder(connect, yeomanConfig.doc)];
+                    }
+                }
+            },
+            docServer: {
+                options: {
+                    port: 3000,
+                    middleware: function (connect) {
+                        return [mountFolder(connect, yeomanConfig.doc)];
+                    }
+                }
             }
         },
         open: {
             server: {
                 url: 'http://localhost:<%= connect.options.port %>'
+            },
+            doc: {
+                url: 'http://localhost:9001'
+            },
+            docServer: {
+                url: 'http://0.0.0.0:3000'
             }
         },
         clean: {
@@ -433,24 +475,66 @@ module.exports = function (grunt) {
                     ]
                 }
             }
+        },
+        docular: {
+            showDocularDocs: false,
+            showAngularDocs: true,
+            docular_webapp_target: "doc",
+            groups: [
+                {
+                    groupTitle: 'Appverse HTML5',
+                    groupId: 'appverse',
+                    groupIcon: 'icon-beer',
+                    sections: [
+                        {
+                            id: "commonapi",
+                            title: "Common API",
+                            showSource: true,
+                            scripts: ["app/scripts/api/modules", "app/scripts/api/directives"
+                            ],
+                            docs: ["ngdocs/commonapi"],
+                            rank: {}
+                        }
+                    ]
+                }, {
+                    groupTitle: 'Angular jQM',
+                    groupId: 'angular-jqm',
+                    groupIcon: 'icon-mobile-phone',
+                    sections: [
+                        {
+                            id: "jqmapi",
+                            title: "API",
+                            showSource: true,
+                            scripts: ["app/scripts/api/angular-jqm.js"
+                            ],
+                            docs: ["ngdocs/jqmapi"],
+                            rank: {}
+                        }
+                    ]
+                }
+            ]
         }
     });
 
+    grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-docular');
 
     grunt.registerTask('server', function (target) {
-        if (target === 'dist') {
-            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
-        }
+//        if (target === 'dist') {
+//            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+//        }
 
         grunt.task.run([
+            'install',
             'clean:server',
             'concurrent:server',
             'autoprefixer',
             'connect:livereload',
-            'open',
-            'watch'
+            'open:server',
+            'watch:livereload'
         ]);
     });
 
@@ -462,9 +546,23 @@ module.exports = function (grunt) {
         'karma'
     ]);
 
-    grunt.registerTask('devmode', [
-        'karma:unit',
-        'watch:karma'
+//    grunt.registerTask('devmode', [
+//        'karma:unit',
+//        'watch:karma'
+//    ]);
+    
+    grunt.registerTask('doc', [
+        'docular',
+        'connect:doc',
+        'open:doc',
+        'watch:doc'
+    ]);
+    
+    grunt.registerTask('docServer', [
+        'docular',
+        'connect:docServer',
+        'open:docServer',
+        'watch:docServer'
     ]);
 
     grunt.registerTask('dist', [
@@ -481,13 +579,21 @@ module.exports = function (grunt) {
         'rev',
         'usemin',
         'connect:dist',
-        'open',
-        'watch'
+//        'docular',
+//        'connect:doc',
+//        'open:server',
+//        'open:doc',
+//        'watch'
     ]);
 
     grunt.registerTask('default', [
         'jshint',
         'test',
         'build'
+    ]);
+    
+    grunt.registerTask('install', [
+        'shell:npm_install',
+        'shell:bower_install'
     ]);
 };

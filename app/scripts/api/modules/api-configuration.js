@@ -16,7 +16,7 @@ angular.module('AppConfiguration', ['AppDetection'])
         $log.info('AppConfiguration run');
     }]);
 
-angular.module('AppConfigDefault', [])
+angular.module('AppConfigDefault', ['$browser'])
 
 /*
 PROJECT CONFIGURATION
@@ -30,7 +30,8 @@ All data are auto-explained because their names ;)
     Year: '2013',
     Team: 'GFT Appverse Web',
     URL: '',
-    LoginViewPath: '/login'
+    LoginViewPath: '/login',
+    myUrl: ''
 })
 
 /*
@@ -411,7 +412,12 @@ Future updates of Restangular imply review of this section in order to keep cons
     Example:
     DefaultHeaders: {'Content-Type': 'application/json'}
     */
-    DefaultHeaders: {},
+    DefaultHeaders: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': 'juan'
+        //SECURITY_GENERAL.XSRFCSRFHeaderName: SECURITY_GENERAL.XSRFCSRFCookieValue
+        
+    },
 
     /*
     If all of your requests require to send some suffix to work, you can set it here.
@@ -433,7 +439,11 @@ Future updates of Restangular imply review of this section in order to keep cons
     /*
     You can set here if you want to URL Encode IDs or not.
     */
-    EncodeIds: true
+    EncodeIds: true,
+    /*
+     * 
+     */
+    DefaultContentType: 'application/json'
 })
 
 .constant('AD_CONFIG', {
@@ -451,15 +461,35 @@ Future updates of Restangular imply review of this section in order to keep cons
  * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
  */
 .constant('SECURITY_GENERAL', {
-    securityEnabled: false
+    securityEnabled: true,
+    XSRFCSRFHeaderName: 'X-XSRF-TOKEN',
+    XSRFCSRFCookieName: 'XSRF-TOKEN',
+    /*
+    The XSRF policy type is the level of complexity to calculate the value to be returned in the xsrf header in request
+    against the authorization server:
+    0: No value is included (The domain is the same one)
+    1: $http service built-in solution. The $http service will extract this token from the cookie,
+     and then included in the X-XSRF-TOKEN header to every HTTP request. The server must check the token
+     on each request, and then block access if it is not valid.
+    2: Additional calculation of the cookie value using a secret hash. The value is included in the X-XSRF-TOKEN
+     request header.
+     */
+    XSRFPolicyType: 1,
+    XSRFSecret: '',
+    Headers_ContentType: 'application/json',
+    loginHTTPMethod: 'POST',
+    loginURL: 'http://localhost:8080/html5-incubator-server/rest/sec/login',
+    username: 'admin',
+    password: 'admin'
+            
 })
 
 .constant('SECURITY_OAUTH', {
-    oauth2_endpoint: 'lelylam',
+    oauth2_endpoint: 'appverse',
     clientID: '',
-    profile: 'http://api.lelylan.com/me',
+    profile: 'http://localhost:8080/html5-incubator-server',
     scope: 'resources',
-    scopeURL: 'http://people.lelylan.com',
+    scopeURL: 'http://localhost:8080/html5-incubator-server',
     scope_authorizePath: '/oauth/authorize',
     scope_tokenPath: '/oauth/token',
     scope_flow: 'implicit',
@@ -467,7 +497,10 @@ Future updates of Restangular imply review of this section in order to keep cons
     scope_storage: 'none',
     scope_template: 'views/demo/security/oauth_default.html',
     redirectURL: 'http://localhost:9000',
-    storage: 'cookies'
+    storage: 'cookies',
+    storage_cookies: 'cookies',
+    storage_header: 'header',
+    tokenResponseHeaderName: 'Authorization'
 })
 
 /*

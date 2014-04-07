@@ -7,11 +7,14 @@ angular.module('appverseClientIncubatorApp')
 
 /**
  * @ngdoc object
- * @name oauth
+ * @name GooglePlusLoginCtrl
  * @requires $scope
  * @requires $log
  * @requires GOOGLE_AUTH
- * @requires UserService
+ * @requires AUTHORIZATION_DATA
+ * @requires SECURITY_GENERAL
+ * @requires AuthenticationService
+ * @requires CacheFactory
  * 
  * @description
  * GooglePlusLoginCtrl is controller to handle Google+ authentication.
@@ -56,7 +59,7 @@ angular.module('appverseClientIncubatorApp')
         $scope.onSignInCallback = function(authResult) {
              gapi.client.load('plus','v1', function(){
                 if (authResult['error'] == undefined) {
-                    $scope.loginStatus = 'connected'
+                    $scope.loginStatus = 'connected';
                     $scope.$apply();
 
                     var request = gapi.client.plus.people.get( {'userId' : 'me'} );
@@ -135,4 +138,71 @@ angular.module('appverseClientIncubatorApp')
     }
     
     
+}])
+
+
+.controller('OauthLoginCtrl', ['$scope', '$modal', '$log', 'AuthenticationService', 'SECURITY_GENERAL',
+    function($scope, $modal, $log, AuthenticationService, SECURITY_GENERAL) {
+        
+        if(SECURITY_GENERAL.securityEnabled){
+            var LoginCtrl = function ($scope, $modalInstance, AuthenticationService, credentials){
+                $scope.credentials = credentials;
+                        $scope.submit = function () {
+                            $log.debug('Submiting credentials info.');
+                            $log.debug("JSON USER -2-: " + JSON.stringify(credentials));
+                            //Send user/pwd to server
+                            AuthenticationService.sendLoginRequest(credentials)
+                              .then(function (response) {      
+                                   $log.debug('hello?.....');
+                                  $scope.result = "SUCESS!!";
+                                  $scope.user = response.data;
+                                  $scope.XSRFCookie = parseInt(response.headers('XSRF-TOKEN'));  
+                                  
+                                  $log.debug('$scope.result: ' + $scope.result);
+                                  $log.debug('$scope.user: ' + response.data.username);
+                                  $log.debug('$scope.XSRFCookie: ' + parseInt(response.headers('XSRF-TOKEN')));
+                              }, function (error) {
+                                  $scope.result = "FAILED!";
+                              });
+
+                            $modalInstance.dismiss('cancel');
+                        }
+                        $scope.cancel = function () {
+                            $modalInstance.dismiss('cancel');
+                        }
+            };
+            LoginCtrl.$inject = ['$scope', '$modalInstance', 'AuthenticationService', 'credentials'];
+            
+            
+             
+            $scope.open = function (credentials) {
+                $scope.credentials = credentials;
+                $log.debug("credentials -1-: " + JSON.stringify($scope.credentials));
+                $modal.open({
+                    templateUrl: 'modalLoginForm.html',
+                    backdrop: true,
+                    windowClass: 'modal',
+                    controller: LoginCtrl,
+                    resolve: {
+                        credentials: function () {
+                           return $scope.credentials;
+                        }
+                    }
+                });
+          };
+        }else{
+            
+        }
+       
+//        if(SECURITY_GENERAL.securityEnabled){
+//            AuthenticationService.sendLoginRequest()
+//                .then(function (response) {       
+//                    $scope.result = "SUCESS!!";
+//                    $scope.user = response.data;
+//                    $scope.XSRFCookie = parseInt(response.headers('XSRF-TOKEN'));    
+//                    //$log.debug('X-XSRF: ' + response.headers('XSRF-TOKEN'));
+//                }, function (error) {
+//                    $scope.result = "FAILED!";
+//                });
+//        }
 }]);

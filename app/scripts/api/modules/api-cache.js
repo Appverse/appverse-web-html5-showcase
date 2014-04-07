@@ -159,10 +159,8 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
              @param duration items expire after this time.
              @param capacity  turns the cache into LRU (Least Recently Used) cache.
              If you don't want $http's default cache to store every response.
-             @description getScopeCache is the singleton that CacheFactory manages
-             as a local cache created with $angularCacheFactory, which is what we return
-             from the service. We can inject this into any controller we
-             want and it will always return the same values.
+             @description Http Cache Storage is the object to handle and configure the features
+             of the cache for default use with the $http service.
              @description
              Your can retrieve the currently cached data: var cachedData =
              */

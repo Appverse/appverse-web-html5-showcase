@@ -181,3 +181,4 @@ angular.module('AppSecurity')
 
   return definition;
 }]);
+

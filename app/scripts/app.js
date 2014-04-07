@@ -61,8 +61,8 @@ angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
                             //$location.path('/error');
                         }
                     } else {
-                        $log.debug('ROUTE NOT CLEAN AND USER NOT LOGGED');
-                        $log.debug('User is not logged and is rediercted to main page (REDIRECTION!!!!!!!!)');
+                        //$log.debug('ROUTE NOT CLEAN AND USER NOT LOGGED');
+                        $log.debug('User is not logged and is redirected to main page.');
                         //Use event.preventDefault() to prevent the transition from happening.
                         ev.preventDefault();
                         // Redirects back to main page
@@ -71,6 +71,7 @@ angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
                 }
             }
         });
+        
     }])
 
 /**
