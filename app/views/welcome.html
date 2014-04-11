@@ -1,10 +1,13 @@
+
 <div class="container">
     <div id="OAuth2Logo">
         <a ng-href="http://oauth.net/2/">
             <img ng-src="images/OAuth2.png" style="width: 50px; height: 50px" />Based on OAuth2</a>
     </div>
-    
-    <div ng-controller="OauthLoginCtrl" ng-cloak>     
+
+
+    <div ng-controller="WelcomeCtrl" ng-cloak>
+
         <div>
             <h2>User Status: {{ status }} </h2>
             <h3>User logged: {{ user.name }} </h3>
@@ -14,13 +17,9 @@
                 <li>{{ role }}</li>
             </ul>
         </div>
-    
-        <div ng-hide="loginStatus == 'connected'">
-            <button class="btn" ng-click="open({name: '', password: ''})">Click here to login</button>
-        </div>
-    
 
-    
+
+
         <div ng-controller="CollapseDemoCtrl" ng-show="loginStatus == 'connected' || loginStatus == 'Security not enabled'">
             <p class="lead">
                 <h3>This is the Appverse Web HTML5/JavaScript Demo</h3>
@@ -157,5 +156,5 @@
         </div>
 
     </div>
-
 </div>
+

@@ -593,8 +593,8 @@ angular.module('AppSecurity', [
                      * @returns {boolean} True if the role of the usder has admin previleges
                      */
                     validateRoleAdmin: function() {
-
-                        var roles = CacheFactory._browserCache.currentUser.roles
+//{"username":"admin","roles":["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"]}
+                        var roles = CacheFactory._browserCache.currentUser.roles;
                         var result;
                         if (roles && AUTHORIZATION_DATA.adminRoles) {
                             for (var j = 0; j < AUTHORIZATION_DATA.adminRoles.length; j++) {

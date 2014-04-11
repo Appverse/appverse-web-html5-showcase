@@ -51,7 +51,7 @@ angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
          */
         $rootScope.$on('$stateChangeStart', function (ev, to, toParams, from, fromParams) {
             if (SECURITY_GENERAL.securityEnabled) {
-                $log.debug('to: ' + to);
+                //$log.debug('to: ' + to);
                 // if route requires auth and user is not logged in
                 if (routeClean(to.url) == false) {
                     if (AuthenticationService.isLoggedIn() == true) {

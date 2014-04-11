@@ -530,18 +530,19 @@ Future updates of Restangular imply review of this section in order to keep cons
  */
 .constant('AUTHORIZATION_DATA', {
     roles: ['user', 'admin', 'editor'],
-    adminRoles: ['admin', 'editor'],
+    adminRoles: ["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"],
     users: ['Jesus de Diego'],
     userRoleMatrix: [
         {
             'user': 'Jesus de Diego',
-            'roles': ['user', 'admin']
+            'roles': ["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"]
         },
         {
             'user': 'Antoine Charnoz',
-            'roles': ['user', 'admin']
+            'roles': ["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"]
         }
     ],
     routesThatDontRequireAuth: ['/home'],
     routesThatRequireAdmin: ['/about']
 });
+

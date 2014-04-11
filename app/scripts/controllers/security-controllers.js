@@ -141,8 +141,8 @@ angular.module('appverseClientIncubatorApp')
 }])
 
 
-.controller('OauthLoginCtrl', ['$scope', '$modal', '$log', 'AuthenticationService', 'SECURITY_GENERAL',
-    function($scope, $modal, $log, AuthenticationService, SECURITY_GENERAL) {
+.controller('OauthLoginCtrl', ['$scope', '$modal', '$log', 'AuthenticationService', 'CacheFactory', 'SECURITY_GENERAL',
+    function($scope, $modal, $log, AuthenticationService, CacheFactory, SECURITY_GENERAL) {
         
         if(SECURITY_GENERAL.securityEnabled){
             var LoginCtrl = function ($scope, $modalInstance, AuthenticationService, credentials){
@@ -153,14 +153,28 @@ angular.module('appverseClientIncubatorApp')
                             //Send user/pwd to server
                             AuthenticationService.sendLoginRequest(credentials)
                               .then(function (response) {      
-                                   $log.debug('hello?.....');
-                                  $scope.result = "SUCESS!!";
-                                  $scope.user = response.data;
-                                  $scope.XSRFCookie = parseInt(response.headers('XSRF-TOKEN'));  
+                                $log.debug('hello?.....');
                                   
-                                  $log.debug('$scope.result: ' + $scope.result);
-                                  $log.debug('$scope.user: ' + response.data.username);
-                                  $log.debug('$scope.XSRFCookie: ' + parseInt(response.headers('XSRF-TOKEN')));
+                                
+                                  
+                                $scope.user = response.data;
+                                $scope.XSRFCookie = parseInt(response.headers('XSRF-TOKEN'));  
+                                  
+                                $log.debug('$scope.result: ' + $scope.result);
+                                $log.debug('$scope.user: ' + response.data.username);
+                                $log.debug('$scope.XSRFCookie: ' + parseInt(response.headers('XSRF-TOKEN')));
+                                //name, roles, token, isLogged
+                                AuthenticationService.login(response.data.username, response.data.roles, '1234', true);
+                                
+                                CacheFactory._scopeCache.put('login_status', 'connected');
+                                CacheFactory._scopeCache.put('userProfile', profile);
+                                
+                                $scope.user = response.data;
+                                $scope.loginStatus = 'connected';
+                                  
+                                $scope.$apply();
+                            
+                                  //$location.path('/welcome');
                               }, function (error) {
                                   $scope.result = "FAILED!";
                               });
@@ -193,16 +207,4 @@ angular.module('appverseClientIncubatorApp')
         }else{
             
         }
-       
-//        if(SECURITY_GENERAL.securityEnabled){
-//            AuthenticationService.sendLoginRequest()
-//                .then(function (response) {       
-//                    $scope.result = "SUCESS!!";
-//                    $scope.user = response.data;
-//                    $scope.XSRFCookie = parseInt(response.headers('XSRF-TOKEN'));    
-//                    //$log.debug('X-XSRF: ' + response.headers('XSRF-TOKEN'));
-//                }, function (error) {
-//                    $scope.result = "FAILED!";
-//                });
-//        }
 }]);
