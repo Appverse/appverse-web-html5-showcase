@@ -117,13 +117,16 @@ in the common API.
     LocalBrowserStorage: 'localStorage',
     //Constant for the literal
     NoBrowserStorage: 'none',
+    
+    //Direct browser storage (0 local | 1 session)
+    browserDirectCacheType: '1',
     /*
      * Specify whether to verify integrity of data saved in localStorage on every operation. 
      * If true, angular-cache will perform a full sync with localStorage on every operation. 
      * Increases reliability of data synchronization, but may incur a performance penalty. 
      * Has no effect if storageMode is set to "none".
      */
-    VerifyIntegrity: false,
+    VerifyIntegrity: true,
     /////////////////////////////
     //$http SERVICE CACHE
     /////////////////////////////
@@ -462,13 +465,19 @@ Future updates of Restangular imply review of this section in order to keep cons
  */
 .constant('SECURITY_GENERAL', {
     securityEnabled: true,
-    XSRFCSRFHeaderName: 'X-XSRF-TOKEN',
-    XSRFCSRFCookieName: 'XSRF-TOKEN',
+    XSRFCSRFRequestHeaderName: 'X-XSRF-TOKEN',
+    XSRFCSRFResponseHeaderName: 'XSRF-TOKEN',
+    XSRFCSRFResponseCookieName: 'X-XSRF-Cookie',
+    BearerTokenResponseHeader: 'access_token',
+    BearerTokenRequestHeader: 'Authorization',
+    RefreshTokenResponseHeader: 'refresh_token',
+    BearerTokenExpiringResponseHeader: 'expires_in',
+    TokenTypeResponseHeader: 'token_type',
     /*
     The XSRF policy type is the level of complexity to calculate the value to be returned in the xsrf header in request
     against the authorization server:
     0: No value is included (The domain is the same one)
-    1: $http service built-in solution. The $http service will extract this token from the cookie,
+    1: $http service built-in solution. The $http service will extract this token from the response header,
      and then included in the X-XSRF-TOKEN header to every HTTP request. The server must check the token
      on each request, and then block access if it is not valid.
     2: Additional calculation of the cookie value using a secret hash. The value is included in the X-XSRF-TOKEN
@@ -480,7 +489,9 @@ Future updates of Restangular imply review of this section in order to keep cons
     loginHTTPMethod: 'POST',
     loginURL: 'http://localhost:8080/html5-incubator-server/rest/sec/login',
     username: 'admin',
-    password: 'admin'
+    password: 'admin',
+    connected: 'connected',
+    disconnected: 'disconnected'
             
 })
 

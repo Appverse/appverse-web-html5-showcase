@@ -152,6 +152,7 @@ angular.module('AppSecurity', [
 
                 var factory = {};
                 var token = null;
+                var xsrfToken = null;
 
 
                 /**
@@ -163,7 +164,19 @@ angular.module('AppSecurity', [
                  */
                 factory.get = function() {
                     getTokenFromCache();
-                    return token
+                    return token;
+                };
+                
+                /**
+                 * @ngdoc method
+                 * @name AppSecurity.factory:Oauth_AccessToken#getXSRF
+                 * @methodOf AppSecurity.factory:Oauth_AccessToken
+                 * @description Returns the XSRF token to be input in each request header.
+                 * @returns {object} The xsrf token from the oauth server in the current session
+                 */
+                factory.getXSRF = function() {
+                    getXSRFTokenFromCache();
+                    return xsrfToken;
                 };
 
 
@@ -198,6 +211,7 @@ angular.module('AppSecurity', [
                  */
                 factory.destroy = function(scope) {
                     token = null;
+                    xsrfToken = null;
                     delete $cookies[scope.client];
                     return token;
                 }
@@ -239,12 +253,18 @@ angular.module('AppSecurity', [
 
 
                 function getTokenFromCache(){
-                    var user = CacheFactory._browserCache.currentUser;
+                    var user =UserService.getCurrentUser();
                     if(user){
-                        token = user.token;
+                        token = user.bToken;
                     }
                 }
-
+                
+                function getXSRFTokenFromCache(){
+                    var user =UserService.getCurrentUser();
+                    if(user){
+                        xsrfToken = user.xsrfToken;
+                    }
+                }
                 /**
                  * @ngdoc method
                  * @name AppSecurity.factory:Oauth_AccessToken#getTokenFromString
@@ -319,7 +339,7 @@ angular.module('AppSecurity', [
                     }
                     var user = UserService.getCurrentUser();
                     if(user){
-                        user.token = token;
+                        user.bToken = token;
                         UserService.setCurrentUser(user);
                     }
 
@@ -518,22 +538,31 @@ angular.module('AppSecurity', [
                 function setRequestHeaders(token, wrappedRestangular) {
                     $log.debug('token: ' + token);
                     $log.debug('is same domain? ' + isSameDomain(REST_CONFIG.BaseUrl, $browser.url()));
+                    
                     if (token) {
                         var xsrfHeaderValue;
                         if(isSameDomain(REST_CONFIG.BaseUrl, $browser.url())){
                             if(SECURITY_GENERAL.XSRFPolicyType === 0){
                                 wrappedRestangular.setDefaultHeaders(
                                     {
-                                        'Authorization': 'Bearer ' + token,
+                                        'Authorization': 'Bearer' + token,
                                         'Content-Type': REST_CONFIG.DefaultContentType
                                     }
                                 );
+                            }else if(SECURITY_GENERAL.XSRFPolicyType === 1){
+                                xsrfHeaderValue = Oauth_AccessToken.getXSRF();
+                                wrappedRestangular.setDefaultHeaders(
+                                        {
+                                            'Authorization': 'Bearer' + token,
+                                            'Content-Type': REST_CONFIG.DefaultContentType,
+                                            'X-XSRF-TOKEN': xsrfHeaderValue
+                                        }
+                                );
                             }else if(SECURITY_GENERAL.XSRFPolicyType === 2){
                                 xsrfHeaderValue = $browser.cookies()[SECURITY_GENERAL.XSRFCSRFCookieName];
-                                //xsrfHeaderValue = 'yatevale';
                                 wrappedRestangular.setDefaultHeaders(
                                     {
-                                        'Authorization': 'Bearer ' + token,
+                                        'Authorization': 'Bearer' + token,
                                         'Content-Type': REST_CONFIG.DefaultContentType,
                                         'X-XSRF-TOKEN': xsrfHeaderValue
                                     }
@@ -593,8 +622,12 @@ angular.module('AppSecurity', [
                      * @returns {boolean} True if the role of the usder has admin previleges
                      */
                     validateRoleAdmin: function() {
-//{"username":"admin","roles":["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"]}
-                        var roles = CacheFactory._browserCache.currentUser.roles;
+                        //var roles = CacheFactory._browserCache.currentUser.roles;
+                        var roles;
+                        if(sessionStorage.roles){
+                            roles = sessionStorage.roles.split(',');
+                        }
+                        $log.debug('roles in session: ' + roles);
                         var result;
                         if (roles && AUTHORIZATION_DATA.adminRoles) {
                             for (var j = 0; j < AUTHORIZATION_DATA.adminRoles.length; j++) {
@@ -638,19 +671,13 @@ angular.module('AppSecurity', [
          * @description
          * Exposes some useful methods for apps developers.
          */
-        .factory('AuthenticationService', ['UserService', 'Base64', '$http', '$q', '$log', 'SECURITY_GENERAL',
-            function(UserService, Base64, $http, $q, $log, SECURITY_GENERAL) {
+        .factory('AuthenticationService', ['$rootScope', 'UserService', 'Base64', '$http', '$q', '$log', 'SECURITY_GENERAL',
+            function($rootScope, UserService, Base64, $http, $q, $log, SECURITY_GENERAL) {
 
                 return {
                         sendLoginRequest: function (credentials) {
                             var deferred = $q.defer();
-//                            var username = SECURITY_GENERAL.username;
-//                            var password = SECURITY_GENERAL.password;
-                            $log.debug("usercredentials.username: " + credentials.name);
-                            //$log.debug("usercredentials.name: " + credentials.name);
-                            $log.debug("usercredentials.password: " + credentials.password);
                             var encoded = Base64.encode(credentials.name + ':' + credentials.password);
-//                            var encoded = Base64.encode(username + ':' + password);
 
                             $http({
                                 method: SECURITY_GENERAL.loginHTTPMethod,
@@ -663,8 +690,33 @@ angular.module('AppSecurity', [
                                 cache: false
                             })
                             .success(function (data, status, headers, config) {
-                                // any required additional processing here 
-                                $log.debug('success in $http.....');
+                                var results = [];
+                                results.data = data;
+                                results.headers = headers;
+                                results.status = status;
+                                results.config = config;
+                                
+                                deferred.resolve(results);            
+                            })
+                            .error(function (data, status) {
+                                deferred.reject(data, status);
+                            });
+                            return deferred.promise;        
+                        },
+                        
+                        sendLogoutRequest: function (credentials) {
+                            var deferred = $q.defer();
+
+                            $http({
+                                method: SECURITY_GENERAL.logoutHTTPMethod,
+                                url: SECURITY_GENERAL.logoutURL,
+                                headers: {
+                                    'Content-Type': SECURITY_GENERAL.Headers_ContentType
+                                },
+                                timeout: 30000, 
+                                cache: false
+                            })
+                            .success(function (data, status, headers, config) {
                                 var results = [];
                                 results.data = data;
                                 results.headers = headers;
@@ -676,9 +728,8 @@ angular.module('AppSecurity', [
                             .error(function (data, status) {
                                 deferred.reject(data, status);
                             });
-                            return deferred.promise;        
+                            return deferred.promise;
                         },
-
                     
                     /**
                      * @ngdoc method
@@ -691,8 +742,9 @@ angular.module('AppSecurity', [
                      * @param {string} role The role to be validated
                      * @description Sets the new logged user
                      */
-                    login: function(name, roles, token, isLogged) {
-                        var user = new User(name, roles, token, isLogged);
+                    login: function(name, roles, bToken, xsrfToken, isLogged) {
+                        var user = new User(name, roles, bToken, xsrfToken, isLogged);
+                        $log.debug(user.print());
                         UserService.setCurrentUser(user);
                     },
                     /**
@@ -739,16 +791,20 @@ angular.module('AppSecurity', [
 
                 return {
                     /**
-                     * @ngdoc method
+                     * @ngdoc method name, roles, bToken, xsrfToken, isLogged
                      * @name AppSecurity.factory:UserService#setCurrentUser
                      * @methodOf AppSecurity.factory:UserService
                      * @param {AppSecurity.global:User} loggedUser The currently logged user
                      * @description Writes the current user in cache ('currentUser').
                      */
                     setCurrentUser: function(loggedUser) {
-                        //$log.debug('Setting/updating the user:');
-                        $log.debug(loggedUser.print());
-                        CacheFactory._browserCache.currentUser = loggedUser;
+                        
+                        CacheFactory._browserDirectCache.username = loggedUser.name;
+                        CacheFactory._browserDirectCache.roles = loggedUser.roles;
+                        CacheFactory._browserDirectCache.bToken = loggedUser.bToken;
+                        CacheFactory._browserDirectCache.xsrfToken = loggedUser.xsrfToken;
+                        CacheFactory._browserDirectCache.isLogged = loggedUser.isLogged;
+                        
                         $log.debug('New user has been stored to cache.');
                     },
                     /**
@@ -759,8 +815,14 @@ angular.module('AppSecurity', [
                      * @returns {AppSecurity.global:User} The currently logged user
                      */
                     getCurrentUser: function() {
-                        return CacheFactory._browserCache.currentUser;
-                    },
+                        if(CacheFactory._browserDirectCache.username && 
+                                CacheFactory._browserDirectCache.roles &&
+                                CacheFactory._browserDirectCache.bToken &&
+                                CacheFactory._browserDirectCache.xsrfToken &&
+                                CacheFactory._browserDirectCache.isLogged){
+                            return new User(CacheFactory._browserDirectCache.username, CacheFactory._browserDirectCache.roles, CacheFactory._browserDirectCache.bToken, CacheFactory._browserDirectCache.xsrfToken, CacheFactory._browserDirectCache.isLogged);
+                        }
+                    },                   
                     /**
                      * @ngdoc method
                      * @name AppSecurity.factory:UserService#removeUser
@@ -769,9 +831,15 @@ angular.module('AppSecurity', [
                      * @description Removes the current user from the app, including cache.
                      */
                     removeUser: function(loggedUser) {
-                        CacheFactory._browserCache.currentUser = null;
-                        CacheFactory._scopeCache.put('login_status', 'Not connected');
-                        CacheFactory._scopeCache.put('userProfile', null);
+                        
+                        CacheFactory._browserDirectCache.removeItem('username');
+                        CacheFactory._browserDirectCache.removeItem('roles');
+                        CacheFactory._browserDirectCache.removeItem('bToken');
+                        CacheFactory._browserDirectCache.removeItem('xsrfToken');
+                        CacheFactory._browserDirectCache.removeItem('isLogged');
+
+                        //CacheFactory._scopeCache.put('login_status', 'Not connected');
+                        //CacheFactory._scopeCache.put('userProfile', null);
                     }
                 }
             }])
@@ -783,23 +851,26 @@ angular.module('AppSecurity', [
  * @name AppSecurity.global:User
  * @param {string} name The name of the user to be registered
  * @param {object} roles Array with the list of assigned roles
- * @param {string} token The provided encrypted oauth token
+ * @param {string} bToken The provided encrypted oauth token
+ * @param {int} xsrfToken The XSRF token provided by the server
  * @param {boolean} isLogged The user is logged or not
  * @description Entity with main data about a user to be handled by the module
  */
-function User(name, roles, token, isLogged) {
+function User(name, roles, bToken, xsrfToken, isLogged) {
     this.name = name;
     //Array
     this.roles = roles;
     //string
-    this.token = token;
+    this.bToken = bToken;
+    //string
+    this.xsrfToken = xsrfToken;
     //boolean
     this.isLogged = isLogged;
 }
 ;
 
 User.prototype.print = function() {
-    return 'User data. Name:' + this.name + '| Roles: ' + this.roles.toString() + '| Token: ' + this.token + '| Logged: ' + this.isLogged;
+    return 'User data. Name:' + this.name + '| Roles: ' + this.roles.toString() + '| Bearer Token: ' + this.bToken + '| XSRFToken: ' + this.xsrfToken + '| Logged: ' + this.isLogged;
 };
 
 

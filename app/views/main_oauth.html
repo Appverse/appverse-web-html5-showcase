@@ -3,25 +3,32 @@
         <a ng-href="http://oauth.net/2/">
             <img ng-src="images/OAuth2.png" style="width: 50px; height: 50px" />Based on OAuth2</a>
     </div>
-    
-    <div ng-controller="OauthLoginCtrl" ng-cloak>     
+
+
+
+    <div ng-controller="OauthLoginCtrl" ng-cloak>
         <div>
-            <h2>User Status: {{ status }} </h2>
-            <h3>User logged: {{ user.name }} </h3>
-            <h3>Token: {{ token }} </h3>
-            <h3>XSRF token value: {{ XSRFCookie }} </h2>
-            <ul ng-repeat="role in user.roles">
-                <li>{{ role }}</li>
-            </ul>
+            <p><h3>Logged User Info</h3></p>
+            <p>User Status: {{ login_status }} </p>
         </div>
+        <div ng-show="login_status == 'connected'">
+            <p>User logged: {{ user.name }} </p>
+            <p>Roles: {{ user.roles }} </p>
+            <p>Bearer Token value: {{ user.bToken }} </h3>
+            <p>XSRF Token value: {{ user.xsrfToken }} </p>
+        </div>
+
     
-        <div ng-hide="loginStatus == 'connected'">
+        <div ng-hide="login_status == 'connected'">
             <button class="btn" ng-click="open({name: '', password: ''})">Click here to login</button>
+        </div>
+         <div ng-show="login_status == 'connected'">
+            <button class="btn" ng-click="logout()">Click here to logout</button>
         </div>
     
 
     
-        <div ng-controller="CollapseDemoCtrl" ng-show="loginStatus == 'connected' || loginStatus == 'Security not enabled'">
+        <div ng-controller="CollapseDemoCtrl" ng-show="login_status == 'connected' || login_status == 'Security not enabled'">
             <p class="lead">
                 <h3>This is the Appverse Web HTML5/JavaScript Demo</h3>
             </p>

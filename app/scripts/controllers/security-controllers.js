@@ -78,9 +78,8 @@ angular.module('appverseClientIncubatorApp')
                                     break;
                                 }
                             }
-
                             //The authenticated user is set by using the AuthenticationService.
-                            AuthenticationService.login(profile.displayName, roles, authResult['access_token'], true);
+                            AuthenticationService.login(profile.displayName, roles, authResult['access_token'], '', true);
 
                             CacheFactory._scopeCache.put('login_status', 'connected');
                             CacheFactory._scopeCache.put('userProfile', profile);
@@ -141,58 +140,27 @@ angular.module('appverseClientIncubatorApp')
 }])
 
 
-.controller('OauthLoginCtrl', ['$scope', '$modal', '$log', 'AuthenticationService', 'CacheFactory', 'SECURITY_GENERAL',
-    function($scope, $modal, $log, AuthenticationService, CacheFactory, SECURITY_GENERAL) {
+.controller('OauthLoginCtrl', ['$scope', '$modal', '$log', 'AuthenticationService', 'UserService', 'CacheFactory', 'SECURITY_GENERAL', 
+    function($scope, $modal, $log, AuthenticationService, UserService, CacheFactory, SECURITY_GENERAL) {
         
         if(SECURITY_GENERAL.securityEnabled){
-            var LoginCtrl = function ($scope, $modalInstance, AuthenticationService, credentials){
-                $scope.credentials = credentials;
-                        $scope.submit = function () {
-                            $log.debug('Submiting credentials info.');
-                            $log.debug("JSON USER -2-: " + JSON.stringify(credentials));
-                            //Send user/pwd to server
-                            AuthenticationService.sendLoginRequest(credentials)
-                              .then(function (response) {      
-                                $log.debug('hello?.....');
-                                  
-                                
-                                  
-                                $scope.user = response.data;
-                                $scope.XSRFCookie = parseInt(response.headers('XSRF-TOKEN'));  
-                                  
-                                $log.debug('$scope.result: ' + $scope.result);
-                                $log.debug('$scope.user: ' + response.data.username);
-                                $log.debug('$scope.XSRFCookie: ' + parseInt(response.headers('XSRF-TOKEN')));
-                                //name, roles, token, isLogged
-                                AuthenticationService.login(response.data.username, response.data.roles, '1234', true);
-                                
-                                CacheFactory._scopeCache.put('login_status', 'connected');
-                                CacheFactory._scopeCache.put('userProfile', profile);
-                                
-                                $scope.user = response.data;
-                                $scope.loginStatus = 'connected';
-                                  
-                                $scope.$apply();
-                            
-                                  //$location.path('/welcome');
-                              }, function (error) {
-                                  $scope.result = "FAILED!";
-                              });
+            /*
+             * Check if the user is already loggedin
+             */
+            $scope.user = UserService.getCurrentUser();
+            
+            if($scope.user && $scope.user.isLogged){
+                $scope.login_status = SECURITY_GENERAL.connected;
+                CacheFactory._scopeCache.put('login_status', SECURITY_GENERAL.connected);
+            }else{
+                $scope.login_status = SECURITY_GENERAL.disconnected;
+                CacheFactory._scopeCache.put('login_status', SECURITY_GENERAL.disconnected);
+            }
 
-                            $modalInstance.dismiss('cancel');
-                        }
-                        $scope.cancel = function () {
-                            $modalInstance.dismiss('cancel');
-                        }
-            };
-            LoginCtrl.$inject = ['$scope', '$modalInstance', 'AuthenticationService', 'credentials'];
-            
-            
-             
             $scope.open = function (credentials) {
                 $scope.credentials = credentials;
-                $log.debug("credentials -1-: " + JSON.stringify($scope.credentials));
-                $modal.open({
+                
+                var modalInstance = $modal.open({
                     templateUrl: 'modalLoginForm.html',
                     backdrop: true,
                     windowClass: 'modal',
@@ -203,8 +171,60 @@ angular.module('appverseClientIncubatorApp')
                         }
                     }
                 });
-          };
-        }else{
+                modalInstance.result.then(function (response) {
+                    AuthenticationService.login(
+                        response.data.username, 
+                        response.data.roles, 
+                        response.headers(SECURITY_GENERAL.BearerTokenHeader),
+                        response.headers(SECURITY_GENERAL.XSRFCSRFResponseHeaderName),
+                        true
+                    );
+                    
+                    $scope.login_status = SECURITY_GENERAL.connected;
+                    CacheFactory._scopeCache.put('login_status', SECURITY_GENERAL.connected);
+                    $scope.user = UserService.getCurrentUser();
+                }, function () {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+            };
             
+            /**
+            * @function
+            * @description Revoke user token.
+            * It uses jQuery's $.ajax whether the REST module is not available.
+            */
+            $scope.logout = function() {
+                 $log.debug('Revoking user token: ' + $scope.user.bToken);
+                 AuthenticationService.logOut();
+                 $scope.login_status = SECURITY_GENERAL.disconnected;
+                 $log.debug("User disconnected and erased from cache");
+            };
+
+            var LoginCtrl = function ($scope, $modalInstance, AuthenticationService, credentials){
+                $scope.errorMessage = '';
+                $scope.credentials = credentials;
+                $scope.login_status = SECURITY_GENERAL.disconnected;
+                CacheFactory._scopeCache.put('login_status', SECURITY_GENERAL.disconnected);
+                $scope.submit = function () {
+                    AuthenticationService.sendLoginRequest(credentials)
+                    .then(function (response) {
+                        $log.info('Successfull authentication');
+                        $modalInstance.close(response);
+                    }, function (error) {
+                        $log.error("The user has not connected nor authenticated against the server: " + error);
+                        $scope.errorMessage = "Credentials are not valid. Please enter new user and password.";
+                        //$modalInstance.dismiss('cancel');
+                    });
+                    
+                    
+                }
+                $scope.cancel = function () {
+                    $modalInstance.dismiss('cancel');
+                }
+            };
+        }else{
+            $log.warn("Security is not enabled in this application.");
         }
+       
+        
 }]);
