@@ -466,7 +466,6 @@ Future updates of Restangular imply review of this section in order to keep cons
 .constant('SECURITY_GENERAL', {
     securityEnabled: true,
     XSRFCSRFRequestHeaderName: 'X-XSRF-TOKEN',
-    XSRFCSRFResponseHeaderName: 'XSRF-TOKEN',
     XSRFCSRFResponseCookieName: 'X-XSRF-Cookie',
     BearerTokenResponseHeader: 'access_token',
     BearerTokenRequestHeader: 'Authorization',

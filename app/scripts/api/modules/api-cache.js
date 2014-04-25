@@ -48,11 +48,6 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             }
 
             if (CACHE_CONFIG.BrowserStorageCache_Enabled) {
-//                    $log.debug('CACHE_CONFIG.BrowserStorage_type: ' + CACHE_CONFIG.BrowserStorage_type);
-//                    $log.debug('CACHE_CONFIG.MaxAge: ' + CACHE_CONFIG.MaxAge);
-//                    $log.debug('CACHE_CONFIG.CacheFlushInterval: ' + CACHE_CONFIG.CacheFlushInterval);
-//                    $log.debug('CACHE_CONFIG.DeleteOnExpire: ' + CACHE_CONFIG.DeleteOnExpire);
-//                    $log.debug('CACHE_CONFIG.VerifyIntegrity: ' + CACHE_CONFIG.VerifyIntegrity);
                 CacheFactory.setBrowserStorage(
                     CACHE_CONFIG.BrowserStorage_type,
                     CACHE_CONFIG.MaxAge,
@@ -91,8 +86,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             var factory = {
                 _scopeCache: null,
                 _browserCache: null,
-                _httpCache: null,
-                _browserDirectCache: null
+                _httpCache: null
             };
 
             /*
@@ -167,35 +161,6 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             };
             
             
-            /**
-             @function
-             @param type Type of storage ( 0 local | 1 session).
-
-             @description This object makes Web Storage directly working based on local/session storage objects..
-             By default, web storage allows you 5-10MB of space to work with, and your data is stored locally
-             on the device rather than passed back-and-forth with each request to the server.
-             Web storage is useful for storing small amounts of key/value data and preserving functionality
-             online and offline.
-             With web storage, both the keys and values are stored as strings.
-
-             We can store anything except those not supported by JSON:
-             Infinity, NaN - Will be replaced with null.
-             undefined, Function - Will be removed.
-             The returned object supports the following set of methods:
-             {void} $reset() - Clears the Storage in one go.
-             */
-            factory.setBrowserDirectStorage = function (type) {
-
-                if(type == '1'){
-                    factory._browserDirectCache = sessionStorage;
-                }else{
-                    factory._browserDirectCache = localStorage;
-                }
-
-                return factory._browserDirectCache;
-            };
-
-
             /*
              @function
              @param duration items expire after this time.

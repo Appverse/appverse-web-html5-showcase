@@ -622,12 +622,9 @@ angular.module('AppSecurity', [
                      * @returns {boolean} True if the role of the usder has admin previleges
                      */
                     validateRoleAdmin: function() {
-                        //var roles = CacheFactory._browserCache.currentUser.roles;
-                        var roles;
-                        if(sessionStorage.roles){
-                            roles = sessionStorage.roles.split(',');
-                        }
+                        var roles = CacheFactory._browserCache.get('loggedUser').roles;
                         $log.debug('roles in session: ' + roles);
+
                         var result;
                         if (roles && AUTHORIZATION_DATA.adminRoles) {
                             for (var j = 0; j < AUTHORIZATION_DATA.adminRoles.length; j++) {
@@ -743,6 +740,7 @@ angular.module('AppSecurity', [
                      * @description Sets the new logged user
                      */
                     login: function(name, roles, bToken, xsrfToken, isLogged) {
+                        //$log.debug(' -- bToken -- : ' + bToken);
                         var user = new User(name, roles, bToken, xsrfToken, isLogged);
                         $log.debug(user.print());
                         UserService.setCurrentUser(user);
@@ -799,11 +797,13 @@ angular.module('AppSecurity', [
                      */
                     setCurrentUser: function(loggedUser) {
                         
-                        CacheFactory._browserDirectCache.username = loggedUser.name;
-                        CacheFactory._browserDirectCache.roles = loggedUser.roles;
-                        CacheFactory._browserDirectCache.bToken = loggedUser.bToken;
-                        CacheFactory._browserDirectCache.xsrfToken = loggedUser.xsrfToken;
-                        CacheFactory._browserDirectCache.isLogged = loggedUser.isLogged;
+                        CacheFactory._browserCache.put('loggedUser', {
+                            username: loggedUser.name,
+                            roles: loggedUser.roles,
+                            bToken: loggedUser.bToken,
+                            xsrfToken: loggedUser.xsrfToken,
+                            isLogged: loggedUser.isLogged
+                        });
                         
                         $log.debug('New user has been stored to cache.');
                     },
@@ -815,12 +815,10 @@ angular.module('AppSecurity', [
                      * @returns {AppSecurity.global:User} The currently logged user
                      */
                     getCurrentUser: function() {
-                        if(CacheFactory._browserDirectCache.username && 
-                                CacheFactory._browserDirectCache.roles &&
-                                CacheFactory._browserDirectCache.bToken &&
-                                CacheFactory._browserDirectCache.xsrfToken &&
-                                CacheFactory._browserDirectCache.isLogged){
-                            return new User(CacheFactory._browserDirectCache.username, CacheFactory._browserDirectCache.roles, CacheFactory._browserDirectCache.bToken, CacheFactory._browserDirectCache.xsrfToken, CacheFactory._browserDirectCache.isLogged);
+                        var loggedUser = CacheFactory._browserCache.get('loggedUser');
+
+                        if(loggedUser && loggedUser.isLogged){
+                            return new User(loggedUser.username, loggedUser.roles, loggedUser.bToken, loggedUser.xsrfToken, loggedUser.isLogged);
                         }
                     },                   
                     /**
@@ -831,15 +829,7 @@ angular.module('AppSecurity', [
                      * @description Removes the current user from the app, including cache.
                      */
                     removeUser: function(loggedUser) {
-                        
-                        CacheFactory._browserDirectCache.removeItem('username');
-                        CacheFactory._browserDirectCache.removeItem('roles');
-                        CacheFactory._browserDirectCache.removeItem('bToken');
-                        CacheFactory._browserDirectCache.removeItem('xsrfToken');
-                        CacheFactory._browserDirectCache.removeItem('isLogged');
-
-                        //CacheFactory._scopeCache.put('login_status', 'Not connected');
-                        //CacheFactory._scopeCache.put('userProfile', null);
+                        CacheFactory._browserCache.remove('loggedUser');
                     }
                 }
             }])

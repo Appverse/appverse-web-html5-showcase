@@ -172,11 +172,12 @@ angular.module('appverseClientIncubatorApp')
                     }
                 });
                 modalInstance.result.then(function (response) {
+                    
                     AuthenticationService.login(
                         response.data.username, 
                         response.data.roles, 
-                        response.headers(SECURITY_GENERAL.BearerTokenHeader),
-                        response.headers(SECURITY_GENERAL.XSRFCSRFResponseHeaderName),
+                        response.headers(SECURITY_GENERAL.BearerTokenResponseHeader),
+                        response.headers(SECURITY_GENERAL.XSRFCSRFResponseCookieName),
                         true
                     );
                     
