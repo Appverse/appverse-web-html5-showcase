@@ -513,4 +513,65 @@ Future updates of Restangular imply review of this section in order to keep cons
     ],
     routesThatDontRequireAuth: ['/home'],
     routesThatRequireAdmin: ['/about']
-});
+})
+
+
+/////////////////////////////
+//PERFORMANCE
+//Includes default information about the different facets for a better performance in the app.
+//There are three main sections: webworkers management, shadow dom objetc and High performance DOM directive.
+/////////////////////////////
+.constant('PERFORMANCE_CONFIG', {
+/*
+ * WEBWORKERS SECTION
+ * To test multiple parallelized threads with web workers a thread pool or task queue is defined.
+ * The goal is focused on using enough threads to improve the execution but not too much or the browser system can turn
+ * into unstable.
+ * You can configure the maximum number of concurrent web workers when this pool is instantiated,
+ * and any 'task' you submit will be executed using one of the available threads from the pool.
+ * Note that the app is not really pooling threads, but just using this pool to control the number of concurrently
+ * executing web workers due to the high cost for start them.
+ */
+        /*
+        Maximum number of simultaneous executing threads used by workers
+         */
+        Webworker_pooled_threads: 4,
+        /*
+        If true, only workers in the web worker_authorized_workers property might be executed.
+        Other invoked workers will not result in a worker call.
+         */
+        Webworker_authorized_workers_only: true,
+        /*
+        Folder for workers' files
+         */
+        Webworker_directory: "resources/webworkers/",
+        /*
+        List of authorized workers with its ID.
+        The ID is used to be passed in the directive's attribute.
+         */
+        Webworker_authorized_workers: [
+            {
+                'id': 'w1',
+                'type': 'shared',
+                'file': 'a.js'
+            },
+            {
+                'user': 'w2',
+                'type': 'shared',
+                'file': 'b.js'
+            },
+            {
+                'user': 'wpi',
+                'type': 'dedicated',
+                'file': 'pi.js'
+            }
+        ],
+        Webworker_dedicated_literal: "dedicated",
+        Webworker_shared_literal: "shared"
+
+
+/*
+ * SHADOWDOM SECTION
+ *
+ */
+    })
