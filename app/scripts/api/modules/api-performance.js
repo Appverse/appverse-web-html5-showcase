@@ -27,6 +27,10 @@ angular.module('AppPerformance', ['AppConfiguration'])
  * @requires PERFORMANCE_CONFIG
  * @description
  * This factory starts a pooled multithreaded execution of a webworker.
+ *                              _______
+ *                             |       |-> thread
+ * USER -> message -> task  -> | pool  |-> thread
+ *                             |_______|-> thread
  * How to use:
  * var callback = function(event){
  *      $log.debug("The result of the worker is: " + event.data);
@@ -37,21 +41,23 @@ angular.module('AppPerformance', ['AppConfiguration'])
         function ($log, PERFORMANCE_CONFIG) {
 
             var factory = {
-                _poolSize: PERFORMANCE_CONFIG.Webworker_pooled_threads,
-                _authorizedWorkersOnly: PERFORMANCE_CONFIG.Webworker_authorized_workers_only,
-                _workersDir: PERFORMANCE_CONFIG.Webworker_directory,
-                _workersList: PERFORMANCE_CONFIG.Webworker_authorized_workers
+                _poolSize: PERFORMANCE_CONFIG.webworker_pooled_threads,
+                _authorizedWorkersOnly: PERFORMANCE_CONFIG.webworker_authorized_workers_only,
+                _workersDir: PERFORMANCE_CONFIG.webworker_directory,
+                _workersList: PERFORMANCE_CONFIG.webworker_authorized_workers,
+                _resultMessage: ''
             };
 
             /**
              * @ngdoc method
              * @name AppPerformance.service:WebWorkerFactory#passMessage
              * @methodOf AppPerformance.service:WebWorkerFactory
-             * @param {object} message .
-             * @param {number} id of the called worker .
+             * @param {number} id of the called worker
+             * @param {object} function as callback
+             * @param {string} message to be passed to the worker
              * @description Entry function. It passes a message to a worker.
              */
-            factory.runTask = function (workerId, callback, message) {
+            factory.runTask = function (workerId, message, callback) {
                 //var pool = new WorkerPool(factory._poolSize);
                 var pool = WorkerPool.getInstance();
                 pool.init();
@@ -86,9 +92,7 @@ angular.module('AppPerformance', ['AppConfiguration'])
                         pool.addWorkerTask(workerTask);
                     }
                 }
-
-
-
+                //return _resultMessage;
             };
 
             /*
@@ -153,13 +157,13 @@ angular.module('AppPerformance', ['AppConfiguration'])
                          For both dedicated and shared workers, you can also attach to the
                          message event handler event type by using the addEventListener method.
                          */
-                        if(this.workerTask.type == PERFORMANCE_CONFIG.Webworker_dedicated_literal){
+                        if(this.workerTask.type == PERFORMANCE_CONFIG.webworker_dedicated_literal){
                             var worker = new Worker(workerTask.script);
-                            worker.addEventListener('message', this.workerTask.callback, false);
+                            worker.addEventListener('message', OnWorkerMessageHandler, false);
                             worker.postMessage(workerTask.startMessage);
-                        }else if(this.workerTask.type == PERFORMANCE_CONFIG.Webworker_shared_literal){
+                        }else if(this.workerTask.type == PERFORMANCE_CONFIG.webworker_shared_literal){
                             var worker = new SharedWorker(workerTask.script);
-                            worker.port.addEventListener('message', this.workerTask.callback, false);
+                            worker.port.addEventListener('message', OnWorkerMessageHandler, false);
                             worker.port.postMessage(workerTask.startMessage);
                         }else{
                             //NO TYPE ERROR
@@ -175,19 +179,30 @@ angular.module('AppPerformance', ['AppConfiguration'])
                     // pass to original callback
                     _this.workerTask.callback(evt);
 
-                    // we should use a separate thread to add the worker
+                    // We should use a separate thread to add the worker
                     _this.parentPool.freeWorkerThread(_this);
                 }
-
             };
 
             //The task to run
             function WorkerTask(workerData, callback, msg) {
                 this.script = workerData.file;
-                this.callback = callback;
+                if(callback){
+                    this.callback = callback;
+                }else{
+                    this.callback = defaultEventHandler;
+                }
                 this.startMessage = msg;
                 this.type = workerData.type;
             };
+
+            /*
+             Default event handler.
+
+             */
+            function defaultEventHandler(event){
+                factory._resultMessage = event.data;
+            }
 
             //Data object for a worker
             function WorkerData(workerId, type, worker) {

@@ -46,7 +46,7 @@ angular.module('AppSecurity')
   function (SECURITY_OAUTH, AccessToken, Endpoint, Profile, $rootScope, $compile, $http, $templateCache) {
 
         var definition = {
-            restrict: 'AE',
+            restrict: 'AE', //E = element, A = attribute, C = class, M = comment
             replace: false,
             scope: {
                 site: '@', // (required) set the oauth2 server host
@@ -119,8 +119,9 @@ angular.module('AppSecurity')
              */
             function initProfile() {
                 var token = AccessToken.get();
-                if (token && token.access_token && SECURITY_OAUTH.profile)
+                if (token && token.access_token && SECURITY_OAUTH.profile) {
                     scope.profile = Profile.get();
+                }
             }
 
             /**

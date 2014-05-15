@@ -535,21 +535,21 @@ Future updates of Restangular imply review of this section in order to keep cons
         /*
         Maximum number of simultaneous executing threads used by workers
          */
-        Webworker_pooled_threads: 4,
+        webworker_pooled_threads: 4,
         /*
         If true, only workers in the web worker_authorized_workers property might be executed.
         Other invoked workers will not result in a worker call.
          */
-        Webworker_authorized_workers_only: true,
+        webworker_authorized_workers_only: true,
         /*
         Folder for workers' files
          */
-        Webworker_directory: "resources/webworkers/",
+        webworker_directory: "resources/webworkers/",
         /*
         List of authorized workers with its ID.
         The ID is used to be passed in the directive's attribute.
          */
-        Webworker_authorized_workers: [
+        webworker_authorized_workers: [
             {
                 'id': 'w1',
                 'type': 'shared',
@@ -566,8 +566,9 @@ Future updates of Restangular imply review of this section in order to keep cons
                 'file': 'pi.js'
             }
         ],
-        Webworker_dedicated_literal: "dedicated",
-        Webworker_shared_literal: "shared"
+        webworker_dedicated_literal: "dedicated",
+        webworker_shared_literal: "shared",
+        webworker_Message_template: 'views/demo/security/oauth_default.html',
 
 
 /*

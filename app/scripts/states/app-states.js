@@ -311,10 +311,10 @@ angular.module('appverseClientIncubatorApp')
                         controller: ''
                     })
 
-                    .state('performance.shadowdom', {
+                    .state('performance.hpcontrols', {
 
-                        url: '/shadowdom',
-                        templateUrl: 'views/demo/performance/performance.shadowdom.html',
+                        url: '/hpcontrols',
+                        templateUrl: 'views/demo/performance/performance.hpcontrols.html',
                         controller: ''
                     })
 
