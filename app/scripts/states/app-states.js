@@ -301,14 +301,13 @@ angular.module('appverseClientIncubatorApp')
                         abstract: true,
                         url: '/performance',
                         templateUrl: 'views/demo/performance/performance.html',
-                        controller: ''
+                        controller: 'performanceController'
                     })
 
                     .state('performance.webworkers', {
 
                         url: '/webworkers',
-                        templateUrl: 'views/demo/performance/performance.webworkers.html',
-                        controller: ''
+                        templateUrl: 'views/demo/performance/performance.webworkers.html'
                     })
 
                     .state('performance.hpcontrols', {

@@ -7,7 +7,7 @@
  * @description
  * The AppPerformance provides services to handle usage of several performance elements:
  * 1-Webworkers. Multithreaded-parallelized execution of tasks separated of the main JavaScript thread.
- * 2-High Performance elements.
+ * 2-High Performance UI directives support.
  */
 
 angular.module('AppPerformance', ['AppConfiguration'])
@@ -27,18 +27,18 @@ angular.module('AppPerformance', ['AppConfiguration'])
  * @requires PERFORMANCE_CONFIG
  * @description
  * This factory starts a pooled multithreaded execution of a webworker.
- *                              _______
- *                             |       |-> thread
- * USER -> message -> task  -> | pool  |-> thread
- *                             |_______|-> thread
+ *                             _______
+ *                            |       |-> thread 1
+ * USER -> message -> task -> | pool  |-> thread 2
+ *                            |_______|-> thread N
  * How to use:
  * var callback = function(event){
  *      $log.debug("The result of the worker is: " + event.data);
  * }
  * WebWorkerFactory.runTask(2, callback, "Hi")
  */
-    .factory('WebWorkerFactory', ['$log', 'PERFORMANCE_CONFIG',
-        function ($log, PERFORMANCE_CONFIG) {
+    .factory('WebWorkerPoolFactory', ['$log', '$q', 'PERFORMANCE_CONFIG',
+        function ($log, $q, PERFORMANCE_CONFIG) {
 
             var factory = {
                 _poolSize: PERFORMANCE_CONFIG.webworker_pooled_threads,
@@ -50,54 +50,99 @@ angular.module('AppPerformance', ['AppConfiguration'])
 
             /**
              * @ngdoc method
+             * @name AppPerformance.service:WebWorkerFactory#runTasksGroup
+             * @methodOf AppPerformance.service:WebWorkerFactory
+             * @param {number} workerId ID of the called worker
+             * @param {object} workerTasks Array with a group of WorkerTask objects with the same ID and worker
+             * @param {string} params Parameters to alter each worker in the pool
+             * @description
+             * Run a set of workers according to the pre-defined data in configuration (id, type, size in pool and worker file).
+             * The group of task are up to the caller.
+             */
+            factory.runTasksGroup = function (workerId, workerTasks, params) {
+                var workerData;
+                var defer;
+                if(workerId){
+                    workerData = getWorkerFromId(workerId);
+                }
+                //Initializes the pool with the indicated size for that worker group
+                var pool = new WorkerPool(workerData.poolSize);
+                pool.init();
+
+                //Create a worker task for
+                if(workerTasks && workerTasks.length > 0){
+                    // iterate through all the parts of the image
+                    for (var x = 0; x < workerTasks.length; x++) {
+                        pool.addWorkerTask(workerTasks(x));
+                    }
+                }
+
+                return _resultMessage;
+            };
+
+            /**
+             * @ngdoc method
              * @name AppPerformance.service:WebWorkerFactory#passMessage
              * @methodOf AppPerformance.service:WebWorkerFactory
              * @param {number} id of the called worker
              * @param {object} function as callback
              * @param {string} message to be passed to the worker
-             * @description Entry function. It passes a message to a worker.
+             * @description
+             * Execute a task in a worker.
+             * The group of task is the same as the number indicated in the pool size for that pre-configured worker.
              */
             factory.runTask = function (workerId, message, callback) {
-                //var pool = new WorkerPool(factory._poolSize);
-                var pool = WorkerPool.getInstance();
+
+
+                var pool = new WorkerPool(factory._poolSize);
                 pool.init();
 
                 /*
                  If only workers in the configuration file are allowed.
                  No fallback needed.
                  */
+                var workerData;
+                var workerTask;
                 if(factory._authorizedWorkersOnly){
                     if(workerId){
                         //Get data from configuration for the worker from the provided ID
-                        var workerData = getWorkerFromId(workerId);
-                        if(workerData){
-                            /*
-                             Create the worker task object from passed data.
-                             workerName: File of the worker
-                             callback: Register the supplied function as callback
-                             message: The last argument will be used to send a message to the worker
-                             */
-                            var workerTask = new WorkerTask(workerData, callback, message);
-                            // Pass the worker task object to the execution pool
-                            pool.addWorkerTask(workerTask);
-                        }else{
-                            //NO VALID WORKER ID
-                        }
+                        workerData = getWorkerFromId(workerId);
+                    }else{
+                        //NO VALID WORKER ID ERROR
                     }
                 }else{
                     //If any provided worker is allowed the workerId arg is the complete path to the worker file
+                    //The ID is not important here
                     if(workerId){
-                        var workerData = new WorkerData(1001, 'dedicated', workerId)
-                        var workerTask = new WorkerTask(workerData, callback, message);
-                        pool.addWorkerTask(workerTask);
+                        workerData = new WorkerData(1001, 'dedicated', workerId)
+                    }else{
+                        //NO VALID WORKER ID ERROR
                     }
                 }
+
+                if(workerData) {
+                    pool = new WorkerPool(workerData.poolSize);
+                    /*
+                    Create the worker task for the pool (only one task, passed N times):
+                    workerName: File of the worker
+                    callback: Register the supplied function as callback
+                    message: The last argument will be used to send a message to the worker
+                    */
+                    workerTask = new WorkerTask(workerData, callback, message);
+                    // Pass the worker task object to the execution pool.
+                    // The default behavior is create one task for each thread in the pool.
+                    for(var i = 0; i < factory._poolSize; i++){
+                        pool.addWorkerTask(workerTask);
+                    }
+                }else{
+                    //NO WORKER DATA ERROR
+                }
+
+
                 //return _resultMessage;
             };
 
-            /*
-            Private object
-             */
+
             var WorkerPool = function() {
                 var _this = this;
                 var size = factory._poolSize;
@@ -205,26 +250,30 @@ angular.module('AppPerformance', ['AppConfiguration'])
             }
 
             //Data object for a worker
-            function WorkerData(workerId, type, worker) {
+            function WorkerData(workerId, type, poolSize, worker) {
                 this.id = workerId;
                 this.type = type;
+                this.poolSize = poolSize;
                 this.file = worker;
             };
 
             //Extract worker information from configuration
             function getWorkerFromId(workerId){
+                this.id = workerId;
                 this.type = '';
+                this.poolSize;
                 this.file = '';
 
                 for(var i = 0; i < factory._workersList.length; i++) {
                     if(factory._workersList[i].id === workerId){
-                        type = factory._workersList[i].type;
-                        file = factory._workersDir + factory._workersList[i].file;
+                        this.type = factory._workersList[i].type;
+                        this.poolSize = factory._workersList[i].poolSize;
+                        this.file = factory._workersDir + factory._workersList[i].file;
                         break;
                     }
                 }
 
-                var workerData = new WorkerData(workerId, type, file);
+                var workerData = new WorkerData(this.id, this.type, this.poolSize, this.file);
 
                 return workerData
             }

@@ -552,23 +552,20 @@ Future updates of Restangular imply review of this section in order to keep cons
         webworker_authorized_workers: [
             {
                 'id': 'w1',
-                'type': 'shared',
-                'file': 'a.js'
-            },
-            {
-                'user': 'w2',
-                'type': 'shared',
-                'file': 'b.js'
-            },
-            {
-                'user': 'wpi',
                 'type': 'dedicated',
-                'file': 'pi.js'
+                'poolSize': 8,
+                'file': 'RenderImage.js'
+            },
+            {
+                'id': 'w2',
+                'type': 'dedicated',
+                'poolSize': 4,
+                'file': 'RestMultiRequest.js'
             }
         ],
         webworker_dedicated_literal: "dedicated",
         webworker_shared_literal: "shared",
-        webworker_Message_template: 'views/demo/security/oauth_default.html',
+        webworker_Message_template: 'scripts/api/directives/webworkerMessage.html'
 
 
 /*
