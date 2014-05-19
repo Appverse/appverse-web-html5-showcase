@@ -11,6 +11,73 @@ var mountFolder = function (connect, dir) {
 
 var fs = require('fs');
 
+var delayApiCalls = function (request, response, next) {
+    if (request.url.indexOf('/api') !== -1) {
+        setTimeout(function () {
+            next();
+        }, 1000);
+    } else {
+        next();
+    }
+};
+
+var httpMethods = function (request, response, next) {
+
+    console.log("request method: " + JSON.stringify(request.method));
+    var rawpath = request.url.split('?')[0];
+    console.log("request url: " + JSON.stringify(request.url));
+    var path = require('path').resolve(__dirname, 'app/' + rawpath);
+
+    console.log("request path : " + JSON.stringify(path));
+
+    console.log("request current dir : " + JSON.stringify(__dirname));
+
+    if ((request.method === 'PUT' || request.method === 'POST')) {
+
+        console.log('inside put/post');
+
+        request.content = '';
+
+        request.addListener("data", function (chunk) {
+            request.content += chunk;
+        });
+
+        request.addListener("end", function () {
+            console.log("request content: " + JSON.stringify(request.content));
+
+            if (fs.existsSync(path)) {
+
+                fs.writeFile(path, request.content, function (err) {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log('file saved');
+                    response.end('file was saved');
+                });
+                return;
+            }
+
+            if (request.url === '/log') {
+
+                var filePath = 'server/log/server.log';
+
+                var logData = JSON.parse(request.content);
+
+                fs.appendFile(filePath, logData.logUrl + '\n' + logData.logMessage + '\n', function (err) {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log('log saved');
+                    response.end('log was saved');
+                });
+                return;
+            }
+        });
+        return;
+    }
+    next();
+};
+
 // # Globbing
 // for performance reasons we're only matching one level down:
 // 'test/spec/{,*/}*.js'
@@ -36,21 +103,20 @@ module.exports = function (grunt) {
         yeoman: yeomanConfig,
         watch: {
             coffee: {
-                files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
-                tasks: ['coffee:dist']
+                files: ['<%= yeoman.app %>/scripts/**/*.coffee'],
+                tasks: ['coffee:app']
             },
             coffeeTest: {
-                files: ['test/spec/{,*/}*.coffee'],
+                files: ['test/spec/**/*.coffee'],
                 tasks: ['coffee:test']
             },
             compass: {
-                files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-                tasks: ['compass:server', 'autoprefixer']
+                files: ['<%= yeoman.app %>/styles/**/*.{scss,sass}'],
+                tasks: ['compass:server', 'autoprefixer:tmp']
             },
             styles: {
-                files: ['<%= yeoman.app %>/styles/{,*/}*.css',
-                       '<%= yeoman.app %>/styles/images'],
-                tasks: ['copy:styles', 'autoprefixer']
+                files: ['<%= yeoman.app %>/styles/**/*.css'],
+                tasks: ['autoprefixer:styles']
             },
             livereload: {
                 options: {
@@ -75,17 +141,26 @@ module.exports = function (grunt) {
         },
         autoprefixer: {
             options: ['last 1 version'],
-            dist: {
+            tmp: {
                 files: [{
                     expand: true,
                     cwd: '.tmp/styles/',
-                    src: '{,*/}*.css',
+                    src: '**/*.css',
+                    dest: '.tmp/styles/'
+                }]
+            },
+            styles: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/styles/',
+                    src: '**/*.css',
                     dest: '.tmp/styles/'
                 }]
             }
         },
         connect: {
             options: {
+                protocol: 'http',
                 port: 9000,
                 // Change this to '0.0.0.0' to access the server from outside.
                 hostname: 'localhost'
@@ -93,90 +168,35 @@ module.exports = function (grunt) {
             livereload: {
                 options: {
                     middleware: function (connect) {
-                        return [function (request, response, next) {
-                                if (request.url.indexOf('/api') !== -1) {
-                                    setTimeout(function () {
-                                        next();
-                                    }, 1000);
-                                } else {
-                                    next();
-                                }
-                            },
+                        return [
+                            delayApiCalls,
                             lrSnippet,
                             mountFolder(connect, '.tmp'),
                             mountFolder(connect, yeomanConfig.app),
-                            function (request, response, next) {
-
-                                console.log("request method: " + JSON.stringify(request.method));
-                                var rawpath = request.url.split('?')[0];
-                                console.log("request url: " + JSON.stringify(request.url));
-                                var path = require('path').resolve(__dirname, 'app/' + rawpath);
-
-                                console.log("request path : " + JSON.stringify(path));
-
-                                console.log("request current dir : " + JSON.stringify(__dirname));
-
-                                if ((request.method === 'PUT' || request.method === 'POST')) {
-
-                                    console.log('inside put/post');
-
-                                    request.content = '';
-
-                                    request.addListener("data", function (chunk) {
-                                        request.content += chunk;
-                                    });
-
-                                    request.addListener("end", function () {
-                                        console.log("request content: " + JSON.stringify(request.content));
-
-                                        if (fs.existsSync(path)) {
-
-                                            fs.writeFile(path, request.content, function (err) {
-                                                if (err) {
-                                                    throw err;
-                                                }
-                                                console.log('file saved');
-                                                response.end('file was saved');
-                                            });
-                                            return;
-                                        }
-
-                                        if (request.url === '/log') {
-
-                                            var filePath = 'server/log/server.log';
-
-                                            var logData = JSON.parse(request.content);
-
-                                            fs.appendFile(filePath, logData.logUrl + '\n' + logData.logMessage + '\n', function (err) {
-                                                if (err) {
-                                                    throw err;
-                                                }
-                                                console.log('log saved');
-                                                response.end('log was saved');
-                                            });
-                                            return;
-                                        }
-                                    });
-                                    return;
-                                }
-                                next();
-                            }];
+                            httpMethods
+                        ];
                     }
                 }
             },
             test: {
                 options: {
                     middleware: function (connect) {
-                        return [mountFolder(connect, '.tmp'),
+                        return [
+                            mountFolder(connect, '.tmp'),
                             mountFolder(connect, yeomanConfig.app),
-                            mountFolder(connect, 'test')];
+                            mountFolder(connect, 'test')
+                        ];
                     }
                 }
             },
             dist: {
                 options: {
                     middleware: function (connect) {
-                        return [mountFolder(connect, yeomanConfig.dist)];
+                        return [
+                            delayApiCalls,
+                            mountFolder(connect, yeomanConfig.dist),
+                            httpMethods
+                        ];
                     }
                 }
             },
@@ -184,17 +204,19 @@ module.exports = function (grunt) {
                 options: {
                     port: 9001,
                     middleware: function (connect) {
-                        return [mountFolder(connect, yeomanConfig.doc)];
+                        return [
+                            mountFolder(connect, yeomanConfig.doc)
+                        ];
                     }
                 }
             }
         },
         open: {
             server: {
-                url: 'http://localhost:<%= connect.options.port %>'
+                url: '<%= connect.options.protocol %>://<%= connect.options.hostname %>:<%= connect.options.port %>'
             },
             doc: {
-                url: 'http://localhost:9001'
+                url: '<%= connect.options.protocol %>://<%= connect.options.hostname %>:9001'
             }
         },
         clean: {
@@ -224,11 +246,11 @@ module.exports = function (grunt) {
                 sourceMap: true,
                 sourceRoot: ''
             },
-            dist: {
+            app: {
                 files: [{
                     expand: true,
                     cwd: '<%= yeoman.app %>/scripts',
-                    src: '{,*/}*.coffee',
+                    src: '**/*.coffee',
                     dest: '.tmp/scripts',
                     ext: '.js'
                 }]
@@ -257,18 +279,27 @@ module.exports = function (grunt) {
                 httpFontsPath: '/styles/fonts',
                 relativeAssets: false
             },
-            dist: {},
+            dist: {
+                options: {
+                    debugInfo: false
+                }
+            },
             server: {
                 options: {
                     debugInfo: true
                 }
             }
         },
-        // not used since Uglify task does concat,
-        // but still available if needed
-        /*concat: {
-      dist: {}
-    },*/
+        uglify: {
+            dist: {
+                files: {
+                    '<%= yeoman.dist %>/scripts/api/angular-jqm.js': ['<%= yeoman.app %>/scripts/api/angular-jqm.js'],
+                    '<%= yeoman.dist %>/bower_components/angular-animate/angular-animate.js': ['<%= yeoman.app %>/bower_components/angular-animate/angular-animate.js'],
+                    '<%= yeoman.dist %>/bower_components/angular-route/angular-route.js': ['<%= yeoman.app %>/bower_components/angular-route/angular-route.js'],
+                    '<%= yeoman.dist %>/bower_components/angular-touch/angular-touch.js': ['<%= yeoman.app %>/bower_components/angular-touch/angular-touch.js']
+                }
+            }
+        },
         rev: {
             dist: {
                 files: {
@@ -288,19 +319,19 @@ module.exports = function (grunt) {
             }
         },
         usemin: {
-            html: ['<%= yeoman.dist %>/{,*/}*.html'],
-            css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+            html: ['<%= yeoman.dist %>/*.html', '<%= yeoman.dist %>/views/**/*.html'],
+            css: ['<%= yeoman.dist %>/styles/**/*.css'],
             options: {
-                dirs: ['<%= yeoman.dist %>']
+                assetsDirs: ['<%= yeoman.dist %>/**']
             }
         },
         imagemin: {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= yeoman.app %>/images',
+                    cwd: '<%= yeoman.app %>/styles/images',
                     src: '{,*/}*.{png,jpg,jpeg}',
-                    dest: '<%= yeoman.dist %>/images'
+                    dest: '<%= yeoman.dist %>/styles/images'
                 }]
             }
         },
@@ -314,36 +345,30 @@ module.exports = function (grunt) {
                 }]
             }
         },
-        cssmin: {
-            // By default, your `index.html` <!-- Usemin Block --> will take care of
-            // minification. This option is pre-configured if you do not wish to use
-            // Usemin blocks.
-            // dist: {
-            //   files: {
-            //     '<%= yeoman.dist %>/styles/main.css': [
-            //       '.tmp/styles/{,*/}*.css',
-            //       '<%= yeoman.app %>/styles/{,*/}*.css'
-            //     ]
-            //   }
-            // }
-        },
         htmlmin: {
             dist: {
                 options: {
-                    /*removeCommentsFromCDATA: true,
-          // https://github.com/yeoman/grunt-usemin/issues/44
-          //collapseWhitespace: true,
-          collapseBooleanAttributes: true,
-          removeAttributeQuotes: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeOptionalTags: true*/
+                    removeComments: true,
+                    removeCommentsFromCDATA: true,
+                    removeCDATASectionsFromCDATA: true,
+                    collapseWhitespace: true,
+                    //                    conservativeCollapse: true,
+                    collapseBooleanAttributes: true,
+                    removeAttributeQuotes: false,
+                    removeRedundantAttributes: true,
+                    useShortDoctype: true,
+                    removeEmptyAttributes: true,
+                    removeOptionalTags: true,
+                    keepClosingSlash: true,
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%= yeoman.app %>',
-                    src: ['*.html', 'views/**/*.*', 'template/**/*.html'],
+                    cwd: '<%= yeoman.dist %>',
+                    src: [
+                        '*.html',
+                        'views/**/*.html',
+                        'template/**/*.html'
+                    ],
                     dest: '<%= yeoman.dist %>'
                 }]
             }
@@ -360,14 +385,13 @@ module.exports = function (grunt) {
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'api/**',
-                        'bower_components/angular-touch/angular-touch.js',
-                        'bower_components/angular-animate/angular-animate.js',
-                        'bower_components/angular-route/angular-route.js',
-                        'scripts/api/angular-jqm.js',
                         'images/{,*/}*.{gif,webp}',
                         'resources/**',
                         'styles/fonts/*',
-                        'styles/images/*'
+                        'styles/images/*',
+                        '*.html',
+                        'views/**/*.html',
+                        'template/**/*.html'
                     ]
                 }, {
                     expand: true,
@@ -381,7 +405,10 @@ module.exports = function (grunt) {
                     cwd: '<%= yeoman.app %>/bower_components/angular-i18n',
                     dest: '<%= yeoman.dist %>/resources/i18n/angular',
                     src: [
-                        '*.js'
+                        '*en-us.js',
+                        '*es-es.js',
+                        '*ja-jp.js',
+                        '*ar-eg.js'
                     ]
                 }]
             },
@@ -389,35 +416,31 @@ module.exports = function (grunt) {
                 expand: true,
                 cwd: '<%= yeoman.app %>/styles',
                 dest: '.tmp/styles',
-                src: '{,*/}*.css'
+                src: '**/*.css'
             },
             i18n: {
                 expand: true,
                 cwd: '<%= yeoman.app %>/bower_components/angular-i18n',
                 dest: '.tmp/resources/i18n/angular',
-                src: '*.js'
+                src: [
+                    '*en-us.js',
+                    '*es-es.js',
+                    '*ja-jp.js',
+                    '*ar-eg.js'
+                ]
             }
         },
         concurrent: {
             server: [
-                'coffee:dist',
-                'compass:server',
-                'copy:styles',
-                'copy:i18n'
-            ],
-            test: [
                 'coffee',
-                'compass',
-                'copy:styles',
+                'compass:server',
                 'copy:i18n'
             ],
             dist: [
                 'coffee',
                 'compass:dist',
-                'copy:styles',
                 'imagemin',
-                'svgmin',
-                'htmlmin'
+                'svgmin'
             ]
         },
         karma: {
@@ -431,23 +454,14 @@ module.exports = function (grunt) {
                 html: ['<%= yeoman.dist %>/*.html']
             }
         },
-        ngmin: {
+        ngAnnotate: {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= yeoman.dist %>/scripts',
+                    cwd: '.tmp/concat/scripts',
                     src: '*.js',
-                    dest: '<%= yeoman.dist %>/scripts'
+                    dest: '.tmp/concat/scripts'
                 }]
-            }
-        },
-        uglify: {
-            dist: {
-                files: {
-                    '<%= yeoman.dist %>/scripts/scripts.js': [
-                        '<%= yeoman.dist %>/scripts/scripts.js'
-                    ]
-                }
             }
         },
         docular: {
@@ -511,7 +525,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', [
         'clean:server',
-        'concurrent:test',
+        'concurrent:server',
         'autoprefixer',
         'connect:test',
         'karma'
@@ -537,22 +551,21 @@ module.exports = function (grunt) {
         'concat',
         'copy:dist',
         'cdnify',
-        'ngmin',
+        'ngAnnotate',
         'cssmin',
         'uglify',
         'rev',
         'usemin',
+        'htmlmin',
         'connect:dist',
-        'docular',
-        'connect:doc',
+ //        'docular',
+ //        'connect:doc',
         'open:server',
-        'open:doc',
+ //        'open:doc',
         'watch'
     ]);
 
     grunt.registerTask('default', [
-        'jshint',
-        'test',
-        'build'
+        'server'
     ]);
 };

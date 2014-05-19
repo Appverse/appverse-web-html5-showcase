@@ -25,10 +25,11 @@ angular.module('AppDetection', [])
             $rootScope.$digest();
         }, true);
 
-        $window.applicationCache.addEventListener("error", function () {
-            $log.debug("Error fetching manifest: a good chance we are offline");
-        });
-
+        if ($window.applicationCache) {
+            $window.applicationCache.addEventListener("error", function () {
+                $log.debug("Error fetching manifest: a good chance we are offline");
+            });
+        }
         window.addEventListener("goodconnection", function () {
             $log.debug('detectionController goodconnection');
             Detection.isOnline = true;

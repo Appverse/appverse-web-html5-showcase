@@ -252,7 +252,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             $http.defaults.cache = factory._httpCache;
             return factory._httpCache;
         };
-        
+
         /**
          * @ngdoc method
          * @name AppCache.service:CacheFactory#getHttpCache
@@ -306,6 +306,11 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
          * @description Initializes an IndexedDB on the browser
          */
         this.openDB = function (dbName, version, options) {
+
+            if (!indexedDB) {
+                return;
+            }
+
             this.dbName = dbName;
             this.version = version;
             this.db = null;
@@ -322,7 +327,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
 
             var request;
             // The version value is important to work on most of browsers.
-            if ( !! this.version) {
+            if (!!this.version) {
                 request = indexedDB.open(this.dbName, this.version);
             } else {
                 request = indexedDB.open(this.dbName);
@@ -345,7 +350,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                     var objectStore;
 
                     if (!this.db.objectStoreNames.contains(options.storeName)) {
-                        if ( !! options.keyPath) {
+                        if (!!options.keyPath) {
                             objectStore = db.createObjectStore(options.storeName, {
                                 keyPath: options.keyPath
                             });
@@ -355,7 +360,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                     } else {
                         objectStore = event.currentTarget.transaction.objectStore(options.storeName);
                     }
-                    if ( !! options.indexes) {
+                    if (!!options.indexes) {
                         for (var j = 0; j < options.indexes.length; j++) {
                             var indexName = options.indexes[j].name;
                             var indexData = options.indexes[j];
@@ -439,7 +444,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 return this.db.transaction(storeName, mode).objectStore(storeName);
             }
         };
-        
+
         /**
          * @ngdoc method
          * @name AppCache.service:IDB#getItemOnIndex
@@ -466,7 +471,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             };
             cursorRequest.onerror = self.failure;
         };
-        
+
         /**
          * @ngdoc method
          * @name AppCache.service:IDB#getItemsOnIndex
@@ -489,14 +494,14 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 if (cursor) {
                     results.push(cursor.value);
                     cursor.
-                    continue ();
+                    continue();
                 } else {
                     $rootScope.$emit('getitem', [self.dbName, storeName, results]);
                 }
             };
             cursorRequest.onerror = self.failure;
         };
-        
+
         /**
          * @ngdoc method
          * @name AppCache.service:IDB#getItemsOnIndexWithTransaction
@@ -520,7 +525,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 if (cursor) {
                     results.push(cursor.value);
                     cursor.
-                    continue ();
+                    continue();
                 } else {
                     $rootScope.$emit('getitem', [self.dbName, storeName, results]);
                 }
@@ -563,7 +568,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 if (cursor) {
                     results.push(cursor.value);
                     cursor.
-                    continue ();
+                    continue();
                 } else {
                     $rootScope.$emit('getinit', [self.dbName, storeName, results]);
                 }
@@ -588,7 +593,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 if (cursor) {
                     results.push(cursor.value);
                     cursor.
-                    continue ();
+                    continue();
                 } else {
                     $rootScope.$emit('getall', [self.dbName, storeName, results]);
                 }
@@ -618,7 +623,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
          * @methodOf AppCache.service:IDB
          * @param {string} storeName The asssigned name of the store object.
          * @param {string} index The provided index
-         * @param {string} key 
+         * @param {string} key
          * @param {string} key_path
          * @description Remove a set of items from key path
          */
@@ -636,7 +641,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                     request.onerror = self.failure;
 
                     cursor.
-                    continue ();
+                    continue();
                 } else {
                     $rootScope.$emit('remove', [self.dbName, storeName]);
                 }
