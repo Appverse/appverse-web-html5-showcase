@@ -57,27 +57,36 @@ angular.module('AppPerformance', ['AppConfiguration'])
              * @param {string} params Parameters to alter each worker in the pool
              * @description
              * Run a set of workers according to the pre-defined data in configuration (id, type, size in pool and worker file).
-             * The group of task are up to the caller.
+             * Pe-definition in configuration is mandatory.
+             * The group of tasks are up to the caller.
              */
-            factory.runTasksGroup = function (workerId, workerTasks, params) {
+            factory.runParallelTasksGroup = function (workerId, workerTasks, params) {
                 var workerData;
                 var defer;
+
                 if(workerId){
-                    workerData = getWorkerFromId(workerId);
+                    workerData = factory.getWorkerFromId(workerId);
                 }
+
                 //Initializes the pool with the indicated size for that worker group
-                var pool = new WorkerPool(workerData.poolSize);
+                var pool = new factory.WorkerPool(workerData.poolSize);
                 pool.init();
 
                 //Create a worker task for
                 if(workerTasks && workerTasks.length > 0){
                     // iterate through all the parts of the image
                     for (var x = 0; x < workerTasks.length; x++) {
-                        pool.addWorkerTask(workerTasks(x));
+                        var workerTask = workerTasks[x];
+
+//                        $log.debug("workerTask.type:  " + workerTask.type) ;
+//                        $log.debug("workerTask.startMessage:  " + workerTask.startMessage) ;
+//                        $log.debug("workerTask.script:  " + workerTask.script) ;
+
+                        pool.addWorkerTask(workerTask);
                     }
                 }
 
-                return _resultMessage;
+                return factory._resultMessage;
             };
 
             /**
@@ -143,9 +152,16 @@ angular.module('AppPerformance', ['AppConfiguration'])
             };
 
 
-            var WorkerPool = function() {
+            factory.WorkerPool = function(poolSize) {
                 var _this = this;
-                var size = factory._poolSize;
+                //this.size = 1;
+                if(!poolSize) {
+                    this.size = factory._poolSize;
+                }else{
+                    this.size = poolSize;
+                }
+
+                //$log.debug("SIZE POOL: " + _this.size);
 
                 //Initialize some vars with default values
                 this.taskQueue = [];
@@ -161,7 +177,9 @@ angular.module('AppPerformance', ['AppConfiguration'])
 
 
                 this.addWorkerTask = function(workerTask) {
+                    //$log.debug("IN addWorkerTask");
                     if (_this.workerQueue.length > 0) {
+                        //$log.debug("IN addWorkerTask:: RUN!");
                         // get the worker from the front of the queue
                         var workerThread = _this.workerQueue.shift();
                         workerThread.run(workerTask);
@@ -194,33 +212,36 @@ angular.module('AppPerformance', ['AppConfiguration'])
 
                 //Execute the task
                 this.run = function(workerTask) {
-                    this.workerTask = workerTask;
+                    _this.workerTask = workerTask
+
                     //Create a new web worker
-                    if (this.workerTask.script!= null) {
+                    if (_this.workerTask.script!= null) {
                         /*
                          Creation of workers.
                          For both dedicated and shared workers, you can also attach to the
                          message event handler event type by using the addEventListener method.
                          */
-                        if(this.workerTask.type == PERFORMANCE_CONFIG.webworker_dedicated_literal){
-                            var worker = new Worker(workerTask.script);
-                            worker.addEventListener('message', OnWorkerMessageHandler, false);
-                            worker.postMessage(workerTask.startMessage);
-                        }else if(this.workerTask.type == PERFORMANCE_CONFIG.webworker_shared_literal){
-                            var worker = new SharedWorker(workerTask.script);
-                            worker.port.addEventListener('message', OnWorkerMessageHandler, false);
-                            worker.port.postMessage(workerTask.startMessage);
+                        if(workerTask.type == PERFORMANCE_CONFIG.webworker_dedicated_literal){
+                            var worker = new Worker(_this.workerTask.script);
+                            worker.addEventListener('message', _this.OnWorkerMessageHandler, false);
+                            worker.postMessage(_this.workerTask.startMessage);
+                        }else if(workerTask.type == PERFORMANCE_CONFIG.webworker_shared_literal){
+                            var worker = new SharedWorker(_this.workerTask.script);
+                            worker.port.addEventListener('message', _this.OnWorkerMessageHandler, false);
+                            worker.port.postMessage(_this.workerTask.startMessage);
                         }else{
                             //NO TYPE ERROR
+                            $log.error("NO VALID WORKER TYPE");
                         }
                     }else{
                         //NO WORKER DEFINED ERROR
+                        $log.error("NO VALID WORKER SCRIPT");
                     }
                 }
 
                 //We assume we only get a single callback from a worker as a handler
                 //It also indicates the end of this worker.
-                function OnWorkerMessageHandler(evt) {
+                _this.OnWorkerMessageHandler = function (evt) {
                     // pass to original callback
                     _this.workerTask.callback(evt);
 
@@ -229,8 +250,9 @@ angular.module('AppPerformance', ['AppConfiguration'])
                 }
             };
 
+
             //The task to run
-            function WorkerTask(workerData, callback, msg) {
+            factory.WorkerTask = function (workerData, callback, msg) {
                 this.script = workerData.file;
                 if(callback){
                     this.callback = callback;
@@ -243,7 +265,6 @@ angular.module('AppPerformance', ['AppConfiguration'])
 
             /*
              Default event handler.
-
              */
             function defaultEventHandler(event){
                 factory._resultMessage = event.data;
@@ -258,7 +279,7 @@ angular.module('AppPerformance', ['AppConfiguration'])
             };
 
             //Extract worker information from configuration
-            function getWorkerFromId(workerId){
+            factory.getWorkerFromId = function (workerId){
                 this.id = workerId;
                 this.type = '';
                 this.poolSize;

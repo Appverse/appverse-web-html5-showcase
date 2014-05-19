@@ -86,7 +86,7 @@
                         <a ui-sref="translation">Translation</a>
                     </li>
                     <li ng-class="{ active: $state.includes('performance') }">
-                        <a ui-sref="performance">Performance</a>
+                        <a ui-sref="performance.webworkers">Performance</a>
                     </li>
                     <li ng-class="{ active: $state.includes('about') }">
                         <a ui-sref="about">About</a>
@@ -163,6 +163,8 @@
     <script src="scripts/api/modules/api-utils.js"></script>
     <script src="scripts/api/directives/cache-directives.js"></script>
     <script src="scripts/api/directives/rest-directives.js"></script>
+
+    <script src="scripts/api/modules/api-performance.js"></script>
     <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/app.js -->
@@ -177,6 +179,8 @@
     <script src="scripts/controllers/mobile-controllers.js"></script>
     <script src="scripts/factories/app-factory.js"></script>
     <script src="scripts/states/app-states.js"></script>
+
+    <script src="scripts/controllers/performance-controllers.js"></script>
     <!-- endbuild -->
 </body>
 

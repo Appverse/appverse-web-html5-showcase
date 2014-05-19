@@ -12,8 +12,8 @@ angular.module('appverseClientIncubatorApp')
         }])
 
 
-    .controller('imageWebworkerController', ['$log', '$q', 'WebWorkerFactory', 'PERFORMANCE_CONFIG',
-        function ($log, $q, WebWorkerFactory, PERFORMANCE_CONFIG) {
+    .controller('imageWebworkerController', ['$scope', '$log', '$q', 'WebWorkerPoolFactory', 'PERFORMANCE_CONFIG',
+        function ($scope, $log, $q, WebWorkerPoolFactory, PERFORMANCE_CONFIG) {
 
             // some global shared variables
             var targetContext;
@@ -22,15 +22,13 @@ angular.module('appverseClientIncubatorApp')
             var total = 0;
             var count = 0;
             var starttime = 0;
-
-//            var pool = new Pool(8);
-//            pool.init();
-
+            var callback;
+            var _this = this;
 
 
             // start processing when the document is loaded.
             $(document).ready(function () {
-
+                //$log.debug("HOLA !!");
                 // wait for the image to be loaded, before we start processing it.
                 $("#source").load(function () {
 
@@ -44,6 +42,7 @@ angular.module('appverseClientIncubatorApp')
 
                     // render elements
                     starttime = new Date().getTime();
+
                     renderElements(imgwidth, imgheight, $(this).get()[0]);
                 });
             });
@@ -59,14 +58,15 @@ angular.module('appverseClientIncubatorApp')
                 this.result = [0, 0, 0];
             }
 
-            function callback(event) {
-
+            this.callback = function (event) {
                 count++;
                 //var defer = $q.defer();
 
                 if (count == total) {
                     var currentTime = new Date().getTime();
-                    console.log("Processing done: " + (currentTime - starttime));
+                    var diff = currentTime - starttime;
+                    $log.debug("Processing done: " + diff);
+                    $scope.execTime = diff;
                 }
                 //defer.resolve(event.data);
 
@@ -81,6 +81,7 @@ angular.module('appverseClientIncubatorApp')
 
             // process the image by splitting it in parts and sending it to the worker
             function renderElements(imgwidth, imgheight, image) {
+
                 // determine image grid size
                 var nrX = Math.round(imgwidth / bulletSize);
                 var nrY = Math.round(imgheight / bulletSize);
@@ -89,6 +90,7 @@ angular.module('appverseClientIncubatorApp')
                 total = nrX * nrY;
 
                 var workerTasks = new Array();
+                var workerData = new WebWorkerPoolFactory.getWorkerFromId('w1');
 
 
                 // iterate through all the parts of the image
@@ -119,18 +121,15 @@ angular.module('appverseClientIncubatorApp')
                         wp.x = x;
                         wp.y = y;
 
-                        //var workerTask = new WorkerTask('extractMainColor.js',callback,wp);
-                        //pool.addWorkerTask(workerTask);
-
                         //Create a new task for the worker pool and push it into the group
-                        var wTask = new WebWorkerFactory.WorkerTask('w1', callback, wp);
+                        var wTask = new WebWorkerPoolFactory.WorkerTask(workerData, _this.callback, wp);
                         workerTasks.push(wTask);
 
                     }
                 }
 
                 //Call to the worker pool passing the group of tasks for the worker
-                WebWorkerFactory.runTasksGroup('w1', workerTasks);
+                WebWorkerPoolFactory.runParallelTasksGroup('w1', workerTasks);
             }
 
             // create the target canvas where the result will be rendered
@@ -145,6 +144,7 @@ angular.module('appverseClientIncubatorApp')
 
             // draw a rectangle on the supplied context
             function drawRectangle(targetContext, x, y, bulletSize, colors) {
+
                 targetContext.beginPath();
                 targetContext.rect(x * bulletSize, y * bulletSize, bulletSize, bulletSize);
                 targetContext.fillStyle = "rgba(" + colors + ",1)";

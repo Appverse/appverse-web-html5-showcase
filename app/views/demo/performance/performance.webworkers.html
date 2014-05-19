@@ -1,13 +1,29 @@
 <div ng-controller="imageWebworkerController">
-    <div style="display: inline;">
-        <img src="resources/webworkers/angular.jpg" id="source">
+
+    <div>
+        <p>Data for execution</p>
+        <div ng-show="execTime != null">
+            <p>Time for execution: {{ execTime }} ms.</p>
+        </div>
+        <label>Number of pooled workers:</label>
+        <input ng-model="pool.size" placeholder="First Name">
+
+        <button class="btn-primary" type="submit">Run</button>
+        <hr>
+
+    </div>
+    <div class="row" >
+        <div class="col-md-4" style="display: inline;">
+            <img src="resources/webworkers/angular.jpg" id="source">
+        </div>
+
+        <div class="col-md-4"id="target" style="display: inline;">
+        </div>
     </div>
 
-    <div id="target" style="display: inline;">
-    </div>
 </div>
 
 
-<div ng-controller="restWebworkerController">
-</div>
+
+
 

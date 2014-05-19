@@ -553,7 +553,7 @@ Future updates of Restangular imply review of this section in order to keep cons
             {
                 'id': 'w1',
                 'type': 'dedicated',
-                'poolSize': 8,
+                'poolSize': 4,
                 'file': 'RenderImage.js'
             },
             {
