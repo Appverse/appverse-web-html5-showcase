@@ -1,27 +1,44 @@
 <div ng-controller="imageWebworkerController">
 
     <div>
-        <p>Data for execution</p>
-        <div ng-show="execTime != null">
+        <h3>Using Multithreading for a task</h3>
+        <div ng-show="execTime != null && execTime != 0">
             <p>Time for execution: {{ execTime }} ms.</p>
         </div>
-        <label>Number of pooled workers:</label>
-        <input ng-model="pool.size" placeholder="First Name">
+            <span  class="nullable">
+                <label>Number of pooled workers:</label>
+                <select ng-model="poolSize" ng-options="threadsNumber.value for threadsNumber in threadsNumbers">
+                    <option value="">-- choose execution mode --</option>
+                </select>
+            </span><br/>
 
-        <button class="btn-primary" type="submit">Run</button>
-        <hr>
-
-    </div>
-    <div class="row" >
-        <div class="col-md-4" style="display: inline;">
-            <img src="resources/webworkers/angular.jpg" id="source">
-        </div>
-
-        <div class="col-md-4"id="target" style="display: inline;">
+            <button class="btn-primary" ng-click="run()">Run</button>
         </div>
     </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="span6"><img src="resources/webworkers/angular.jpg" id="source"></div>
+        <div class="span6" id="target"/>
+    </div>
+
 
 </div>
+
+<pre>
+    EXPLANATION
+    This section includes a heavy load process. The process select an area in the picture and extracts the dominant
+    color from a set of complicated statistics. This step is repeated until all the picture area has been analyzed.
+    When an area has been analyzed it is included in the DOM element.
+    As you can see, this is the type of task you can include in a web worker. Select the "Only One Thread" option to check
+    processing time using a single webworker (as commonly used).
+    With the Pool of Workers you can attach a number of threads to parallelized the processing. Select the "Four threads"
+    option and compare the values in "Time for Execution". Due to the busy threads of the available threads in your browser
+    results can vary from one browser to another.
+    A high number of threads does not guarantee a better performance. Search for the most appropriate number of threads
+    for each specific process. Then, include the value in the configuration (PERFORMANCE_CONFIG.webworker_pooled_threads).
+</pre>
 
 
 

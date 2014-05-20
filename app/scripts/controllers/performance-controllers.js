@@ -24,28 +24,37 @@ angular.module('appverseClientIncubatorApp')
             var starttime = 0;
             var callback;
             var _this = this;
+            $scope.execTime = 0;
 
+            //$scope.threadsNumbers = [1,2,4,6,8];
+            $scope.threadsNumbers = [
+                {key:'1', value:'Only one thread'},
+                {key:'2', value:'Two Threads'},
+                {key:'4', value:'Four Threads'},
+                {key:'6', value:'Six Threads'},
+                {key:'8', value:'Eight Threads'},
+                {key:'12', value:'Twelve Threads (gulp!)'}
+            ];
 
-            // start processing when the document is loaded.
-            $(document).ready(function () {
-                //$log.debug("HOLA !!");
-                // wait for the image to be loaded, before we start processing it.
-                $("#source").load(function () {
+            $scope.run = function(){
+                total = 0;
+                count = 0;
+                $("#targetCanvas").remove();
+                $scope.execTime = 0;
 
-                    // determine size of image
-                    var imgwidth = $(this).width();
-                    var imgheight = $(this).height();
+                // determine size of image
+                var imgwidth = $("#source").width();
+                var imgheight = $("#source").height();
 
-                    // create a canvas and make context available
-                    var targetCanvas = createTargetCanvas(imgwidth, imgheight);
-                    targetContext = targetCanvas.getContext("2d");
+                // create a canvas and make context available
+                var targetCanvas = createTargetCanvas(imgwidth, imgheight);
+                targetContext = targetCanvas.getContext("2d");
 
-                    // render elements
-                    starttime = new Date().getTime();
+                // render elements
+                starttime = new Date().getTime();
 
-                    renderElements(imgwidth, imgheight, $(this).get()[0]);
-                });
-            });
+                renderElements(imgwidth, imgheight, $("#source").get()[0], $scope.poolSize.key);
+            };
 
             // defines a workpacke object that can be sent to the worker
             function workPackage() {
@@ -60,15 +69,16 @@ angular.module('appverseClientIncubatorApp')
 
             this.callback = function (event) {
                 count++;
-                //var defer = $q.defer();
 
                 if (count == total) {
                     var currentTime = new Date().getTime();
                     var diff = currentTime - starttime;
                     $log.debug("Processing done: " + diff);
-                    $scope.execTime = diff;
+
+                    $scope.$apply(function(){
+                        $scope.execTime = diff;
+                    });
                 }
-                //defer.resolve(event.data);
 
                 var wp = event.data;
 
@@ -80,8 +90,7 @@ angular.module('appverseClientIncubatorApp')
             }
 
             // process the image by splitting it in parts and sending it to the worker
-            function renderElements(imgwidth, imgheight, image) {
-
+            function renderElements(imgwidth, imgheight, image, poolSize) {
                 // determine image grid size
                 var nrX = Math.round(imgwidth / bulletSize);
                 var nrY = Math.round(imgheight / bulletSize);
@@ -90,7 +99,7 @@ angular.module('appverseClientIncubatorApp')
                 total = nrX * nrY;
 
                 var workerTasks = new Array();
-                var workerData = new WebWorkerPoolFactory.getWorkerFromId('w1');
+                var workerData = new WebWorkerPoolFactory.getWorkerFromId('w1', poolSize);
 
 
                 // iterate through all the parts of the image
@@ -105,7 +114,7 @@ angular.module('appverseClientIncubatorApp')
                         context2.drawImage(image, x * bulletSize, y * bulletSize, bulletSize, bulletSize, 0, 0, bulletSize, bulletSize);
 
                         // get the data from the image
-                        var data = context2.getImageData(0, 0, bulletSize, bulletSize).data
+                        var data = context2.getImageData(0, 0, bulletSize, bulletSize).data;
                         // convert data, which is a canvas pixel array, to a normal array
                         // since we can't send the canvas array to a webworker
                         var dataAsArray = [];
@@ -129,7 +138,7 @@ angular.module('appverseClientIncubatorApp')
                 }
 
                 //Call to the worker pool passing the group of tasks for the worker
-                WebWorkerPoolFactory.runParallelTasksGroup('w1', workerTasks);
+                WebWorkerPoolFactory.runParallelTasksGroup(workerData, workerTasks, poolSize);
             }
 
             // create the target canvas where the result will be rendered

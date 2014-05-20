@@ -31,11 +31,6 @@ angular.module('AppPerformance', ['AppConfiguration'])
  *                            |       |-> thread 1
  * USER -> message -> task -> | pool  |-> thread 2
  *                            |_______|-> thread N
- * How to use:
- * var callback = function(event){
- *      $log.debug("The result of the worker is: " + event.data);
- * }
- * WebWorkerFactory.runTask(2, callback, "Hi")
  */
     .factory('WebWorkerPoolFactory', ['$log', '$q', 'PERFORMANCE_CONFIG',
         function ($log, $q, PERFORMANCE_CONFIG) {
@@ -48,28 +43,34 @@ angular.module('AppPerformance', ['AppConfiguration'])
                 _resultMessage: ''
             };
 
+            $log.debug("Initializated webworkers factory preconfigured values." );
+            $log.debug("Default pool size: " + factory._poolSize);
+            $log.debug("Are only authorized preconfigured workers? " + factory._authorizedWorkersOnly);
+            $log.debug("The folder for webworkers in the app: " + factory._workersDir);
+            $log.debug("Number of members in the workers list: " + factory._workersList.length);
+
             /**
              * @ngdoc method
              * @name AppPerformance.service:WebWorkerFactory#runTasksGroup
              * @methodOf AppPerformance.service:WebWorkerFactory
-             * @param {number} workerId ID of the called worker
-             * @param {object} workerTasks Array with a group of WorkerTask objects with the same ID and worker
-             * @param {string} params Parameters to alter each worker in the pool
+             * @param {number} workerData WorkerData object with information of the task to be executed
+             * @param {object} workerTasks Array with a group of WorkerTask objects for the same WorkerData
+             * @param {string} params Optional Parameters to alter each worker in the pool
              * @description
              * Run a set of workers according to the pre-defined data in configuration (id, type, size in pool and worker file).
              * Pe-definition in configuration is mandatory.
              * The group of tasks are up to the caller.
              */
-            factory.runParallelTasksGroup = function (workerId, workerTasks, params) {
-                var workerData;
-                var defer;
+            factory.runParallelTasksGroup = function (workerData, workerTasks, params) {
+                this.workerData = workerData;
 
-                if(workerId){
-                    workerData = factory.getWorkerFromId(workerId);
-                }
+
+                $log.debug("Started parallelized execution for worker: ");
+                $log.debug(workerData.toString());
+
 
                 //Initializes the pool with the indicated size for that worker group
-                var pool = new factory.WorkerPool(workerData.poolSize);
+                var pool = new factory.WorkerPool(this.workerData.poolSize);
                 pool.init();
 
                 //Create a worker task for
@@ -77,10 +78,6 @@ angular.module('AppPerformance', ['AppConfiguration'])
                     // iterate through all the parts of the image
                     for (var x = 0; x < workerTasks.length; x++) {
                         var workerTask = workerTasks[x];
-
-//                        $log.debug("workerTask.type:  " + workerTask.type) ;
-//                        $log.debug("workerTask.startMessage:  " + workerTask.startMessage) ;
-//                        $log.debug("workerTask.script:  " + workerTask.script) ;
 
                         pool.addWorkerTask(workerTask);
                     }
@@ -118,6 +115,7 @@ angular.module('AppPerformance', ['AppConfiguration'])
                         workerData = getWorkerFromId(workerId);
                     }else{
                         //NO VALID WORKER ID ERROR
+                        $log.error("NO VALID WORKER ID ERROR");
                     }
                 }else{
                     //If any provided worker is allowed the workerId arg is the complete path to the worker file
@@ -126,17 +124,18 @@ angular.module('AppPerformance', ['AppConfiguration'])
                         workerData = new WorkerData(1001, 'dedicated', workerId)
                     }else{
                         //NO VALID WORKER ID ERROR
+                        $log.error("NO VALID WORKER ID ERROR");
                     }
                 }
 
                 if(workerData) {
                     pool = new WorkerPool(workerData.poolSize);
                     /*
-                    Create the worker task for the pool (only one task, passed N times):
-                    workerName: File of the worker
-                    callback: Register the supplied function as callback
-                    message: The last argument will be used to send a message to the worker
-                    */
+                     Create the worker task for the pool (only one task, passed N times):
+                     workerName: File of the worker
+                     callback: Register the supplied function as callback
+                     message: The last argument will be used to send a message to the worker
+                     */
                     workerTask = new WorkerTask(workerData, callback, message);
                     // Pass the worker task object to the execution pool.
                     // The default behavior is create one task for each thread in the pool.
@@ -145,6 +144,7 @@ angular.module('AppPerformance', ['AppConfiguration'])
                     }
                 }else{
                     //NO WORKER DATA ERROR
+                    $log.error("NO WORKER DATA ERROR");
                 }
 
 
@@ -154,14 +154,11 @@ angular.module('AppPerformance', ['AppConfiguration'])
 
             factory.WorkerPool = function(poolSize) {
                 var _this = this;
-                //this.size = 1;
                 if(!poolSize) {
                     this.size = factory._poolSize;
                 }else{
                     this.size = poolSize;
                 }
-
-                //$log.debug("SIZE POOL: " + _this.size);
 
                 //Initialize some vars with default values
                 this.taskQueue = [];
@@ -177,9 +174,7 @@ angular.module('AppPerformance', ['AppConfiguration'])
 
 
                 this.addWorkerTask = function(workerTask) {
-                    //$log.debug("IN addWorkerTask");
                     if (_this.workerQueue.length > 0) {
-                        //$log.debug("IN addWorkerTask:: RUN!");
                         // get the worker from the front of the queue
                         var workerThread = _this.workerQueue.shift();
                         workerThread.run(workerTask);
@@ -233,9 +228,6 @@ angular.module('AppPerformance', ['AppConfiguration'])
                             //NO TYPE ERROR
                             $log.error("NO VALID WORKER TYPE");
                         }
-                    }else{
-                        //NO WORKER DEFINED ERROR
-                        $log.error("NO VALID WORKER SCRIPT");
                     }
                 }
 
@@ -278,17 +270,27 @@ angular.module('AppPerformance', ['AppConfiguration'])
                 this.file = worker;
             };
 
+            WorkerData.prototype.toString = function(){
+                return "ID: " + this.id + "|TYPE: " + this.type + "|POOL SIZE: " + this.poolSize + "|FILE: " + this.file;
+
+            }
+
             //Extract worker information from configuration
-            factory.getWorkerFromId = function (workerId){
+            factory.getWorkerFromId = function (workerId, poolSize){
                 this.id = workerId;
                 this.type = '';
-                this.poolSize;
+                this.poolSize = poolSize;
                 this.file = '';
 
                 for(var i = 0; i < factory._workersList.length; i++) {
                     if(factory._workersList[i].id === workerId){
                         this.type = factory._workersList[i].type;
-                        this.poolSize = factory._workersList[i].poolSize;
+                        if(!this.poolSize || this.poolSize == 0){
+                            this.poolSize = factory._workersList[i].poolSize;
+                        }else{
+                            this.poolSize = poolSize;
+                        }
+
                         this.file = factory._workersDir + factory._workersList[i].file;
                         break;
                     }
@@ -302,5 +304,3 @@ angular.module('AppPerformance', ['AppConfiguration'])
             return factory;
         }
     ])
-
-
