@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/jquery.mobile.css">
     <link rel="stylesheet" href="styles/angular-jqm.css">
+    <link rel="stylesheet" href="styles/cpustyle.css">
     <!-- endbuild -->
 
 </head>
@@ -82,6 +83,9 @@
                     <li ng-class="{ active: $state.includes('serverpush') }">
                         <a ui-sref="serverpush">Server Push</a>
                     </li>
+                    <li ng-class="{ active: $state.includes('websockets') }">
+                        <a ui-sref="websockets">Websockets</a>
+                    </li>
                     <li ng-class="{ active: $state.includes('translation') }">
                         <a ui-sref="translation">Translation</a>
                     </li>
@@ -108,10 +112,14 @@
     <div ui-view class="myslide" autoscroll="false"></div>
 
     <script src="https://plus.google.com/js/client:plusone.js"></script>
+    
     <!-- build:js scripts/external.js -->
     <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/modernizr/modernizr.js"></script>
+    <script src="bower_components/jquery-flot/jquery.flot.js"></script>
+    <script src="bower_components/jquery-flot/jquery.flot.resize.js"></script>
+    <script src="bower_components/jquery-flot/jquery.flot.time.js"></script>
     <!-- endbuild -->
 
     <!-- build:js scripts/uibootstrap.js -->
