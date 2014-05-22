@@ -305,9 +305,10 @@ module.exports = function (grunt) {
                 files: {
                     src: [
                         '<%= yeoman.dist %>/scripts/*.js',
-                        '<%= yeoman.dist %>/styles/{,*/}*.css',
-                        '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-                        '<%= yeoman.dist %>/styles/fonts/*'
+                        '<%= yeoman.dist %>/styles/*.css',
+                        '<%= yeoman.dist %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}',
+                        '!<%= yeoman.dist %>/images/glyphicons-*',
+                        '<%= yeoman.dist %>/styles/images/*.{gif,png}'
                     ]
                 }
             }
@@ -329,20 +330,29 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%= yeoman.app %>/styles/images',
-                    src: '{,*/}*.{png,jpg,jpeg}',
-                    dest: '<%= yeoman.dist %>/styles/images'
+                    cwd: '<%= yeoman.app %>',
+                    src: [
+                        'styles/images/*.{jpg,jpeg,svg,gif}',
+                        'images/*.{jpg,jpeg,svg,gif}'
+                    ],
+                    dest: '<%= yeoman.dist %>'
                 }]
             }
         },
-        svgmin: {
+        tinypng: {
+            options: {
+                apiKey: "l_QIDgceoKGF8PBNRr3cmYy_Nhfa9F1p",
+                checkSigs: true,
+                sigFile: '<%= yeoman.app %>/images/tinypng_sigs.json',
+                summarize: true,
+                showProgress: true,
+                stopOnImageError: true
+            },
             dist: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/images',
-                    src: '{,*/}*.svg',
-                    dest: '<%= yeoman.dist %>/images'
-                }]
+                expand: true,
+                cwd: '<%= yeoman.app %>',
+                src: 'images/**/*.png',
+                dest: '<%= yeoman.app %>'
             }
         },
         htmlmin: {
@@ -428,6 +438,12 @@ module.exports = function (grunt) {
                     '*ja-jp.js',
                     '*ar-eg.js'
                 ]
+            },
+            png: {
+                expand: true,
+                cwd: '<%= yeoman.app %>',
+                dest: '<%= yeoman.dist %>',
+                src: 'images/**/*.png'
             }
         },
         concurrent: {
@@ -439,8 +455,7 @@ module.exports = function (grunt) {
             dist: [
                 'coffee',
                 'compass:dist',
-                'imagemin',
-                'svgmin'
+                'imagemin'
             ]
         },
         karma: {
@@ -547,6 +562,8 @@ module.exports = function (grunt) {
         'clean:dist',
         'useminPrepare',
         'concurrent:dist',
+        'tinypng',
+        'copy:png',
         'autoprefixer',
         'concat',
         'copy:dist',
