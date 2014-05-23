@@ -10,7 +10,7 @@
  * 2-High Performance UI directives support.
  */
 
-angular.module('AppPerformance', ['AppConfiguration'])
+angular.module('AppPerformance', ['AppConfiguration', 'ngGrid'])
 
     .run(['$log', 'PERFORMANCE_CONFIG',
         function ($log, PERFORMANCE_CONFIG) {

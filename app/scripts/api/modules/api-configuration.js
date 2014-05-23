@@ -581,10 +581,4 @@ Future updates of Restangular imply review of this section in order to keep cons
         webworker_dedicated_literal: "dedicated",
         webworker_shared_literal: "shared",
         webworker_Message_template: 'scripts/api/directives/webworkerMessage.html'
-
-
-/*
- * SHADOWDOM SECTION
- *
- */
     })
