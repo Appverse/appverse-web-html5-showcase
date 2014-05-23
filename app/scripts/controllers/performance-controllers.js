@@ -23,7 +23,13 @@ angular.module('appverseClientIncubatorApp')
             var count = 0;
             var starttime = 0;
             var callback;
+            var wTask;;
+            var poolSize;;
+            var workerTasks;
+            var workerData;
+
             var _this = this;
+
             $scope.execTime = 0;
 
             //$scope.threadsNumbers = [1,2,4,6,8];
@@ -98,8 +104,11 @@ angular.module('appverseClientIncubatorApp')
                 // how much to process
                 total = nrX * nrY;
 
-                var workerTasks = new Array();
-                var workerData = new WebWorkerPoolFactory.getWorkerFromId('w1', poolSize);
+                //var workerTasks = new Array();
+                _this.wTask = null;
+                _this.poolSize = poolSize;
+                _this.workerTasks = [];
+                _this.workerData = new WebWorkerPoolFactory.getWorkerFromId('w1', poolSize);
 
 
                 // iterate through all the parts of the image
@@ -131,14 +140,14 @@ angular.module('appverseClientIncubatorApp')
                         wp.y = y;
 
                         //Create a new task for the worker pool and push it into the group
-                        var wTask = new WebWorkerPoolFactory.WorkerTask(workerData, _this.callback, wp);
-                        workerTasks.push(wTask);
+                        _this.wTask = new WebWorkerPoolFactory.WorkerTask(_this.workerData, _this.callback, wp);
+                        _this.workerTasks.push(_this.wTask);
 
                     }
                 }
 
                 //Call to the worker pool passing the group of tasks for the worker
-                WebWorkerPoolFactory.runParallelTasksGroup(workerData, workerTasks, poolSize);
+                WebWorkerPoolFactory.runParallelTasksGroup(_this.workerData, _this.workerTasks, _this.poolSize);
             }
 
             // create the target canvas where the result will be rendered

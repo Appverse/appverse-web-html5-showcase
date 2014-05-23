@@ -57,6 +57,7 @@ angular.module('AppPerformance', ['AppConfiguration'])
              * @param {object} workerTasks Array with a group of WorkerTask objects for the same WorkerData
              * @param {string} params Optional Parameters to alter each worker in the pool
              * @description
+             * Runs a group of parallelized tasks 
              * Run a set of workers according to the pre-defined data in configuration (id, type, size in pool and worker file).
              * Pe-definition in configuration is mandatory.
              * The group of tasks are up to the caller.
@@ -85,6 +86,7 @@ angular.module('AppPerformance', ['AppConfiguration'])
 
                 return factory._resultMessage;
             };
+
 
             /**
              * @ngdoc method

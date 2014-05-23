@@ -34,7 +34,11 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
     function ($log, Restangular, CacheFactory, REST_CONFIG) {
 
         $log.info('AppREST run');
-
+//        if(REST_CONFIG.Multicast_enabled){
+//            Restangular.setBaseUrl(REST_CONFIG.Multicast_baseUrl);
+//        }else{
+//            Restangular.setBaseUrl(REST_CONFIG.BaseUrl);
+//        }
         Restangular.setBaseUrl(REST_CONFIG.BaseUrl);
         Restangular.setExtraFields(REST_CONFIG.ExtraFields);
         Restangular.setParentless(REST_CONFIG.Parentless);
@@ -231,5 +235,28 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
             Restangular.one(path).delete().then(callback);
         };
 
-        return factory;
-    }]);
+       return factory;
+    }])
+
+
+
+
+//    .factory('MulticastRESTFactory', ['$log', 'Restangular', 'REST_CONFIG',
+//        function ($log, Restangular, REST_CONFIG) {
+//            var factory = {};
+//            var multicastSpawn = REST_CONFIG.Multicast_enabled;
+//            var _this = this;
+//
+//
+//            factory.readObject = function (path, params) {
+//                if(params && params.length >0){
+//
+//                }else{
+//                    //No params. It is a normal call
+//                    return Restangular.one(path).get().$object;
+//                }
+//
+//            };
+//
+//            return factory;
+//        }])
