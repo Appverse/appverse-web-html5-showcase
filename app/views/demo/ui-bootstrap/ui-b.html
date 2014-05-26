@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <div class="container" scrolly-scroll>
     <p class="lead">Alert</p>
     <div ng-controller="AlertDemoCtrl">
@@ -47,8 +48,8 @@
     <p class="lead">Modal</p>
     <div ng-controller="ModalDemoCtrl">
         <script type="text/ng-template" id="myModalContent.html">
-            <div class="modal-header">
-                <h3>I'm a modal!</h3>
+            < div class = "modal-header" >
+                < h3 > I 'm a modal!</h3>
             </div>
             <div class="modal-body">
                 <ul>
@@ -69,6 +70,26 @@
     </div>
 
     <hr/>
+
+    <p class="lead">Sliders</p>
+
+    <br>
+    <slider ng-model="myslider" floor="0" ceiling="100" step="1" ng-init="myslider=25">
+    </slider>
+    <br>
+    <div class="well">
+        Slider value: {{myslider}}
+    </div>
+
+    <br>
+    <slider ng-model="mysliderLow" ng-model-range="mysliderHigh" floor="100" ceiling="1000" step="5" ng-init="mysliderLow=300;mysliderHigh=500">
+    </slider>
+    <br><br>
+    <div class="well">
+        <p>Low value: {{mysliderLow}}</p>
+        <p>High value: {{mysliderHigh}}</p>
+    </div>
+
     <p class="lead">And many others..</p>
 
 </div>

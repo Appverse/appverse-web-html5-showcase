@@ -18,7 +18,7 @@
 
 //angular.module('jqm', []);
 
-angular.module('COMMONAPI', ['ui.bootstrap', 'ui.router', 'AppCache', 'AppConfiguration', 'AppDetection', 'jqm', 'AppLogging', 'AppREST', 'AppSecurity', 'AppServerPush', 'AppTranslate'])
+angular.module('COMMONAPI', ['vr.directives.slider','ui.bootstrap', 'ui.router', 'AppCache', 'AppConfiguration', 'AppDetection', 'jqm', 'AppLogging', 'AppREST', 'AppSecurity', 'AppServerPush', 'AppTranslate'])
     .run(['$rootScope', '$state', '$stateParams',
         function ($rootScope, $state, $stateParams) {
 
