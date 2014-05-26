@@ -11,8 +11,8 @@
 * @ngdoc module
 * @name AppServerPush
 * @description
-* This module handles server data communication when it pushes them to the client 
-* exposing the factory SocketFactory, which is an API for instantiating sockets 
+* This module handles server data communication when it pushes them to the client
+* exposing the factory SocketFactory, which is an API for instantiating sockets
 * that are integrated with Angular's digest cycle.
 * It is now based on SocketIO (http://socket.io/). Why?
 *
@@ -30,10 +30,10 @@
 *
 * So, AppServerPush is ready to integrate other Server Push approaches (e.g. Atmosphere) only by including
 * a new module and injecting it to AppServerPush.
-* 
-* 
+*
+*
 * NOTE ABOUT CLIENT DEPENDENCIES WITH SOCKET.IO
-* 
+*
 * The Socket.IO server will handle serving the correct version of the Socket.IO client library;
 *
 * We should not be using one from elsewhere on the Internet. From the top example on http://socket.io/:
@@ -127,7 +127,7 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
              @name AppServerPush.factory:SocketFactory#unsubscribeCommunication
              @methodOf AppServerPush.factory:SocketFactory
              @param {object} callback The function to be passed as callback.
-             @description Cancels all communications to server. 
+             @description Cancels all communications to server.
              The communication will be cancelled without regarding other consideration.
              */
         factory.unsubscribeCommunication = function (callback) {
@@ -286,7 +286,7 @@ angular.module('AppServerPush', ['AppSocketIO', 'AppConfiguration'])
  * @name AppSocketIO
  * @description
  * Private module implementing SocketIO. It provides the common API module AppServerpush
- * with the socket object wrapping the SocketIO client. This is initializated according 
+ * with the socket object wrapping the SocketIO client. This is initializated according
  * to the pre-existing external configuration.
  */
 angular.module('AppSocketIO', ['AppConfiguration'])
@@ -296,21 +296,21 @@ angular.module('AppSocketIO', ['AppConfiguration'])
  * @name AppSocketIO.provider:socket
  * @description
  * This provider provides the appserverpush module with the SocketIO client object from pre-existing configuration in application.
- *  
+ *
  * This object helps the common API module  making  easier to add/remove listeners in a way that works with AngularJS's scope.
- * 
+ *
  * socket.on / socket.addListener: Takes an event name and callback. Works just like the method of the same name from Socket.IO.
- * 
+ *
  * socket.removeListener: Takes an event name and callback. Works just like the method of the same name from Socket.IO.
- * 
+ *
  * socket.emit: sends a message to the server. Optionally takes a callback.
  * Works just like the method of the same name from Socket.IO.
- * 
- * socket.forward: allows you to forward the events received by Socket.IO's socket to AngularJS's event system. 
+ *
+ * socket.forward: allows you to forward the events received by Socket.IO's socket to AngularJS's event system.
  * You can then listen to the event with $scope.$on. By default, socket-forwarded events are namespaced with socket:.
- * The first argument is a string or array of strings listing the event names to be forwarded. 
- * The second argument is optional, and is the scope on which the events are to be broadcast. 
- * If an argument is not provided, it defaults to $rootScope. 
+ * The first argument is a string or array of strings listing the event names to be forwarded.
+ * The second argument is optional, and is the scope on which the events are to be broadcast.
+ * If an argument is not provided, it defaults to $rootScope.
  * As a reminder, broadcasted events are propagated down to descendant scopes.
  */
  .provider('socket', ['SERVERPUSH_CONFIG',
@@ -388,7 +388,7 @@ angular.module('AppSocketIO', ['AppConfiguration'])
                     if (!scope) {
                         scope = $rootScope;
                     }
-                    events.forEach(function (eventName) {
+                    angular.forEach(events, function (eventName) {
                         var prefixed = prefix + eventName;
                         var forwardEvent = asyncAngularify(function (data) {
                             scope.$broadcast(prefixed, data);
