@@ -493,8 +493,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 var cursor = event.target.result;
                 if (cursor) {
                     results.push(cursor.value);
-                    cursor.
-                    continue();
+                    cursor['continue']();
                 } else {
                     $rootScope.$emit('getitem', [self.dbName, storeName, results]);
                 }
@@ -524,8 +523,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 var cursor = event.target.result;
                 if (cursor) {
                     results.push(cursor.value);
-                    cursor.
-                    continue();
+                    cursor['continue']();
                 } else {
                     $rootScope.$emit('getitem', [self.dbName, storeName, results]);
                 }
@@ -567,8 +565,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 var cursor = event.target.result;
                 if (cursor) {
                     results.push(cursor.value);
-                    cursor.
-                    continue();
+                    cursor['continue']();
                 } else {
                     $rootScope.$emit('getinit', [self.dbName, storeName, results]);
                 }
@@ -592,8 +589,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
                 var cursor = event.target.result;
                 if (cursor) {
                     results.push(cursor.value);
-                    cursor.
-                    continue();
+                    cursor['continue']();
                 } else {
                     $rootScope.$emit('getall', [self.dbName, storeName, results]);
                 }
@@ -610,7 +606,7 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
          * @description Removes an item from its key
          */
         this.remove = function (storeName, key) {
-            var request = this.getTransactionStore(storeName, "readwrite").delete(key);
+            var request = this.getTransactionStore(storeName, "readwrite")['delete'](key);
             request.onsuccess = function () {
                 $rootScope.$emit('remove', [self.dbName, storeName]);
             };
@@ -636,12 +632,11 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             cursorRequest.onsuccess = function (event) {
                 var cursor = event.target.result;
                 if (cursor) {
-                    var request = transactionStore.delete(cursor.value[key_path]);
+                    var request = transactionStore['delete'](cursor.value[key_path]);
                     request.onsuccess = self.success;
                     request.onerror = self.failure;
 
-                    cursor.
-                    continue();
+                    cursor['continue']();
                 } else {
                     $rootScope.$emit('remove', [self.dbName, storeName]);
                 }

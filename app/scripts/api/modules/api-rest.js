@@ -228,7 +228,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
          */
         factory.deleteObject = function (path, callback) {
             // Use 'then' to resolve the promise.
-            Restangular.one(path).delete().then(callback);
+            Restangular.one(path)['delete']().then(callback);
         };
 
         return factory;
