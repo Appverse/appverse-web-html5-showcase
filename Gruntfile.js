@@ -133,11 +133,12 @@ module.exports = function (grunt) {
             karma: {
                 files: ['app/scripts/**/*.js', 'test/unit/**/*.js'],
                 tasks: ['karma:unit:run']
-            },
-            doc: {
-                files: ['{.tmp,<%= yeoman.app %>}/scripts/**/*.js'],
-                tasks: ['docular', 'open:doc']
             }
+//            ,
+//            doc: {
+//                files: ['{.tmp,<%= yeoman.app %>}/scripts/**/*.js'],
+//                tasks: ['docular']
+//            }
         },
         autoprefixer: {
             options: ['last 1 version'],

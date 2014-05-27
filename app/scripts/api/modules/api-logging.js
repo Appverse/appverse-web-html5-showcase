@@ -30,7 +30,7 @@
  *
  * This way, we are telling in config time to Angular that every time a service/controller/directive asks for $log instance, Angular will provide the result of the callback. As you can see, we are passing the original $log and formattedLogger (the API implementation) to the callback, and then, he returns a formattedLogger factory instance.
  */
-angular.module('AppLogging', ['AppREST', 'AppConfiguration', 'AppDetection'])
+angular.module('AppLogging', ['AppConfiguration', 'AppDetection'])
 
 .config(["$provide",
     function ($provide) {

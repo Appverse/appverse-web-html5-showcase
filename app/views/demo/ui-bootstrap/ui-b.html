@@ -1,16 +1,16 @@
 <!DOCTYPE HTML>
 <div class="container" scrolly-scroll>
     <p class="lead">Alert</p>
-    <div ng-controller="AlertDemoCtrl">
-        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-        <button class="btn" ng-click="addAlert()">Add Alert</button>
+    <div data-ng-controller="AlertDemoCtrl">
+        <alert data-ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <button class="btn" data-ng-click="addAlert()">Add Alert</button>
     </div>
 
     <hr/>
     <p class="lead">Collapse</p>
-    <div ng-controller="CollapseDemoCtrl">
-        <button class="btn" ng-click="uidemoCollapsed = !uidemoCollapsed">Toggle collapse</button>
-        <p/>
+    <div data-ng-controller="CollapseDemoCtrl">
+        <button class="btn" data-ng-click="uidemoCollapsed = !uidemoCollapsed">Toggle collapse</button>
+        <p></p>
         <div collapse="uidemoCollapsed">
             <div class="well well-large">Some content</div>
         </div>
@@ -18,78 +18,97 @@
 
     <hr/>
     <p class="lead">Date Picker</p>
-    <div ng-controller="DatepickerDemoCtrl">
-        <div class="well well-large">
-            Selected date is:
-            <em>{{dt | date:'fullDate' }}</em>
-        </div>
+    <div data-ng-controller="DatepickerDemoCtrl">
+        <div class="well pull-left">
+            <p>Selected date is: <em>{{dt | date:'fullDate' }}</em>
+            </p>
 
-        <p/>
-        <div class="well well-small" ng-model="dt">
+            <div class="form-horizontal">
+                <input type="text" datepicker-popup="dd-MMMM-yyyy" data-ng-model="dt" is-open="opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" data-ng-required="true" />
+                <button class="btn" data-ng-click="open()">
+                    <i class="icon-calendar"></i>
+                </button>
+            </div>
+
+            <br>
+            <button class="btn btn-small btn-inverse" data-ng-click="today()">Today</button>
+            <button class="btn btn-small btn-inverse" data-ng-click="dt = '2009-08-24'">2009-08-24</button>
+            <button class="btn btn-small btn-success" data-ng-click="toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
+            <button class="btn btn-small btn-danger" data-ng-click="clear()">Clear</button>
+            <button class="btn btn-small" data-ng-click="toggleMin()" tooltip="After today restriction">Min date</button>
+        </div>
+        <p class="pull-left">&nbsp;&nbsp;</p>
+        <div class="well pull-left" data-ng-model="dt">
             <datepicker min="minDate" show-weeks="showWeeks"></datepicker>
         </div>
-        <p/>
-        <div class="form-horizontal">
-            <input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt" is-open="opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" />
-            <button class="btn" ng-click="open()">
-                <i class="icon-calendar"></i>
-            </button>
-        </div>
-
-        <p/>
-        <button class="btn btn-small btn-inverse" ng-click="today()">Today</button>
-        <button class="btn btn-small btn-inverse" ng-click="dt = '2009-08-24'">2009-08-24</button>
-        <button class="btn btn-small btn-success" ng-click="toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
-        <button class="btn btn-small btn-danger" ng-click="clear()">Clear</button>
-        <button class="btn btn-small" ng-click="toggleMin()" tooltip="After today restriction">Min date</button>
+        <div class="clearfix"></div>
     </div>
 
     <hr/>
     <p class="lead">Modal</p>
-    <div ng-controller="ModalDemoCtrl">
+    <div data-ng-controller="ModalDemoCtrl">
         <script type="text/ng-template" id="myModalContent.html">
-            < div class = "modal-header" >
-                < h3 > I 'm a modal!</h3>
+            <div class=modal-header>
+                <h3>I 'm a modal!</h3>
             </div>
             <div class="modal-body">
                 <ul>
-                    <li ng-repeat="item in items">
-                        <a ng-click="selected.item = item">{{ item }}</a>
+                    <li data-ng-repeat="item in items">
+                        <a data-ng-click="selected.item = item">{{ item }}</a>
                     </li>
                 </ul>
                 Selected: <b>{{ selected.item }}</b>
             <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="ok()">OK</button>
-                <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                <button class="btn btn-primary" data-ng-click="ok()">OK</button>
+                <button class="btn btn-warning" data-ng-click="cancel()">Cancel</button>
             </div>
         </script>
 
-        <button class="btn" ng-click="open()">Open a modal window!</button>
-        <p/>
-        <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+        <button class="btn" data-ng-click="open()">Open a modal window!</button>
+        <p></p>
+        <div data-ng-show="selected">Selection from a modal: {{ selected }}</div>
     </div>
 
     <hr/>
-
     <p class="lead">Sliders</p>
 
-    <br>
-    <slider ng-model="myslider" floor="0" ceiling="100" step="1" ng-init="myslider=25">
-    </slider>
-    <br>
-    <div class="well">
+    <div class="pull-left">
+        <br>
+        <slider data-ng-model="myslider" floor="0" ceiling="100" step="1" data-ng-init="myslider=25">
+        </slider>
+    </div>
+    <p class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;</p>
+    <div class="well pull-left">
         Slider value: {{myslider}}
     </div>
+    <div class="clearfix"></div>
 
-    <br>
-    <slider ng-model="mysliderLow" ng-model-range="mysliderHigh" floor="100" ceiling="1000" step="5" ng-init="mysliderLow=300;mysliderHigh=500">
-    </slider>
-    <br><br>
-    <div class="well">
+    <div class="pull-left">
+        <br>
+        <slider data-ng-model="mysliderLow" data-ng-model-range="mysliderHigh" floor="100" ceiling="1000" step="5" data-ng-init="mysliderLow=300;mysliderHigh=500">
+        </slider>
+    </div>
+    <p class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;</p>
+    <div class="well pull-left">
         <p>Low value: {{mysliderLow}}</p>
         <p>High value: {{mysliderHigh}}</p>
     </div>
+    <div class="clearfix"></div>
 
+    <hr/>
+    <p class="lead">QR code</p>
+
+    <div class="well pull-left">
+        <label for="inputQR">Text to encode:</label>
+        <input id="inputQR" data-ng-model="qrText" data-ng-init="qrText='http://appverse.org'">
+    </div>
+    <p class="pull-left">&nbsp;&nbsp;</p>
+    <div class="pull-left">
+        <qr correction-level="'M'" size="150" text="qrText"></qr>
+    </div>
+    <div class="clearfix"></div>
+
+    <hr>
     <p class="lead">And many others..</p>
 
 </div>

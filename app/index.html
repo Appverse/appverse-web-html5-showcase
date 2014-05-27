@@ -8,11 +8,10 @@
 <!--<![endif]-->
 
 <head>
-    <title ng-bind="$state.current.name">Appverse Web HTML5 Incubator</title>
+    <title data-ng-bind="$state.current.name">Appverse Web HTML5 Incubator</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
-    <meta name="" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
@@ -23,11 +22,11 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/cpustyle.css">
     <!-- endbuild -->
-
 </head>
+
 <!--Include the module with the app scope-->
 
-<body ng-app="appverseClientIncubatorApp">
+<body data-ng-app="appverseClientIncubatorApp">
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -66,31 +65,31 @@
                     <!-- Here you can see ui-sref in action again. Also notice the use of $state.includes, which
                  will set the links to 'active' if, for example on the first link, 'contacts' or any of
                  its descendant states are activated. -->
-                    <li ng-class="{ active: $state.includes('topics') }">
+                    <li data-ng-class="{ active: $state.includes('topics') }">
                         <a ui-sref="topics.list">REST</a>
                     </li>
-                    <li ng-class="{ active: $state.includes('ui') }">
+                    <li data-ng-class="{ active: $state.includes('ui') }">
                         <a ui-sref="ui">Gadgets</a>
                     </li>
-                    <li ng-class="{ active: $state.includes('cache') }">
+                    <li data-ng-class="{ active: $state.includes('cache') }">
                         <a ui-sref="cache.state1">Cache</a>
                     </li>
-                    <li ng-class="{ active: $state.includes('detection') }">
+                    <li data-ng-class="{ active: $state.includes('detection') }">
                         <a ui-sref="detection">Detection</a>
                     </li>
-                    <li ng-class="{ active: $state.includes('mobile') }">
+                    <li data-ng-class="{ active: $state.includes('mobile') }">
                         <a ui-sref="mobile">Mobile</a>
                     </li>
-                    <li ng-class="{ active: $state.includes('serverpush') }">
+                    <li data-ng-class="{ active: $state.includes('serverpush') }">
                         <a ui-sref="serverpush">Server Push</a>
                     </li>
-                    <li ng-class="{ active: $state.includes('websockets') }">
+                    <li data-ng-class="{ active: $state.includes('websockets') }">
                         <a ui-sref="websockets">Websockets</a>
                     </li>
-                    <li ng-class="{ active: $state.includes('translation') }">
+                    <li data-ng-class="{ active: $state.includes('translation') }">
                         <a ui-sref="translation">Translation</a>
                     </li>
-                    <li ng-class="{ active: $state.includes('about') }">
+                    <li data-ng-class="{ active: $state.includes('about') }">
                         <a ui-sref="about">About</a>
                     </li>
                 </ul>
@@ -147,26 +146,44 @@
     <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-    <script src="bower_components/lodash/dist/lodash.underscore.min.js"></script>
-    <script src="bower_components/restangular/dist/restangular.min.js"></script>
-    <script src="bower_components/angular-translate/angular-translate.min.js"></script>
-    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
-    <script src="bower_components/angular-dynamic-locale/src/tmhDinamicLocale.js"></script>
-    <script src="bower_components/angular-cache/dist/angular-cache.min.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
-    <script src="bower_components/venturocket-angular-slider/build/angular-slider.min.js"></script>
 
-    <!-- api -->
+    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+
+    <!-- UI components -->
+    <script src="bower_components/venturocket-angular-slider/build/angular-slider.min.js"></script>
+    <script src="bower_components/qrcode/lib/qrcode.min.js"></script>
+    <script src="bower_components/angular-qr/angular-qr.min.js"></script>
+
+    <!-- ########## API modules ########## -->
+
+    <!-- Cache module -->
+    <script src="bower_components/angular-cache/dist/angular-cache.min.js"></script>
     <script src="scripts/api/modules/api-cache.js"></script>
+
     <script src="scripts/api/modules/api-configuration.js"></script>
     <script src="scripts/api/modules/api-detection.js"></script>
     <script src="scripts/api/modules/api-logging.js"></script>
     <script src="scripts/api/modules/api-main.js"></script>
+
+    <!-- REST module -->
+    <script src="bower_components/lodash/dist/lodash.underscore.min.js"></script>
+    <script src="bower_components/restangular/dist/restangular.min.js"></script>
     <script src="scripts/api/modules/api-rest.js"></script>
+
+    <!-- Security module -->
     <script src="scripts/api/modules/api-security.js"></script>
+
+    <!-- Server Push module -->
     <script src="scripts/api/modules/api-serverpush.js"></script>
+
+    <!-- Translate module -->
     <script src="scripts/api/modules/api-translate.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.min.js"></script>
+    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+    <script src="bower_components/angular-dynamic-locale/src/tmhDinamicLocale.js"></script>
+
     <script src="scripts/api/modules/api-utils.js"></script>
+
     <!-- Directives should be included after the modules -->
     <script src="scripts/api/directives/cache-directives.js"></script>
     <script src="scripts/api/directives/rest-directives.js"></script>
