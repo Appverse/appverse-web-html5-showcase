@@ -6,7 +6,7 @@
         <button class="btn" data-ng-click="addAlert()">Add Alert</button>
     </div>
 
-    <hr/>
+    <hr>
     <p class="lead">Collapse</p>
     <div data-ng-controller="CollapseDemoCtrl">
         <button class="btn" data-ng-click="uidemoCollapsed = !uidemoCollapsed">Toggle collapse</button>
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <hr/>
+    <hr>
     <p class="lead">Date Picker</p>
     <div data-ng-controller="DatepickerDemoCtrl">
         <div class="well pull-left">
@@ -44,12 +44,12 @@
         <div class="clearfix"></div>
     </div>
 
-    <hr/>
+    <hr>
     <p class="lead">Modal</p>
     <div data-ng-controller="ModalDemoCtrl">
         <script type="text/ng-template" id="myModalContent.html">
-            <div class=modal-header>
-                <h3>I 'm a modal!</h3>
+            < div class = modal - header >
+                < h3 > I 'm a modal!</h3>
             </div>
             <div class="modal-body">
                 <ul>
@@ -69,7 +69,7 @@
         <div data-ng-show="selected">Selection from a modal: {{ selected }}</div>
     </div>
 
-    <hr/>
+    <hr>
     <p class="lead">Sliders</p>
 
     <div class="pull-left">
@@ -95,7 +95,7 @@
     </div>
     <div class="clearfix"></div>
 
-    <hr/>
+    <hr>
     <p class="lead">QR code</p>
 
     <div class="well pull-left">
@@ -107,6 +107,16 @@
         <qr correction-level="'M'" size="150" text="qrText"></qr>
     </div>
     <div class="clearfix"></div>
+
+    <hr>
+    <p class="lead">Xeditable</p>
+
+    <div class="well" ng-init="domain='Appverse'">
+        <p>Domain:
+            <a href="#" editable-text="domain">{{ domain || 'Please enter a domain name...' }}</a>
+        </p>
+        <p>Domain value: {{domain}}</p>
+    </div>
 
     <hr>
     <p class="lead">And many others..</p>
