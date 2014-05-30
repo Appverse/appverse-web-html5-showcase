@@ -1,8 +1,8 @@
 'use strict';
 
 /*
- * Controllers for cache demo.
- * Pay attention to injection of dependencies (factories, entities and Angular objects).
+ * Controllers for performance demo.
+ *
  */
 angular.module('appverseClientIncubatorApp')
 
@@ -182,31 +182,36 @@ angular.module('appverseClientIncubatorApp')
             }
         }])
 
-    .controller('restWebworkerController', ['$log',
-        function ($log) {
-            $log.debug('restWebworkerController loading');
-        }])
 
 
-    .controller('hpGridDataController', ['$log',
-        function($log){
 
-        }])
+    .controller('concurrentCallingDataController', ['$log', '$scope', '$q', 'RESTFactory',
+        function($log, $scope, $q, RESTFactory){
+            var gridData = [];
+            gridData.push('largeLoad_1');
+            gridData.push('largeLoad_2');
+            gridData.push('largeLoad_3');
+            var starttime = 0;
+            var currentTime = 0;
 
-
-    .controller('normalGridController', ['$scope', '$http',
-        function($scope, $http) {
             $scope.filterOptions = {
                 filterText: "",
                 useExternalFilter: true
             };
+
             $scope.totalServerItems = 0;
+
             $scope.pagingOptions = {
                 pageSizes: [250, 500, 1000],
                 pageSize: 250,
                 currentPage: 1
             };
+
             $scope.setPagingData = function(data, page, pageSize){
+
+                currentTime = new Date().getTime();
+                $scope.execTime = currentTime - starttime;
+
                 var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
                 $scope.myData = pagedData;
                 $scope.totalServerItems = data.length;
@@ -214,23 +219,40 @@ angular.module('appverseClientIncubatorApp')
                     $scope.$apply();
                 }
             };
+
             $scope.getPagedDataAsync = function (pageSize, page, searchText) {
-                setTimeout(function () {
-                    var data;
-                    if (searchText) {
-                        var ft = searchText.toLowerCase();
-                        $http.get('api/v1/largeLoad.json').success(function (largeLoad) {
+                starttime = new Date().getTime();
+                var data;
+                if (searchText) {
+                    $log.debug('hi searchText: ' + searchText);
+                    var ft = searchText.toLowerCase();
+
+                    RESTFactory.readParallelMultipleBatch(gridData).then(
+                        function(largeLoad){
                             data = largeLoad.filter(function(item) {
                                 return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
                             });
                             $scope.setPagingData(data,page,pageSize);
+                        },
+                        function(error){
+                            $log.error("Error calling data for grid: " + error);
                         });
-                    } else {
-                        $http.get('api/v1/largeLoad.json').success(function (largeLoad) {
-                            $scope.setPagingData(largeLoad,page,pageSize);
-                        });
-                    }
-                }, 100);
+                } else {
+
+                    RESTFactory.readParallelMultipleBatch(gridData).then(function(largeLoad){
+
+                        var dst = [];
+                        angular.forEach(largeLoad,function(largeLoadSubSet){
+                            $.merge(dst,largeLoadSubSet);
+                        })
+
+//                        $log.debug("largeLoad: " + JSON.stringify(dst));
+                        $scope.setPagingData(dst,page,pageSize);
+                    },function(error){
+                        $log.error("Error calling data for grid: " + error);
+                    });
+
+                };
             };
 
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
@@ -239,11 +261,14 @@ angular.module('appverseClientIncubatorApp')
                 if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
                     $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
                 }
+                currentTime = new Date().getTime();
+
             }, true);
             $scope.$watch('filterOptions', function (newVal, oldVal) {
                 if (newVal !== oldVal) {
                     $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
                 }
+                currentTime = new Date().getTime();
             }, true);
 
             $scope.gridOptions = {
@@ -252,6 +277,264 @@ angular.module('appverseClientIncubatorApp')
                 showFooter: true,
                 totalServerItems: 'totalServerItems',
                 pagingOptions: $scope.pagingOptions,
-                filterOptions: $scope.filterOptions
+                filterOptions: $scope.filterOptions,
+                columnDefs: [
+                    { field: 'name', displayName: 'name', enableCellEdit: false } ,
+                    { field: 'allowance', displayName: 'allowance', enableCellEdit: false }
+                ]
             };
-       }]);
+
+
+
+        }])
+   
+   .controller('normalGridController', ['$scope', '$log', 'RESTFactory',
+        function($scope, $log, RESTFactory) {
+            var gridData = 'largeLoad';
+            var starttime = 0;
+            var currentTime = 0;
+            
+            $scope.filterOptions = {
+                filterText: "",
+                useExternalFilter: true
+            };
+            
+            $scope.totalServerItems = 0;
+            
+            $scope.pagingOptions = {
+                pageSizes: [250, 500, 1000],
+                pageSize: 250,
+                currentPage: 1
+            };
+            
+            $scope.setPagingData = function(data, page, pageSize){
+
+                currentTime = new Date().getTime();
+                $scope.execTime = currentTime - starttime;
+
+                var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
+                $scope.myData = pagedData;
+                $scope.totalServerItems = data.length;
+                if (!$scope.$$phase) {
+                    $scope.$apply();
+                }
+            };
+            
+            $scope.getPagedDataAsync = function (pageSize, page, searchText) {
+                starttime = new Date().getTime();
+                var data;
+                if (searchText) {
+                        $log.debug('hi searchText: ' + searchText);
+                        var ft = searchText.toLowerCase();
+
+                    RESTFactory.readList(gridData).then(
+                        function(largeLoad){
+                            data = largeLoad.filter(function(item) {
+                                return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+                            });
+                            $scope.setPagingData(data,page,pageSize);
+                        },
+                        function(error){
+                            $log.error("Error calling data for grid: " + error);
+                        });
+                } else {
+                        RESTFactory.readList(gridData).then(function(data){
+                            $scope.setPagingData(data,page,pageSize);
+                        },function(error){
+                            $log.error("Error calling data for grid: " + error);
+                        });
+
+                };
+            };
+
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+
+            $scope.$watch('pagingOptions', function (newVal, oldVal) {
+                if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
+                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+                }
+                currentTime = new Date().getTime();
+
+            }, true);
+            $scope.$watch('filterOptions', function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+                }
+                currentTime = new Date().getTime();
+            }, true);
+
+            $scope.gridOptions = {
+                data: 'myData',
+                enablePaging: true,
+                showFooter: true,
+                totalServerItems: 'totalServerItems',
+                pagingOptions: $scope.pagingOptions,
+                filterOptions: $scope.filterOptions,
+                columnDefs: [
+                    { field: 'name', displayName: 'name', enableCellEdit: false } ,
+                    { field: 'allowance', displayName: 'allowance', enableCellEdit: false }
+                ]
+            };
+       }])
+
+   .controller('optimizedGridController', ['$scope', '$log', 'RESTFactory',
+        function($scope, $log, RESTFactory) {
+            var gridData = 'largeLoad';
+            var starttime = 0;
+            var currentTime = 0;
+
+            $scope.filterOptions = {
+                filterText: "",
+                useExternalFilter: true
+            };
+
+            $scope.totalServerItems = 0;
+
+            $scope.pagingOptions = {
+                pageSizes: [250, 500, 1000],
+                pageSize: 250,
+                currentPage: 1
+            };
+
+            $scope.setPagingData = function(data, page, pageSize){
+
+                currentTime = new Date().getTime();
+                $scope.execTime = currentTime - starttime;
+
+                var pagedData = data.slice((page - 1) * pageSize, page * pageSize);
+                $scope.myData = pagedData;
+                $scope.totalServerItems = data.length;
+                if (!$scope.$$phase) {
+                    $scope.$apply();
+                }
+            };
+
+            $scope.getPagedDataAsync = function (pageSize, page, searchText) {
+                starttime = new Date().getTime();
+                var data;
+                if (searchText) {
+                    $log.debug('hi searchText: ' + searchText);
+                    var ft = searchText.toLowerCase();
+
+                    RESTFactory.readBatch(gridData).then(
+                        function(largeLoad){
+                            data = largeLoad.filter(function(item) {
+                                return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+                            });
+                            $scope.setPagingData(data,page,pageSize);
+                        },
+                        function(error){
+                            $log.error("Error calling data for grid: " + error);
+                        });
+                } else {
+                    RESTFactory.readBatch(gridData).then(function(largeLoad){
+//                        $log.debug("largeLoad in $http: " + JSON.stringify(largeLoad));
+                        $scope.setPagingData(largeLoad,page,pageSize);
+                    },function(error){
+                        $log.error("Error calling data for grid: " + error);
+                    });
+
+                };
+            };
+
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+
+            $scope.$watch('pagingOptions', function (newVal, oldVal) {
+                if (newVal !== oldVal && newVal.currentPage !== oldVal.currentPage) {
+                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+                }
+                currentTime = new Date().getTime();
+
+            }, true);
+            $scope.$watch('filterOptions', function (newVal, oldVal) {
+                if (newVal !== oldVal) {
+                    $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+                }
+                currentTime = new Date().getTime();
+            }, true);
+
+            $scope.gridOptions = {
+                data: 'myData',
+                enablePaging: true,
+                showFooter: true,
+                totalServerItems: 'totalServerItems',
+                pagingOptions: $scope.pagingOptions,
+                filterOptions: $scope.filterOptions,
+                columnDefs: [
+                    { field: 'name', displayName: 'name', enableCellEdit: false } ,
+                    { field: 'allowance', displayName: 'allowance', enableCellEdit: false }
+                ]
+            };
+        }]);
+
+
+(function ( window ){
+    "use strict";
+
+    /**
+     * Decorate the $q service instance to add extra
+     * `spread()` and `resolve()` features
+     */
+    var $QDecorator = function ($provide)
+    {
+        // Partial application to build a resolve() function
+
+        var resolveWith = function( $q)
+        {
+            return function resolved( val )
+            {
+                var dfd = $q.defer();
+                dfd.resolve( val );
+
+                return dfd.promise;
+            };
+        };
+
+        // Register our $log decorator with AngularJS $provider
+
+        $provide.decorator('$q', ["$delegate",
+            function ($delegate)
+            {
+                if ( angular.isUndefined( $delegate.spread ))
+                {
+                    // Let's add a `spread()` that is very useful
+                    // when using $q.all()
+
+                    $delegate.spread = function( targetFn,scope )
+                    {
+                        return function()
+                        {
+                            var params = [].concat(arguments[0]);
+                            targetFn.apply(scope, params);
+                        };
+                    };
+                }
+
+                if ( angular.isUndefined( $delegate.resolve ))
+                {
+                    // Similar to $q.reject(), let's add $q.resolve()
+                    // to easily make an immediately-resolved promise
+                    // ... this is useful for mock promise-returning APIs.
+
+                    $delegate.resolve = resolveWith($delegate);
+                }
+
+                return $delegate;
+            }
+        ]);
+    };
+
+
+    if ( window.define != null )
+    {
+        window.define([ ], function ( )
+        {
+            return [ "$provide", $QDecorator ];
+        });
+
+    } else {
+
+        window.$QDecorator = [ "$provide", $QDecorator ];
+    }
+
+})( window );

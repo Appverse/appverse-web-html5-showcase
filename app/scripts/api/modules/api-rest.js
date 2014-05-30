@@ -93,8 +93,8 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
  * Contains methods for data finding (demo).
  * This module provides basic quick standard access to a REST API.
  */
-.factory('RESTFactory', ['$log', 'Restangular',
-    function ($log, Restangular) {
+.factory('RESTFactory', ['$log', 'Restangular', '$http', 'REST_CONFIG', '$q',
+    function ($log, Restangular, $http, REST_CONFIG, $q) {
 
         ////////////////////////////////////////////////////////////////////////////////////
         // ADVICES ABOUT PROMISES
@@ -142,8 +142,62 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
          * @returns {object} List of values
          */
         factory.readList = function (path) {
-            return Restangular.all(path).getList().$object;
+            return Restangular.all(path).getList();
         };
+
+        /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#readBatch
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @description Returns a complete list from a REST resource.
+         * It is specially recommended when retrieving large amounts of data. Restangular adds 4 additional fields
+         * per each record: route, reqParams, parentResource and restangular Collection. These fields add a lot of weight
+         * to the retrieved JSON structure. So, we need the lightest as possible data weight.
+         * This method uses the $http AngularJS service. So, Restangular object settings are not applicable.
+         * @returns {object} Promise with a large data structure
+         */
+       factory.readBatch = function (path) {
+            var d = $q.defer();
+            $http.get(REST_CONFIG.BaseUrl + '/' + path + '.json').success(function(data){
+                d.resolve(data);
+            });
+            return d.promise;
+        };
+
+        /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#readParallelMultipleBatch
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} paths An array with URLs for each resource
+         * @description Returns a combined result from several REST resources in chained promises.
+         * It is specially recommended when retrieving large amounts of data. Restangular adds 4 additional fields
+         * per each record: route, reqParams, parentResource and restangular Collection. These fields add a lot of weight
+         * to the retrieved JSON structure. So, we need the lightest as possible data weight.
+         * This method uses the $http AngularJS service. So, Restangular object settings are not applicable.
+         * @returns {object} Promise with a large data structure
+         */
+       factory.readParallelMultipleBatch = function (paths) {
+           var promises = [];
+
+           angular.forEach(paths, function (path) {
+
+               var deferred = $q.defer();
+               factory.readBatch(path).then(function (data) {
+                       deferred.resolve(data);
+                   },
+                   function (error) {
+                       deferred.reject();
+                   });
+
+               promises.push(deferred.promise);
+
+           });
+
+           return $q.all(promises);
+       };
+
+
 
        /**
          * @ngdoc method
@@ -241,22 +295,22 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
 
 
 
-//    .factory('MulticastRESTFactory', ['$log', 'Restangular', 'REST_CONFIG',
-//        function ($log, Restangular, REST_CONFIG) {
-//            var factory = {};
-//            var multicastSpawn = REST_CONFIG.Multicast_enabled;
-//            var _this = this;
-//
-//
-//            factory.readObject = function (path, params) {
-//                if(params && params.length >0){
-//
-//                }else{
-//                    //No params. It is a normal call
-//                    return Restangular.one(path).get().$object;
-//                }
-//
-//            };
-//
-//            return factory;
-//        }])
+    .factory('MulticastRESTFactory', ['$log', 'Restangular', 'REST_CONFIG',
+        function ($log, Restangular, REST_CONFIG) {
+            var factory = {};
+            var multicastSpawn = REST_CONFIG.Multicast_enabled;
+            var _this = this;
+
+
+            factory.readObject = function (path, params) {
+                if(params && params.length >0){
+
+                }else{
+                    //No params. It is a normal call
+                    return Restangular.one(path).get().$object;
+                }
+
+            };
+
+            return factory;
+        }])

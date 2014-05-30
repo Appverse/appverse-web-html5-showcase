@@ -18,12 +18,16 @@
  *
  * @author Steven Czerwinski <czerwin@scalyr.com>
  */
-defineScalyrAngularModule('slyRepeat', ['gatedScope'])
+//defineScalyrAngularModule('slyRepeat', ['gatedScope'])
+'use strict';
+
+angular.module('AppCache')
+
     .directive('slyRepeat', ['$animate', '$parse', function ($animate, $parse) {
 
         /**
          * Sets the scope contained in elementScope to gate all its
-         * watchers based on the isActiveForRepeat proprety.
+         * watchers based on the isActiveForRepeat property.
          *
          * @param {Object} elementScope The object containing the
          *   scope and isActiveForRepeat properties.
