@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="styles/fade.css">
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/cpustyle.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/ng-grid/ng-grid.min.css" />
+    <link rel="stylesheet" type="text/css" href="styles/jquery.mobile.css">
     <!-- endbuild -->
 
 </head>
@@ -81,14 +83,14 @@
                     <li ng-class="{ active: $state.includes('mobile') }">
                         <a ui-sref="mobile">Mobile</a>
                     </li>
-                    <li ng-class="{ active: $state.includes('serverpush') }">
-                        <a ui-sref="serverpush">Server Push</a>
-                    </li>
                     <li ng-class="{ active: $state.includes('websockets') }">
                         <a ui-sref="websockets">Websockets</a>
                     </li>
                     <li ng-class="{ active: $state.includes('translation') }">
                         <a ui-sref="translation">Translation</a>
+                    </li>
+                    <li ng-class="{ active: $state.includes('performance') }">
+                        <a ui-sref="performance.webworkers">Performance</a>
                     </li>
                     <li ng-class="{ active: $state.includes('about') }">
                         <a ui-sref="about">About</a>
@@ -153,6 +155,8 @@
     <script src="bower_components/angular-dynamic-locale/src/tmhDinamicLocale.js"></script>
     <script src="bower_components/angular-cache/dist/angular-cache.min.js"></script>
     <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="bower_components/ng-grid/ng-grid-2.0.11.debug.js"></script>
+    <!-- endbuild -->
 
     <!-- api -->
     <script src="scripts/api/modules/api-cache.js"></script>
@@ -168,6 +172,9 @@
     <!-- Directives should be included after the modules -->
     <script src="scripts/api/directives/cache-directives.js"></script>
     <script src="scripts/api/directives/rest-directives.js"></script>
+    <script src="scripts/api/modules/api-performance.js"></script>
+    <!-- endbuild -->
+
 
     <!-- app -->
     <script src="scripts/app.js"></script>
@@ -181,6 +188,7 @@
     <script src="scripts/controllers/mobile-controllers.js"></script>
     <script src="scripts/factories/app-factory.js"></script>
     <script src="scripts/states/app-states.js"></script>
+    <script src="scripts/controllers/performance-controllers.js"></script>
     <!-- endbuild -->
 </body>
 

@@ -38,9 +38,10 @@ angular.module('appverseClientIncubatorApp')
                 // topics.detail
                 // topics.detail.item
                 // ui.list
-                // serverpush
+                // server push
+                // translation
+                // performance
                 // about
-                //
                 //////////////////////////
 
                 // We must configure states using $stateProvider.
@@ -309,6 +310,31 @@ angular.module('appverseClientIncubatorApp')
                     templateUrl: 'views/translation/translation.html',
                     controller: 'translationController'
                 })
+
+                //////////////////////////
+                // SECTION: PERFORMANCE //
+                //////////////////////////
+                    .state('performance', {
+
+                        abstract: true,
+                        url: '/performance',
+                        templateUrl: 'views/demo/performance/performance.html',
+                        controller: 'performanceController'
+                    })
+
+                    .state('performance.webworkers', {
+
+                        url: '/webworkers',
+                        templateUrl: 'views/demo/performance/performance.webworkers.html'
+                    })
+
+                    .state('performance.hpcontrols', {
+
+                        url: '/hpcontrols',
+                        templateUrl: 'views/demo/performance/performance.hpcontrols.html',
+                        controller: ''
+                    })
+
 
                 ////////////////////
                 // SECTION: About //

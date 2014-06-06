@@ -271,6 +271,21 @@ Future updates of Restangular imply review of this section in order to keep cons
     BaseUrl: '/api/v1',
 
     /*
+    If enabled, requests via REST module will be multicasted.
+     */
+//    Multicast_enabled: true,
+
+     /*
+     The base URLs array for all multicast calls to your API.
+     */
+//    Multicast_baseUrl: ['/api/v1', '/api/v2', '/api/v3', '/api/v4'],
+
+    /*
+    Number of requests to be spawned in multicast mode for each
+     */
+//    Multicast_spawn: 1,
+
+    /*
     These are the fields that you want to save from your parent resources if you need to display them.
     By default this is an Empty Array which will suit most cases.
     */
@@ -533,4 +548,56 @@ WEBSOCKETS MODULE CONFIGURATION
     WS_FAILED_CONNECTION: 'Failed to open a Websocket connection',
     WS_NOT_SUPPORTED: 'HTML5 Websockets specification is not supported in this browser.',
     WS_SUPPORTED: 'HTML5 Websockets specification is supported in this browser.'
-});
+})
+
+/////////////////////////////
+//PERFORMANCE
+//Includes default information about the different facets for a better performance in the app.
+//There are three main sections: webworkers management, shadow dom objetc and High performance DOM directive.
+/////////////////////////////
+.constant('PERFORMANCE_CONFIG', {
+/*
+ * WEBWORKERS SECTION
+ * To test multiple parallelized threads with web workers a thread pool or task queue is defined.
+ * The goal is focused on using enough threads to improve the execution but not too much or the browser system can turn
+ * into unstable.
+ * You can configure the maximum number of concurrent web workers when this pool is instantiated,
+ * and any 'task' you submit will be executed using one of the available threads from the pool.
+ * Note that the app is not really pooling threads, but just using this pool to control the number of concurrently
+ * executing web workers due to the high cost for start them.
+ */
+        /*
+        Maximum number of simultaneous executing threads used by workers
+         */
+        webworker_pooled_threads: 4,
+        /*
+        If true, only workers in the web worker_authorized_workers property might be executed.
+        Other invoked workers will not result in a worker call.
+         */
+        webworker_authorized_workers_only: true,
+        /*
+        Folder for workers' files
+         */
+        webworker_directory: "resources/webworkers/",
+        /*
+        List of authorized workers with its ID.
+        The ID is used to be passed in the directive's attribute.
+         */
+        webworker_authorized_workers: [
+            {
+                'id': 'w1',
+                'type': 'dedicated',
+                'poolSize': 4,
+                'file': 'RenderImage.js'
+            },
+            {
+                'id': 'w2',
+                'type': 'dedicated',
+                'poolSize': 4,
+                'file': 'RestMultiRequest.js'
+            }
+        ],
+        webworker_dedicated_literal: "dedicated",
+        webworker_shared_literal: "shared",
+        webworker_Message_template: 'scripts/api/directives/webworkerMessage.html'
+    });
