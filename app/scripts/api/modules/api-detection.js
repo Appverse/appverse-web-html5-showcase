@@ -1,10 +1,11 @@
 'use strict';
 
-////////////////////////////////////////////////////////////////////////////
-// COMMON API - 0.1
-// DEVICE/BROWSER DETECTION (AppDetection)
-////////////////////////////////////////////////////////////////////////////
-
+/**
+ * @ngdoc module
+ * @name AppDetection
+ * @description
+ * Provides browser and network detection.
+ */
 angular.module('AppDetection', [])
 
 .run(['$log', 'Detection', '$rootScope', '$window',
@@ -62,6 +63,12 @@ angular.module('AppDetection', [])
         });
     }])
 
+/**
+ * @ngdoc service
+ * @name AppDetection.provider:Detection
+ * @description
+ * Contains methods for browser and network detection.
+ */
 .provider('Detection',
     function () {
 
@@ -143,10 +150,24 @@ angular.module('AppDetection', [])
         this.isOnline = window.navigator.onLine;
         this.isPollingOnlineStatus = false;
 
+        /**
+         * @ngdoc method
+         * @name AppDetection.provider:Detection#testOnlineStatus
+         * @methodOf AppDetection.provider:Detection
+         * @param {String} path The item URL
+         * @description Tries to fetch a file on the server and fire events for fail and success.
+         */
         this.testOnlineStatus = function () {
             fetch("resources/detection/ping.json");
         };
 
+        /**
+         * @ngdoc method
+         * @name AppDetection.provider:Detection#startPollingOnlineStatus
+         * @methodOf AppDetection.provider:Detection
+         * @param {number} interval Time in milliseconds
+         * @description Tries to fetch a file on the server at regular intervals and fire events for fail and success.
+         */
         this.startPollingOnlineStatus = function (interval) {
             this.isPollingOnlineStatus = setInterval(this.testOnlineStatus, interval);
         };

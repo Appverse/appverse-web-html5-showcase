@@ -24,7 +24,8 @@ module.exports = function (grunt) {
     // configurable paths
     var yeomanConfig = {
         app: 'app',
-        dist: 'dist'
+        dist: 'dist',
+        doc: 'doc'
     };
 
     try {
@@ -62,6 +63,14 @@ module.exports = function (grunt) {
                     '{.tmp,<%= yeoman.app %>}/configuration/**/*.json',
                     '<%= yeoman.app %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
+            },
+            karma: {
+                files: ['app/scripts/**/*.js', 'test/unit/**/*.js'],
+                tasks: ['karma:unit:run']
+            },
+            doc: {
+                files: ['{.tmp,<%= yeoman.app %>}/scripts/**/*.js'],
+                tasks: ['docular', 'open:doc']
             }
         },
         autoprefixer: {
@@ -79,7 +88,8 @@ module.exports = function (grunt) {
             options: {
                 port: 9000,
                 // Change this to '0.0.0.0' to access the server from outside.
-                hostname: 'localhost'
+                //hostname: 'localhost'
+                hostname: '0.0.0.0'
             },
             livereload: {
                 options: {
@@ -159,6 +169,7 @@ module.exports = function (grunt) {
                 options: {
                     middleware: function (connect) {
                         return [mountFolder(connect, '.tmp'),
+                            mountFolder(connect, yeomanConfig.app),
                             mountFolder(connect, 'test')];
                     }
                 }
@@ -169,11 +180,22 @@ module.exports = function (grunt) {
                         return [mountFolder(connect, yeomanConfig.dist)];
                     }
                 }
+            },
+            doc: {
+                options: {
+                    port: 3000,
+                    middleware: function (connect) {
+                        return [mountFolder(connect, yeomanConfig.doc)];
+                    }
+                }
             }
         },
         open: {
             server: {
                 url: 'http://localhost:<%= connect.options.port %>'
+            },
+            doc: {
+                url: 'http://appverse.gftlabs.com:3000'
             }
         },
         clean: {
@@ -387,7 +409,8 @@ module.exports = function (grunt) {
             test: [
                 'coffee',
                 'compass',
-                'copy:styles'
+                'copy:styles',
+                'copy:i18n'
             ],
             dist: [
                 'coffee',
@@ -401,7 +424,7 @@ module.exports = function (grunt) {
         karma: {
             unit: {
                 configFile: 'karma.conf.js',
-                singleRun: true
+                background: true
             }
         },
         cdnify: {
@@ -427,20 +450,62 @@ module.exports = function (grunt) {
                     ]
                 }
             }
+        },
+        docular: {
+            showDocularDocs: false,
+            showAngularDocs: true,
+            docular_webapp_target: "doc",
+            groups: [
+                {
+                    groupTitle: 'Appverse HTML5',
+                    groupId: 'appverse',
+                    groupIcon: 'icon-beer',
+                    sections: [
+                        {
+                            id: "commonapi",
+                            title: "Common API",
+                            showSource: true,
+                            scripts: ["app/scripts/api/modules", "app/scripts/api/directives"
+                            ],
+                            docs: ["ngdocs/commonapi"],
+                            rank: {}
+                        }
+                    ]
+                }, {
+                    groupTitle: 'Angular jQM',
+                    groupId: 'angular-jqm',
+                    groupIcon: 'icon-mobile-phone',
+                    sections: [
+                        {
+                            id: "jqmapi",
+                            title: "API",
+                            showSource: true,
+                            scripts: ["app/scripts/api/angular-jqm.js"
+                            ],
+                            docs: ["ngdocs/jqmapi"],
+                            rank: {}
+                        }
+                    ]
+                }
+            ]
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-docular');
+
     grunt.registerTask('server', function (target) {
-        if (target === 'dist') {
-            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
-        }
+//        if (target === 'dist') {
+//            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+//        }
 
         grunt.task.run([
             'clean:server',
             'concurrent:server',
             'autoprefixer',
             'connect:livereload',
-            'open',
+            'open:server',
             'watch'
         ]);
     });
@@ -451,6 +516,18 @@ module.exports = function (grunt) {
         'autoprefixer',
         'connect:test',
         'karma'
+    ]);
+
+    grunt.registerTask('devmode', [
+        'karma:unit',
+        'watch:karma'
+    ]);
+
+    grunt.registerTask('doc', [
+        'docular',
+        'connect:doc',
+        'open:doc',
+        'watch:doc'
     ]);
 
     grunt.registerTask('dist', [
@@ -467,8 +544,11 @@ module.exports = function (grunt) {
         'rev',
         'usemin',
         'connect:dist',
-        'open',
-        'watch'
+        'docular',
+        //'connect:doc',
+        //'open:server',
+        //'open:doc',
+        //'watch'
     ]);
 
     grunt.registerTask('default', [

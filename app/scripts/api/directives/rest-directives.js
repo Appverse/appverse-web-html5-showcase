@@ -2,9 +2,21 @@
 
 angular.module('AppREST')
 /**
- * Usage:
- * <div rest rest-path="" rest-id="" rest-name="" rest-loading-text="" rest-error-text="" />
- **/
+ * @ngdoc directive
+ * @name AppREST.directive:rest
+ * @restrict A
+ *
+ * @description
+ * Retrieves JSON data
+ *
+ * @example
+ <example module="AppREST">
+   <file name="index.html">
+     <p>REST test</p>
+     <div rest rest-path="" rest-id="" rest-name="" rest-loading-text="" rest-error-text="" />
+   </file>
+ </example>
+ */
 .directive('rest', ['$log', 'Restangular',
     function ($log, Restangular) {
 

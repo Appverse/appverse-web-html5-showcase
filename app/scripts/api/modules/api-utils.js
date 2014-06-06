@@ -9,41 +9,39 @@ angular.module('AppUtils', ['AppConfiguration'])
  *
  * @description
  * This factory provides common utilities for API functionalities.
- *
- * @param none
  */
-    .factory('UtilFactory', ['$log',
+.factory('UtilFactory', ['$log',
         function ($log) {
-            var factory ={};
-            /**
+        var factory = {};
+        /**
              @function
              @param properties content of the static external properties file
              @param area group of properties
              @param property property to know the value in
              @description Deletes an item from a list.
              */
-            factory.findPropertyValueByName = function (properties, area, property) {
-                for (var i = 0; i < properties.length; i++) {
-                    if (properties[i].area == area) {
-                        for (var p = 0; p < properties[i].properties.length; p++) {
-                            if (properties[i].properties[p].property == property) {
-                                return properties[i].properties[p].value;
-                            }
+        factory.findPropertyValueByName = function (properties, area, property) {
+            for (var i = 0; i < properties.length; i++) {
+                if (properties[i].area == area) {
+                    for (var p = 0; p < properties[i].properties.length; p++) {
+                        if (properties[i].properties[p].property == property) {
+                            return properties[i].properties[p].value;
                         }
                     }
                 }
-                return null;
-
-            };
-
-            factory.newRandomKey = function (coll, key, currentKey) {
-                var randKey;
-                do {
-                    randKey = coll[Math.floor(coll.length * Math.random())][key];
-                } while (randKey == currentKey);
-                return randKey;
             }
+            return null;
 
-            return factory;
+        };
+
+        factory.newRandomKey = function (coll, key, currentKey) {
+            var randKey;
+            do {
+                randKey = coll[Math.floor(coll.length * Math.random())][key];
+            } while (randKey == currentKey);
+            return randKey;
+        }
+
+        return factory;
 
     }]);

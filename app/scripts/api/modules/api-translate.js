@@ -1,16 +1,18 @@
 'use strict';
 
-////////////////////////////////////////////////////////////////////////////
-// COMMON API - 0.1
-// INTERNATIONALIZATION MODULE (AppTranslate)
-////////////////////////////////////////////////////////////////////////////
-// The Internationalization module handles languages in application.
-// It should be directly configurable by developers.
-// WARNING
-// Items in each translations object must match to items defined
-// in the Configuration module.
-////////////////////////////////////////////////////////////////////////////
-
+/**
+ * @ngdoc module
+ * @name AppTranslate
+ * @requires AppConfiguration
+ * @description
+ * The Internationalization module handles languages in application.
+ *
+ * It should be directly configurable by developers.
+ *
+ * WARNING:
+ *
+ * Items in each translations object must match to items defined in the Configuration module.
+ */
 angular.module('AppTranslate', ['pascalprecht.translate', 'AppConfiguration', 'tmh.dynamicLocale'])
 
 .config(['$translateProvider', 'I18N_CONFIG', 'tmhDynamicLocaleProvider',
