@@ -1,7 +1,6 @@
 'use strict';
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// COMMON API - MAIN
+//////////////////////// COMMON API - MAIN //////////////////////////
 // The Main module includes other API modules:
 // - Bootstrap-based styling and gadgets
 // - Routing
@@ -12,13 +11,23 @@
 // - Security
 // - Internationalization
 // - Logging
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 
-//angular.module('jqm', []);
 
-angular.module('COMMONAPI', ['ui.bootstrap', 'ui.router', 'AppCache', 'AppConfiguration', 'AppDetection', 'jqm', 'AppLogging', 'AppREST', 'AppSecurity', 'AppServerPush', 'AppTranslate', 'AppPerformance'])
+/* Optional modules initialization */
+var optionalModules = ['xeditable', 'ja.qr', 'vr.directives.slider', 'ui.bootstrap', 'AppDetection', 'AppREST', 'AppTranslate'];
+
+angular.forEach(optionalModules, function (element) {
+    try {
+        angular.module(element);
+    } catch (e) {
+        angular.module(element, []);
+    }
+});
+
+/* Main module */
+angular.module('COMMONAPI', optionalModules.concat(['ui.router', 'AppCache', 'AppConfiguration', 'jqm', 'AppLogging', 'AppSecurity', 'AppServerPush', 'AppPerformance']))
+
     .run(['$rootScope', '$state', '$stateParams',
         function ($rootScope, $state, $stateParams) {
 
@@ -28,4 +37,10 @@ angular.module('COMMONAPI', ['ui.bootstrap', 'ui.router', 'AppCache', 'AppConfig
             // to active whenever 'contacts.list' or one of its decendents is active.
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
+    }])
+
+.config(['$compileProvider',
+    function ($compileProvider) {
+
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|itms-services):/);
         }]);

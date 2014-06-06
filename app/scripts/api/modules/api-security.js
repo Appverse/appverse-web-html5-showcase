@@ -100,36 +100,35 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /**
-* @ngdoc module
-* @name AppSecurity
-* @description
-* 3 services:
-* 
-*  A-AUTHENTICATION
-*  Protect username and password
-*  Manages authentication operations
-*  Handles user session
-*  
-* B-REMOTE COMMUNICATION AUTHORIZATION HANDLING
-*  Based on OAuth 2.0 integration (RFC 6749, October 2012).
-*  It handles token for the current user session.
-*  
-* C-INTERNAL AUTHORIZATION
-*  It handles access to site sections
-*  Includes roles management and rights checking
-*/
+ * @ngdoc module
+ * @name AppSecurity
+ * @description
+ * 3 services:
+ *
+ *  A-AUTHENTICATION
+ *  Protect username and password
+ *  Manages authentication operations
+ *  Handles user session
+ *
+ * B-REMOTE COMMUNICATION AUTHORIZATION HANDLING
+ *  Based on OAuth 2.0 integration (RFC 6749, October 2012).
+ *  It handles token for the current user session.
+ *
+ * C-INTERNAL AUTHORIZATION
+ *  It handles access to site sections
+ *  Includes roles management and rights checking
+ */
 angular.module('AppSecurity', [
-  'ngCookies', // Angular support for cookies
-  'restangular', // Common API Module: REST comm
-  'AppCache', // Common API Module: cache services
-  'AppConfiguration' // Common API Module: configuration
+    'ngCookies', // Angular support for cookies
+    'AppCache', // Common API Module: cache services
+    'AppConfiguration' // Common API Module: configuration
 ])
 
 
 .run(['$log',
     function ($log) {
         $log.info('AppSecurity run');
- }])
+    }])
 
 /*@ngdoc module
  * @name AppSecurity
@@ -261,7 +260,7 @@ angular.module('AppSecurity', [
          * @param {object} hash The initial string
          * @description
          * Parse the fragment URI into an object
-         * @returns {object} The value of the token 
+         * @returns {object} The value of the token
          */
         function getTokenFromString(hash) {
             var splitted = hash.split('&');
@@ -299,7 +298,7 @@ angular.module('AppSecurity', [
         }
 
 
-         /**
+        /**
          * @ngdoc method
          * @name AppSecurity.factory:Oauth_AccessToken#setTokenInCookies
          * @methodOf AppSecurity.factory:Oauth_AccessToken
@@ -338,7 +337,7 @@ angular.module('AppSecurity', [
         };
 
 
-       /**
+        /**
          * @ngdoc method
          * @name AppSecurity.factory:Oauth_AccessToken#setExpiresAt
          * @methodOf AppSecurity.factory:Oauth_AccessToken
@@ -388,7 +387,7 @@ angular.module('AppSecurity', [
         var url;
 
 
-        
+
         //TODO Check against other oauth providers (linkedin, twitter).
 
         /*
@@ -403,7 +402,7 @@ angular.module('AppSecurity', [
          *https://www.google.com/accounts/OAuthAuthorizeToken?scope=http%3A%2F%2Fwww.google.com%2Fm8%2Ffeeds&oauth_token=REQUEST_TOKEN&oauth_callback=http%3A%2F%2Fwww.mysite.com%2Fcallback
          *3-User authorizes your app, then exchange the request token for an access token.
          */
-        
+
 
         /**
          * @ngdoc method
@@ -1212,7 +1211,7 @@ angular.module('AppSecurity', [
         };
 
 
-         /**
+        /**
          * @ngdoc method
          * @name AppSecurity.factory:Oauth_RequestWrapper#setAuthorizationHeader
          * @methodOf AppSecurity.factory:Oauth_RequestWrapper
@@ -1266,13 +1265,13 @@ angular.module('AppSecurity', [
 
         return {
 
-           /**
-            * @ngdoc method
-            * @name AppSecurity.factory:RoleService#validateRoleAdmin
-            * @methodOf AppSecurity.factory:RoleService
-            * @description Check if the passed user has a role in the adminsitrator family
-            * @returns {boolean} True if the role of the usder has admin previleges
-            */
+            /**
+             * @ngdoc method
+             * @name AppSecurity.factory:RoleService#validateRoleAdmin
+             * @methodOf AppSecurity.factory:RoleService
+             * @description Check if the passed user has a role in the adminsitrator family
+             * @returns {boolean} True if the role of the usder has admin previleges
+             */
             validateRoleAdmin: function () {
 
                 var roles = CacheFactory._browserCache.currentUser.roles
@@ -1292,14 +1291,14 @@ angular.module('AppSecurity', [
                 }
             },
 
-           /**
-            * @ngdoc method
-            * @name AppSecurity.factory:RoleService#validateRoleInUserOther
-            * @methodOf AppSecurity.factory:RoleService
-            * @param {string} role The role to be validated
-            * @description Check if the passed user has a given role
-            * @returns {boolean} True if the user has that role
-            */
+            /**
+             * @ngdoc method
+             * @name AppSecurity.factory:RoleService#validateRoleInUserOther
+             * @methodOf AppSecurity.factory:RoleService
+             * @param {string} role The role to be validated
+             * @description Check if the passed user has a given role
+             * @returns {boolean} True if the user has that role
+             */
             validateRoleInUserOther: function (role) {
                 if (CacheFactory._browserCache.currentUser) {
                     var user = CacheFactory._browserCache.currentUser;
@@ -1326,30 +1325,30 @@ angular.module('AppSecurity', [
 
         return {
 
-           /**
-            * @ngdoc method
-            * @name AppSecurity.factory:AuthenticationService#login
-            * @methodOf AppSecurity.factory:AuthenticationService
-            * @param {string} name Name of the user
-            * @param {object} roles Set of roles of the user as array
-            * @param {string} token The token from the oauth server
-            * @param {boolean} isLogged If the user is logged or not
-            * @param {string} role The role to be validated
-            * @description Sets the new logged user
-            */
+            /**
+             * @ngdoc method
+             * @name AppSecurity.factory:AuthenticationService#login
+             * @methodOf AppSecurity.factory:AuthenticationService
+             * @param {string} name Name of the user
+             * @param {object} roles Set of roles of the user as array
+             * @param {string} token The token from the oauth server
+             * @param {boolean} isLogged If the user is logged or not
+             * @param {string} role The role to be validated
+             * @description Sets the new logged user
+             */
             login: function (name, roles, token, isLogged) {
                 var user = new User(name, roles, token, isLogged);
                 UserService.setCurrentUser(user);
             },
 
-           /**
-            * @ngdoc method
-            * @name AppSecurity.factory:AuthenticationService#isLoggedIn
-            * @methodOf AppSecurity.factory:AuthenticationService
-            * @param {string} role The role to be validated
-            * @description Check if the user is logged
-            * @returns {boolean}  true if is already logged
-            */
+            /**
+             * @ngdoc method
+             * @name AppSecurity.factory:AuthenticationService#isLoggedIn
+             * @methodOf AppSecurity.factory:AuthenticationService
+             * @param {string} role The role to be validated
+             * @description Check if the user is logged
+             * @returns {boolean}  true if is already logged
+             */
             isLoggedIn: function () {
                 if (UserService.getCurrentUser()) {
                     return true;
@@ -1358,13 +1357,13 @@ angular.module('AppSecurity', [
                 }
             },
 
-           /**
-            * @ngdoc method
-            * @name AppSecurity.factory:AuthenticationService#logOut
-            * @methodOf AppSecurity.factory:AuthenticationService
-            * @param {AppSecurity.global:User} user The User object to be logged out
-            * @description Removes the current user from the app
-            */
+            /**
+             * @ngdoc method
+             * @name AppSecurity.factory:AuthenticationService#logOut
+             * @methodOf AppSecurity.factory:AuthenticationService
+             * @param {AppSecurity.global:User} user The User object to be logged out
+             * @description Removes the current user from the app
+             */
             logOut: function (user) {
                 UserService.removeUser(user);
             }
@@ -1387,38 +1386,38 @@ angular.module('AppSecurity', [
 
         return {
 
-           /**
-            * @ngdoc method
-            * @name AppSecurity.factory:UserService#setCurrentUser
-            * @methodOf AppSecurity.factory:UserService
-            * @param {AppSecurity.global:User} loggedUser The currently logged user
-            * @description Writes the current user in cache ('currentUser').
-            */
+            /**
+             * @ngdoc method
+             * @name AppSecurity.factory:UserService#setCurrentUser
+             * @methodOf AppSecurity.factory:UserService
+             * @param {AppSecurity.global:User} loggedUser The currently logged user
+             * @description Writes the current user in cache ('currentUser').
+             */
             setCurrentUser: function (loggedUser) {
                 $log.debug('Setting new user:');
                 $log.debug(loggedUser.print());
                 CacheFactory._browserCache.currentUser = loggedUser;
                 $log.debug('New user has been stored to cache.');
             },
-            
-           /**
-            * @ngdoc method
-            * @name AppSecurity.factory:UserService#getCurrentUser
-            * @methodOf AppSecurity.factory:UserService
-            * @description Retrieves the current user from cache ('currentUser').
-            * @returns {AppSecurity.global:User} The currently logged user
-            */
+
+            /**
+             * @ngdoc method
+             * @name AppSecurity.factory:UserService#getCurrentUser
+             * @methodOf AppSecurity.factory:UserService
+             * @description Retrieves the current user from cache ('currentUser').
+             * @returns {AppSecurity.global:User} The currently logged user
+             */
             getCurrentUser: function () {
                 return CacheFactory._browserCache.currentUser;
             },
 
-           /**
-            * @ngdoc method
-            * @name AppSecurity.factory:UserService#removeUser
-            * @methodOf AppSecurity.factory:UserService
-            * @param {AppSecurity.global:User} loggedUser The currently logged user
-            * @description Removes the current user from the app, including cache.
-            */
+            /**
+             * @ngdoc method
+             * @name AppSecurity.factory:UserService#removeUser
+             * @methodOf AppSecurity.factory:UserService
+             * @param {AppSecurity.global:User} loggedUser The currently logged user
+             * @description Removes the current user from the app, including cache.
+             */
             removeUser: function (loggedUser) {
                 CacheFactory._browserCache.currentUser = null;
                 CacheFactory._scopeCache.put('login_status', 'Not connected');
@@ -1491,14 +1490,14 @@ function isSameDomain(requestUrl, locationUrl) {
 };
 
 /**
-  * @doc function
-  * @name AppSecurity.global:User
-  * @param {string} name The name of the user to be registered
-  * @param {object} roles Array with the list of assigned roles
-  * @param {string} token The provided encrypted oauth token
-  * @param {boolean} isLogged The user is logged or not
-  * @description Entity with main data about a user to be handled by the module
-  */
+ * @doc function
+ * @name AppSecurity.global:User
+ * @param {string} name The name of the user to be registered
+ * @param {object} roles Array with the list of assigned roles
+ * @param {string} token The provided encrypted oauth token
+ * @param {boolean} isLogged The user is logged or not
+ * @description Entity with main data about a user to be handled by the module
+ */
 function User(name, roles, token, isLogged) {
     this.name = name;
     //Array
