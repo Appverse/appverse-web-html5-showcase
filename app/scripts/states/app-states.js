@@ -55,9 +55,12 @@ angular.module('appverseClientIncubatorApp')
 
                     // Use a url of "/" to set a states as the "index".
                     url: "/home",
-                    templateUrl: 'views/main.html'
+                    templateUrl: 'views/main_oauth.html',
+                    //templateUrl: 'views/main.html'
+                    controller: 'OauthLoginCtrl'
 
                 })
+                
 
                 ///////////////////
                 // State: Topics //

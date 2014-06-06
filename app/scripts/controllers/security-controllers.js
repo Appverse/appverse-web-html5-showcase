@@ -7,11 +7,14 @@ angular.module('appverseClientIncubatorApp')
 
 /**
  * @ngdoc object
- * @name oauth
+ * @name GooglePlusLoginCtrl
  * @requires $scope
  * @requires $log
  * @requires GOOGLE_AUTH
- * @requires UserService
+ * @requires AUTHORIZATION_DATA
+ * @requires SECURITY_GENERAL
+ * @requires AuthenticationService
+ * @requires CacheFactory
  * 
  * @description
  * GooglePlusLoginCtrl is controller to handle Google+ authentication.
@@ -56,7 +59,7 @@ angular.module('appverseClientIncubatorApp')
         $scope.onSignInCallback = function(authResult) {
              gapi.client.load('plus','v1', function(){
                 if (authResult['error'] == undefined) {
-                    $scope.loginStatus = 'connected'
+                    $scope.loginStatus = 'connected';
                     $scope.$apply();
 
                     var request = gapi.client.plus.people.get( {'userId' : 'me'} );
@@ -75,9 +78,8 @@ angular.module('appverseClientIncubatorApp')
                                     break;
                                 }
                             }
-
                             //The authenticated user is set by using the AuthenticationService.
-                            AuthenticationService.login(profile.displayName, roles, authResult['access_token'], true);
+                            AuthenticationService.login(profile.displayName, roles, authResult['access_token'], '', true);
 
                             CacheFactory._scopeCache.put('login_status', 'connected');
                             CacheFactory._scopeCache.put('userProfile', profile);
@@ -135,4 +137,95 @@ angular.module('appverseClientIncubatorApp')
     }
     
     
+}])
+
+
+.controller('OauthLoginCtrl', ['$scope', '$modal', '$log', 'AuthenticationService', 'UserService', 'CacheFactory', 'SECURITY_GENERAL', 
+    function($scope, $modal, $log, AuthenticationService, UserService, CacheFactory, SECURITY_GENERAL) {
+        
+        if(SECURITY_GENERAL.securityEnabled){
+            /*
+             * Check if the user is already loggedin
+             */
+            $scope.user = UserService.getCurrentUser();
+            
+            if($scope.user && $scope.user.isLogged){
+                $scope.login_status = SECURITY_GENERAL.connected;
+                CacheFactory._scopeCache.put('login_status', SECURITY_GENERAL.connected);
+            }else{
+                $scope.login_status = SECURITY_GENERAL.disconnected;
+                CacheFactory._scopeCache.put('login_status', SECURITY_GENERAL.disconnected);
+            }
+
+            $scope.open = function (credentials) {
+                $scope.credentials = credentials;
+                
+                var modalInstance = $modal.open({
+                    templateUrl: 'modalLoginForm.html',
+                    backdrop: true,
+                    windowClass: 'modal',
+                    controller: LoginCtrl,
+                    resolve: {
+                        credentials: function () {
+                           return $scope.credentials;
+                        }
+                    }
+                });
+                modalInstance.result.then(function (response) {
+                    
+                    AuthenticationService.login(
+                        response.data.username, 
+                        response.data.roles, 
+                        response.headers(SECURITY_GENERAL.BearerTokenResponseHeader),
+                        response.headers(SECURITY_GENERAL.XSRFCSRFResponseCookieName),
+                        true
+                    );
+                    
+                    $scope.login_status = SECURITY_GENERAL.connected;
+                    CacheFactory._scopeCache.put('login_status', SECURITY_GENERAL.connected);
+                    $scope.user = UserService.getCurrentUser();
+                }, function () {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+            };
+            
+            /**
+            * @function
+            * @description Revoke user token.
+            * It uses jQuery's $.ajax whether the REST module is not available.
+            */
+            $scope.logout = function() {
+                 $log.debug('Revoking user token: ' + $scope.user.bToken);
+                 AuthenticationService.logOut();
+                 $scope.login_status = SECURITY_GENERAL.disconnected;
+                 $log.debug("User disconnected and erased from cache");
+            };
+
+            var LoginCtrl = function ($scope, $modalInstance, AuthenticationService, credentials){
+                $scope.errorMessage = '';
+                $scope.credentials = credentials;
+                $scope.login_status = SECURITY_GENERAL.disconnected;
+                CacheFactory._scopeCache.put('login_status', SECURITY_GENERAL.disconnected);
+                $scope.submit = function () {
+                    AuthenticationService.sendLoginRequest(credentials)
+                    .then(function (response) {
+                        $log.info('Successfull authentication');
+                        $modalInstance.close(response);
+                    }, function (error) {
+                        $log.error("The user has not connected nor authenticated against the server: " + error);
+                        $scope.errorMessage = "Credentials are not valid. Please enter new user and password.";
+                        //$modalInstance.dismiss('cancel');
+                    });
+                    
+                    
+                }
+                $scope.cancel = function () {
+                    $modalInstance.dismiss('cancel');
+                }
+            };
+        }else{
+            $log.warn("Security is not enabled in this application.");
+        }
+       
+        
 }]);

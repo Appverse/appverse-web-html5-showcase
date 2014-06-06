@@ -1,3 +1,4 @@
+
 <div class="container">
     <div id="OAuth2Logo">
         <a ng-href="http://oauth.net/2/">
@@ -5,25 +6,16 @@
     </div>
 
 
-    <div ng-controller="GooglePlusLoginCtrl" ng-cloak>
+    <div ng-controller="WelcomeCtrl" ng-cloak>
 
-      <div id="gConnect" ng-hide="loginStatus == 'connected'">
-        <div id="gButton" />
-        </div>
-        <p class="lead">User Status: {{ loginStatus }}</p>
-
-
-        <div id="authOps" ng-show="loginStatus == 'connected'">
-
-            <p class="lead">User Profile</p>
-            <div>
-                <img ng-src="{{profile.image.url}}" />
-                <p>{{ profile.displayName }}</p>
-                <p>{{ profile.eMail }}</p>
-            </div>
-
-            <button ng-click="logout()">Disconnect</button>
-
+        <div>
+            <h2>User Status: {{ status }} </h2>
+            <h3>User logged: {{ user.name }} </h3>
+            <h3>Token: {{ token }} </h3>
+            <h3>XSRF token value: {{ XSRFCookie }} </h2>
+            <ul ng-repeat="role in user.roles">
+                <li>{{ role }}</li>
+            </ul>
         </div>
 
 
@@ -165,3 +157,4 @@
 
     </div>
 </div>
+

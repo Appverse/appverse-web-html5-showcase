@@ -1,5 +1,5 @@
-// Generated on 2013-09-19 using generator-angular 0.4.0
 'use strict';
+
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({
     port: LIVERELOAD_PORT
@@ -91,8 +91,8 @@ module.exports = function (grunt) {
     // configurable paths
     var yeomanConfig = {
         app: 'app',
-        dist: 'dist'
-        //doc: 'doc'
+        dist: 'dist',
+        doc: 'doc'
     };
 
     try {

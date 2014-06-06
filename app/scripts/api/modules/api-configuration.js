@@ -15,7 +15,7 @@ angular.module('AppConfiguration', ['AppDetection'])
         $log.info('AppConfiguration run');
     }]);
 
-angular.module('AppConfigDefault', [])
+angular.module('AppConfigDefault', ['$browser'])
 
 /*
 PROJECT CONFIGURATION
@@ -29,7 +29,8 @@ All data are auto-explained because their names ;)
     Year: '2013',
     Team: 'GFT Appverse Web',
     URL: '',
-    LoginViewPath: '/login'
+    LoginViewPath: '/login',
+    myUrl: ''
 })
 
 /*
@@ -115,13 +116,16 @@ in the common API.
     LocalBrowserStorage: 'localStorage',
     //Constant for the literal
     NoBrowserStorage: 'none',
+    
+    //Direct browser storage (0 local | 1 session)
+    browserDirectCacheType: '1',
     /*
      * Specify whether to verify integrity of data saved in localStorage on every operation.
      * If true, angular-cache will perform a full sync with localStorage on every operation.
      * Increases reliability of data synchronization, but may incur a performance penalty.
      * Has no effect if storageMode is set to "none".
      */
-    VerifyIntegrity: false,
+    VerifyIntegrity: true,
     /////////////////////////////
     //$http SERVICE CACHE
     /////////////////////////////
@@ -428,7 +432,12 @@ Future updates of Restangular imply review of this section in order to keep cons
     Example:
     DefaultHeaders: {'Content-Type': 'application/json'}
     */
-    DefaultHeaders: {},
+    DefaultHeaders: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': 'juan'
+        //SECURITY_GENERAL.XSRFCSRFHeaderName: SECURITY_GENERAL.XSRFCSRFCookieValue
+        
+    },
 
     /*
     If all of your requests require to send some suffix to work, you can set it here.
@@ -450,7 +459,11 @@ Future updates of Restangular imply review of this section in order to keep cons
     /*
     You can set here if you want to URL Encode IDs or not.
     */
-    EncodeIds: true
+    EncodeIds: true,
+    /*
+     * 
+     */
+    DefaultContentType: 'application/json'
 })
 
 .constant('AD_CONFIG', {
@@ -468,15 +481,42 @@ Future updates of Restangular imply review of this section in order to keep cons
  * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
  */
 .constant('SECURITY_GENERAL', {
-    securityEnabled: true
+    securityEnabled: true,
+    XSRFCSRFRequestHeaderName: 'X-XSRF-TOKEN',
+    XSRFCSRFResponseCookieName: 'X-XSRF-Cookie',
+    BearerTokenResponseHeader: 'access_token',
+    BearerTokenRequestHeader: 'Authorization',
+    RefreshTokenResponseHeader: 'refresh_token',
+    BearerTokenExpiringResponseHeader: 'expires_in',
+    TokenTypeResponseHeader: 'token_type',
+    /*
+    The XSRF policy type is the level of complexity to calculate the value to be returned in the xsrf header in request
+    against the authorization server:
+    0: No value is included (The domain is the same one)
+    1: $http service built-in solution. The $http service will extract this token from the response header,
+     and then included in the X-XSRF-TOKEN header to every HTTP request. The server must check the token
+     on each request, and then block access if it is not valid.
+    2: Additional calculation of the cookie value using a secret hash. The value is included in the X-XSRF-TOKEN
+     request header.
+     */
+    XSRFPolicyType: 1,
+    XSRFSecret: '',
+    Headers_ContentType: 'application/json',
+    loginHTTPMethod: 'POST',
+    loginURL: 'http://localhost:8080/html5-incubator-server/rest/sec/login',
+    username: 'admin',
+    password: 'admin',
+    connected: 'connected',
+    disconnected: 'disconnected'
+            
 })
 
 .constant('SECURITY_OAUTH', {
-    oauth2_endpoint: 'lelylam',
+    oauth2_endpoint: 'appverse',
     clientID: '',
-    profile: 'http://api.lelylan.com/me',
+    profile: 'http://localhost:8080/html5-incubator-server',
     scope: 'resources',
-    scopeURL: 'http://people.lelylan.com',
+    scopeURL: 'http://localhost:8080/html5-incubator-server',
     scope_authorizePath: '/oauth/authorize',
     scope_tokenPath: '/oauth/token',
     scope_flow: 'implicit',
@@ -484,7 +524,10 @@ Future updates of Restangular imply review of this section in order to keep cons
     scope_storage: 'none',
     scope_template: 'views/demo/security/oauth_default.html',
     redirectURL: 'http://localhost:9000',
-    storage: 'cookies'
+    storage: 'cookies',
+    storage_cookies: 'cookies',
+    storage_header: 'header',
+    tokenResponseHeaderName: 'Authorization'
 })
 
 /*
@@ -514,16 +557,16 @@ Future updates of Restangular imply review of this section in order to keep cons
  */
 .constant('AUTHORIZATION_DATA', {
     roles: ['user', 'admin', 'editor'],
-    adminRoles: ['admin', 'editor'],
+    adminRoles: ["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"],
     users: ['Jesus de Diego'],
     userRoleMatrix: [
         {
             'user': 'Jesus de Diego',
-            'roles': ['user', 'admin']
+            'roles': ["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"]
         },
         {
             'user': 'Antoine Charnoz',
-            'roles': ['user', 'admin']
+            'roles': ["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"]
         }
     ],
     routesThatDontRequireAuth: ['/home'],
@@ -601,3 +644,5 @@ WEBSOCKETS MODULE CONFIGURATION
         webworker_shared_literal: "shared",
         webworker_Message_template: 'scripts/api/directives/webworkerMessage.html'
     });
+
+

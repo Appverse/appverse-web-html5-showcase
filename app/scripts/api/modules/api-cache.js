@@ -46,40 +46,57 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
 .run(['$log', 'CacheFactory', 'CACHE_CONFIG', 'IDB',
     function ($log, CacheFactory, CACHE_CONFIG, IDB) {
 
-        $log.info('AppCache run');
+            $log.info('AppCache run');
 
-        /* Initializes the different caches with params in configuration. */
-        if (CACHE_CONFIG.ScopeCache_Enabled) {
-            CacheFactory.setScopeCache(
-                CACHE_CONFIG.ScopeCache_duration,
-                CACHE_CONFIG.ScopeCache_capacity
-            );
-        }
+            /* Initializes the different caches with params in configuration. */
+            if (CACHE_CONFIG.ScopeCache_Enabled) {
+                CacheFactory.setScopeCache(
+                    CACHE_CONFIG.ScopeCache_duration,
+                    CACHE_CONFIG.ScopeCache_capacity
+                );
+            }
 
-        if (CACHE_CONFIG.BrowserStorageCache_Enabled) {
-            CacheFactory.setBrowserStorage(
-                CACHE_CONFIG.BrowserStorage_type,
-                CACHE_CONFIG.MaxAge,
-                CACHE_CONFIG.CacheFlushInterval,
-                CACHE_CONFIG.DeleteOnExpire,
-                CACHE_CONFIG.VerifyIntegrity
-            );
-        }
+            if (CACHE_CONFIG.BrowserStorageCache_Enabled) {
+                CacheFactory.setBrowserStorage(
+                    CACHE_CONFIG.BrowserStorage_type,
+                    CACHE_CONFIG.MaxAge,
+                    CACHE_CONFIG.CacheFlushInterval,
+                    CACHE_CONFIG.DeleteOnExpire,
+                    CACHE_CONFIG.VerifyIntegrity
+                );
+            }
 
-        /* The cache for http calls */
-        if (CACHE_CONFIG.HttpCache_Enabled) {
-            CacheFactory.setDefaultHttpCacheStorage(
-                CACHE_CONFIG.HttpCache_duration,
-                CACHE_CONFIG.HttpCache_capacity);
-        }
+            /* The cache for http calls */
+            if (CACHE_CONFIG.HttpCache_Enabled) {
+                CacheFactory.setDefaultHttpCacheStorage(
+                    CACHE_CONFIG.HttpCache_duration,
+                    CACHE_CONFIG.HttpCache_capacity);
+            }
 
-        /* IndexedDB */
-        if (CACHE_CONFIG.IndexedDBCache_Enabled) {
-            IDB.openDB(
-                CACHE_CONFIG.IndexedDB_name,
-                CACHE_CONFIG.IndexedDB_version,
-                CACHE_CONFIG.IndexedDB_options);
-        }
+            /* IndexedDB */
+            if (CACHE_CONFIG.IndexedDBCache_Enabled) {
+                IDB.openDB(
+                        CACHE_CONFIG.IndexedDB_name, 
+                        CACHE_CONFIG.IndexedDB_version, 
+                        CACHE_CONFIG.IndexedDB_options);
+            }
+            
+           
+        }])
+    
+    .factory('CacheFactory', [
+        '$angularCacheFactory',
+        '$http',
+        'CACHE_CONFIG',
+        '$log',
+        'IDB',
+        function ($angularCacheFactory, $http, CACHE_CONFIG, $log, IDB) {
+
+            var factory = {
+                _scopeCache: null,
+                _browserCache: null,
+                _httpCache: null
+            };
     }])
 
 /**
@@ -140,45 +157,60 @@ angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', '
             return factory._scopeCache || factory.setScopeCache(CACHE_CONFIG.ScopeCache_duration,
                 CACHE_CONFIG.ScopeCache_capacity);
         };
-
+        
         /**
-         * @ngdoc method
-         * @name AppCache.service:CacheFactory#setBrowserStorage
-         * @methodOf AppCache.service:CacheFactory
-         * @param {number} type Type of storage ( 1 local | 2 session).
-         * @param {number} maxAgeInit .
-         * @param {number} cacheFlushIntervalInit .
-         * @param {boolean} deleteOnExpireInit .
-         *
-         * @description
-         * This object makes Web Storage working in the Angular Way.
-         *
-         * By default, web storage allows you 5-10MB of space to work with, and your data is stored locally on the device rather than passed back-and-forth with each request to the server.
-         * Web storage is useful for storing small amounts of key/value data and preserving functionality online and offline.
-         *
-         * With web storage, both the keys and values are stored as strings.
-         *
-         * We can store anything except those not supported by JSON:
-         *
-         * Infinity, NaN - Will be replaced with null.
-         *
-         * undefined, Function - Will be removed.
-         *
-         * The returned object supports the following set of methods:
-         * {void} $reset() - Clears the Storage in one go.
-         */
+             @function
+             @param type Type of storage ( 1 local | 2 session).
+             @param maxAgeInit
+             @param cacheFlushIntervalInit
+             @param deleteOnExpireInit
+
+             @description This object makes Web Storage working in the Angular Way.
+             By default, web storage allows you 5-10MB of space to work with, and your data is stored locally
+             on the device rather than passed back-and-forth with each request to the server.
+             Web storage is useful for storing small amounts of key/value data and preserving functionality
+             online and offline.
+             With web storage, both the keys and values are stored as strings.
+
+             We can store anything except those not supported by JSON:
+             Infinity, NaN - Will be replaced with null.
+             undefined, Function - Will be removed.
+             The returned object supports the following set of methods:
+             {void} $reset() - Clears the Storage in one go.
+             */
+
         factory.setBrowserStorage = function (type, maxAgeInit, cacheFlushIntervalInit, deleteOnExpireInit, verifyIntegrityInit) {
-
-            var browserStorageType = CACHE_CONFIG.SessionBrowserStorage;
-
-            factory._browserCache = $angularCacheFactory(CACHE_CONFIG.DefaultBrowserCacheName, {
-                maxAge: maxAgeInit,
-                cacheFlushInterval: cacheFlushIntervalInit,
-                deleteOnExpire: deleteOnExpireInit,
-                storageMode: browserStorageType,
-                verifyIntegrity: verifyIntegrityInit
-            });
-
+                //$log.debug('type: ' + type);
+                var selectedStorageType;
+                if(type == '2'){
+                    selectedStorageType = CACHE_CONFIG.SessionBrowserStorage;
+                }else{
+                    selectedStorageType = CACHE_CONFIG.LocalBrowserStorage;
+                }
+                //$log.debug('selectedStorageType: ' + selectedStorageType);
+                
+                factory._browserCache = $angularCacheFactory(CACHE_CONFIG.DefaultBrowserCacheName, {
+                    maxAge: maxAgeInit,
+                    cacheFlushInterval: cacheFlushIntervalInit,
+                    deleteOnExpire: deleteOnExpireInit,
+                    storageMode: selectedStorageType,
+                    verifyIntegrity: verifyIntegrityInit
+                });
+                return factory._browserCache;
+        };
+            
+            
+        /*
+             @function
+             @param duration items expire after this time.
+             @param capacity  turns the cache into LRU (Least Recently Used) cache.
+             If you don't want $http's default cache to store every response.
+             @description Http Cache Storage is the object to handle and configure the features
+             of the cache for default use with the $http service.
+             @description
+             Your can retrieve the currently cached data: var cachedData =
+             */
+        factory.setDefaultHttpCacheStorage = function (maxAge, capacity) {
             return factory._browserCache;
         };
 

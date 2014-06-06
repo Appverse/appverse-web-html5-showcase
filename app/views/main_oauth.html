@@ -5,30 +5,32 @@
     </div>
 
 
-    <div ng-controller="GooglePlusLoginCtrl" ng-cloak>
 
-      <div id="gConnect" ng-hide="loginStatus == 'connected'">
-        <div id="gButton" />
+    <div ng-controller="OauthLoginCtrl" ng-cloak>
+        <div>
+<!--            <p><h3>Logged User Info</h3></p>-->
+            <p><b>User Status: {{ login_status }} </b></p>
         </div>
-        <p class="lead">User Status: {{ loginStatus }}</p>
-
-
-        <div id="authOps" ng-show="loginStatus == 'connected'">
-
-            <p class="lead">User Profile</p>
-            <div>
-                <img ng-src="{{profile.image.url}}" />
-                <p>{{ profile.displayName }}</p>
-                <p>{{ profile.eMail }}</p>
-            </div>
-
-            <button ng-click="logout()">Disconnect</button>
-
+        <div ng-show="login_status == 'connected'">
+            <p><b>Welcome {{ user.name }}!</b></p>
+<!--            <p>User logged: {{ user.name }} </p>
+            <p>Roles: {{ user.roles }} </p>
+            <p>Bearer Token value: {{ user.bToken }} </p>
+            <p>XSRF Token value: {{ user.xsrfToken }} </p>
+            <p>Is logged now? {{ user.isLogged }} </p>-->
         </div>
 
+    
+        <div ng-hide="login_status == 'connected'">
+            <button class="btn" ng-click="open({name: '', password: ''})">Click here to login</button>
+        </div>
+         <div ng-show="login_status == 'connected'">
+            <button class="btn" ng-click="logout()">Click here to logout</button>
+        </div>
+    
 
-
-        <div ng-controller="CollapseDemoCtrl" ng-show="loginStatus == 'connected' || loginStatus == 'Security not enabled'">
+    
+        <div ng-controller="CollapseDemoCtrl" ng-show="login_status == 'connected' || login_status == 'Security not enabled'">
             <p class="lead">
                 <h3>This is the Appverse Web HTML5/JavaScript Demo</h3>
             </p>
@@ -164,4 +166,5 @@
         </div>
 
     </div>
+
 </div>

@@ -30,15 +30,11 @@
 
 angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
 
-.run(['$log', 'Restangular', 'CacheFactory', 'REST_CONFIG',
-    function ($log, Restangular, CacheFactory, REST_CONFIG) {
 
-        $log.info('AppREST run');
-//        if(REST_CONFIG.Multicast_enabled){
-//            Restangular.setBaseUrl(REST_CONFIG.Multicast_baseUrl);
-//        }else{
-//            Restangular.setBaseUrl(REST_CONFIG.BaseUrl);
-//        }
+.run(['$log', 'Restangular', 'CacheFactory', 'Oauth_RequestWrapper', 'Oauth_AccessToken', 'REST_CONFIG', 'SECURITY_GENERAL',
+    function ($log, Restangular, CacheFactory, Oauth_RequestWrapper, Oauth_AccessToken, REST_CONFIG, SECURITY_GENERAL) {
+        
+
         Restangular.setBaseUrl(REST_CONFIG.BaseUrl);
         Restangular.setExtraFields(REST_CONFIG.ExtraFields);
         Restangular.setParentless(REST_CONFIG.Parentless);
@@ -52,6 +48,9 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         Restangular.setResponseInterceptor(
             function (data, operation, what, url, response) {
 
+                /*
+                1-Caches response data or not according to configuration.
+                 */
                 var cache = CacheFactory.getHttpCache();
 
                 if (cache) {
@@ -60,6 +59,17 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
                     } else if (operation === 'put') {
                         cache.put(response.config.url, response.config.data);
                     }
+                }
+
+                /*
+                 2-Retrieves bearer/oauth token from header.
+                 */
+                //var tokenInHeader = response.headers(SECURITY_GENERAL.tokenResponseHeaderName);
+                var tokenInHeader = response.headers('X-XSRF-Cookie');
+                $log.debug('X-XSRF-Cookie: ' + tokenInHeader);
+                if(tokenInHeader){
+                    
+                    Oauth_AccessToken.setFromHeader(tokenInHeader);
                 }
 
                 return data;
@@ -76,12 +86,15 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         Restangular.setErrorInterceptor(REST_CONFIG.ErrorInterceptor);
         Restangular.setRestangularFields(REST_CONFIG.RestangularFields);
         Restangular.setMethodOverriders(REST_CONFIG.MethodOverriders);
-        Restangular.setDefaultRequestParams(REST_CONFIG.DefaultRequestParams);
         Restangular.setFullResponse(REST_CONFIG.FullResponse);
-        Restangular.setDefaultHeaders(REST_CONFIG.DefaultHeaders);
+        //Restangular.setDefaultHeaders(REST_CONFIG.DefaultHeaders);
         Restangular.setRequestSuffix(REST_CONFIG.RequestSuffix);
         Restangular.setUseCannonicalId(REST_CONFIG.UseCannonicalId);
         Restangular.setEncodeIds(REST_CONFIG.EncodeIds);
+
+        
+        $log.info('AppREST run');
+        
     }])
 
 /**
@@ -93,8 +106,19 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
  * Contains methods for data finding (demo).
  * This module provides basic quick standard access to a REST API.
  */
-.factory('RESTFactory', ['$log', 'Restangular', '$http', 'REST_CONFIG', '$q',
-    function ($log, Restangular, $http, REST_CONFIG, $q) {
+.factory('RESTFactory', ['$log', 'Restangular', 'Oauth_RequestWrapper','REST_CONFIG', 'SECURITY_GENERAL',
+    function ($log, Restangular, Oauth_RequestWrapper, REST_CONFIG, SECURITY_GENERAL) {
+
+        if(SECURITY_GENERAL.securityEnabled){
+            Restangular = Oauth_RequestWrapper.wrapRequest(Restangular);
+        }else{
+            Restangular.setDefaultHeaders(
+                {
+                    'Content-Type': REST_CONFIG.DefaultContentType
+                });
+        }
+        
+        
 
         ////////////////////////////////////////////////////////////////////////////////////
         // ADVICES ABOUT PROMISES
@@ -107,6 +131,14 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         // If what we want to do is to edit the object you get and then do a put, in
         // that case, we cannot work with the promise, as we need to change values.
         // If that's the case, we need to assign the result of the promise to a $scope variable.
+        // 2-HANDLING ERRORS
+        // While the first param is te callback the second parameter is the error handler function.
+        // 
+        //  Restangular.all("accounts").getList().then(function() {
+        //      console.log("All ok");
+        //  }, function(response) {
+        //      console.log("Error with status code", response.status);
+        //  });
         // 2-HANDLING LISTS
         //The best option for doing CRUD operations with a list, is to actually use the "real" list, and not the promise.
         // It makes it easy to interact with it.
@@ -254,7 +286,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
          * @returns {object} The created item
          */
         factory.createListItem = function (path, newData, callback) {
-            Restangular.all(path).post(newData).then(callback);
+            Restangular.all(path).post(newData).then(callback,restErrorHandler);
         };
 
 
@@ -269,7 +301,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
          * @returns {object} The updated item
          */
         factory.updateObject = function (path, newData, callback) {
-            Restangular.one(path).put(newData).then(callback);
+            Restangular.one(path).put(newData).then(callback, restErrorHandler);
         };
 
 
@@ -286,10 +318,9 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         factory.deleteListItem = function (path, key, callback) {
             // Use 'then' to resolve the promise.
             Restangular.one(path, key).get().then(function (item) {
-                item.remove().then(callback);
+                item.remove().then(callback, restErrorHandler);
             });
         };
-
 
        /**
          * @ngdoc method
@@ -300,10 +331,21 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
          * @description Deletes an item from a list.
          * @returns {object} The deleted item
          */
+
         factory.deleteObject = function (path, callback) {
             // Use 'then' to resolve the promise.
-            Restangular.one(path)['delete']().then(callback);
+            Restangular.one(path).delete().then(callback,restErrorHandler);
         };
+        
+        /**
+        @function
+        @param response Response to know its status
+        @description Provides a handler for errors.
+        */
+        function restErrorHandler(response){
+            $log.error("Error with status code", response.status);
+        };
+        
 
        return factory;
     }])
@@ -329,4 +371,4 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
             };
 
             return factory;
-        }])
+        }]);

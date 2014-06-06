@@ -34,32 +34,6 @@
         "FlashPolicyPort": "",
         "ForceNewConnection": false
     },
-    "REST_CONFIG": {
-        "BaseUrl": "/api/v1",
-        "ExtraFields": [],
-        "ParentLess": false,
-        "NoCacheHttpMethods": {
-            "get": false,
-            "post": true,
-            "put": false,
-            "delete": true,
-            "option": false
-        },
-        "ElementTransformer": [],
-        "RequestInterceptor": null,
-        "FullRequestInterceptor": null,
-        "RestangularFields": {
-            "id": "id",
-            "route": "route"
-        },
-        "MethodOverriders": [],
-        "DefaultRequestParams": {},
-        "FullResponse": false,
-        "DefaultHeaders": {},
-        "RequestSuffix": ".json",
-        "UseCannonicalId": false,
-        "EncodeIds": true
-    },
     "AD_CONFIG": {
         "ConsumerKey": "",
         "ConsumerSecret": ""
