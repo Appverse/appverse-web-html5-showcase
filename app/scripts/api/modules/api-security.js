@@ -99,51 +99,20 @@
 // CONFIGURATION: SECURITY_OAUTH
 //////////////////////////////////////////////////////////////////////////////
 
-/**
- * @ngdoc module
- * @name AppSecurity
- * @description
- * 3 services:
- *
- *  A-AUTHENTICATION
- *  Protect username and password
- *  Manages authentication operations
- *  Handles user session
- *
- * B-REMOTE COMMUNICATION AUTHORIZATION HANDLING
- *  Based on OAuth 2.0 integration (RFC 6749, October 2012).
- *  It handles token for the current user session.
- *
- * C-INTERNAL AUTHORIZATION
- *  It handles access to site sections
- *  Includes roles management and rights checking
- */
-angular.module('AppSecurity', [
-    'ngCookies', // Angular support for cookies
-    'AppCache', // Common API Module: cache services
-    'AppConfiguration' // Common API Module: configuration
-])
-
-
-.run(['$log',
-    function ($log) {
-        $log.info('AppSecurity run');
-    }])
-
 /*@ngdoc module
  * @name AppSecurity
  * @description
  * 3 services:
- * 
+ *
  *  A-AUTHENTICATION
  *  Protect username and password
  *  Manages authentication operations
  *  Handles user session
- *  
+ *
  * B-REMOTE COMMUNICATION AUTHORIZATION HANDLING
  *  Based on OAuth 2.0 integration (RFC 6749, October 2012).
  *  It handles token for the current user session.
- *  
+ *
  * C-INTERNAL AUTHORIZATION
  *  It handles access to site sections
  *  Includes roles management and rights checking
@@ -157,219 +126,10 @@ angular.module('AppSecurity', [
 ])
 
 
-        .run(['$log',
-            function($log) {
-                $log.info('AppSecurity run');
+.run(['$log',
+            function ($log) {
+        $log.info('AppSecurity run');
             }])
-
-/**
- * @ngdoc service
- * @name AppSecurity.factory:Oauth_AccessToken
- * @requires $location
- * @requires $cookies
- * @description
- * OAuth access token service.
- * Management of the access token.
- */
-.factory('Oauth_AccessToken', ['$location', '$cookies',
-  function ($location, $cookies) {
-
-        var factory = {};
-        var token = null;
-
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#get
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @description Returns the access token.
-         * @returns {object} The user token from the oauth server
-         */
-        factory.get = function () {
-            return token
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#set
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @param {object} scope The current scope
-         * @description Sets and returns the access token taking it from the fragment URI or eventually
-         * from the cookies. Use `AccessToken.init()` to load (at boot time) the access token.
-         * @returns {object} The user token from the oauth server
-         */
-        factory.set = function (scope) {
-            setTokenFromString(scope); // take the token from the query string and eventually save it in the cookies
-            setTokenFromCookies(scope); // take the from the cookies
-            return token
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#destroy
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @param {object} scope The current scope
-         * @description Delete the access token and remove the cookies.
-         * @returns {object} The user token from the oauth server
-         */
-        factory.destroy = function (scope) {
-            token = null;
-            delete $cookies[scope.client];
-            return token;
-        }
-
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#expired
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @description Tells when the access token is expired.
-         * @returns {boolean} True or false if the token is expired
-         */
-        factory.expired = function () {
-            return (token && token.expires_at && token.expires_at < new Date())
-        }
-
-
-
-        /////////////////////////////Private methods///////////////////////////////////
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#setTokenFromString
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @param {object} scope The current scope
-         * @description
-         * Get the access token from a string and save it
-         */
-        function setTokenFromString(scope) {
-            var token = getTokenFromString($location.hash());
-
-            if (token) {
-                removeFragment();
-                setToken(token, scope);
-            }
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#getTokenFromString
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @param {object} hash The initial string
-         * @description
-         * Parse the fragment URI into an object
-         * @returns {object} The value of the token
-         */
-        function getTokenFromString(hash) {
-            var splitted = hash.split('&');
-            var params = {};
-
-            for (var i = 0; i < splitted.length; i++) {
-                var param = splitted[i].split('=');
-                var key = param[0];
-                var value = param[1];
-                params[key] = value
-            }
-
-            if (params.access_token || params.error) {
-                return params;
-            }
-        }
-
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#setTokenFromCookies
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @param {object} scope The current scope
-         * @description
-         * Set the access token from the cookies.
-         * Returns the access token only when the storage attribute is set to 'cookies'.
-         */
-        function setTokenFromCookies(scope) {
-            if (scope.storage === 'cookies') {
-                if ($cookies[scope.client]) {
-                    var params = JSON.parse($cookies[scope.client]);
-                    setToken(params, scope);
-                }
-            }
-        }
-
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#setTokenInCookies
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @param {object} scope The current scope
-         * @param {object} params with token value hash
-         * @description
-         * Save the access token into a cookie identified by the application ID
-         * Save the access token only when the storage attribute is set to 'cookies'.
-         */
-        function setTokenInCookies(scope, params) {
-            if (scope.storage === 'cookies') {
-                if (params && params.access_token) {
-                    $cookies[scope.client] = JSON.stringify(params);
-                }
-            }
-        }
-
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#setToken
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @param {object} params The object with the token
-         * @param {object} scope The current scope
-         * @description
-         * Set the access token in cookies.
-         * @returns {object} The token value
-         */
-        function setToken(params, scope) {
-            token = token || {} // init the token
-            angular.extend(token, params); // set the access token params
-            setExpiresAt(); // set the expiring time
-            setTokenInCookies(scope, params); // save the token into a cookie
-
-            return token;
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#setExpiresAt
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @description
-         * Set the access token expiration date (useful for refresh logics)
-         */
-        function setExpiresAt() {
-            if (token) {
-                var expires_at = new Date();
-                expires_at.setSeconds(expires_at.getSeconds() + parseInt(token.expires_in) - 60); // 60 seconds less to secure browser and response latency
-                token.expires_at = expires_at;
-            }
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_AccessToken#removeFragment
-         * @methodOf AppSecurity.factory:Oauth_AccessToken
-         * @param {object} scope The current scope
-         * @description
-         * Remove the fragment URI
-         */
-        function removeFragment(scope) {
-            //TODO we need to let the fragment live if it's not the access token
-            $location.hash('');
-        }
-
-
-        return factory;
-}])
-
 
 /**
  * @ngdoc service
@@ -448,707 +208,349 @@ angular.module('AppSecurity', [
         return factory;
 }])
 
-        /**
-         * @ngdoc service
-         * @name AppSecurity.factory:Oauth_AccessToken
-         * @requires $location
-         * @requires $cookies
-         * @requires CacheFactory
-         * @description
-         * OAuth access token service.
-         * Management of the access token.
-         */
-        .factory('Oauth_AccessToken', ['$location', '$cookies', 'CacheFactory', 'UserService',
-            function($location, $cookies, CacheFactory, UserService) {
+/**
+ * @ngdoc service
+ * @name AppSecurity.factory:Oauth_AccessToken
+ * @requires $location
+ * @requires $cookies
+ * @requires CacheFactory
+ * @description
+ * OAuth access token service.
+ * Management of the access token.
+ */
+.factory('Oauth_AccessToken', ['$location', '$cookies', 'CacheFactory', 'UserService',
+            function ($location, $cookies, CacheFactory, UserService) {
 
-                var factory = {};
-                var token = null;
-                var xsrfToken = null;
-
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#get
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @description Returns the access token.
-                 * @returns {object} The user token from the oauth server
-                 */
-                factory.get = function() {
-                    getTokenFromCache();
-                    return token;
-                };
-                
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#getXSRF
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @description Returns the XSRF token to be input in each request header.
-                 * @returns {object} The xsrf token from the oauth server in the current session
-                 */
-                factory.getXSRF = function() {
-                    getXSRFTokenFromCache();
-                    return xsrfToken;
-                };
-
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#set
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @param {object} scope The current scope
-                 * @description Sets and returns the access token taking it from the fragment URI or eventually
-                 * from the cookies. Use `AccessToken.init()` to load (at boot time) the access token.
-                 * @returns {object} The user token from the oauth server
-                 */
-                factory.set = function(scope) {
-                    setTokenFromString(scope); // take the token from the query string and eventually save it in the cookies
-                    setTokenFromCookies(scope); // take the from the cookies
-                    return token
-                };
-
-
-                factory.setFromHeader = function(token) {
-                    setTokenInCurrentUser(token);
-                    return token
-                };
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#destroy
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @param {object} scope The current scope
-                 * @description Delete the access token and remove the cookies.
-                 * @returns {object} The user token from the oauth server
-                 */
-                factory.destroy = function(scope) {
-                    token = null;
-                    xsrfToken = null;
-                    delete $cookies[scope.client];
-                    return token;
-                }
-
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#expired
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @description Tells when the access token is expired.
-                 * @returns {boolean} True or false if the token is expired
-                 */
-                factory.expired = function() {
-                    return (token && token.expires_at && token.expires_at < new Date())
-                }
-
-
-
-                /////////////////////////////Private methods///////////////////////////////////
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#setTokenFromString
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @param {object} scope The current scope
-                 * @description
-                 * Get the access token from a string and save it
-                 */
-                function setTokenFromString(scope) {
-                    var token = getTokenFromString($location.hash());
-
-                    if (token) {
-                        removeFragment();
-                        setToken(token, scope);
-                    }
-                }
-                ;
-
-
-
-                function getTokenFromCache(){
-                    var user =UserService.getCurrentUser();
-                    if(user){
-                        token = user.bToken;
-                    }
-                }
-                
-                function getXSRFTokenFromCache(){
-                    var user =UserService.getCurrentUser();
-                    if(user){
-                        xsrfToken = user.xsrfToken;
-                    }
-                }
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#getTokenFromString
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @param {object} hash The initial string
-                 * @description
-                 * Parse the fragment URI into an object
-                 * @returns {object} The value of the token 
-                 */
-                function getTokenFromString(hash) {
-                    var splitted = hash.split('&');
-                    var params = {};
-
-                    for (var i = 0; i < splitted.length; i++) {
-                        var param = splitted[i].split('=');
-                        var key = param[0];
-                        var value = param[1];
-                        params[key] = value
-                    }
-
-                    if (params.access_token || params.error) {
-                        return params;
-                    }
-                }
-
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#setTokenFromCookies
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @param {object} scope The current scope
-                 * @description
-                 * Set the access token from the cookies.
-                 * Returns the access token only when the storage attribute is set to 'cookies'.
-                 */
-                function setTokenFromCookies(scope) {
-                    if (scope.storage === 'cookies') {
-                        if ($cookies[scope.client]) {
-                            var params = JSON.parse($cookies[scope.client]);
-                            setToken(params, scope);
-                        }
-                    }
-                }
-
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#setTokenInCookies
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @param {object} scope The current scope
-                 * @param {object} params with token value hash
-                 * @description
-                 * Save the access token into a cookie identified by the application ID
-                 * Save the access token only when the storage attribute is set to 'cookies'.
-                 */
-                function setTokenInCookies(scope, params) {
-                    if (scope.storage === SECURITY_OAUTH.storage_cookies) {
-                        if (params && params.access_token) {
-                            $cookies[scope.client] = JSON.stringify(params);
-                        }
-                    }
-                }
-
-
-                function setTokenInCurrentUser(scope, params) {
-                    if (params && params.access_token) {
-                        token =  params.access_token;
-                        //token =  JSON.stringify(params);
-                    }else{
-                        //If not exist takes the saved token from cache
-                        token = factory.get();
-                    }
-                    var user = UserService.getCurrentUser();
-                    if(user){
-                        user.bToken = token;
-                        UserService.setCurrentUser(user);
-                    }
-
-                }
-
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#setToken
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @param {object} params The object with the token
-                 * @param {object} scope The current scope
-                 * @description
-                 * Set the access token in cookies.
-                 * @returns {object} The token value
-                 */
-                function setToken(params, scope) {
-                    token = token || {} // init the token
-                    angular.extend(token, params); // set the access token params
-                    setExpiresAt(); // set the expiring time
-                    setTokenInCookies(scope, params); // save the token into a cookie
-
-                    setTokenInCurrentUser(token);
-
-                    return token;
-                }
-                ;
-
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#setExpiresAt
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @description
-                 * Set the access token expiration date (useful for refresh logics)
-                 */
-                function setExpiresAt() {
-                    if (token) {
-                        var expires_at = new Date();
-                        expires_at.setSeconds(expires_at.getSeconds() + parseInt(token.expires_in) - 60); // 60 seconds less to secure browser and response latency
-                        token.expires_at = expires_at;
-                    }
-                }
-                ;
-
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_AccessToken#removeFragment
-                 * @methodOf AppSecurity.factory:Oauth_AccessToken
-                 * @param {object} scope The current scope
-                 * @description
-                 * Remove the fragment URI
-                 */
-                function removeFragment(scope) {
-                    //TODO we need to let the fragment live if it's not the access token
-                    $location.hash('');
-                }
-
-
-                return factory;
-            }])
+        var factory = {};
+        var token = null;
+        var xsrfToken = null;
 
 
         /**
-         * @ngdoc service
-         * @name AppSecurity.factory:Oauth_Endpoint
-         * @requires AppSecurity.factory:Oauth_AccessToken
-         * @requires $location
-         * @description
-         * OAuth Endpoint service.
-         * Contains one factory managing the authorization's (endpoint) URL.
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#get
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @description Returns the access token.
+         * @returns {object} The user token from the oauth server
          */
-        .factory('Oauth_Endpoint', ['$location',
-            function($location) {
+        factory.get = function () {
+            getTokenFromCache();
+            return token;
+        };
 
-                var factory = {};
-                var url;
-
-
-
-                //TODO Check against other oauth providers (linkedin, twitter).
-
-                /*
-                 *NOTE
-                 *Google uses the same url for authentication and authorization, so just
-                 *redirect your users to the authorize url with the appropriate parameters in
-                 *the query string. Google then determines if the user needs to login,
-                 *authorize your app, or both.
-                 *The flow would go something like this...
-                 *1-Get the request token
-                 *2-Redirect your users to the authorization link
-                 *https://www.google.com/accounts/OAuthAuthorizeToken?scope=http%3A%2F%2Fwww.google.com%2Fm8%2Ffeeds&oauth_token=REQUEST_TOKEN&oauth_callback=http%3A%2F%2Fwww.mysite.com%2Fcallback
-                 *3-User authorizes your app, then exchange the request token for an access token.
-                 */
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#getXSRF
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @description Returns the XSRF token to be input in each request header.
+         * @returns {object} The xsrf token from the oauth server in the current session
+         */
+        factory.getXSRF = function () {
+            getXSRFTokenFromCache();
+            return xsrfToken;
+        };
 
 
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_Endpoint#set
-                 * @methodOf AppSecurity.factory:Oauth_Endpoint
-                 * @param {object} scope The current scope
-                 * @description Defines the authorization URL with correct attributes.
-                 * @returns {String} The URL for the oauth endpoint
-                 */
-                factory.set = function(scope) {
-                    url = scope.site +
-                            scope.authorizePath +
-                            '?response_type=token' + '&' +
-                            'client_id=' + scope.client + '&' +
-                            'redirect_uri=' + scope.redirect + '&' +
-                            'scope=' + scope.scope + '&' +
-                            'state=' + $location.url();
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#set
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
+         * @description Sets and returns the access token taking it from the fragment URI or eventually
+         * from the cookies. Use `AccessToken.init()` to load (at boot time) the access token.
+         * @returns {object} The user token from the oauth server
+         */
+        factory.set = function (scope) {
+            setTokenFromString(scope); // take the token from the query string and eventually save it in the cookies
+            setTokenFromCookies(scope); // take the from the cookies
+            return token
+        };
 
-                    return url;
+
+        factory.setFromHeader = function (token) {
+            setTokenInCurrentUser(token);
+            return token
+        };
+
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#destroy
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
+         * @description Delete the access token and remove the cookies.
+         * @returns {object} The user token from the oauth server
+         */
+        factory.destroy = function (scope) {
+            token = null;
+            xsrfToken = null;
+            delete $cookies[scope.client];
+            return token;
+        }
+
+
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#expired
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @description Tells when the access token is expired.
+         * @returns {boolean} True or false if the token is expired
+         */
+        factory.expired = function () {
+            return (token && token.expires_at && token.expires_at < new Date())
+        }
+
+
+
+        /////////////////////////////Private methods///////////////////////////////////
+
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setTokenFromString
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
+         * @description
+         * Get the access token from a string and save it
+         */
+        function setTokenFromString(scope) {
+            var token = getTokenFromString($location.hash());
+
+            if (token) {
+                removeFragment();
+                setToken(token, scope);
+            }
+        };
+
+
+
+        function getTokenFromCache() {
+            var user = UserService.getCurrentUser();
+            if (user) {
+                token = user.bToken;
+            }
+        }
+
+        function getXSRFTokenFromCache() {
+            var user = UserService.getCurrentUser();
+            if (user) {
+                xsrfToken = user.xsrfToken;
+            }
+        }
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#getTokenFromString
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} hash The initial string
+         * @description
+         * Parse the fragment URI into an object
+         * @returns {object} The value of the token
+         */
+        function getTokenFromString(hash) {
+            var splitted = hash.split('&');
+            var params = {};
+
+            for (var i = 0; i < splitted.length; i++) {
+                var param = splitted[i].split('=');
+                var key = param[0];
+                var value = param[1];
+                params[key] = value
+            }
+
+            if (params.access_token || params.error) {
+                return params;
+            }
+        }
+
+
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setTokenFromCookies
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
+         * @description
+         * Set the access token from the cookies.
+         * Returns the access token only when the storage attribute is set to 'cookies'.
+         */
+        function setTokenFromCookies(scope) {
+            if (scope.storage === 'cookies') {
+                if ($cookies[scope.client]) {
+                    var params = JSON.parse($cookies[scope.client]);
+                    setToken(params, scope);
                 }
+            }
+        }
 
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_Endpoint#get
-                 * @methodOf AppSecurity.factory:Oauth_Endpoint
-                 * @description Returns the authorization URL.
-                 * @returns {String} The URL for the oauth endpoint
-                 */
-                factory.get = function() {
-                    return url;
+
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setTokenInCookies
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
+         * @param {object} params with token value hash
+         * @description
+         * Save the access token into a cookie identified by the application ID
+         * Save the access token only when the storage attribute is set to 'cookies'.
+         */
+        function setTokenInCookies(scope, params) {
+            if (scope.storage === SECURITY_OAUTH.storage_cookies) {
+                if (params && params.access_token) {
+                    $cookies[scope.client] = JSON.stringify(params);
                 }
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_Endpoint#redirect
-                 * @methodOf AppSecurity.factory:Oauth_Endpoint
-                 * @description Redirects the app to the authorization URL.
-                 */
-                factory.redirect = function() {
-                    window.location.replace(url);
-                }
-
-                return factory;
-            }])
+            }
+        }
 
 
-        /**
-         * @ngdoc service
-         * @name AppSecurity.factory:Oauth_RequestWrapper
-         * @requires AppSecurity.factory:Oauth_AccessToken
-         * @requires AppSecurity.factory:Oauth_Endpoint
-         * @requires $http
-         *
-         * @description
-         * Requests wrapper. It wraps every request setting needed header by injecting
-         * the access token into the header
-         */
-        .factory('Oauth_RequestWrapper', ['$log', '$browser', 'Oauth_AccessToken', 'REST_CONFIG', 'SECURITY_GENERAL', 
-            function($log, $browser, Oauth_AccessToken, REST_CONFIG, SECURITY_GENERAL) {
-                var factory = {};
-                //var token;
+        function setTokenInCurrentUser(scope, params) {
+            if (params && params.access_token) {
+                token = params.access_token;
+                //token =  JSON.stringify(params);
+            } else {
+                //If not exist takes the saved token from cache
+                token = factory.get();
+            }
+            var user = UserService.getCurrentUser();
+            if (user) {
+                user.bToken = token;
+                UserService.setCurrentUser(user);
+            }
 
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_RequestWrapper#wrapRequest
-                 * @methodOf AppSecurity.factory:Oauth_RequestWrapper
-                 * @param {object} Restangular object
-                 * @param {object} actions Array with actions
-                 * @description Wraps every request with the Restangular object
-                 * @returns {object} the modified Restangular object
-                 */
-                factory.wrapRequest = function(restangular) {
-                    var token = Oauth_AccessToken.get();
-                    var wrappedRestangular = restangular;
-                    
-                    if(token){
-                        $log.debug("Including default headers in request.");
-                        setRequestHeaders(token, restangular);
-                    }else{
-                        $log.debug("OAuth token is not present yet.");
-                    }
-                    
-
-                    return wrappedRestangular;
-                };
-
-
-
-                /////////////////////////////Private methods///////////////////////////////////
-
-                /**
-                 * @ngdoc method
-                 * @name AppSecurity.factory:Oauth_RequestWrapper#setRequestHeaders
-                 * @methodOf AppSecurity.factory:Oauth_RequestWrapper
-                 * @param {string} token The token value from the oauth server
-                 * @description 
-                 * Set security request headers
-                 * 
-                 */
-                function setRequestHeaders(token, wrappedRestangular) {
-                    $log.debug('token: ' + token);
-                    $log.debug('is same domain? ' + isSameDomain(REST_CONFIG.BaseUrl, $browser.url()));
-                    
-                    if (token) {
-                        var xsrfHeaderValue;
-                        if(isSameDomain(REST_CONFIG.BaseUrl, $browser.url())){
-                            if(SECURITY_GENERAL.XSRFPolicyType === 0){
-                                wrappedRestangular.setDefaultHeaders(
-                                    {
-                                        'Authorization': 'Bearer' + token,
-                                        'Content-Type': REST_CONFIG.DefaultContentType
-                                    }
-                                );
-                            }else if(SECURITY_GENERAL.XSRFPolicyType === 1){
-                                xsrfHeaderValue = Oauth_AccessToken.getXSRF();
-                                wrappedRestangular.setDefaultHeaders(
-                                        {
-                                            'Authorization': 'Bearer' + token,
-                                            'Content-Type': REST_CONFIG.DefaultContentType,
-                                            'X-XSRF-TOKEN': xsrfHeaderValue
-                                        }
-                                );
-                            }else if(SECURITY_GENERAL.XSRFPolicyType === 2){
-                                xsrfHeaderValue = $browser.cookies()[SECURITY_GENERAL.XSRFCSRFCookieName];
-                                wrappedRestangular.setDefaultHeaders(
-                                    {
-                                        'Authorization': 'Bearer' + token,
-                                        'Content-Type': REST_CONFIG.DefaultContentType,
-                                        'X-XSRF-TOKEN': xsrfHeaderValue
-                                    }
-                                );
-                            }
-                        };
-
-
-                    }
-                    return wrappedRestangular;
-                };
-
-
-                return factory;
-            }])
+        }
 
 
         /**
-         * @ngdoc service
-         * @name AppSecurity.factory:Oauth_Profile
-         * @requires AppSecurity.factory:Oauth_RequestWrapper
-         * @requires $resource
-         * @requires SECURITY_OAUTH
-         *
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setToken
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} params The object with the token
+         * @param {object} scope The current scope
          * @description
-         * Profile model. *
+         * Set the access token in cookies.
+         * @returns {object} The token value
          */
-        .factory('Oauth_Profile', ['Oauth_RequestWrapper', '$resource', 'SECURITY_OAUTH',
-            function(RequestWrapper, $resource, SECURITY_OAUTH) {
+        function setToken(params, scope) {
+            token = token || {} // init the token
+            angular.extend(token, params); // set the access token params
+            setExpiresAt(); // set the expiring time
+            setTokenInCookies(scope, params); // save the token into a cookie
 
-                var resource = $resource(SECURITY_OAUTH.profile, {}, {
-                    //get: { method: 'JSONP', params: { callback: 'JSON_CALLBACK' } }
-                });
-                return RequestWrapper.wrap(resource, ['get']);
-            }])
+            setTokenInCurrentUser(token);
+
+            return token;
+        };
 
 
         /**
-         * @ngdoc service
-         * @name AppSecurity.factory:RoleService
-         * @requires $log
-         * @requires AppConfiguration.constant:AUTHORIZATION_DATA
-         * @requires AppCache.factory:CacheFactory
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#setExpiresAt
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
          * @description
-         * Manages user's roles.
+         * Set the access token expiration date (useful for refresh logics)
          */
-        .factory('RoleService', ['$log', 'AUTHORIZATION_DATA', 'CacheFactory',
-            function($log, AUTHORIZATION_DATA, CacheFactory) {
-
-
-                return {
-                    /**
-                     * @ngdoc method
-                     * @name AppSecurity.factory:RoleService#validateRoleAdmin
-                     * @methodOf AppSecurity.factory:RoleService
-                     * @description Check if the passed user has a role in the adminsitrator family
-                     * @returns {boolean} True if the role of the usder has admin previleges
-                     */
-                    validateRoleAdmin: function() {
-                        var roles = CacheFactory._browserCache.get('loggedUser').roles;
-                        $log.debug('roles in session: ' + roles);
-
-                        var result;
-                        if (roles && AUTHORIZATION_DATA.adminRoles) {
-                            for (var j = 0; j < AUTHORIZATION_DATA.adminRoles.length; j++) {
-                                if (_.contains(roles, AUTHORIZATION_DATA.adminRoles[j])) {
-                                    result = true;
-                                    break;
-                                } else {
-                                    result = false;
-                                }
-                            }
-                            return result;
-                        } else {
-                            return false;
-                        }
-                    },
-                    /**
-                     * @ngdoc method
-                     * @name AppSecurity.factory:RoleService#validateRoleInUserOther
-                     * @methodOf AppSecurity.factory:RoleService
-                     * @param {string} role The role to be validated
-                     * @description Check if the passed user has a given role
-                     * @returns {boolean} True if the user has that role
-                     */
-                    validateRoleInUserOther: function(role) {
-                        if (CacheFactory._browserCache.currentUser) {
-                            var user = CacheFactory._browserCache.currentUser;
-                            return _.contains(role, user.roles);
-                        } else {
-                            return false;
-                        }
-
-                    }
-                };
-            }])
+        function setExpiresAt() {
+            if (token) {
+                var expires_at = new Date();
+                expires_at.setSeconds(expires_at.getSeconds() + parseInt(token.expires_in) - 60); // 60 seconds less to secure browser and response latency
+                token.expires_at = expires_at;
+            }
+        };
 
 
         /**
-         * @ngdoc service
-         * @name AppSecurity.factory:AuthenticationService
-         * @requires AppSecurity.factory:UserService
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_AccessToken#removeFragment
+         * @methodOf AppSecurity.factory:Oauth_AccessToken
+         * @param {object} scope The current scope
          * @description
-         * Exposes some useful methods for apps developers.
+         * Remove the fragment URI
          */
-        .factory('AuthenticationService', ['$rootScope', 'UserService', 'Base64', '$http', '$q', '$log', 'SECURITY_GENERAL',
-            function($rootScope, UserService, Base64, $http, $q, $log, SECURITY_GENERAL) {
+        function removeFragment(scope) {
+            //TODO we need to let the fragment live if it's not the access token
+            $location.hash('');
+        }
 
-                return {
-                        sendLoginRequest: function (credentials) {
-                            var deferred = $q.defer();
-                            var encoded = Base64.encode(credentials.name + ':' + credentials.password);
 
-                            $http({
-                                method: SECURITY_GENERAL.loginHTTPMethod,
-                                url: SECURITY_GENERAL.loginURL,
-                                headers: {
-                                    'Authorization': 'Basic ' + encoded, 
-                                    'Content-Type': SECURITY_GENERAL.Headers_ContentType
-                                },
-                                timeout: 30000, 
-                                cache: false
-                            })
-                            .success(function (data, status, headers, config) {
-                                var results = [];
-                                results.data = data;
-                                results.headers = headers;
-                                results.status = status;
-                                results.config = config;
-                                
-                                deferred.resolve(results);            
-                            })
-                            .error(function (data, status) {
-                                deferred.reject(data, status);
-                            });
-                            return deferred.promise;        
-                        },
-                        
-                        sendLogoutRequest: function (credentials) {
-                            var deferred = $q.defer();
-
-                            $http({
-                                method: SECURITY_GENERAL.logoutHTTPMethod,
-                                url: SECURITY_GENERAL.logoutURL,
-                                headers: {
-                                    'Content-Type': SECURITY_GENERAL.Headers_ContentType
-                                },
-                                timeout: 30000, 
-                                cache: false
-                            })
-                            .success(function (data, status, headers, config) {
-                                var results = [];
-                                results.data = data;
-                                results.headers = headers;
-                                results.status = status;
-                                results.config = config;
-
-                                deferred.resolve(results);            
-                            })
-                            .error(function (data, status) {
-                                deferred.reject(data, status);
-                            });
-                            return deferred.promise;
-                        },
-                    
-                    /**
-                     * @ngdoc method
-                     * @name AppSecurity.factory:AuthenticationService#login
-                     * @methodOf AppSecurity.factory:AuthenticationService
-                     * @param {string} name Name of the user
-                     * @param {object} roles Set of roles of the user as array
-                     * @param {string} token The token from the oauth server
-                     * @param {boolean} isLogged If the user is logged or not
-                     * @param {string} role The role to be validated
-                     * @description Sets the new logged user
-                     */
-                    login: function(name, roles, bToken, xsrfToken, isLogged) {
-                        //$log.debug(' -- bToken -- : ' + bToken);
-                        var user = new User(name, roles, bToken, xsrfToken, isLogged);
-                        $log.debug(user.print());
-                        UserService.setCurrentUser(user);
-                    },
-                    /**
-                     * @ngdoc method
-                     * @name AppSecurity.factory:AuthenticationService#isLoggedIn
-                     * @methodOf AppSecurity.factory:AuthenticationService
-                     * @param {string} role The role to be validated
-                     * @description Check if the user is logged
-                     * @returns {boolean}  true if is already logged
-                     */
-                    isLoggedIn: function() {
-                        if (UserService.getCurrentUser()) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    /**
-                     * @ngdoc method
-                     * @name AppSecurity.factory:AuthenticationService#logOut
-                     * @methodOf AppSecurity.factory:AuthenticationService
-                     * @param {AppSecurity.global:User} user The User object to be logged out
-                     * @description Removes the current user from the app
-                     */
-                    logOut: function(user) {
-                        UserService.removeUser(user);
-                    }
-
-                };
+        return factory;
             }])
-
-
-        /**
-         * @ngdoc service
-         * @name AppSecurity.factory:UserService
-         * @requires $log
-         * @requires AppCache.factory:CacheFactory
-         * @description
-         * Handles the user in the app.
-         */
-        .factory('UserService', ['$log', 'CacheFactory',
-            function($log, CacheFactory) {
-
-
-                return {
-                    /**
-                     * @ngdoc method name, roles, bToken, xsrfToken, isLogged
-                     * @name AppSecurity.factory:UserService#setCurrentUser
-                     * @methodOf AppSecurity.factory:UserService
-                     * @param {AppSecurity.global:User} loggedUser The currently logged user
-                     * @description Writes the current user in cache ('currentUser').
-                     */
-                    setCurrentUser: function(loggedUser) {
-                        
-                        CacheFactory._browserCache.put('loggedUser', {
-                            username: loggedUser.name,
-                            roles: loggedUser.roles,
-                            bToken: loggedUser.bToken,
-                            xsrfToken: loggedUser.xsrfToken,
-                            isLogged: loggedUser.isLogged
-                        });
-                        
-                        $log.debug('New user has been stored to cache.');
-                    },
-                    /**
-                     * @ngdoc method
-                     * @name AppSecurity.factory:UserService#getCurrentUser
-                     * @methodOf AppSecurity.factory:UserService
-                     * @description Retrieves the current user from cache ('currentUser').
-                     * @returns {AppSecurity.global:User} The currently logged user
-                     */
-                    getCurrentUser: function() {
-                        var loggedUser = CacheFactory._browserCache.get('loggedUser');
-
-                        if(loggedUser && loggedUser.isLogged){
-                            return new User(loggedUser.username, loggedUser.roles, loggedUser.bToken, loggedUser.xsrfToken, loggedUser.isLogged);
-                        }
-                    },                   
-                    /**
-                     * @ngdoc method
-                     * @name AppSecurity.factory:UserService#removeUser
-                     * @methodOf AppSecurity.factory:UserService
-                     * @param {AppSecurity.global:User} loggedUser The currently logged user
-                     * @description Removes the current user from the app, including cache.
-                     */
-                    removeUser: function(loggedUser) {
-                        CacheFactory._browserCache.remove('loggedUser');
-                    }
-                }
-            }])
-
 
 
 /**
-<<<<<<< HEAD
+ * @ngdoc service
+ * @name AppSecurity.factory:Oauth_Endpoint
+ * @requires AppSecurity.factory:Oauth_AccessToken
+ * @requires $location
+ * @description
+ * OAuth Endpoint service.
+ * Contains one factory managing the authorization's (endpoint) URL.
+ */
+.factory('Oauth_Endpoint', ['$location',
+            function ($location) {
+
+        var factory = {};
+        var url;
+
+
+
+        //TODO Check against other oauth providers (linkedin, twitter).
+
+        /*
+         *NOTE
+         *Google uses the same url for authentication and authorization, so just
+         *redirect your users to the authorize url with the appropriate parameters in
+         *the query string. Google then determines if the user needs to login,
+         *authorize your app, or both.
+         *The flow would go something like this...
+         *1-Get the request token
+         *2-Redirect your users to the authorization link
+         *https://www.google.com/accounts/OAuthAuthorizeToken?scope=http%3A%2F%2Fwww.google.com%2Fm8%2Ffeeds&oauth_token=REQUEST_TOKEN&oauth_callback=http%3A%2F%2Fwww.mysite.com%2Fcallback
+         *3-User authorizes your app, then exchange the request token for an access token.
+         */
+
+
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_Endpoint#set
+         * @methodOf AppSecurity.factory:Oauth_Endpoint
+         * @param {object} scope The current scope
+         * @description Defines the authorization URL with correct attributes.
+         * @returns {String} The URL for the oauth endpoint
+         */
+        factory.set = function (scope) {
+            url = scope.site +
+                scope.authorizePath +
+                '?response_type=token' + '&' +
+                'client_id=' + scope.client + '&' +
+                'redirect_uri=' + scope.redirect + '&' +
+                'scope=' + scope.scope + '&' +
+                'state=' + $location.url();
+
+            return url;
+        }
+
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_Endpoint#get
+         * @methodOf AppSecurity.factory:Oauth_Endpoint
+         * @description Returns the authorization URL.
+         * @returns {String} The URL for the oauth endpoint
+         */
+        factory.get = function () {
+            return url;
+        }
+
+        /**
+         * @ngdoc method
+         * @name AppSecurity.factory:Oauth_Endpoint#redirect
+         * @methodOf AppSecurity.factory:Oauth_Endpoint
+         * @description Redirects the app to the authorization URL.
+         */
+        factory.redirect = function () {
+            window.location.replace(url);
+        }
+
+        return factory;
+            }])
+
+
+/**
  * @ngdoc service
  * @name AppSecurity.factory:Oauth_RequestWrapper
  * @requires AppSecurity.factory:Oauth_AccessToken
@@ -1159,75 +561,85 @@ angular.module('AppSecurity', [
  * Requests wrapper. It wraps every request setting needed header by injecting
  * the access token into the header
  */
-.factory('Oauth_RequestWrapper', ['Oauth_AccessToken', 'Oauth_Endpoint', '$http',
-    function (AccessToken, Endpoint, $http) {
+.factory('Oauth_RequestWrapper', ['$log', '$browser', 'Oauth_AccessToken', 'REST_CONFIG', 'SECURITY_GENERAL',
+            function ($log, $browser, Oauth_AccessToken, REST_CONFIG, SECURITY_GENERAL) {
         var factory = {};
-        var token;
-
+        //var token;
 
         /**
          * @ngdoc method
-         * @name AppSecurity.factory:Oauth_RequestWrapper#wrap
+         * @name AppSecurity.factory:Oauth_RequestWrapper#wrapRequest
          * @methodOf AppSecurity.factory:Oauth_RequestWrapper
-         * @param {object} resource Array with resources
+         * @param {object} Restangular object
          * @param {object} actions Array with actions
-         * @param {object} options Array with options
-         * @description Wraps every request.
-         * @returns {object} the request wrapped resource
+         * @description Wraps every request with the Restangular object
+         * @returns {object} the modified Restangular object
          */
-        factory.wrap = function (resource, actions, options) {
-            var wrappedResource = resource;
-            for (var i = 0; i < actions.length; i++) {
-                request(wrappedResource, actions[i]);
-            };
-            return wrappedResource;
+        factory.wrapRequest = function (restangular) {
+            var token = Oauth_AccessToken.get();
+            var wrappedRestangular = restangular;
+
+            if (token) {
+                $log.debug("Including default headers in request.");
+                setRequestHeaders(token, restangular);
+            } else {
+                $log.debug("OAuth token is not present yet.");
+            }
+
+
+            return wrappedRestangular;
         };
+
 
 
         /////////////////////////////Private methods///////////////////////////////////
 
-
         /**
          * @ngdoc method
-         * @name AppSecurity.factory:Oauth_RequestWrapper#request
+         * @name AppSecurity.factory:Oauth_RequestWrapper#setRequestHeaders
          * @methodOf AppSecurity.factory:Oauth_RequestWrapper
-         * @param {object} resource The resource
-         * @param {object} action The action
-         * @description Verify if the access token exists and based on it set or unset the header request.
-         * @returns {string} the request resource
+         * @param {string} token The token value from the oauth server
+         * @description
+         * Set security request headers
+         *
          */
-        function request(resource, action) {
-            resource['_' + action] = resource[action];
+        function setRequestHeaders(token, wrappedRestangular) {
+            $log.debug('token: ' + token);
+            $log.debug('is same domain? ' + isSameDomain(REST_CONFIG.BaseUrl, $browser.url()));
 
-            resource[action] = function (params, data, success, error) {
-                var token = AccessToken.get();
-                if (token && AccessToken.expired()) {
-                    Endpoint.redirect()
-                }
+            if (token) {
+                var xsrfHeaderValue;
+                if (isSameDomain(REST_CONFIG.BaseUrl, $browser.url())) {
+                    if (SECURITY_GENERAL.XSRFPolicyType === 0) {
+                        wrappedRestangular.setDefaultHeaders({
+                            'Authorization': 'Bearer' + token,
+                            'Content-Type': REST_CONFIG.DefaultContentType
+                        });
+                    } else if (SECURITY_GENERAL.XSRFPolicyType === 1) {
+                        xsrfHeaderValue = Oauth_AccessToken.getXSRF();
+                        wrappedRestangular.setDefaultHeaders({
+                            'Authorization': 'Bearer' + token,
+                            'Content-Type': REST_CONFIG.DefaultContentType,
+                            'X-XSRF-TOKEN': xsrfHeaderValue
+                        });
+                    } else if (SECURITY_GENERAL.XSRFPolicyType === 2) {
+                        xsrfHeaderValue = $browser.cookies()[SECURITY_GENERAL.XSRFCSRFCookieName];
+                        wrappedRestangular.setDefaultHeaders({
+                            'Authorization': 'Bearer' + token,
+                            'Content-Type': REST_CONFIG.DefaultContentType,
+                            'X-XSRF-TOKEN': xsrfHeaderValue
+                        });
+                    }
+                };
 
-                setAuthorizationHeader(token);
-                return resource['_' + action].call(this, params, data, success, error);
-            };
-        };
 
-
-        /**
-         * @ngdoc method
-         * @name AppSecurity.factory:Oauth_RequestWrapper#setAuthorizationHeader
-         * @methodOf AppSecurity.factory:Oauth_RequestWrapper
-         * @param {string} token The token avlue from the oauth server
-         * @description Set the oauth request header
-         */
-        function setAuthorizationHeader(token) {
-            if (token)
-                $http.defaults.headers.common['Authorization'] = 'Bearer ' + token.access_token;
-            else
-                delete $http.defaults.headers.common['Authorization']
+            }
+            return wrappedRestangular;
         };
 
 
         return factory;
-}])
+            }])
 
 
 /**
@@ -1241,13 +653,13 @@ angular.module('AppSecurity', [
  * Profile model. *
  */
 .factory('Oauth_Profile', ['Oauth_RequestWrapper', '$resource', 'SECURITY_OAUTH',
-  function (RequestWrapper, $resource, SECURITY_OAUTH) {
+            function (RequestWrapper, $resource, SECURITY_OAUTH) {
 
         var resource = $resource(SECURITY_OAUTH.profile, {}, {
             //get: { method: 'JSONP', params: { callback: 'JSON_CALLBACK' } }
         });
         return RequestWrapper.wrap(resource, ['get']);
-}])
+            }])
 
 
 /**
@@ -1260,11 +672,10 @@ angular.module('AppSecurity', [
  * Manages user's roles.
  */
 .factory('RoleService', ['$log', 'AUTHORIZATION_DATA', 'CacheFactory',
-    function ($log, AUTHORIZATION_DATA, CacheFactory) {
+            function ($log, AUTHORIZATION_DATA, CacheFactory) {
 
 
         return {
-
             /**
              * @ngdoc method
              * @name AppSecurity.factory:RoleService#validateRoleAdmin
@@ -1273,8 +684,9 @@ angular.module('AppSecurity', [
              * @returns {boolean} True if the role of the usder has admin previleges
              */
             validateRoleAdmin: function () {
+                var roles = CacheFactory._browserCache.get('loggedUser').roles;
+                $log.debug('roles in session: ' + roles);
 
-                var roles = CacheFactory._browserCache.currentUser.roles
                 var result;
                 if (roles && AUTHORIZATION_DATA.adminRoles) {
                     for (var j = 0; j < AUTHORIZATION_DATA.adminRoles.length; j++) {
@@ -1290,7 +702,6 @@ angular.module('AppSecurity', [
                     return false;
                 }
             },
-
             /**
              * @ngdoc method
              * @name AppSecurity.factory:RoleService#validateRoleInUserOther
@@ -1309,7 +720,8 @@ angular.module('AppSecurity', [
 
             }
         };
-}])
+            }])
+
 
 /**
  * @ngdoc service
@@ -1318,12 +730,65 @@ angular.module('AppSecurity', [
  * @description
  * Exposes some useful methods for apps developers.
  */
-.factory('AuthenticationService', ['UserService',
-    function (UserService) {
-
-        'use strict';
+.factory('AuthenticationService', ['$rootScope', 'UserService', 'Base64', '$http', '$q', '$log', 'SECURITY_GENERAL',
+            function ($rootScope, UserService, Base64, $http, $q, $log, SECURITY_GENERAL) {
 
         return {
+            sendLoginRequest: function (credentials) {
+                var deferred = $q.defer();
+                var encoded = Base64.encode(credentials.name + ':' + credentials.password);
+
+                $http({
+                    method: SECURITY_GENERAL.loginHTTPMethod,
+                    url: SECURITY_GENERAL.loginURL,
+                    headers: {
+                        'Authorization': 'Basic ' + encoded,
+                        'Content-Type': SECURITY_GENERAL.Headers_ContentType
+                    },
+                    timeout: 30000,
+                    cache: false
+                })
+                    .success(function (data, status, headers, config) {
+                        var results = [];
+                        results.data = data;
+                        results.headers = headers;
+                        results.status = status;
+                        results.config = config;
+
+                        deferred.resolve(results);
+                    })
+                    .error(function (data, status) {
+                        deferred.reject(data, status);
+                    });
+                return deferred.promise;
+            },
+
+            sendLogoutRequest: function (credentials) {
+                var deferred = $q.defer();
+
+                $http({
+                    method: SECURITY_GENERAL.logoutHTTPMethod,
+                    url: SECURITY_GENERAL.logoutURL,
+                    headers: {
+                        'Content-Type': SECURITY_GENERAL.Headers_ContentType
+                    },
+                    timeout: 30000,
+                    cache: false
+                })
+                    .success(function (data, status, headers, config) {
+                        var results = [];
+                        results.data = data;
+                        results.headers = headers;
+                        results.status = status;
+                        results.config = config;
+
+                        deferred.resolve(results);
+                    })
+                    .error(function (data, status) {
+                        deferred.reject(data, status);
+                    });
+                return deferred.promise;
+            },
 
             /**
              * @ngdoc method
@@ -1336,11 +801,12 @@ angular.module('AppSecurity', [
              * @param {string} role The role to be validated
              * @description Sets the new logged user
              */
-            login: function (name, roles, token, isLogged) {
-                var user = new User(name, roles, token, isLogged);
+            login: function (name, roles, bToken, xsrfToken, isLogged) {
+                //$log.debug(' -- bToken -- : ' + bToken);
+                var user = new User(name, roles, bToken, xsrfToken, isLogged);
+                $log.debug(user.print());
                 UserService.setCurrentUser(user);
             },
-
             /**
              * @ngdoc method
              * @name AppSecurity.factory:AuthenticationService#isLoggedIn
@@ -1356,7 +822,6 @@ angular.module('AppSecurity', [
                     return false;
                 }
             },
-
             /**
              * @ngdoc method
              * @name AppSecurity.factory:AuthenticationService#logOut
@@ -1369,7 +834,7 @@ angular.module('AppSecurity', [
             }
 
         };
-}])
+            }])
 
 
 /**
@@ -1381,25 +846,29 @@ angular.module('AppSecurity', [
  * Handles the user in the app.
  */
 .factory('UserService', ['$log', 'CacheFactory',
-        function ($log, CacheFactory) {
+            function ($log, CacheFactory) {
 
 
         return {
-
             /**
-             * @ngdoc method
+             * @ngdoc method name, roles, bToken, xsrfToken, isLogged
              * @name AppSecurity.factory:UserService#setCurrentUser
              * @methodOf AppSecurity.factory:UserService
              * @param {AppSecurity.global:User} loggedUser The currently logged user
              * @description Writes the current user in cache ('currentUser').
              */
             setCurrentUser: function (loggedUser) {
-                $log.debug('Setting new user:');
-                $log.debug(loggedUser.print());
-                CacheFactory._browserCache.currentUser = loggedUser;
+
+                CacheFactory._browserCache.put('loggedUser', {
+                    username: loggedUser.name,
+                    roles: loggedUser.roles,
+                    bToken: loggedUser.bToken,
+                    xsrfToken: loggedUser.xsrfToken,
+                    isLogged: loggedUser.isLogged
+                });
+
                 $log.debug('New user has been stored to cache.');
             },
-
             /**
              * @ngdoc method
              * @name AppSecurity.factory:UserService#getCurrentUser
@@ -1408,9 +877,12 @@ angular.module('AppSecurity', [
              * @returns {AppSecurity.global:User} The currently logged user
              */
             getCurrentUser: function () {
-                return CacheFactory._browserCache.currentUser;
-            },
+                var loggedUser = CacheFactory._browserCache.get('loggedUser');
 
+                if (loggedUser && loggedUser.isLogged) {
+                    return new User(loggedUser.username, loggedUser.roles, loggedUser.bToken, loggedUser.xsrfToken, loggedUser.isLogged);
+                }
+            },
             /**
              * @ngdoc method
              * @name AppSecurity.factory:UserService#removeUser
@@ -1419,15 +891,12 @@ angular.module('AppSecurity', [
              * @description Removes the current user from the app, including cache.
              */
             removeUser: function (loggedUser) {
-                CacheFactory._browserCache.currentUser = null;
-                CacheFactory._scopeCache.put('login_status', 'Not connected');
-                CacheFactory._scopeCache.put('userProfile', null);
+                CacheFactory._browserCache.remove('loggedUser');
             }
         }
-}]);
+            }])
 
-
- /* @doc function
+/* @doc function
  * @name AppSecurity.global:User
  * @param {string} name The name of the user to be registered
  * @param {object} roles Array with the list of assigned roles
@@ -1447,12 +916,10 @@ function User(name, roles, bToken, xsrfToken, isLogged) {
     //boolean
     this.isLogged = isLogged;
 }
-;
 
-User.prototype.print = function() {
+User.prototype.print = function () {
     return 'User data. Name:' + this.name + '| Roles: ' + this.roles.toString() + '| Bearer Token: ' + this.bToken + '| XSRFToken: ' + this.xsrfToken + '| Logged: ' + this.isLogged;
 };
-
 
 /**
  * @function
@@ -1484,40 +951,17 @@ function isSameDomain(requestUrl, locationUrl) {
     };
 
     return (domain1.protocol == domain2.protocol || domain1.relativeProtocol) &&
-            domain1.host == domain2.host &&
-            (domain1.port == domain2.port || (domain1.relativeProtocol &&
-                    domain2.port == DEFAULT_PORTS[domain2.protocol]));
+        domain1.host == domain2.host &&
+        (domain1.port == domain2.port || (domain1.relativeProtocol &&
+            domain2.port == DEFAULT_PORTS[domain2.protocol]));
 };
 
-/**
- * @doc function
- * @name AppSecurity.global:User
- * @param {string} name The name of the user to be registered
- * @param {object} roles Array with the list of assigned roles
- * @param {string} token The provided encrypted oauth token
- * @param {boolean} isLogged The user is logged or not
- * @description Entity with main data about a user to be handled by the module
- */
-function User(name, roles, token, isLogged) {
-    this.name = name;
-    //Array
-    this.roles = roles;
-    //string
-    this.token = token;
-    //boolean
-    this.isLogged = isLogged;
-};
-
-User.prototype.print = function () {
-    return 'User data. Name:' + this.name + '| Roles: ' + this.roles.toString() + '| Token: ' + this.token + '| Logged: ' + this.isLogged;
-}
-
- /* @function
+/* @function
  * @param {string} requestUrl The url of the request.
  * @param {string} locationUrl The current browser location url.
  * @returns {boolean} Whether the request is for the same domain.
  * @description Parse a request and location URL and determine whether this is a same-domain request.
  */
-function calculatexsrfHeader (providedCookie, xsrfPolicyType) {
+function calculatexsrfHeader(providedCookie, xsrfPolicyType) {
 
 };
