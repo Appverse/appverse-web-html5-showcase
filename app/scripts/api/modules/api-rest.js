@@ -139,12 +139,28 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
          * @methodOf AppREST.factory:RESTFactory
          * @param {String} path The item URL
          * @description Returns a complete list from a REST resource.
-         * @returns {object} List of values
+         * @returns {object} Does a GET to path
+         * Returns an empty array by default. Once a value is returned from the server
+         * that array is filled with those values.
          */
         factory.readList = function (path) {
-            return Restangular.all(path).getList();
+            return Restangular.all(path).getList().$object;
         };
 
+        /**
+         * @ngdoc method
+         * @name AppREST.factory:RESTFactory#readList
+         * @methodOf AppREST.factory:RESTFactory
+         * @param {String} path The item URL
+         * @description Returns a complete list from a REST resource.
+         * @returns {object} Does a GET to path
+         * It does not return an empty array by default. 
+         * Once a value is returned from the server that array is filled with those values.
+         */
+        factory.readListNoEmpty = function (path) {
+            return Restangular.all(path).getList();
+        };
+        
         /**
          * @ngdoc method
          * @name AppREST.factory:RESTFactory#readBatch

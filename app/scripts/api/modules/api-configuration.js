@@ -468,7 +468,7 @@ Future updates of Restangular imply review of this section in order to keep cons
  * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
  */
 .constant('SECURITY_GENERAL', {
-    securityEnabled: false
+    securityEnabled: true
 })
 
 .constant('SECURITY_OAUTH', {
