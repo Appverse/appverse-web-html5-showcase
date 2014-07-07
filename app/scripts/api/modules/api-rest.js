@@ -106,8 +106,8 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
  * Contains methods for data finding (demo).
  * This module provides basic quick standard access to a REST API.
  */
-.factory('RESTFactory', ['$log', 'Restangular', 'Oauth_RequestWrapper','REST_CONFIG', 'SECURITY_GENERAL',
-    function ($log, Restangular, Oauth_RequestWrapper, REST_CONFIG, SECURITY_GENERAL) {
+.factory('RESTFactory', ['$log', '$q', '$http', 'Restangular', 'Oauth_RequestWrapper','REST_CONFIG', 'SECURITY_GENERAL', 
+    function ($log, $q, $http, Restangular, Oauth_RequestWrapper, REST_CONFIG, SECURITY_GENERAL) {
 
         if(SECURITY_GENERAL.securityEnabled){
             Restangular = Oauth_RequestWrapper.wrapRequest(Restangular);
