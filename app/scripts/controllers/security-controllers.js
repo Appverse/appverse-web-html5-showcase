@@ -22,12 +22,6 @@ angular.module('appverseClientIncubatorApp')
  */
 .controller('GooglePlusLoginCtrl', ['$scope', '$log', 'GOOGLE_AUTH', 'AUTHORIZATION_DATA', 'SECURITY_GENERAL', 'AuthenticationService', 'CacheFactory',
     function($scope, $log, GOOGLE_AUTH, AUTHORIZATION_DATA, SECURITY_GENERAL, AuthenticationService, CacheFactory) {
-//    $log.debug('GOOGLE_AUTH.scopeURL: ' + GOOGLE_AUTH.scopeURL);
-//    $log.debug('GOOGLE_AUTH.requestvisibleactionsURL: ' + GOOGLE_AUTH.requestvisibleactionsURL);
-//    $log.debug('GOOGLE_AUTH.clientID: ' + GOOGLE_AUTH.clientID);
-//    $log.debug('GOOGLE_AUTH.theme: ' + GOOGLE_AUTH.theme);
-//    $log.debug('GOOGLE_AUTH.cookiepolicy: ' + GOOGLE_AUTH.cookiepolicy);
-//    $log.debug('GOOGLE_AUTH.revocationURL: ' + GOOGLE_AUTH.revocationURL);
     
     if(SECURITY_GENERAL.securityEnabled){
         var parameters = {"scope": GOOGLE_AUTH.scopeURL,
@@ -224,6 +218,7 @@ angular.module('appverseClientIncubatorApp')
                 }
             };
         }else{
+            $scope.login_status =  SECURITY_GENERAL.notEnabled;
             $log.warn("Security is not enabled in this application.");
         }
        

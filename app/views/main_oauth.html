@@ -8,20 +8,14 @@
 
     <div ng-controller="OauthLoginCtrl" ng-cloak>
         <div>
-<!--            <p><h3>Logged User Info</h3></p>-->
             <p><b>User Status: {{ login_status }} </b></p>
         </div>
         <div ng-show="login_status == 'connected'">
             <p><b>Welcome {{ user.name }}!</b></p>
-<!--            <p>User logged: {{ user.name }} </p>
-            <p>Roles: {{ user.roles }} </p>
-            <p>Bearer Token value: {{ user.bToken }} </p>
-            <p>XSRF Token value: {{ user.xsrfToken }} </p>
-            <p>Is logged now? {{ user.isLogged }} </p>-->
         </div>
 
     
-        <div ng-hide="login_status == 'connected'">
+        <div ng-hide="login_status == 'connected' || login_status == 'Security not enabled'">
             <button class="btn" ng-click="open({name: '', password: ''})">Click here to login</button>
         </div>
          <div ng-show="login_status == 'connected'">

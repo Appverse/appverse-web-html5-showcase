@@ -507,7 +507,8 @@ Future updates of Restangular imply review of this section in order to keep cons
     username: 'admin',
     password: 'admin',
     connected: 'connected',
-    disconnected: 'disconnected'
+    disconnected: 'disconnected',
+    notEnabled: 'Security not enabled'
             
 })
 
