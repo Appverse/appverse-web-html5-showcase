@@ -1,48 +1,44 @@
 <table class="table table-bordered table-striped">
-	<thead>
-		<tr>
-			<th>
-				Title 
-				<a ng-click="sortBy='title'" class="glyphicon glyphicon-chevron-down"></a><a ng-click="sortBy='-title'" class="glyphicon glyphicon-chevron-up"></a>
-			</th>
-			<th>
-				Updated
-<a ng-click="sortBy='updated'" class="glyphicon glyphicon-chevron-down"></a><a ng-click="sortBy='-updated'" class="glyphicon glyphicon-chevron-up"></a>				
-			</th><th>&nbsp;</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr ng-repeat="note in notes | filter: filter | orderBy: sortBy">
-			<td class="notetitle" ng-click="loadNote(note.key)">{{note.title}}</td>
-			<td>{{note.updated | dateFormat}}</td>
-			<td><a class="btn btn-primary" href="#/edit/{{note.key}}">Edit</a> <a class="btn btn-danger" ng-click="deleteNote(note.key)">Delete</a></td>
-		</tr>
-		</tbody>
+    <thead>
+        <tr>
+            <th>
+                Title 
+                <a ng-click="sortBy = 'title'" class="glyphicon glyphicon-chevron-down"></a><a ng-click="sortBy = '-title'" class="glyphicon glyphicon-chevron-up"></a>
+            </th>
+            <th>
+                Description
+                <a ng-click="sortBy = 'body'" class="glyphicon glyphicon-chevron-down"></a><a ng-click="sortBy = '-body'" class="glyphicon glyphicon-chevron-up"></a>
+            </th>
+            <th>
+                Updated
+                <a ng-click="sortBy = 'updated'" class="glyphicon glyphicon-chevron-down"></a><a ng-click="sortBy = '-updated'" class="glyphicon glyphicon-chevron-up"></a>				
+            </th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="note in notes| filter: filter | orderBy: sortBy">
+            <td class="notetitle" ng-click="loadNote(note.key)">{{note.title}}</td>
+            <td class="notebody">{{note.body}}</td>
+            <td>{{note.updated| dateFormat}}</td>
+            <td><a class="btn btn-danger" ng-click="deleteNote(note.key)">Delete</a></td>
+        </tr>
+    </tbody>
 </table>
 
-<form role="form" class="form-horizontal" ng-submit="saveNote()">
-<input type="hidden" id="key" ng-model="note.id">
-<div class="form-group">
-	<label for="title" class="col-lg-2 control-label">Title</label>
-	<div class="col-lg-10">
-	<input type="text" id="title" required class="form-control" ng-model="note.title">
-	</div>
-</div>
-<div class="form-group">
-	<label for="body" class="col-lg-2 control-label">Body</label>	
-	<div class="col-lg-10">
-	<textarea id="body" required class="form-control" ng-model="note.body"></textarea>
-	</div>
-</div>
-<div class="form-group">
-	<label for="tags" class="col-lg-2 control-label">Tags (comma separated)</label>	
-	<div class="col-lg-10">
-		<input type="text" id="tags" class="form-control" ng-model="tagString">
-	</div>
-</div>
-<div class="form-group">
-	<div class="col-lg-offset-2 col-lg-10">
-		<button id="saveNoteButton" class="btn btn-default">Save Note</button>
-	</div>
-</div>
+
+<form ng-submit="saveNote()">
+    <input type="hidden" id="key" ng-model="note.id">
+    <label>Title</label>
+    <input type="text" id="title" required class="form-control" ng-model="note.title">
+    <label>Item description:</label>
+    <textarea id="body" required class="form-control" ng-model="note.body"></textarea>
+    <label>Item tags:</label>
+    <input type="text" id="tags" class="form-control" ng-model="tagString">
+    <button id="saveNoteButton" class="btn btn-primary">Create/Update</button>
 </form>
+<button class="btn btn-primary" ng-click="clearForm()">Clear Form for a new Note</button>
+
+
+
+
+

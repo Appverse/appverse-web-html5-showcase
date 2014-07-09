@@ -43,868 +43,466 @@
 
 angular.module('AppCache', ['ng', 'AppConfiguration', 'jmdobry.angular-cache', 'ngResource'])
 
-.run(['$log', 'CacheFactory', 'CACHE_CONFIG', 'IDB',
-    function ($log, CacheFactory, CACHE_CONFIG, IDB) {
+        .run(['$log', 'CacheFactory', 'CACHE_CONFIG', 'IDBService',
+            function($log, CacheFactory, CACHE_CONFIG, IDBService) {
 
-            $log.info('AppCache run');
+                $log.info('AppCache run');
 
-            /* Initializes the different caches with params in configuration. */
-            if (CACHE_CONFIG.ScopeCache_Enabled) {
-                CacheFactory.setScopeCache(
-                    CACHE_CONFIG.ScopeCache_duration,
-                    CACHE_CONFIG.ScopeCache_capacity
-                );
-            }
-
-            if (CACHE_CONFIG.BrowserStorageCache_Enabled) {
-                CacheFactory.setBrowserStorage(
-                    CACHE_CONFIG.BrowserStorage_type,
-                    CACHE_CONFIG.MaxAge,
-                    CACHE_CONFIG.CacheFlushInterval,
-                    CACHE_CONFIG.DeleteOnExpire,
-                    CACHE_CONFIG.VerifyIntegrity
-                );
-            }
-
-            /* The cache for http calls */
-            if (CACHE_CONFIG.HttpCache_Enabled) {
-                CacheFactory.setDefaultHttpCacheStorage(
-                    CACHE_CONFIG.HttpCache_duration,
-                    CACHE_CONFIG.HttpCache_capacity);
-            }
-
-            /* IndexedDB */
-            if (CACHE_CONFIG.IndexedDBCache_Enabled) {
-                IDB.openDB(
-                        CACHE_CONFIG.IndexedDB_name, 
-                        CACHE_CONFIG.IndexedDB_version, 
-                        CACHE_CONFIG.IndexedDB_options);
-            }
-            
-           
-        }])
-    
-    .factory('CacheFactory', [
-        '$angularCacheFactory',
-        '$http',
-        'CACHE_CONFIG',
-        '$log',
-        'IDB',
-        function ($angularCacheFactory, $http, CACHE_CONFIG, $log, IDB) {
-
-            var factory = {
-                _scopeCache: null,
-                _browserCache: null,
-                _httpCache: null
-            };
-    }])
-
-/**
- * @ngdoc service
- * @name AppCache.service:CacheFactory
- * @requires $angularCacheFactory
- * @requires $http
- * @requires CACHE_CONFIG
- * @description
- * Contains methods for cache management.
- */
-.factory('CacheFactory', ['$angularCacheFactory', '$http', 'CACHE_CONFIG', '$log', 'IDB',
-    function ($angularCacheFactory, $http, CACHE_CONFIG, $log, IDB) {
-
-        var factory = {
-            _scopeCache: null,
-            _browserCache: null,
-            _httpCache: null
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:CacheFactory#setScopeCache
-         * @methodOf AppCache.service:CacheFactory
-         * @param {number} duration Items expire after this time.
-         * @param {number} capacity Turns the cache into LRU (Least Recently Used) cache. If you don't want $http's default cache to store every response.
-         * @description Configure the scope cache.
-         */
-        factory.setScopeCache = function (duration, capacity) {
-            factory._scopeCache = $angularCacheFactory(CACHE_CONFIG.DefaultScopeCacheName, {
-                maxAge: duration,
-                capacity: capacity
-            });
-            return factory._scopeCache;
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:CacheFactory#getScopeCache
-         * @methodOf AppCache.service:CacheFactory
-         * @description getScopeCache is the singleton that CacheFactory manages as a local cache created with $angularCacheFactory, which is what we return from the service. Then, we can inject this into any controller we want and it will always return the same values.
-         *
-         * The newly created cache object has the following set of methods:
-         *
-         * {object} info() — Returns id, size, and options of cache.
-         *
-         * {{*}} put({string} key, {*} value) — Puts a new key-value pair into the cache and returns it.
-         *
-         * {{*}} get({string} key) — Returns cached value for key or undefined for cache miss.
-         *
-         * {void} remove({string} key) — Removes a key-value pair from the cache.
-         *
-         * {void} removeAll() — Removes all cached values.
-         *
-         * {void} destroy() — Removes references to this cache from $angularCacheFactory.
-         */
-        factory.getScopeCache = function () {
-            return factory._scopeCache || factory.setScopeCache(CACHE_CONFIG.ScopeCache_duration,
-                CACHE_CONFIG.ScopeCache_capacity);
-        };
-        
-        /**
-             @function
-             @param type Type of storage ( 1 local | 2 session).
-             @param maxAgeInit
-             @param cacheFlushIntervalInit
-             @param deleteOnExpireInit
-
-             @description This object makes Web Storage working in the Angular Way.
-             By default, web storage allows you 5-10MB of space to work with, and your data is stored locally
-             on the device rather than passed back-and-forth with each request to the server.
-             Web storage is useful for storing small amounts of key/value data and preserving functionality
-             online and offline.
-             With web storage, both the keys and values are stored as strings.
-
-             We can store anything except those not supported by JSON:
-             Infinity, NaN - Will be replaced with null.
-             undefined, Function - Will be removed.
-             The returned object supports the following set of methods:
-             {void} $reset() - Clears the Storage in one go.
-             */
-
-        factory.setBrowserStorage = function (type, maxAgeInit, cacheFlushIntervalInit, deleteOnExpireInit, verifyIntegrityInit) {
-                //$log.debug('type: ' + type);
-                var selectedStorageType;
-                if(type == '2'){
-                    selectedStorageType = CACHE_CONFIG.SessionBrowserStorage;
-                }else{
-                    selectedStorageType = CACHE_CONFIG.LocalBrowserStorage;
+                /* Initializes the different caches with params in configuration. */
+                if (CACHE_CONFIG.ScopeCache_Enabled) {
+                    CacheFactory.setScopeCache(
+                            CACHE_CONFIG.ScopeCache_duration,
+                            CACHE_CONFIG.ScopeCache_capacity
+                            );
                 }
-                //$log.debug('selectedStorageType: ' + selectedStorageType);
-                
-                factory._browserCache = $angularCacheFactory(CACHE_CONFIG.DefaultBrowserCacheName, {
-                    maxAge: maxAgeInit,
-                    cacheFlushInterval: cacheFlushIntervalInit,
-                    deleteOnExpire: deleteOnExpireInit,
-                    storageMode: selectedStorageType,
-                    verifyIntegrity: verifyIntegrityInit
-                });
-                return factory._browserCache;
-        };
-            
-            
-        /*
-             @function
-             @param duration items expire after this time.
-             @param capacity  turns the cache into LRU (Least Recently Used) cache.
-             If you don't want $http's default cache to store every response.
-             @description Http Cache Storage is the object to handle and configure the features
-             of the cache for default use with the $http service.
-             @description
-             Your can retrieve the currently cached data: var cachedData =
-             */
-        factory.setDefaultHttpCacheStorage = function (maxAge, capacity) {
-            return factory._browserCache;
-        };
 
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:CacheFactory#setDefaultHttpCacheStorage
-         * @methodOf AppCache.service:CacheFactory
-         * @param {number} duration items expire after this time.
-         * @param {string} capacity  turns the cache into LRU (Least Recently Used) cache.
-         * @description Default cache configuration for $http service
-         */
-        factory.setDefaultHttpCacheStorage = function (maxAge, capacity) {
-
-            var cacheId = 'MyHttpAngularCache';
-            factory._httpCache = $angularCacheFactory.get(cacheId);
-
-            if (!factory._httpCache) {
-                factory._httpCache = $angularCacheFactory(cacheId, {
-                    // This cache can hold x items
-                    capacity: capacity,
-
-                    // Items added to this cache expire after x milliseconds
-                    maxAge: maxAge,
-
-                    // Items will be actively deleted when they expire
-                    deleteOnExpire: 'aggressive',
-
-                    // This cache will check for expired items every x milliseconds
-                    recycleFreq: 15000,
-
-                    // This cache will clear itself every x milliseconds
-                    cacheFlushInterval: 15000,
-
-                    // This cache will sync itself with localStorage
-                    //                        storageMode: 'localStorage',
-
-                    // Custom implementation of localStorage
-                    //storageImpl: myLocalStoragePolyfill,
-
-                    // Full synchronization with localStorage on every operation
-                    verifyIntegrity: true
-                });
-            } else {
-                factory._httpCache.setOptions({
-                    // This cache can hold x items
-                    capacity: capacity,
-
-                    // Items added to this cache expire after x milliseconds
-                    maxAge: maxAge,
-
-                    // Items will be actively deleted when they expire
-                    deleteOnExpire: 'aggressive',
-
-                    // This cache will check for expired items every x milliseconds
-                    recycleFreq: 15000,
-
-                    // This cache will clear itself every x milliseconds
-                    cacheFlushInterval: 15000,
-
-                    // This cache will sync itself with localStorage
-                    storageMode: 'localStorage',
-
-                    // Custom implementation of localStorage
-                    //storageImpl: myLocalStoragePolyfill,
-
-                    // Full synchronization with localStorage on every operation
-                    verifyIntegrity: true
-                });
-            }
-            $http.defaults.cache = factory._httpCache;
-            return factory._httpCache;
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:CacheFactory#getHttpCache
-         * @methodOf AppCache.service:CacheFactory
-         * @description Returns the httpcache object in factory
-         * @returns httpcache object
-         */
-        factory.getHttpCache = function () {
-            return factory._httpCache;
-        };
-
-        return factory;
-    }
-])
-
-
-/**
- * @ngdoc service
- * @name AppCache.service:IDB
- * @description
- * This service has been planned to be used as HTML5's indexedDB specification with the commonAPI.
- *
- * Normally, and as a recommendation, we should have only one indexedDB per app.
- * <pre>
- * options = {
- *   storeName : 'your store name',
- *   keyPath : 'inline key',
- *   indexes : [{ name : 'indexName', unique : 'true/false' },{},...]
- * }
- * </pre>
- * Unify browser specific implementations:
- * <pre>
- * var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
- * var IDBKeyRange = window.IDBKeyRange || window.mozIDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
- * </pre>
- */
-.service('IDB', ['$rootScope', '$log',
-    function ($rootScope, $log) {
-        var self = this;
-        var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-        var IDBKeyRange = window.IDBKeyRange || window.mozIDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#openDB
-         * @methodOf AppCache.service:IDB
-         * @function
-         * @param {string} dbName .
-         * @param {int} version .
-         * @param {array} options .
-         * @description Initializes an IndexedDB on the browser
-         */
-        this.openDB = function (dbName, version, options) {
-
-            if (!indexedDB) {
-                return;
-            }
-
-            this.dbName = dbName;
-            this.version = version;
-            this.db = null;
-            this.objectStore = null;
-            this.options = {};
-            if (options instanceof Array) {
-                for (var i = 0; i < options.length; i++) {
-                    this.options[options[i].storeName] = options[i];
+                if (CACHE_CONFIG.BrowserStorageCache_Enabled) {
+                    CacheFactory.setBrowserStorage(
+                            CACHE_CONFIG.BrowserStorage_type,
+                            CACHE_CONFIG.MaxAge,
+                            CACHE_CONFIG.CacheFlushInterval,
+                            CACHE_CONFIG.DeleteOnExpire,
+                            CACHE_CONFIG.VerifyIntegrity
+                            );
                 }
-            } else {
-                this.options[options.storeName] = options;
-            }
-            $log.debug('options', this.options);
 
-            var request;
-            // The version value is important to work on most of browsers.
-            if (!!this.version) {
-                request = indexedDB.open(this.dbName, this.version);
-            } else {
-                request = indexedDB.open(this.dbName);
-            }
-            // handle the failure case
-            request.onerror = function (event) {
-                $log.debug('failed to open db ' + event);
-                self.failure();
-            };
-            // handle the upgrade case
-            request.onupgradeneeded = function (event) {
-                $log.debug('idb upgrade');
-                var db = event.target.result;
-                this.db = db;
-                var opKeys = Object.keys(this.options);
-                // Step through the options objects.
-                // The db needs to know about all keys and indexes in a store
-                for (var i = 0; i < opKeys.length; i++) {
-                    var options = this.options[opKeys[i]];
-                    var objectStore;
+                /* The cache for http calls */
+                if (CACHE_CONFIG.HttpCache_Enabled) {
+                    CacheFactory.setDefaultHttpCacheStorage(
+                            CACHE_CONFIG.HttpCache_duration,
+                            CACHE_CONFIG.HttpCache_capacity);
+                }
 
-                    if (!this.db.objectStoreNames.contains(options.storeName)) {
-                        if (!!options.keyPath) {
-                            objectStore = db.createObjectStore(options.storeName, {
-                                keyPath: options.keyPath
-                            });
-                        } else {
-                            objectStore = db.createObjectStore(options.storeName);
-                        }
+
+            }])
+
+        .factory('CacheFactory', [
+            '$angularCacheFactory',
+            '$http',
+            'CACHE_CONFIG',
+            '$log',
+            function($angularCacheFactory, $http, CACHE_CONFIG, $log) {
+
+                var factory = {
+                    _scopeCache: null,
+                    _browserCache: null,
+                    _httpCache: null
+                };
+            }])
+
+        /**
+         * @ngdoc service
+         * @name AppCache.service:CacheFactory
+         * @requires $angularCacheFactory
+         * @requires $http
+         * @requires CACHE_CONFIG
+         * @description
+         * Contains methods for cache management.
+         */
+        .factory('CacheFactory', ['$angularCacheFactory', '$http', 'CACHE_CONFIG', '$log',
+            function($angularCacheFactory, $http, CACHE_CONFIG, $log) {
+
+                var factory = {
+                    _scopeCache: null,
+                    _browserCache: null,
+                    _httpCache: null
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:CacheFactory#setScopeCache
+                 * @methodOf AppCache.service:CacheFactory
+                 * @param {number} duration Items expire after this time.
+                 * @param {number} capacity Turns the cache into LRU (Least Recently Used) cache. If you don't want $http's default cache to store every response.
+                 * @description Configure the scope cache.
+                 */
+                factory.setScopeCache = function(duration, capacity) {
+                    factory._scopeCache = $angularCacheFactory(CACHE_CONFIG.DefaultScopeCacheName, {
+                        maxAge: duration,
+                        capacity: capacity
+                    });
+                    return factory._scopeCache;
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:CacheFactory#getScopeCache
+                 * @methodOf AppCache.service:CacheFactory
+                 * @description getScopeCache is the singleton that CacheFactory manages as a local cache created with $angularCacheFactory, which is what we return from the service. Then, we can inject this into any controller we want and it will always return the same values.
+                 *
+                 * The newly created cache object has the following set of methods:
+                 *
+                 * {object} info() — Returns id, size, and options of cache.
+                 *
+                 * {{*}} put({string} key, {*} value) — Puts a new key-value pair into the cache and returns it.
+                 *
+                 * {{*}} get({string} key) — Returns cached value for key or undefined for cache miss.
+                 *
+                 * {void} remove({string} key) — Removes a key-value pair from the cache.
+                 *
+                 * {void} removeAll() — Removes all cached values.
+                 *
+                 * {void} destroy() — Removes references to this cache from $angularCacheFactory.
+                 */
+                factory.getScopeCache = function() {
+                    return factory._scopeCache || factory.setScopeCache(CACHE_CONFIG.ScopeCache_duration,
+                            CACHE_CONFIG.ScopeCache_capacity);
+                };
+
+                /**
+                 @function
+                 @param type Type of storage ( 1 local | 2 session).
+                 @param maxAgeInit
+                 @param cacheFlushIntervalInit
+                 @param deleteOnExpireInit
+                 
+                 @description This object makes Web Storage working in the Angular Way.
+                 By default, web storage allows you 5-10MB of space to work with, and your data is stored locally
+                 on the device rather than passed back-and-forth with each request to the server.
+                 Web storage is useful for storing small amounts of key/value data and preserving functionality
+                 online and offline.
+                 With web storage, both the keys and values are stored as strings.
+                 
+                 We can store anything except those not supported by JSON:
+                 Infinity, NaN - Will be replaced with null.
+                 undefined, Function - Will be removed.
+                 The returned object supports the following set of methods:
+                 {void} $reset() - Clears the Storage in one go.
+                 */
+
+                factory.setBrowserStorage = function(type, maxAgeInit, cacheFlushIntervalInit, deleteOnExpireInit, verifyIntegrityInit) {
+                    //$log.debug('type: ' + type);
+                    var selectedStorageType;
+                    if (type == '2') {
+                        selectedStorageType = CACHE_CONFIG.SessionBrowserStorage;
                     } else {
-                        objectStore = event.currentTarget.transaction.objectStore(options.storeName);
+                        selectedStorageType = CACHE_CONFIG.LocalBrowserStorage;
                     }
-                    if (!!options.indexes) {
-                        for (var j = 0; j < options.indexes.length; j++) {
-                            var indexName = options.indexes[j].name;
-                            var indexData = options.indexes[j];
+                    //$log.debug('selectedStorageType: ' + selectedStorageType);
 
-                            if (objectStore.indexNames.contains(indexName)) {
-                                // check if it complies
-                                var actualIndex = objectStore.index(indexName);
-                                var complies = indexComplies(actualIndex, indexData);
-                                if (!complies) {
-                                    objectStore.deleteIndex(indexName);
-                                    objectStore.createIndex(indexName, indexName, {
-                                        unique: indexData.unique
-                                    });
-                                }
-                            } else {
-                                objectStore.createIndex(indexName, indexName, {
-                                    unique: indexData.unique
-                                });
-                            }
+                    factory._browserCache = $angularCacheFactory(CACHE_CONFIG.DefaultBrowserCacheName, {
+                        maxAge: maxAgeInit,
+                        cacheFlushInterval: cacheFlushIntervalInit,
+                        deleteOnExpire: deleteOnExpireInit,
+                        storageMode: selectedStorageType,
+                        verifyIntegrity: verifyIntegrityInit
+                    });
+                    return factory._browserCache;
+                };
+
+
+                /*
+                 @function
+                 @param duration items expire after this time.
+                 @param capacity  turns the cache into LRU (Least Recently Used) cache.
+                 If you don't want $http's default cache to store every response.
+                 @description Http Cache Storage is the object to handle and configure the features
+                 of the cache for default use with the $http service.
+                 @description
+                 Your can retrieve the currently cached data: var cachedData =
+                 */
+                factory.setDefaultHttpCacheStorage = function(maxAge, capacity) {
+                    return factory._browserCache;
+                };
+
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:CacheFactory#setDefaultHttpCacheStorage
+                 * @methodOf AppCache.service:CacheFactory
+                 * @param {number} duration items expire after this time.
+                 * @param {string} capacity  turns the cache into LRU (Least Recently Used) cache.
+                 * @description Default cache configuration for $http service
+                 */
+                factory.setDefaultHttpCacheStorage = function(maxAge, capacity) {
+
+                    var cacheId = 'MyHttpAngularCache';
+                    factory._httpCache = $angularCacheFactory.get(cacheId);
+
+                    if (!factory._httpCache) {
+                        factory._httpCache = $angularCacheFactory(cacheId, {
+                            // This cache can hold x items
+                            capacity: capacity,
+                            // Items added to this cache expire after x milliseconds
+                            maxAge: maxAge,
+                            // Items will be actively deleted when they expire
+                            deleteOnExpire: 'aggressive',
+                            // This cache will check for expired items every x milliseconds
+                            recycleFreq: 15000,
+                            // This cache will clear itself every x milliseconds
+                            cacheFlushInterval: 15000,
+                            // This cache will sync itself with localStorage
+                            //                        storageMode: 'localStorage',
+
+                            // Custom implementation of localStorage
+                            //storageImpl: myLocalStoragePolyfill,
+
+                            // Full synchronization with localStorage on every operation
+                            verifyIntegrity: true
+                        });
+                    } else {
+                        factory._httpCache.setOptions({
+                            // This cache can hold x items
+                            capacity: capacity,
+                            // Items added to this cache expire after x milliseconds
+                            maxAge: maxAge,
+                            // Items will be actively deleted when they expire
+                            deleteOnExpire: 'aggressive',
+                            // This cache will check for expired items every x milliseconds
+                            recycleFreq: 15000,
+                            // This cache will clear itself every x milliseconds
+                            cacheFlushInterval: 15000,
+                            // This cache will sync itself with localStorage
+                            storageMode: 'localStorage',
+                            // Custom implementation of localStorage
+                            //storageImpl: myLocalStoragePolyfill,
+
+                            // Full synchronization with localStorage on every operation
+                            verifyIntegrity: true
+                        });
+                    }
+                    $http.defaults.cache = factory._httpCache;
+                    return factory._httpCache;
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:CacheFactory#getHttpCache
+                 * @methodOf AppCache.service:CacheFactory
+                 * @description Returns the httpcache object in factory
+                 * @returns httpcache object
+                 */
+                factory.getHttpCache = function() {
+                    return factory._httpCache;
+                };
+
+                return factory;
+            }
+        ])
+
+
+        /**
+         * @ngdoc service
+         * @name AppCache.service:IDBService
+         * @description
+         * This service has been planned to be used as a simple HTML5's indexedDB specification with the commonAPI.
+         * A pre-configured data structure has been included to be used for common purposes:
+         * Data Structure Name: 'default'
+         * Fields: Id, Title, Body, Tags, Updated.
+         * Indexes: Id (Unique), titlelc(Unique), tag(multientry).
+         */
+        .service('IDBService', ['$q', '$log',
+            function($q, $log) {
+                var setUp = false;
+                var db;
+
+                var service = {};
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:SimpleIDB#init
+                 * @methodOf AppCache.service:SimpleIDB
+                 * @description Initialize the default Indexed DB in browser if supported
+                 */
+                function init() {
+                    var deferred = $q.defer();
+
+                    if (setUp) {
+                        deferred.resolve(true);
+                        return deferred.promise;
+                    }
+
+                    var openRequest = window.indexedDB.open("indexeddb_appverse", 1);
+
+                    openRequest.onerror = function(e) {
+                        $log.debug("Error opening db");
+                        console.dir(e);
+                        deferred.reject(e.toString());
+                    };
+
+                    openRequest.onupgradeneeded = function(e) {
+
+                        var thisDb = e.target.result;
+                        var objectStore;
+
+                        //Create Note
+                        if (!thisDb.objectStoreNames.contains("default")) {
+                            objectStore = thisDb.createObjectStore("item", {keyPath: "id", autoIncrement: true});
+                            objectStore.createIndex("titlelc", "titlelc", {unique: false});
+                            objectStore.createIndex("tags", "tags", {unique: false, multiEntry: true});
                         }
+
+                    };
+
+                    openRequest.onsuccess = function(e) {
+                        db = e.target.result;
+
+                        db.onerror = function(event) {
+                            // Generic error handler for all errors targeted at this database's
+                            // requests!
+                            deferred.reject("Database error: " + event.target.errorCode);
+                        };
+
+                        setUp = true;
+                        deferred.resolve(true);
+
+                    };
+
+                    return deferred.promise;
+                }
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:SimpleIDB#isSupported
+                 * @methodOf AppCache.service:SimpleIDB
+                 * @description Returns true if the browser supports the Indexed DB HTML5 spec.
+                 */
+                service.isSupported = function() {
+                    return ("indexedDB" in window);
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:SimpleIDB#deleteDefault
+                 * @methodOf AppCache.service:SimpleIDB
+                 * @param {string} The ID of the item to be deleted.
+                 * @description Deletes a record with the passed ID
+                 */
+                service.deleteDefault = function(key) {
+                    var deferred = $q.defer();
+                    var t = db.transaction(["item"], "readwrite");
+                    var request = t.objectStore("item").delete(key);
+                    t.oncomplete = function(event) {
+                        deferred.resolve();
+                    };
+                    return deferred.promise;
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:SimpleIDB#getDefault
+                 * @methodOf AppCache.service:SimpleIDB
+                 * @param {string} storeName The asssigned name of the store object.
+                 * @description Retrieves the record with the passed ID
+                 * It returns a promise. remember The Indexed DB provides an asynchronous
+                 * non-blocking I/O access to browser storage.
+                 */
+                service.getDefault = function(key) {
+                    var deferred = $q.defer();
+
+                    var transaction = db.transaction(["item"]);
+                    var objectStore = transaction.objectStore("item");
+                    var request = objectStore.get(key);
+
+                    request.onsuccess = function(event) {
+                        var note = request.result;
+                        deferred.resolve(note);
+                    };
+
+                    return deferred.promise;
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:SimpleIDB#getDefaults
+                 * @methodOf AppCache.service:SimpleIDB
+                 * @description Retrieves the set with ALL the records in the IDB.
+                 * It returns a promise. remember The Indexed DB provides an asynchronous
+                 * non-blocking I/O access to browser storage.
+                 */
+                service.getDefaults = function() {
+                    var deferred = $q.defer();
+
+                    init().then(function() {
+
+                        var result = [];
+
+                        var handleResult = function(event) {
+                            var cursor = event.target.result;
+                            if (cursor) {
+                                result.push({key: cursor.key, title: cursor.value.title, body: cursor.value.body, updated: cursor.value.updated, tags: cursor.value.tags});
+                                cursor.continue();
+                            }
+                        };
+
+                        var transaction = db.transaction(["item"], "readonly");
+                        var objectStore = transaction.objectStore("item");
+                        objectStore.openCursor().onsuccess = handleResult;
+
+                        transaction.oncomplete = function(event) {
+                            deferred.resolve(result);
+                        };
+
+                    });
+                    return deferred.promise;
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:SimpleIDB#ready
+                 * @methodOf AppCache.service:SimpleIDB
+                 * @description This flag is true if the IDB has been successfully initializated.
+                 */
+                service.ready = function() {
+                    return setUp;
+                };
+
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:SimpleIDB#saveDefault
+                 * @methodOf AppCache.service:SimpleIDB
+                 * @param {string} item The record to be stored
+                 * @description Saves a record with the given structure into the IDB.
+                 * It returns a promise. remember The Indexed DB provides an asynchronous
+                 * non-blocking I/O access to browser storage.
+                 */
+                service.saveDefault = function(item) {
+                    //Should this call init() too? maybe
+                    var deferred = $q.defer();
+
+                    if (!item.id) {
+                        item.id = "";
                     }
-                }
-                $rootScope.$emit('dbopenupgrade', [this.dbName, event.target.transaction]);
-            }.bind(this);
 
-            request.onsuccess = function (event) {
-                this.db = event.target.result;
-                $log.debug('idb success', this, this.db);
-                // $rootScope.$emit is AngularJS's event emitter
-                $rootScope.$emit('dbopen', [this.dbName]);
-            }.bind(this);
+                    var titlelc = item.title.toLowerCase();
+                    var t = db.transaction(["item"], "readwrite");
 
-        };
+                    if (item.id === "") {
+                        $log.debug('id empty');
+                        t.objectStore("item")
+                                .add({title: item.title, body: item.body, updated: new Date().getTime(), titlelc: titlelc, tags: Array(item.tags)});
+                    } else {
+                        $log.debug('id not empty');
+                        t.objectStore("item")
+                                .put({title: item.title, body: item.body, updated: new Date(), id: Number(item.id), titlelc: titlelc, tags: Array(item.tags)});
+                    }
 
-        this.failure = function () {
-            $rootScope.$emit('failure');
-        };
-        this.success = function () {
-            $rootScope.$emit('success');
-        };
-        this.test = function () {
-            $log.debug('idb test');
-        };
+                    t.oncomplete = function(event) {
+                        deferred.resolve();
+                    };
 
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#indexComplies
-         * @methodOf AppCache.service:IDB
-         * @param {string} actual Real index.
-         * @param {string} expected Expected index.
-         * @description Checks if the indexes complaint
-         * @returns {boolean} True if both indexes are equal
-         */
-        function indexComplies(actual, expected) {
-            return ['keyPath', 'unique', 'multiEntry'].every(function (key) {
-                // IE10 returns undefined for no multiEntry
-                if (key === 'multiEntry' && actual[key] === undefined && expected[key] === false) {
-                    return true;
-                }
-                return expected[key] === actual[key];
-            });
-        }
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#getTransactionStore
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @param {string} mode Current mode of the idb.
-         * @description A quick and simple wrapper for getting the transaction store with an optional mode
-         * @returns {object} The object store
-         */
-        this.getTransactionStore = function (storeName, mode) {
-            if (!(this.db instanceof IDBDatabase)) {
-                $log.debug('db', this, this.db);
-                throw 'missing database error!';
-            }
+                    return deferred.promise;
+                };
 
-            if (typeof mode !== 'string') {
-                return this.db.transaction(storeName).objectStore(storeName);
-            } else {
-                return this.db.transaction(storeName, mode).objectStore(storeName);
-            }
-        };
+                /**
+                 * @ngdoc method
+                 * @name AppCache.service:SimpleIDB#item
+                 * @methodOf AppCache.service:item
+                 * @param {int} id The ID of the record to be stored
+                 * @param {string} title The name for record to be stored
+                 * @param {string} body The description of the record to be stored
+                 * @param {Array} tags Several tags useful for searches
+                 * @description This object represents the common default object stored in the IDB
+                 */
+                service.item = function(id, title, body, tags) {
+                    this.id = id;
+                    this.title = title;
+                    this.body = body;
+                    //Array
+                    this.tags = tags;
+                };
 
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#getItemOnIndex
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @param {string} index The index of the search.
-         * @param {string} key The key of the item.
-         * @description Retrieves one item of the idb from its key and a given index
-         */
-        this.getItemOnIndex = function (storeName, index, key) {
-            var boundKeyRange = IDBKeyRange.only(key);
+                return service;
 
-            var cursorRequest = this.getTransactionStore(storeName)
-                .index(index).openCursor(boundKeyRange);
-
-            cursorRequest.onsuccess = function (event) {
-                var cursor = cursorRequest.result || event.result;
-                if (cursor) {
-                    $rootScope.$emit('getitem', [self.dbName, storeName, cursor.value]);
-                } else {
-                    $log.debug('no cursor');
-                    self.failure();
-                }
-            };
-            cursorRequest.onerror = self.failure;
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#getItemsOnIndex
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @param {string} index The index of the search.
-         * @param {string} key The key of the item.
-         * @description Retrieves a list of items of the idb from their key and a given index
-         */
-        this.getItemsOnIndex = function (storeName, index, key) {
-            var boundKeyRange = IDBKeyRange.only(key);
-
-            var cursorRequest = this.getTransactionStore(storeName)
-                .index(index).openCursor(boundKeyRange, "next");
-
-            var results = [];
-
-            cursorRequest.onsuccess = function (event) {
-                var cursor = event.target.result;
-                if (cursor) {
-                    results.push(cursor.value);
-                    cursor['continue']();
-                } else {
-                    $rootScope.$emit('getitem', [self.dbName, storeName, results]);
-                }
-            };
-            cursorRequest.onerror = self.failure;
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#getItemsOnIndexWithTransaction
-         * @methodOf AppCache.service:IDB
-         * @param {object} transaction The transaction operation of the object.
-         * @param {string} storeName The asssigned name of the store object.
-         * @param {string} index The index of the search.
-         * @param {string} key The key of the item.
-         * @description Retrieves a list of items of the idb from their key and a given index
-         */
-        this.getItemsOnIndexWithTransaction = function (transaction, storeName, index, key) {
-            var boundKeyRange = IDBKeyRange.only(key);
-
-            var cursorRequest = transaction.objectStore(storeName)
-                .index(index).openCursor(boundKeyRange, "next");
-
-            var results = [];
-
-            cursorRequest.onsuccess = function (event) {
-                var cursor = event.target.result;
-                if (cursor) {
-                    results.push(cursor.value);
-                    cursor['continue']();
-                } else {
-                    $rootScope.$emit('getitem', [self.dbName, storeName, results]);
-                }
-            };
-            cursorRequest.onerror = self.failure;
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#getItem
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @param {string} key The key of the item.
-         * @description Retrieves one item for simple get requests by key
-         */
-        this.getItem = function (storeName, key) {
-            var getRequest = this.getTransactionStore(storeName).get(key);
-
-            getRequest.onsuccess = function (event) {
-                $rootScope.$emit('getitem', [self.dbName, storeName, event.target.result]);
-            };
-            getRequest.onerror = self.failure;
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#getInit
-         * @methodOf AppCache.service:IDB
-         * @param {object} transaction The transaction operation of the object.
-         * @param {string} storeName The asssigned name of the store object.
-         * @description Just going to get everything from a given data store
-         */
-        this.getInit = function (transaction, storeName) {
-            var objectStore = transaction.objectStore(storeName);
-            var results = [];
-
-            objectStore.openCursor().onsuccess = function (event) {
-                var cursor = event.target.result;
-                if (cursor) {
-                    results.push(cursor.value);
-                    cursor['continue']();
-                } else {
-                    $rootScope.$emit('getinit', [self.dbName, storeName, results]);
-                }
-            };
-            objectStore.onerror = self.failure;
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#getAll
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @description Similar to getInit, but we don't have a transaction to pass in
-         */
-        this.getAll = function (storeName) {
-            var objectStore = this.getTransactionStore(storeName);
-            var results = [];
-
-            objectStore.openCursor().onsuccess = function (event) {
-                var cursor = event.target.result;
-                if (cursor) {
-                    results.push(cursor.value);
-                    cursor['continue']();
-                } else {
-                    $rootScope.$emit('getall', [self.dbName, storeName, results]);
-                }
-            };
-            objectStore.onerror = self.failure;
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#remove
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @param {string} key The key of the object
-         * @description Removes an item from its key
-         */
-        this.remove = function (storeName, key) {
-            var request = this.getTransactionStore(storeName, "readwrite")['delete'](key);
-            request.onsuccess = function () {
-                $rootScope.$emit('remove', [self.dbName, storeName]);
-            };
-            request.onerror = self.failure;
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#removeItemsOnIndex
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @param {string} index The provided index
-         * @param {string} key
-         * @param {string} key_path
-         * @description Remove a set of items from key path
-         */
-        this.removeItemsOnIndex = function (storeName, index, key, key_path) {
-            var boundKeyRange = IDBKeyRange.only(key);
-
-            var transactionStore = this.getTransactionStore(storeName, "readwrite");
-            var cursorRequest = transactionStore.index(index).openCursor(boundKeyRange, "next");
-
-            cursorRequest.onsuccess = function (event) {
-                var cursor = event.target.result;
-                if (cursor) {
-                    var request = transactionStore['delete'](cursor.value[key_path]);
-                    request.onsuccess = self.success;
-                    request.onerror = self.failure;
-
-                    cursor['continue']();
-                } else {
-                    $rootScope.$emit('remove', [self.dbName, storeName]);
-                }
-            }.bind(transactionStore);
-            cursorRequest.onerror = self.failure;
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#put
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @param {object} data Item to be inserted.
-         * @description Similar to getInit, but we don't have a transaction to pass in
-         */
-        this.put = function (storeName, data) {
-            $log.debug('IDB put');
-            var request = this.getTransactionStore(storeName, "readwrite").put(data);
-            request.onsuccess = function () {
-                $rootScope.$emit('put', [self.dbName, storeName]);
-            };
-            request.onerror = self.failure;
-        };
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#removeAll
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @description Remove all items form the given store object
-         */
-        this.removeAll = function (storeName) {
-            $log.debug('IDB put');
-            var request = this.getTransactionStore(storeName, "readwrite").clear();
-            request.onsuccess = function () {
-                $rootScope.$emit('clear', [self.dbName, storeName]);
-            };
-            request.onerror = self.failure;
-        };
-
-
-        /**
-         * @ngdoc method
-         * @name AppCache.service:IDB#batchInsert
-         * @methodOf AppCache.service:IDB
-         * @param {string} storeName The asssigned name of the store object.
-         * @param {object} data Objects to be inserted.
-         * @description Data should be an array of objects
-         */
-        this.batchInsert = function (storeName, data) {
-            $log.debug('IDB batchInsert');
-            var objectStore = this.getTransactionStore(storeName, "readwrite");
-
-            var i = 0;
-            var putNext = function () {
-                if (i < data.length) {
-                    var request = objectStore.put(data[i]);
-                    request.onsuccess = putNext;
-                    request.onerror = self.failure;
-                    ++i;
-                } else {
-                    $log.debug('populate complete');
-                    $rootScope.$emit('batchinsert', [self.dbName, storeName]);
-                }
-            };
-
-            putNext();
-        };
-
-    }])
-
-/**
- * @ngdoc service
- * @name AppCache.service:SimpleIDB
- * @description
- * This service has been planned to be used as a simple HTML5's indexedDB specification with the commonAPI.
- * A pre-configured data structure has been included to be used for common purposes:
- * Data Structure Name: 'default'
- * Fields: Id, Title, Body, Tags, Updated.
- * Indexes: Id (Unique), titlelc(Unique), tag(multientry).
- */
-.service('SimpleIDB', ['$q', '$log',
-    function ($q, $log) {
-        var setUp=false;
-	var db;
-		
-	function init() {
-		var deferred = $q.defer();
-
-		if(setUp) {
-			deferred.resolve(true);
-			return deferred.promise;
-		}
-		
-		var openRequest = window.indexedDB.open("indexeddb_angular",1);
-	
-		openRequest.onerror = function(e) {
-			$log.debug("Error opening db");
-			console.dir(e);
-			deferred.reject(e.toString());
-		};
-
-		openRequest.onupgradeneeded = function(e) {
-	
-			var thisDb = e.target.result;
-			var objectStore;
-			
-			//Create Note OS
-			if(!thisDb.objectStoreNames.contains("default")) {
-				objectStore = thisDb.createObjectStore("note", { keyPath: "id", autoIncrement:true });
-				objectStore.createIndex("titlelc", "titlelc", { unique: false });
-				objectStore.createIndex("tags","tags", {unique:false,multiEntry:true});
-			}
-	
-		};
-
-		openRequest.onsuccess = function(e) {
-			db = e.target.result;
-			
-			db.onerror = function(event) {
-				// Generic error handler for all errors targeted at this database's
-				// requests!
-				deferred.reject("Database error: " + event.target.errorCode);
-			};
-	
-			setUp=true;
-			deferred.resolve(true);
-		
-		};	
-
-		return deferred.promise;
-	}
-	
-	function isSupported() {
-		return ("indexedDB" in window);		
-	}
-	
-	function deleteDefault(key) {
-		var deferred = $q.defer();
-		var t = db.transaction(["note"], "readwrite");
-		var request = t.objectStore("note").delete(key);
-		t.oncomplete = function(event) {
-			deferred.resolve();
-		};
-		return deferred.promise;
-	}
-	
-	function getDefault(key) {
-		var deferred = $q.defer();
-
-		var transaction = db.transaction(["note"]);  
-		var objectStore = transaction.objectStore("note");  
-		var request = objectStore.get(key);  
-
-		request.onsuccess = function(event) {  
-			var note = request.result;
-			deferred.resolve(note);
-		}; 
-		
-		return deferred.promise;
-	}
-	
-	function getDefaults() {
-		var deferred = $q.defer();
-		
-		init().then(function() {
-
-			var result = [];
-
-			var handleResult = function(event) {  
-				var cursor = event.target.result;
-				if (cursor) {
-					result.push({key:cursor.key, title:cursor.value.title, updated:cursor.value.updated});
-					cursor.continue();
-				}
-			};  
-			
-			var transaction = db.transaction(["note"], "readonly");  
-			var objectStore = transaction.objectStore("note");
-            objectStore.openCursor().onsuccess = handleResult;
-
-			transaction.oncomplete = function(event) {
-				deferred.resolve(result);
-			};
-		
-		});
-		return deferred.promise;
-	}
-	
-	function ready() {
-		return setUp;
-	}
-	
-	function saveDefault(item) {
-		//Should this call init() too? maybe
-		var deferred = $q.defer();
-
-		if(!item.id){
-                    item.id = "";
-                }
-		
-		var titlelc = item.title.toLowerCase();
-		
-		//handle tags
-		var tags = [];
-		if(item.tags && item.tags.length) tags = item.tags.split(",");
-		
-		var t = db.transaction(["note"], "readwrite");
-		
-        if(item.id === "") {
-            t.objectStore("note")
-                            .add({title:item.title,body:item.body,updated:new Date().getTime(),titlelc:titlelc,tags:tags});
-        } else {
-            t.objectStore("note")
-                            .put({title:item.title,body:item.body,updated:new Date(),id:Number(item.id),titlelc:titlelc,tags:tags});
-        }
-
-		t.oncomplete = function(event) {
-			deferred.resolve();
-		};
-
-		return deferred.promise;
-	}
-	
-	function supportsIDB() {
-		return "indexedDB" in window;	
-	}
-	
-	return {
-		isSupported:isSupported,
-		deleteDefault:deleteDefault,
-		getDefault:getDefault,
-		getDefaults:getDefaults,
-		ready:ready,
-		saveDefault:saveDefault,
-		supportsIDB:supportsIDB
-	};
-    }]);
+            }]);
     
