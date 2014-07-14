@@ -110,8 +110,10 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
     function ($log, $q, $http, Restangular, Oauth_RequestWrapper, REST_CONFIG, SECURITY_GENERAL) {
 
         if(SECURITY_GENERAL.securityEnabled){
+            $log.debug("REST communication is secure. Security is enabled. REST requests will be wrapped with authorization headers.");
             Restangular = Oauth_RequestWrapper.wrapRequest(Restangular);
         }else{
+            $log.debug("REST communication is not secure. Security is not enabled.");
             Restangular.setDefaultHeaders(
                 {
                     'Content-Type': REST_CONFIG.DefaultContentType

@@ -578,12 +578,12 @@ angular.module('AppSecurity', [
         factory.wrapRequest = function (restangular) {
             var token = Oauth_AccessToken.get();
             var wrappedRestangular = restangular;
-
+            
             if (token) {
-                $log.debug("Including default headers in request.");
+                 $log.debug("OAuth token is present and valid. The wrapped request is secure.");
                 setRequestHeaders(token, restangular);
             } else {
-                $log.debug("OAuth token is not present yet.");
+                $log.debug("OAuth token is not present yet. The wrapped request will not be secure.");
             }
 
 
@@ -607,15 +607,28 @@ angular.module('AppSecurity', [
             $log.debug('token: ' + token);
             $log.debug('is same domain? ' + isSameDomain(REST_CONFIG.BaseUrl, $browser.url()));
 
+            /*
+            The XSRF policy type is the level of complexity to calculate the value to be returned in the xsrf header in request
+            against the authorization server:
+            0: No value is included (The domain is the same one)
+            1: $http service built-in solution. The $http service will extract this token from the response header,
+             and then included in the X-XSRF-TOKEN header to every HTTP request. The server must check the token
+             on each request, and then block access if it is not valid.
+            2: Additional calculation of the cookie value using a secret hash. The value is included in the X-XSRF-TOKEN
+             request header.
+             */
             if (token) {
                 var xsrfHeaderValue;
                 if (isSameDomain(REST_CONFIG.BaseUrl, $browser.url())) {
+                    $log.debug("*** isSameDomain");
                     if (SECURITY_GENERAL.XSRFPolicyType === 0) {
+                        $log.debug("*** case 0");
                         wrappedRestangular.setDefaultHeaders({
                             'Authorization': 'Bearer' + token,
                             'Content-Type': REST_CONFIG.DefaultContentType
                         });
                     } else if (SECURITY_GENERAL.XSRFPolicyType === 1) {
+                        $log.debug("*** case 1");
                         xsrfHeaderValue = Oauth_AccessToken.getXSRF();
                         wrappedRestangular.setDefaultHeaders({
                             'Authorization': 'Bearer' + token,
@@ -623,6 +636,7 @@ angular.module('AppSecurity', [
                             'X-XSRF-TOKEN': xsrfHeaderValue
                         });
                     } else if (SECURITY_GENERAL.XSRFPolicyType === 2) {
+                        $log.debug("*** case 2");
                         xsrfHeaderValue = $browser.cookies()[SECURITY_GENERAL.XSRFCSRFCookieName];
                         wrappedRestangular.setDefaultHeaders({
                             'Authorization': 'Bearer' + token,

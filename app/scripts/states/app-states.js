@@ -337,6 +337,16 @@ angular.module('appverseClientIncubatorApp')
                         templateUrl: 'views/demo/performance/performance.hpcontrols.html',
                         controller: ''
                     })
+                    
+                //////////////////////////
+                // SECTION: Modals //
+                //////////////////////////
+                .state('modals', {
+
+                    url: '/modals',
+                    templateUrl: 'views/modals/modal.html',
+                    controller: 'dialogCtrl'
+                })
 
 
                 ////////////////////

@@ -15,7 +15,7 @@
 
 
 /* Optional modules initialization */
-var optionalModules = ['xeditable', 'ja.qr', 'vr.directives.slider', 'ui.bootstrap', 'AppDetection', 'AppREST', 'AppTranslate'];
+var optionalModules = ['xeditable', 'ja.qr', 'vr.directives.slider', 'ui.bootstrap', 'AppDetection', 'AppREST', 'AppTranslate', 'AppModal'];
 
 angular.forEach(optionalModules, function (element) {
     try {

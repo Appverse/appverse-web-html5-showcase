@@ -472,7 +472,7 @@ Future updates of Restangular imply review of this section in order to keep cons
 })
 
 .constant('I18N_CONFIG', {
-    PreferredLocale: 'en-US',
+    PreferredLocale: 'en-GB',
     DetectLocale: true
 })
 

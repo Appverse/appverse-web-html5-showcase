@@ -6,15 +6,16 @@
  */
 angular.module('appverseClientIncubatorApp')
 
-.controller('translationController', ['$scope', '$translate', 'tmhDynamicLocale',
-        function ($scope, $translate, tmhDynamicLocale) {
+.controller('translationController', ['$scope', '$translate', '$log', 'tmhDynamicLocale',
+        function ($scope, $translate, $log, tmhDynamicLocale) {
 
         $scope.now = new Date();
         $scope.name = 'Alicia';
         $scope.age = '25';
 
         $scope.setLocale = function (locale) {
-            $translate.uses(locale);
+            $log.debug("LOCALE: " + locale);
+            $translate.use(locale);
             tmhDynamicLocale.set(locale.toLowerCase());
         };
     }]);
