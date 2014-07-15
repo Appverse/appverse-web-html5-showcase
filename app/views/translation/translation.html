@@ -2,9 +2,9 @@
     <p class="lead">Translation Demo</p>
     <p>Select desired locale:</p>
     <button class="btn" ng-click="setLocale('es-ES')">es-ES</button>
-    <button class="btn" ng-click="setLocale('en-GB')">en-GB</button>
-<!--    <button class="btn" ng-click="setLocale('ja-JP')">ja-JP</button>
-    <button class="btn" ng-click="setLocale('ar-EG')">ar-EG</button>-->
+    <button class="btn" ng-click="setLocale('en-US')">en-US</button>
+    <button class="btn" ng-click="setLocale('ja-JP')">ja-JP</button>
+    <button class="btn" ng-click="setLocale('ar-EG')">ar-EG</button>
 
     <h4>Date</h4>
 
@@ -24,8 +24,8 @@
     <p translate>WELCOME</p>
 
     <!-- With values -->
-    <p translate translate-values='{"name": "Alex"}' ng-cloak>WELCOME_NAME</p>
+    <p translate translate-values='{"name": "Alex"}'>WELCOME_NAME</p>
 
     <!-- Using scope variables -->
-    <p translate translate-values='{"name": "{{name}}", "age": {{age}} }' ng-cloak>WELCOME_NAME_AGE</p>
+    <p translate translate-values='{"name": "{{name}}", "age": {{age}} }'>WELCOME_NAME_AGE</p>
 </div>

@@ -12,7 +12,7 @@
     "angular-sanitize": "1.2.1",
     "angular-bootstrap": "0.6.0",
     "angular-ui-router": "0.2.8-bowratic-tedium",
-    "angular-translate": "2.1.0",
+    "angular-translate": "1.1.0",
     "angular-translate-loader-static-files": "0.1.6",
     "angular-i18n": "1.0.8",
     "angular-dynamic-locale": "0.0.2",
@@ -34,8 +34,7 @@
   },
   "resolutions": {
     "angular": "1.2.1",
-    "angular-translate": "2.1.0",
-    "jquery": "1.10.2",
-    "angular-bootstrap": "0.11.x"
+    "angular-translate": "1.1.0",
+    "jquery": "1.10.2"
   }
 }

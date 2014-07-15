@@ -25,7 +25,7 @@ angular.module('AppTranslate', ['pascalprecht.translate', 'AppConfiguration', 't
 
         $translateProvider.preferredLanguage(I18N_CONFIG.PreferredLocale);
 
-        //tmhDynamicLocaleProvider.localeLocationPattern('/i18n/angular/angular-locale_{{locale}}.js');
+        tmhDynamicLocaleProvider.localeLocationPattern('resources/i18n/angular/angular-locale_{{locale}}.js');
     }])
 
 .run(['$log',
