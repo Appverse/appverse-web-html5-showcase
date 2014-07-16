@@ -116,7 +116,7 @@ in the common API.
     LocalBrowserStorage: 'localStorage',
     //Constant for the literal
     NoBrowserStorage: 'none',
-    
+
     //Direct browser storage (0 local | 1 session)
     browserDirectCacheType: '1',
     /*
@@ -436,7 +436,7 @@ Future updates of Restangular imply review of this section in order to keep cons
         'Content-Type': 'application/json',
         'X-XSRF-TOKEN': 'juan'
         //SECURITY_GENERAL.XSRFCSRFHeaderName: SECURITY_GENERAL.XSRFCSRFCookieValue
-        
+
     },
 
     /*
@@ -461,7 +461,7 @@ Future updates of Restangular imply review of this section in order to keep cons
     */
     EncodeIds: true,
     /*
-     * 
+     *
      */
     DefaultContentType: 'application/json'
 })
@@ -472,7 +472,7 @@ Future updates of Restangular imply review of this section in order to keep cons
 })
 
 .constant('I18N_CONFIG', {
-    PreferredLocale: 'en-GB',
+    PreferredLocale: 'en-US',
     DetectLocale: true
 })
 
@@ -509,7 +509,7 @@ Future updates of Restangular imply review of this section in order to keep cons
     connected: 'connected',
     disconnected: 'disconnected',
     notEnabled: 'Security not enabled'
-            
+
 })
 
 .constant('SECURITY_OAUTH', {

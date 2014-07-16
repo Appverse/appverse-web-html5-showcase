@@ -39,7 +39,7 @@
         "ConsumerSecret": ""
     },
     "I18N_CONFIG": {
-        "PreferredLocale": "en-GB",
+        "PreferredLocale": "en-US",
         "DetectLocale": true
     },
     "WEBSOCKETS_CONFIG": {
