@@ -28,12 +28,12 @@
  * configuration.
  */
 
-angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
+angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration', 'AppSecurity'])
 
 
 .run(['$log', 'Restangular', 'CacheFactory', 'Oauth_RequestWrapper', 'Oauth_AccessToken', 'REST_CONFIG', 'SECURITY_GENERAL',
     function ($log, Restangular, CacheFactory, Oauth_RequestWrapper, Oauth_AccessToken, REST_CONFIG, SECURITY_GENERAL) {
-        
+
 
         Restangular.setBaseUrl(REST_CONFIG.BaseUrl);
         Restangular.setExtraFields(REST_CONFIG.ExtraFields);
@@ -68,7 +68,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
                 var tokenInHeader = response.headers('X-XSRF-Cookie');
                 $log.debug('X-XSRF-Cookie: ' + tokenInHeader);
                 if(tokenInHeader){
-                    
+
                     Oauth_AccessToken.setFromHeader(tokenInHeader);
                 }
 
@@ -92,9 +92,9 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         Restangular.setUseCannonicalId(REST_CONFIG.UseCannonicalId);
         Restangular.setEncodeIds(REST_CONFIG.EncodeIds);
 
-        
+
         $log.info('AppREST run');
-        
+
     }])
 
 /**
@@ -106,7 +106,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
  * Contains methods for data finding (demo).
  * This module provides basic quick standard access to a REST API.
  */
-.factory('RESTFactory', ['$log', '$q', '$http', 'Restangular', 'Oauth_RequestWrapper','REST_CONFIG', 'SECURITY_GENERAL', 
+.factory('RESTFactory', ['$log', '$q', '$http', 'Restangular', 'Oauth_RequestWrapper','REST_CONFIG', 'SECURITY_GENERAL',
     function ($log, $q, $http, Restangular, Oauth_RequestWrapper, REST_CONFIG, SECURITY_GENERAL) {
 
         if(SECURITY_GENERAL.securityEnabled){
@@ -119,8 +119,8 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
                     'Content-Type': REST_CONFIG.DefaultContentType
                 });
         }
-        
-        
+
+
 
         ////////////////////////////////////////////////////////////////////////////////////
         // ADVICES ABOUT PROMISES
@@ -135,7 +135,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         // If that's the case, we need to assign the result of the promise to a $scope variable.
         // 2-HANDLING ERRORS
         // While the first param is te callback the second parameter is the error handler function.
-        // 
+        //
         //  Restangular.all("accounts").getList().then(function() {
         //      console.log("All ok");
         //  }, function(response) {
@@ -188,13 +188,13 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
          * @param {String} path The item URL
          * @description Returns a complete list from a REST resource.
          * @returns {object} Does a GET to path
-         * It does not return an empty array by default. 
+         * It does not return an empty array by default.
          * Once a value is returned from the server that array is filled with those values.
          */
         factory.readListNoEmpty = function (path) {
             return Restangular.all(path).getList();
         };
-        
+
         /**
          * @ngdoc method
          * @name AppREST.factory:RESTFactory#readBatch
@@ -338,7 +338,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
             // Use 'then' to resolve the promise.
             Restangular.one(path).delete().then(callback,restErrorHandler);
         };
-        
+
         /**
         @function
         @param response Response to know its status
@@ -347,7 +347,7 @@ angular.module('AppREST', ['restangular', 'AppCache', 'AppConfiguration'])
         function restErrorHandler(response){
             $log.error("Error with status code", response.status);
         };
-        
+
 
        return factory;
     }])
