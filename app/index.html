@@ -105,13 +105,13 @@
             <!--            <p ui-view="hint" class="navbar-text pull-left" autoscroll="false"></p>-->
         </div>
     </div>
-    
+
     <div>
-      <script type="text/ng-template" id="modalLoginForm.html">    
+      <script type="text/ng-template" id="modalLoginForm.html">
           <div class="modal-header">
               <h3>Enter your user name and password</h3>
           </div>
-          
+
           <form name="loginForm" novalidate ng-submit="submit()">
             <div class="modal-body">
                 <span ng-show="loginForm.name.$error.required || loginForm.password.$error.required" />
@@ -119,7 +119,7 @@
             <div class="modal-body" ng-class="{'has-error': loginForm.credentials.$invalid}">
                 <label>User name</label>
                 <input id="name" type="text" placeholder="Username" required ng-model="credentials.name" autofocus/>
-                                                   
+
               <label>Password</label>
               <input id="password" type="password" placeholder="Password" ng-model="credentials.password" />
             </div>
@@ -130,7 +130,7 @@
           </form>
           <font color="red"> {{ errorMessage }} </font>
       </script>
-      
+
 <!--      <button class="btn" ng-click="open({username: 'username', password: 'password'})">Click here to login</button>-->
 <!--      <div ng-show="user.password">Got back from modal: {{ user | json}}</div>-->
   </div>
@@ -158,22 +158,10 @@
     <script src="bower_components/jquery-flot/jquery.flot.js"></script>
     <script src="bower_components/jquery-flot/jquery.flot.resize.js"></script>
     <script src="bower_components/jquery-flot/jquery.flot.time.js"></script>
-    <!-- endbuild -->
 
     <!-- uibootstrap -->
-<!--    <script src="bower_components/bootstrap-sass/js/bootstrap-affix.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-alert.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-dropdown.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-tooltip.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-modal.js"></script>
     <script src="bower_components/bootstrap-sass/js/bootstrap-transition.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-button.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-popover.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-typeahead.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-carousel.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-scrollspy.js"></script>
     <script src="bower_components/bootstrap-sass/js/bootstrap-collapse.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-tab.js"></script>-->
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
     <!-- modules -->
@@ -183,7 +171,6 @@
     <script src="bower_components/angular-cache/dist/angular-cache.min.js"></script>
     <script src="bower_components/angular-resource/angular-resource.min.js"></script>
     <script src="bower_components/ng-grid/ng-grid-2.0.11.debug.js"></script>
-    <!-- endbuild -->
 
     <!-- UI components -->
     <script src="bower_components/venturocket-angular-slider/build/angular-slider.min.js"></script>
@@ -221,8 +208,6 @@
     <script src="scripts/api/directives/cache-directives.js"></script>
     <script src="scripts/api/directives/rest-directives.js"></script>
     <script src="scripts/api/modules/api-performance.js"></script>
-    <!-- endbuild -->
-
 
     <!-- app -->
     <script src="scripts/app.js"></script>
@@ -237,7 +222,7 @@
     <script src="scripts/controllers/performance-controllers.js"></script>
     <script src="scripts/factories/app-factory.js"></script>
     <script src="scripts/states/app-states.js"></script>
-    
+
     <!-- endbuild -->
 </body>
 
