@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('appverseClientIncubatorApp')
+angular.module('App')
 
 /*
  * Factory Name: 'topics'

@@ -4,7 +4,7 @@
  * Controllers for server messages demo.
  * Pay attention to injection of dependencies (factories, entities and Angular objects).
  */
-angular.module('appverseClientIncubatorApp')
+angular.module('App.Controllers')
 
 .controller('serverPushController', ['$scope', '$log', 'SocketFactory',
         function ($scope, $log, SocketFactory) {
@@ -157,7 +157,7 @@ angular.module('appverseClientIncubatorApp')
 
 .controller('wsController_ECHO', ['$scope', '$log', 'WebSocketFactory', 'WEBSOCKETS_CONFIG',
         function ($scope, $log, WebSocketFactory, WEBSOCKETS_CONFIG) {
-            
+
             $scope.endpointURL = WEBSOCKETS_CONFIG.WsUrl;
             $scope.connStatus;
             $scope.messages = [];
@@ -165,22 +165,22 @@ angular.module('appverseClientIncubatorApp')
             $scope.status = WebSocketFactory.statusAsText();
             $scope.wsIsSupportedMessage = WEBSOCKETS_CONFIG.WS_SUPPORTED;
             $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;
-            
+
             function updateStatus(){
                 $scope.status = WebSocketFactory.statusAsText();
             };
- 
+
             WebSocketFactory.subscribe(function(message) {
                 $scope.messages.push(message);
                 updateStatus();
                 $scope.$apply();
             });
-            
+
             /**
             @ngdoc method
             @name AppServerPush.factory:WebSocketFactory#connect
             @methodOf AppServerPush.factory:WebSocketFactory
-            @param {string} itemId The id of the item 
+            @param {string} itemId The id of the item
             @description Establishes a connection to the swebsocket endpoint.
             */
             $scope.connect = function() {
@@ -188,18 +188,18 @@ angular.module('appverseClientIncubatorApp')
                 updateStatus();
                 $log.debug("Connected TO the websockets peer server.");
             }
-            
-            
+
+
             $scope.send = function() {
                  WebSocketFactory.send($scope.text);
                  $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
             }
-            
+
             /**
             @ngdoc method
             @name AppServerPush.factory:WebSocketFactory#disconnect
             @methodOf AppServerPush.factory:WebSocketFactory
-            @param {string} itemId The id of the item 
+            @param {string} itemId The id of the item
             @description Close the WebSocket connection.
             */
             $scope.disconnect = function () {
@@ -213,9 +213,9 @@ angular.module('appverseClientIncubatorApp')
                 $log.debug('OLD STATUS' + oldValue);
                 $log.debug('NEW STATUS' + newValue);
             });
-            
-            
-            
+
+
+
 
 }])
 
@@ -227,7 +227,7 @@ angular.module('appverseClientIncubatorApp')
             $scope.wsSupported = Modernizr.websockets;
             $scope.wsIsSupportedMessage = WEBSOCKETS_CONFIG.WS_SUPPORTED;
             $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;
-            
+
             $scope.stats = function(){
                     $scope.showButton = false;
                     //Making loading spinner disappear
@@ -292,7 +292,7 @@ angular.module('appverseClientIncubatorApp')
                     var updateInterval = WEBSOCKETS_CONFIG.WS_CPU_INTERVAL;
 
                     var plot = $.plot($("#load_statistics"), [getRandomData()], options);
-                    
+
                     WebSocketFactory.subscribe(function(message) {
                         if(event.data && JSON){
                             var a= JSON.parse(event.data);
@@ -309,11 +309,11 @@ angular.module('appverseClientIncubatorApp')
                             plot.setData([res]);
                             plot.draw();
                         }
-                        
+
 
                         //$scope.$apply();
                     });
-            
+
                     function echo() {
                         if (ws != null) {
                             ws.send('');
@@ -328,8 +328,8 @@ angular.module('appverseClientIncubatorApp')
                         setTimeout(update, updateInterval);
                     }
                     WebSocketFactory.connect(WEBSOCKETS_CONFIG.WS_CPU_URL);
-                
+
 
             };
-            
+
 }]);

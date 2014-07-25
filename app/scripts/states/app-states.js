@@ -7,7 +7,7 @@
 
 'use strict';
 
-angular.module('appverseClientIncubatorApp')
+angular.module('App')
     .config(
     ['$stateProvider', '$urlRouterProvider',
       function ($stateProvider, $urlRouterProvider) {
@@ -60,7 +60,7 @@ angular.module('appverseClientIncubatorApp')
                     controller: 'OauthLoginCtrl'
 
                 })
-                
+
 
                 ///////////////////
                 // State: Topics //
@@ -246,7 +246,7 @@ angular.module('appverseClientIncubatorApp')
                     templateUrl: 'views/cache/cache.state2.html',
                     controller: 'cacheState2Controller'
                 })
-                
+
                 .state('cache.simpleidb', {
 
                     url: '/simpleidb',
@@ -285,7 +285,7 @@ angular.module('appverseClientIncubatorApp')
                     controller: 'serverPushController'
 
                 })
-                
+
 //                .state('websockets', {
 //
 //                    abstract: false,
@@ -294,7 +294,7 @@ angular.module('appverseClientIncubatorApp')
 //                    controller: 'wsController_ECHO'
 //
 //                })
-                
+
                 .state('websockets', {
 
                     abstract: false,
@@ -337,7 +337,7 @@ angular.module('appverseClientIncubatorApp')
                         templateUrl: 'views/demo/performance/performance.hpcontrols.html',
                         controller: ''
                     })
-                    
+
                 //////////////////////////
                 // SECTION: Modals //
                 //////////////////////////
