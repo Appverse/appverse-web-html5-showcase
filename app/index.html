@@ -105,31 +105,26 @@
 
     <div>
         <script type="text/ng-template" id="modalLoginForm.html">
-            < div class = "modal-header" >
-                < h3 > Enter your user name and password < /h3>
-          </div >
-
-          <form name="loginForm" novalidate ng-submit="submit()">
-                < div class = "modal-body" >
-                < span ng - show = "loginForm.name.$error.required || loginForm.password.$error.required" / >
-                < /div>
-            <div class="modal-body" ng-class="{'has-error': loginForm.credentials.$invalid}">
-                <label>User name</label >
-                <input id="name" type="text" placeholder="Username" required ng-model="credentials.name" autofocus/>
-
-             < label > Password < /label>
-              <input id="password" type="password" placeholder="Password" ng-model="credentials.password" / >
-                < /div>
-            <div class="modal-footer">
-                <button class="btn btn-warning" ng-click="cancel()">Cancel</button >
-                <input type="submit" class="btn primary-btn" value="Submit" ng-disabled="!loginForm.$valid" />
-                < /div>
-          </form >
-          <font color="red"> {{ errorMessage }} </font>
+            <div class="modal-header">
+                <h3>Enter your user name and password</h3>
+            </div>
+            <form name="loginForm" novalidate ng - submit="submit()">
+                <div class="modal-body">
+                    <span ng - show="loginForm.name.$error.required || loginForm.password.$error.required" />
+                </div>
+                <div class="modal-body" ng-class="{'has-error': loginForm.credentials.$invalid}">
+                    <label>User name</label>
+                    <input id="name" type="text" placeholder="Username" required ng - model="credentials.name" autofocus />
+                    <label>Password</label>
+                    <input id="password" type="password" placeholder="Password" ng-model="credentials.password" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+                    < input type="submit" class="btn primary-btn" value="Submit" ng - disabled="!loginForm.$valid" />
+                </div>
+            </form>
+            <font color="red">{ { errorMessage } }</font>
         </script>
-
-        <!--      <button class="btn" ng-click="open({username: 'username', password: 'password'})">Click here to login</button>-->
-        <!--      <div ng-show="user.password">Got back from modal: {{ user | json}}</div>-->
     </div>
 
     <!-- MAIN INSERTION POINT
@@ -142,11 +137,6 @@
      -->
     <div ui-view class="myslide" autoscroll="false"></div>
 
-    <script src="https://plus.google.com/js/client:plusone.js"></script>
-
-    <!-- Temporary solution based on CDN. For development purpose only -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
-
     <!-- build:js scripts/scripts.js -->
     <script src="bower_components/jquery/jquery.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
@@ -157,21 +147,7 @@
     <script src="bower_components/jquery-flot/jquery.flot.time.js"></script>
 
     <!-- uibootstrap -->
-    <!--
-    <script src="bower_components/bootstrap-sass/js/bootstrap-affix.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-alert.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-dropdown.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-tooltip.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-modal.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-transition.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-button.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-popover.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-typeahead.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-carousel.js"></script>
-    <script src="bower_components/bootstrap-sass/js/bootstrap-scrollspy.js"></script>
--->
     <script src="bower_components/bootstrap-sass/js/bootstrap-collapse.js"></script>
-    <!--    <script src="bower_components/bootstrap-sass/js/bootstrap-tab.js"></script>-->
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
     <!-- modules -->
@@ -204,6 +180,7 @@
     <script src="scripts/api/modules/api-security.js"></script>
 
     <!-- Server Push module -->
+    <script src="bower_components/socket.io-client/dist/socket.io.min.js"></script>
     <script src="scripts/api/modules/api-serverpush.js"></script>
 
     <!-- Translate module -->
