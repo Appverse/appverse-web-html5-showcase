@@ -1,21 +1,4 @@
-$iconSpritePath:"../images/glyphicons-halflings.png";
- $iconWhiteSpritePath:"../images/glyphicons-halflings-white.png";
-
-
-/* Import specific css here */
-@import "bootstrap-sass/lib/bootstrap";
-
-
-/*
-http://getbootstrap.com/2.3.2/components.html#navbar
-Add .navbar-fixed-top and remember to account for the hidden area underneath it by adding at least 40px padding to the <body>. Be sure to add this after the core Bootstrap CSS and before the optional responsive CSS.
-*/
-body {
-    padding-top: 60px;
-    padding-bottom: 60px;
-}
-
-@import "bootstrap-sass/lib/responsive";
+@import "bootstrap";
 @import "fade";
 @import "grid";
 
@@ -49,29 +32,29 @@ body {
 
 /* Bootstrap navbar */
 div.navbar-inner {
-    padding: 0 !important;
+/*    padding: 0 !important;*/
 }
 
 /* Fix scrolling above navbar */
 @media (max-width: 979px) {
     .navbar-fixed-top,
     .navbar-fixed-bottom {
-        position: relative;
+/*        position: relative;*/
 
     }
 }
 //START BLOCK FOR SECTION HEADER
 .navbar-fixed-top,
 .navbar-fixed-bottom {
-  position: relative;
+/*  position: relative;*/
 }
 
 .navbar-fixed-top {
-  margin-bottom: 20px;
+/*  margin-bottom: 20px;*/
 }
 //END
 /* Navbar title */
-a.brand {
+a.navbar-brand {
     margin-left: 0 !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
@@ -79,7 +62,7 @@ a.brand {
 }
 
 /* HTML5 logo */
-a.brand img {
+a.navbar-brand img {
     width: 95px;
     margin-top: -5px;
 }

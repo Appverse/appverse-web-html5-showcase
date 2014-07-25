@@ -440,6 +440,12 @@ module.exports = function (grunt) {
                     '*ar-eg.js'
                 ]
             },
+            fonts: {
+                expand: true,
+                cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass/fonts',
+                dest: '.tmp/fonts',
+                src: '*'
+            },
             png: {
                 expand: true,
                 cwd: '<%= yeoman.app %>',
@@ -451,7 +457,8 @@ module.exports = function (grunt) {
             server: [
                 'coffee',
                 'compass:server',
-                'copy:i18n'
+                'copy:i18n',
+                'copy:fonts'
             ],
             dist: [
                 'coffee',
