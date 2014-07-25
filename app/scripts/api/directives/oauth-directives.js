@@ -42,149 +42,149 @@ angular.module('AppSecurity')
  * is used to prevent the Angular html template from being briefly displayed by
  * the browser in its raw (uncompiled) form while your application is loading.
  */
-.directive('oauth', ['SECURITY_OAUTH', 'Oauth_AccessToken', 'Oauth_Endpoint', 'Oauth_Profile', '$rootScope', '$compile', '$http', '$templateCache',
-  function (SECURITY_OAUTH, AccessToken, Endpoint, Profile, $rootScope, $compile, $http, $templateCache) {
+.directive('oauth', ['SECURITY_OAUTH', 'Oauth_AccessToken', 'Oauth_Endpoint', 'Oauth_Profile' ,'$rootScope', '$compile', '$http', '$templateCache',
+  function(SECURITY_OAUTH, AccessToken, Endpoint, Profile, $rootScope, $compile, $http, $templateCache) {
 
-        var definition = {
-            restrict: 'AE',
-            replace: false,
-            scope: {
-                site: '@', // (required) set the oauth2 server host
-                client: '@', // (required) client id
-                redirect: '@', // (required) client redirect uri
-                scope: '@', // (optional) scope
-                flow: '@', // (required) flow (e.g password, implicit)
-                view: '@', // (optional) view (e.g standard, popup)
-                storage: '@', // (optional) storage (e.g none, cookies)
-                profile: '@', // (optional) user info URL
-                template: '@' // (optional) template to render
-            }
-        };
+  var definition = {
+    restrict: 'AE',
+    replace: false,
+    scope: {
+      site: '@',       // (required) set the oauth2 server host
+      client: '@',     // (required) client id
+      redirect: '@',   // (required) client redirect uri
+      scope: '@',      // (optional) scope
+      flow: '@',       // (required) flow (e.g password, implicit)
+      view: '@',       // (optional) view (e.g standard, popup)
+      storage: '@',    // (optional) storage (e.g none, cookies)
+      profile: '@',    // (optional) user info URL
+      template: '@'    // (optional) template to render
+    }
+  };
 
-        definition.link = function postLink(scope, element, attrs) {
-            scope.show = 'none';
+  definition.link = function postLink(scope, element, attrs) {
+    scope.show = 'none';
 
-            scope.$watch('client', function (value) {
-                init(); // set defaults
-                compile(); // gets the template and compile the desired layout
-                Endpoint.set(scope); // set the oauth client url for authorization
-                AccessToken.set(scope); // set the access token object (from fragment or cookies)
-                initProfile(); // get the profile info
-                initView(); // set the actual visualization status for the widget
-            });
+    scope.$watch('client', function(value) {
+      init();                    // set defaults
+      compile();                 // gets the template and compile the desired layout
+      Endpoint.set(scope);       // set the oauth client url for authorization
+      AccessToken.set(scope);    // set the access token object (from fragment or cookies)
+      initProfile();             // get the profile info
+      initView();                // set the actual visualization status for the widget
+    });
+    
 
+    /**
+     * @function
+     * @description set defaults into the scope object
+     */
+   function init () {
+      scope.site = scope.site || SECURITY_OAUTH.scopeURL;
+      scope.clientID = scope.clientID || SECURITY_OAUTH.clientID;
+      scope.redirect = scope.redirect || SECURITY_OAUTH.redirect;
+      scope.scope = scope.scope || SECURITY_OAUTH.scope;
+      scope.flow = scope.flow || SECURITY_OAUTH.flow;
+      scope.view = scope.view || SECURITY_OAUTH.view;
+      scope.storage = scope.storage || SECURITY_OAUTH.storage;
+      scope.scope = scope.scope || SECURITY_OAUTH.scope;
+      scope.authorizePath = scope.authorizePath || SECURITY_OAUTH.scope_authorizePath;
+      scope.tokenPath = scope.tokenPath || SECURITY_OAUTH.scope_tokenPath;
+      scope.template = scope.template || SECURITY_OAUTH.scope_template;
+    }
 
-            /**
-             * @function
-             * @description set defaults into the scope object
-             */
-            function init() {
-                scope.site = scope.site || SECURITY_OAUTH.scopeURL;
-                scope.clientID = scope.clientID || SECURITY_OAUTH.clientID;
-                scope.redirect = scope.redirect || SECURITY_OAUTH.redirect;
-                scope.scope = scope.scope || SECURITY_OAUTH.scope;
-                scope.flow = scope.flow || SECURITY_OAUTH.flow;
-                scope.view = scope.view || SECURITY_OAUTH.view;
-                scope.storage = scope.storage || SECURITY_OAUTH.storage;
-                scope.scope = scope.scope || SECURITY_OAUTH.scope;
-                scope.authorizePath = scope.authorizePath || SECURITY_OAUTH.scope_authorizePath;
-                scope.tokenPath = scope.tokenPath || SECURITY_OAUTH.scope_tokenPath;
-                scope.template = scope.template || SECURITY_OAUTH.scope_template;
-            }
+    /**
+     * @function
+     * @description 
+     * Gets the template and compile the desired layout.
+     * Based on $compile, it compiles a piece of HTML string or DOM into the retrieved 
+     * template and produces a template function, which can then be used to link scope and 
+     * the template together.
+     */
+    function compile () {
+      $http.get(scope.template, { 
+          //This allows you can get the template again by consuming the 
+          //$templateCache service directly.
+          cache: $templateCache 
+      })
+      .success(function(html) {
+        element.html(html);
+        $compile(element.contents())(scope);
+      });
+    };
 
-            /**
-             * @function
-             * @description
-             * Gets the template and compile the desired layout.
-             * Based on $compile, it compiles a piece of HTML string or DOM into the retrieved
-             * template and produces a template function, which can then be used to link scope and
-             * the template together.
-             */
-            function compile() {
-                $http.get(scope.template, {
-                    //This allows you can get the template again by consuming the
-                    //$templateCache service directly.
-                    cache: $templateCache
-                })
-                    .success(function (html) {
-                        element.html(html);
-                        $compile(element.contents())(scope);
-                    });
-            };
+    /**
+     * @function
+     * @description 
+     * Gets the profile info.
+     */
+    function initProfile () {
+      var token = AccessToken.get();
+      if (token && token.access_token && SECURITY_OAUTH.profile)
+        scope.profile = Profile.get();
+    }
 
-            /**
-             * @function
-             * @description
-             * Gets the profile info.
-             */
-            function initProfile() {
-                var token = AccessToken.get();
-                if (token && token.access_token && SECURITY_OAUTH.profile)
-                    scope.profile = Profile.get();
-            }
+    /**
+     * @function
+     * @description 
+     * Sets the actual visualization status for the widget.
+     */
+    function initView (token) {
+      var token = AccessToken.get();
+      // There is not token: without access token it's logged out
+      if (!token)             { 
+          return loggedOut() 
+      }   
+      // The request exists: if there is the access token we are done
+      if (token.access_token) { 
+          return loggedIn() 
+      }    
+      // The request is denied: if the request has been denied we fire the denied event
+      if (token.error)        { 
+          return denied() 
+      }      
+    }
 
-            /**
-             * @function
-             * @description
-             * Sets the actual visualization status for the widget.
-             */
-            function initView(token) {
-                var token = AccessToken.get();
-                // There is not token: without access token it's logged out
-                if (!token) {
-                    return loggedOut()
-                }
-                // The request exists: if there is the access token we are done
-                if (token.access_token) {
-                    return loggedIn()
-                }
-                // The request is denied: if the request has been denied we fire the denied event
-                if (token.error) {
-                    return denied()
-                }
-            }
+    scope.login = function() {
+      Endpoint.redirect();
+    }
 
-            scope.login = function () {
-                Endpoint.redirect();
-            }
+    scope.logout = function() {
+      AccessToken.destroy(scope);
+      loggedOut();
+    }
+    
+    /**
+     * @function
+     * @description 
+     */
+    function loggedIn(){
+      $rootScope.$broadcast('oauth:success', AccessToken.get());
+      scope.show = 'logout';
+    }
+    
+    /**
+     * @function
+     * @description 
+     */
+    function loggedOut () {
+      $rootScope.$broadcast('oauth:logout');
+      scope.show = 'login';
+    }
+    
+    /**
+     * @function
+     * @description 
+     */
+    function denied(){
+      scope.show = 'denied';
+      $rootScope.$broadcast('oauth:denied');
+    }
 
-            scope.logout = function () {
-                AccessToken.destroy(scope);
-                loggedOut();
-            }
+    scope.$on('oauth:template', function(event, template) {
+      scope.template = template;
+      compile(scope);
+    });
+  };
 
-            /**
-             * @function
-             * @description -
-             */
-            function loggedIn() {
-                $rootScope.$broadcast('oauth:success', AccessToken.get());
-                scope.show = 'logout';
-            }
-
-            /**
-             * @function
-             * @description -
-             */
-            function loggedOut() {
-                $rootScope.$broadcast('oauth:logout');
-                scope.show = 'login';
-            }
-
-            /**
-             * @function
-             * @description -
-             */
-            function denied() {
-                scope.show = 'denied';
-                $rootScope.$broadcast('oauth:denied');
-            }
-
-            scope.$on('oauth:template', function (event, template) {
-                scope.template = template;
-                compile(scope);
-            });
-        };
-
-        return definition;
+  return definition;
 }]);

@@ -15,7 +15,7 @@ angular.module('AppConfiguration', ['AppDetection'])
         $log.info('AppConfiguration run');
     }]);
 
-angular.module('AppConfigDefault', [])
+angular.module('AppConfigDefault', ['$browser'])
 
 /*
 PROJECT CONFIGURATION
@@ -29,7 +29,8 @@ All data are auto-explained because their names ;)
     Year: '2013',
     Team: 'GFT Appverse Web',
     URL: '',
-    LoginViewPath: '/login'
+    LoginViewPath: '/login',
+    myUrl: ''
 })
 
 /*
@@ -115,13 +116,16 @@ in the common API.
     LocalBrowserStorage: 'localStorage',
     //Constant for the literal
     NoBrowserStorage: 'none',
+
+    //Direct browser storage (0 local | 1 session)
+    browserDirectCacheType: '1',
     /*
      * Specify whether to verify integrity of data saved in localStorage on every operation.
      * If true, angular-cache will perform a full sync with localStorage on every operation.
      * Increases reliability of data synchronization, but may incur a performance penalty.
      * Has no effect if storageMode is set to "none".
      */
-    VerifyIntegrity: false,
+    VerifyIntegrity: true,
     /////////////////////////////
     //$http SERVICE CACHE
     /////////////////////////////
@@ -271,6 +275,21 @@ Future updates of Restangular imply review of this section in order to keep cons
     BaseUrl: '/api/v1',
 
     /*
+    If enabled, requests via REST module will be multicasted.
+     */
+//    Multicast_enabled: true,
+
+     /*
+     The base URLs array for all multicast calls to your API.
+     */
+//    Multicast_baseUrl: ['/api/v1', '/api/v2', '/api/v3', '/api/v4'],
+
+    /*
+    Number of requests to be spawned in multicast mode for each
+     */
+//    Multicast_spawn: 1,
+
+    /*
     These are the fields that you want to save from your parent resources if you need to display them.
     By default this is an Empty Array which will suit most cases.
     */
@@ -413,7 +432,12 @@ Future updates of Restangular imply review of this section in order to keep cons
     Example:
     DefaultHeaders: {'Content-Type': 'application/json'}
     */
-    DefaultHeaders: {},
+    DefaultHeaders: {
+        'Content-Type': 'application/json',
+        'X-XSRF-TOKEN': 'juan'
+        //SECURITY_GENERAL.XSRFCSRFHeaderName: SECURITY_GENERAL.XSRFCSRFCookieValue
+
+    },
 
     /*
     If all of your requests require to send some suffix to work, you can set it here.
@@ -435,7 +459,11 @@ Future updates of Restangular imply review of this section in order to keep cons
     /*
     You can set here if you want to URL Encode IDs or not.
     */
-    EncodeIds: true
+    EncodeIds: true,
+    /*
+     *
+     */
+    DefaultContentType: 'application/json'
 })
 
 .constant('AD_CONFIG', {
@@ -453,15 +481,43 @@ Future updates of Restangular imply review of this section in order to keep cons
  * Includes default information about authentication and authorization configuration based on OAUTH 2.0.
  */
 .constant('SECURITY_GENERAL', {
-    securityEnabled: false
+    securityEnabled: false,
+    XSRFCSRFRequestHeaderName: 'X-XSRF-TOKEN',
+    XSRFCSRFResponseCookieName: 'XSRF-TOKEN',
+    BearerTokenResponseHeader: 'access_token',
+    BearerTokenRequestHeader: 'Authorization',
+    RefreshTokenResponseHeader: 'refresh_token',
+    BearerTokenExpiringResponseHeader: 'expires_in',
+    TokenTypeResponseHeader: 'token_type',
+    /*
+    The XSRF policy type is the level of complexity to calculate the value to be returned in the xsrf header in request
+    against the authorization server:
+    0: No value is included (The domain is the same one)
+    1: $http service built-in solution. The $http service will extract this token from the response header,
+     and then included in the X-XSRF-TOKEN header to every HTTP request. The server must check the token
+     on each request, and then block access if it is not valid.
+    2: Additional calculation of the cookie value using a secret hash. The value is included in the X-XSRF-TOKEN
+     request header.
+     */
+    XSRFPolicyType: 1,
+    XSRFSecret: '',
+    Headers_ContentType: 'application/json',
+    loginHTTPMethod: 'POST',
+    loginURL: 'http://localhost:8080/html5-incubator-server/rest/sec/login',
+    username: 'admin',
+    password: 'admin',
+    connected: 'connected',
+    disconnected: 'disconnected',
+    notEnabled: 'Security not enabled'
+
 })
 
 .constant('SECURITY_OAUTH', {
-    oauth2_endpoint: 'lelylam',
+    oauth2_endpoint: 'appverse',
     clientID: '',
-    profile: 'http://api.lelylan.com/me',
+    profile: 'http://localhost:8080/html5-incubator-server',
     scope: 'resources',
-    scopeURL: 'http://people.lelylan.com',
+    scopeURL: 'http://localhost:8080/html5-incubator-server',
     scope_authorizePath: '/oauth/authorize',
     scope_tokenPath: '/oauth/token',
     scope_flow: 'implicit',
@@ -469,7 +525,10 @@ Future updates of Restangular imply review of this section in order to keep cons
     scope_storage: 'none',
     scope_template: 'views/demo/security/oauth_default.html',
     redirectURL: 'http://localhost:9000',
-    storage: 'cookies'
+    storage: 'cookies',
+    storage_cookies: 'cookies',
+    storage_header: 'header',
+    tokenResponseHeaderName: 'Authorization'
 })
 
 /*
@@ -499,18 +558,92 @@ Future updates of Restangular imply review of this section in order to keep cons
  */
 .constant('AUTHORIZATION_DATA', {
     roles: ['user', 'admin', 'editor'],
-    adminRoles: ['admin', 'editor'],
+    adminRoles: ["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"],
     users: ['Jesus de Diego'],
     userRoleMatrix: [
         {
             'user': 'Jesus de Diego',
-            'roles': ['user', 'admin']
+            'roles': ["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"]
         },
         {
             'user': 'Antoine Charnoz',
-            'roles': ['user', 'admin']
+            'roles': ["ROLE_EXAMPLE","ROLE_EXAMPLE_2","ROLE_REMOTE_LOGGING_WRITER","ROLE_USER"]
         }
     ],
     routesThatDontRequireAuth: ['/home'],
     routesThatRequireAdmin: ['/about']
-});
+})
+
+/*
+WEBSOCKETS MODULE CONFIGURATION
+*/
+.constant('WEBSOCKETS_CONFIG', {
+
+    WS_ECHO_URL: "ws://echo.websocket.org",
+    WS_CPU_URL: "ws://localhost:8080/websocket/services/websocket/statistics/get/cpuload",
+    WS_CPU_INTERVAL: 30,
+    WS_CONNECTED: 'Websocket connected',
+    WS_DISCONNECTED: 'Websocket disconnected',
+    WS_CONNECTING: 'Connecting Websocket...',
+    WS_CLOSED: 'Websocket connection closed',
+    WS_CLOSING: 'Websocket connection closing...',
+    WS_OPEN: 'Websocket connection is open',
+    WS_UNKNOWN: 'Websocket status is unknown',
+    WS_FAILED_CONNECTION: 'Failed to open a Websocket connection',
+    WS_NOT_SUPPORTED: 'HTML5 Websockets specification is not supported in this browser.',
+    WS_SUPPORTED: 'HTML5 Websockets specification is supported in this browser.'
+})
+
+/////////////////////////////
+//PERFORMANCE
+//Includes default information about the different facets for a better performance in the app.
+//There are three main sections: webworkers management, shadow dom objetc and High performance DOM directive.
+/////////////////////////////
+.constant('PERFORMANCE_CONFIG', {
+/*
+ * WEBWORKERS SECTION
+ * To test multiple parallelized threads with web workers a thread pool or task queue is defined.
+ * The goal is focused on using enough threads to improve the execution but not too much or the browser system can turn
+ * into unstable.
+ * You can configure the maximum number of concurrent web workers when this pool is instantiated,
+ * and any 'task' you submit will be executed using one of the available threads from the pool.
+ * Note that the app is not really pooling threads, but just using this pool to control the number of concurrently
+ * executing web workers due to the high cost for start them.
+ */
+        /*
+        Maximum number of simultaneous executing threads used by workers
+         */
+        webworker_pooled_threads: 4,
+        /*
+        If true, only workers in the web worker_authorized_workers property might be executed.
+        Other invoked workers will not result in a worker call.
+         */
+        webworker_authorized_workers_only: true,
+        /*
+        Folder for workers' files
+         */
+        webworker_directory: "resources/webworkers/",
+        /*
+        List of authorized workers with its ID.
+        The ID is used to be passed in the directive's attribute.
+         */
+        webworker_authorized_workers: [
+            {
+                'id': 'w1',
+                'type': 'dedicated',
+                'poolSize': 4,
+                'file': 'RenderImage.js'
+            },
+            {
+                'id': 'w2',
+                'type': 'dedicated',
+                'poolSize': 4,
+                'file': 'RestMultiRequest.js'
+            }
+        ],
+        webworker_dedicated_literal: "dedicated",
+        webworker_shared_literal: "shared",
+        webworker_Message_template: 'scripts/api/directives/webworkerMessage.html'
+    });
+
+
