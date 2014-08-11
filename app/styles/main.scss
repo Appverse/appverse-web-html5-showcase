@@ -1,4 +1,3 @@
-@import "bootstrap";
 @import "fade";
 @import "grid";
 
@@ -30,41 +29,24 @@ body {
     width: 24px;
 }
 
-/* Bootstrap navbar */
-div.navbar-inner {
-/*    padding: 0 !important;*/
-}
-
-/* Fix scrolling above navbar */
-@media (max-width: 979px) {
-    .navbar-fixed-top,
-    .navbar-fixed-bottom {
-/*        position: relative;*/
-
-    }
-}
-//START BLOCK FOR SECTION HEADER
-.navbar-fixed-top,
-.navbar-fixed-bottom {
-/*  position: relative;*/
-}
-
-.navbar-fixed-top {
-/*  margin-bottom: 20px;*/
-}
-//END
-/* Navbar title */
-a.navbar-brand {
-    margin-left: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-top: 10px !important;
-}
-
 /* HTML5 logo */
+a.navbar-brand {
+    line-height: 14px;
+    font-size: 13px;
+    padding-bottom: 0;
+    padding-top: 11px;
+}
+
 a.navbar-brand img {
-    width: 95px;
-    margin-top: -5px;
+    width: 28px;
+    margin-top: -16px;
+    margin-left: 10px;
+}
+
+/* To fit navbar on one line for small screens */
+.nav li a {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 /* Slide effect */
