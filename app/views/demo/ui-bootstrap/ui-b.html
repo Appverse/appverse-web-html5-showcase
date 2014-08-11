@@ -2,8 +2,8 @@
 <div class="container" scrolly-scroll>
     <p class="lead">Alert</p>
     <div data-ng-controller="AlertDemoCtrl">
-        <alert data-ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-        <button class="btn" data-ng-click="addAlert()">Add Alert</button>
+        <alert data-ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+        <button class="btn btn-default" data-ng-click="addAlert()">Add Alert</button>
     </div>
 
     <hr>

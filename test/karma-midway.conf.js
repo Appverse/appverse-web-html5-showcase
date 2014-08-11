@@ -9,7 +9,8 @@ module.exports = function (config) {
 
     conf.files = conf.files.concat([
 
-        'app/bower_components/bootstrap-sass/js/bootstrap-collapse.js',
+        'app/bower_components/bootstrap-sass/js/collapse.js',
+        'app/bower_components/bootstrap-sass/js/transition.js',
         'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
 
         //extra testing code

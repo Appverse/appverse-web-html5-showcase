@@ -9,7 +9,7 @@ angular.module('App.Controllers')
     function ($scope) {
         $scope.alerts = [
             {
-                type: 'error',
+                    type: 'danger',
                 msg: 'Oh snap! Change a few things up and try submitting again.'
                 },
             {
