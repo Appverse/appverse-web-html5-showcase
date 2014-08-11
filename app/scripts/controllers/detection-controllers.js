@@ -4,7 +4,7 @@
  * Controllers for detection demo.
  * Pay attention to injection of dependencies (factories, entities and Angular objects).
  */
-angular.module('appverseClientIncubatorApp')
+angular.module('App.Controllers')
 
 .controller('detectionController', ['$log', '$scope', 'Detection',
     function ($log, $scope, Detection) {

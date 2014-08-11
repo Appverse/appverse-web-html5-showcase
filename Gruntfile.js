@@ -92,7 +92,8 @@ module.exports = function (grunt) {
     var yeomanConfig = {
         app: 'app',
         dist: 'dist',
-        doc: 'doc'
+        doc: 'doc',
+        test: 'test'
     };
 
     try {
@@ -107,7 +108,7 @@ module.exports = function (grunt) {
                 tasks: ['coffee:app']
             },
             coffeeTest: {
-                files: ['test/spec/**/*.coffee'],
+                files: ['<%= yeoman.test %>/spec/**/*.coffee'],
                 tasks: ['coffee:test']
             },
             compass: {
@@ -129,16 +130,12 @@ module.exports = function (grunt) {
                     '{.tmp,<%= yeoman.app %>}/configuration/**/*.json',
                     '<%= yeoman.app %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
-            },
-            karma: {
-                files: ['app/scripts/**/*.js', 'test/unit/**/*.js'],
-                tasks: ['karma:unit:run']
             }
-//            ,
-//            doc: {
-//                files: ['{.tmp,<%= yeoman.app %>}/scripts/**/*.js'],
-//                tasks: ['docular']
-//            }
+            //            ,
+            //            doc: {
+            //                files: ['{.tmp,<%= yeoman.app %>}/scripts/**/*.js'],
+            //                tasks: ['docular']
+            //            }
         },
         autoprefixer: {
             options: ['last 1 version'],
@@ -181,11 +178,13 @@ module.exports = function (grunt) {
             },
             test: {
                 options: {
+                    port: 9090,
                     middleware: function (connect) {
                         return [
                             mountFolder(connect, '.tmp'),
                             mountFolder(connect, yeomanConfig.app),
-                            mountFolder(connect, 'test')
+                            mountFolder(connect, '<%= yeoman.test %>'),
+                            httpMethods
                         ];
                     }
                 }
@@ -259,7 +258,7 @@ module.exports = function (grunt) {
             test: {
                 files: [{
                     expand: true,
-                    cwd: 'test/spec',
+                    cwd: '<%= yeoman.test %>/spec',
                     src: '{,*/}*.coffee',
                     dest: '.tmp/spec',
                     ext: '.js'
@@ -461,8 +460,28 @@ module.exports = function (grunt) {
         },
         karma: {
             unit: {
-                configFile: 'karma.conf.js',
-                background: true
+                configFile: '<%= yeoman.test %>/karma-unit.conf.js',
+                autoWatch: false,
+                singleRun: true
+            },
+            unit_auto: {
+                configFile: '<%= yeoman.test %>/karma-unit.conf.js'
+            },
+            midway: {
+                configFile: '<%= yeoman.test %>/karma-midway.conf.js',
+                autoWatch: false,
+                singleRun: true
+            },
+            midway_auto: {
+                configFile: '<%= yeoman.test %>/karma-midway.conf.js'
+            },
+            e2e: {
+                configFile: '<%= yeoman.test %>/karma-e2e.conf.js',
+                autoWatch: false,
+                singleRun: true
+            },
+            e2e_auto: {
+                configFile: '<%= yeoman.test %>/karma-e2e.conf.js'
             }
         },
         cdnify: {
@@ -524,32 +543,41 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-docular');
 
-    grunt.registerTask('server', function (target) {
-//        if (target === 'dist') {
-//            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
-//        }
-
-        grunt.task.run([
-            'clean:server',
-            'concurrent:server',
-            'autoprefixer',
-            'connect:livereload',
-            'open:server',
-            'watch'
-        ]);
-    });
-
-    grunt.registerTask('test', [
+    grunt.registerTask('server', [
         'clean:server',
         'concurrent:server',
         'autoprefixer',
-        'connect:test',
-        'karma'
+        'connect:livereload',
+        'open:server',
+        'watch'
+    ]);
+
+    grunt.registerTask('testserver', [
+        'clean:server',
+        'concurrent:server',
+        'autoprefixer',
+        'connect:test'
+    ]);
+
+    grunt.registerTask('test', [
+        'karma:unit',
+        'testserver',
+        'karma:midway',
+        'karma:e2e'
+    ]);
+
+    grunt.registerTask('test:midway', [
+        'testserver',
+        'karma:midway_auto'
+    ]);
+
+    grunt.registerTask('test:e2e', [
+        'testserver',
+        'karma:e2e_auto'
     ]);
 
     grunt.registerTask('devmode', [
-        'karma:unit',
-        'watch:karma'
+        'karma:unit_auto'
     ]);
 
     grunt.registerTask('doc', [
