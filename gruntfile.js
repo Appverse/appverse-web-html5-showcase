@@ -517,12 +517,28 @@ module.exports = function (grunt) {
                     ]
                 }
             ]
+        },
+        bump: {
+            options: {
+              files: ['package.json', 'bower.json'],
+              updateConfigs: [],
+              commit: true,
+              commitMessage: 'Release v%VERSION%',
+              commitFiles: ['package.json'],
+              createTag: true,
+              tagName: 'v%VERSION%',
+              tagMessage: 'Version %VERSION%',
+              push: true,
+              pushTo: 'origin',
+              gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-docular');
+    grunt.loadNpmTasks('grunt-bump');
 
     grunt.registerTask('server', function (target) {
 //        if (target === 'dist') {
