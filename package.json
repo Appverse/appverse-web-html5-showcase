@@ -1,6 +1,6 @@
 {
-    "name": "appverseHTML5Incubator",
-    "version": "0.2.0",
+    "name": "appverse-web-html5",
+    "version": "0.2.1",
     "dependencies": {},
     "devDependencies": {
         "grunt": "~0.4.1",
