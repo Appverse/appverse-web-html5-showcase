@@ -131,7 +131,7 @@ module.exports = function (grunt) {
                 ]
             },
             karma: {
-                files: ['app/scripts/**/*.js', 'test/unit/**/*.js'],
+                files: ['src/**/*.js', 'test/unit/**/*.js'],
                 tasks: ['karma:unit:run']
             }
 //            ,
@@ -494,7 +494,7 @@ module.exports = function (grunt) {
                             id: "commonapi",
                             title: "Common API",
                             showSource: true,
-                            scripts: ["app/scripts/api/modules", "app/scripts/api/directives"
+                            scripts: ["src/modules", "src/directives"
                             ],
                             docs: ["ngdocs/commonapi"],
                             rank: {}
@@ -509,7 +509,7 @@ module.exports = function (grunt) {
                             id: "jqmapi",
                             title: "API",
                             showSource: true,
-                            scripts: ["app/scripts/api/angular-jqm.js"
+                            scripts: ["src/angular-jqm.js"
                             ],
                             docs: ["ngdocs/jqmapi"],
                             rank: {}
@@ -538,7 +538,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-docular');
-    grunt.loadNpmTasks('grunt-bump');
+    grunt.loadNpmTasks('grunt-bump');    
 
     grunt.registerTask('server', function (target) {
 //        if (target === 'dist') {
@@ -581,22 +581,14 @@ module.exports = function (grunt) {
         'concurrent:dist',
         'tinypng',
         'copy:png',
-        'autoprefixer',
-        'concat',
+        'autoprefixer',        
         'copy:dist',
         'cdnify',
-        'ngAnnotate',
-        'cssmin',
+        'ngAnnotate',        
         'uglify',
         'rev',
         'usemin',
-        'htmlmin',
-        'connect:dist',
- //        'docular',
- //        'connect:doc',
-        'open:server',
- //        'open:doc',
-        'watch'
+        'htmlmin'
     ]);
 
     grunt.registerTask('default', [
