@@ -22,6 +22,7 @@ Appverse HTML5/JS development framework.
 * Run `bower install appverse-web-html5`
 * Add the following to your index.html
 ```html
+
   <!-- ########## API modules ########## -->
 
     <!-- Cache module -->
@@ -57,6 +58,7 @@ Appverse HTML5/JS development framework.
     <script src="bower_components/appverse-web-html5/api/directives/rest-directives.js"></script>
     <script src="bower_components/appverse-web-html5/api/modules/api-performance.js"></script>
     <!-- endbuild -->
+    
 ```
 * Add the `appverse-web-html5` module to your Angular module list (e.g. in a main app.js file: `angular.module('yourMainModule',['COMMONAPI'])`)
 
