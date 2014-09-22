@@ -2,14 +2,15 @@
 
 describe("E2E: Testing Controllers", function () {
 
-    beforeEach(function () {
-        browser().navigateTo('/');
-    });
+    var root = 'http://localhost:9090/';
+    browser.get(root);
 
     it('should have a working home page controller', function () {
-        browser().navigateTo('#/home');
-        expect(browser().location().path()).toBe("/home");
-        expect(element('[ui-view]').html()).toContain('ng-controller="OauthLoginCtrl"');
+        browser.setLocation('/home');
+        expect(browser.getLocationAbsUrl()).toBe(root + "#/home");
+        //        element.all(by.css('[ui-view]')).then(function (items) {
+        //            expect(items[0].getInnerHtml()).toContain('ng-controller="OauthLoginCtrl"');
+        // });
     });
 
 });
