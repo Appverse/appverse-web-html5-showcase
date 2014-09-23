@@ -510,10 +510,10 @@ module.exports = function (grunt) {
             ]
         },
         protractor_webdriver: {
-            your_target: {
+            start: {
                 options: {
-                    command: 'webdriver-manager start --standalone',
-                },
+                    command: 'node_modules/.bin/webdriver-manager start --standalone'
+                }
             }
         },
         instrument: {
@@ -531,11 +531,7 @@ module.exports = function (grunt) {
                 coverageDir: '<%= yeoman.coverage %>',
                 args: {}
             },
-            local: {
-                options: {
-                    baseUrl: 'http://localhost:9090'
-                }
-            }
+            run: {}
         },
         makeReport: {
             src: '<%= yeoman.coverage %>/*.json',
