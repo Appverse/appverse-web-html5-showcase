@@ -93,7 +93,9 @@ module.exports = function (grunt) {
         app: 'app',
         dist: 'dist',
         doc: 'doc',
-        test: 'test'
+        test: 'test',
+        coverage: 'test/coverage',
+        instrumented: 'test/coverage/instrumented'
     };
 
     try {
@@ -103,14 +105,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
-            coffee: {
-                files: ['<%= yeoman.app %>/scripts/**/*.coffee'],
-                tasks: ['coffee:app']
-            },
-            coffeeTest: {
-                files: ['<%= yeoman.test %>/spec/**/*.coffee'],
-                tasks: ['coffee:test']
-            },
             compass: {
                 files: ['<%= yeoman.app %>/styles/**/*.{scss,sass}'],
                 tasks: ['compass:server', 'autoprefixer:tmp']
@@ -182,6 +176,7 @@ module.exports = function (grunt) {
                     middleware: function (connect) {
                         return [
                             mountFolder(connect, '.tmp'),
+                            mountFolder(connect, yeomanConfig.instrumented + '/app'),
                             mountFolder(connect, yeomanConfig.app),
                             mountFolder(connect, '<%= yeoman.test %>'),
                             httpMethods
@@ -215,8 +210,11 @@ module.exports = function (grunt) {
             server: {
                 url: '<%= connect.options.protocol %>://<%= connect.options.hostname %>:<%= connect.options.port %>'
             },
+            test: {
+                url: '<%= connect.options.protocol %>://<%= connect.options.hostname %>:<%= connect.test.options.port %>'
+            },
             doc: {
-                url: '<%= connect.options.protocol %>://<%= connect.options.hostname %>:9001'
+                url: '<%= connect.options.protocol %>://<%= connect.options.hostname %>:<%= connect.doc.options.port %>'
             }
         },
         clean: {
@@ -230,7 +228,8 @@ module.exports = function (grunt) {
                     ]
                 }]
             },
-            server: '.tmp'
+            server: '.tmp',
+            coverage: 'test/coverage'
         },
         jshint: {
             options: {
@@ -240,30 +239,6 @@ module.exports = function (grunt) {
                 'Gruntfile.js',
                 '<%= yeoman.app %>/scripts/{,*/}*.js'
             ]
-        },
-        coffee: {
-            options: {
-                sourceMap: true,
-                sourceRoot: ''
-            },
-            app: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= yeoman.app %>/scripts',
-                    src: '**/*.coffee',
-                    dest: '.tmp/scripts',
-                    ext: '.js'
-                }]
-            },
-            test: {
-                files: [{
-                    expand: true,
-                    cwd: '<%= yeoman.test %>/spec',
-                    src: '{,*/}*.coffee',
-                    dest: '.tmp/spec',
-                    ext: '.js'
-                }]
-            }
         },
         compass: {
             options: {
@@ -454,13 +429,11 @@ module.exports = function (grunt) {
         },
         concurrent: {
             server: [
-                'coffee',
                 'compass:server',
                 'copy:i18n',
                 'copy:fonts'
             ],
             dist: [
-                'coffee',
                 'compass:dist',
                 'imagemin'
             ]
@@ -481,14 +454,6 @@ module.exports = function (grunt) {
             },
             midway_auto: {
                 configFile: '<%= yeoman.test %>/karma-midway.conf.js'
-            },
-            e2e: {
-                configFile: '<%= yeoman.test %>/karma-e2e.conf.js',
-                autoWatch: false,
-                singleRun: true
-            },
-            e2e_auto: {
-                configFile: '<%= yeoman.test %>/karma-e2e.conf.js'
             }
         },
         cdnify: {
@@ -543,12 +508,42 @@ module.exports = function (grunt) {
                     ]
                 }
             ]
+        },
+        protractor_webdriver: {
+            start: {
+                options: {
+                    command: 'node_modules/.bin/webdriver-manager start --standalone'
+                }
+            }
+        },
+        instrument: {
+            files: 'app/scripts/**/*.js',
+            options: {
+                lazy: true,
+                basePath: "<%= yeoman.instrumented %>"
+            }
+        },
+        protractor_coverage: {
+            options: {
+                configFile: '<%= yeoman.test %>/protractor-e2e.conf.js',
+                keepAlive: true,
+                noColor: false,
+                coverageDir: '<%= yeoman.coverage %>',
+                args: {}
+            },
+            run: {}
+        },
+        makeReport: {
+            src: '<%= yeoman.coverage %>/*.json',
+            options: {
+                type: ['lcov', 'clover'],
+                dir: '<%= yeoman.coverage %>/e2e',
+                print: 'detail'
+            }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-docular');
 
     grunt.registerTask('server', [
         'clean:server',
@@ -559,32 +554,50 @@ module.exports = function (grunt) {
         'watch'
     ]);
 
-    grunt.registerTask('testserver', [
+    grunt.registerTask('testserver:pre', [
         'clean:server',
         'concurrent:server',
         'autoprefixer',
         'connect:test'
     ]);
 
+    grunt.registerTask('testserver', [
+        'testserver:pre',
+        'open:test',
+        'watch'
+    ]);
+
     grunt.registerTask('test', [
+        'clean:coverage',
         'karma:unit',
-        'testserver',
+        'testserver:pre',
         'karma:midway',
-        'karma:e2e'
+        'protractor_webdriver',
+        'test:e2e:run'
+    ]);
+
+    grunt.registerTask('test:unit', [
+        'clean:coverage',
+        'karma:unit_auto'
     ]);
 
     grunt.registerTask('test:midway', [
-        'testserver',
+        'testserver:pre',
+        'clean:coverage',
         'karma:midway_auto'
     ]);
 
     grunt.registerTask('test:e2e', [
-        'testserver',
-        'karma:e2e_auto'
+        'protractor_webdriver',
+        'clean:coverage',
+        'testserver:pre',
+        'test:e2e:run'
     ]);
 
-    grunt.registerTask('devmode', [
-        'karma:unit_auto'
+    grunt.registerTask('test:e2e:run', [
+        'instrument',
+        'protractor_coverage',
+        'makeReport'
     ]);
 
     grunt.registerTask('doc', [
