@@ -1,10 +1,8 @@
 <hr>
-<div cache="item" />
-<!--<div ng-hide="itemEditLoading || itemEditError">-->
-    <h4>{{item.name}}
-        <button class="btn" ng-click="done()">Done</button>
+<div cache="item"></div>
+<h4>{{item.name}}
+        <button class="btn btn-default" ng-click="done()">Done</button>
     </h4>
-    <div>
-        <input type="text" ng-model="item.value" />
-    </div>
-<!--</div>-->
+<div>
+    <input type="text" ng-model="item.value">
+</div>

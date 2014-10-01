@@ -1,23 +1,5 @@
-$iconSpritePath:"../images/glyphicons-halflings.png";
- $iconWhiteSpritePath:"../images/glyphicons-halflings-white.png";
-
-
-/* Import specific css here */
-@import "bootstrap-sass/lib/bootstrap";
-
-
-/*
-http://getbootstrap.com/2.3.2/components.html#navbar
-Add .navbar-fixed-top and remember to account for the hidden area underneath it by adding at least 40px padding to the <body>. Be sure to add this after the core Bootstrap CSS and before the optional responsive CSS.
-*/
-body {
-    padding-top: 60px;
-    padding-bottom: 60px;
-}
-
-@import "bootstrap-sass/lib/responsive";
 @import "fade";
-
+@import "grid";
 
 /* Put main CSS here */
 body {
@@ -47,31 +29,24 @@ body {
     width: 24px;
 }
 
-/* Bootstrap navbar */
-div.navbar-inner {
-    padding: 0 !important;
-}
-
-/* Fix scrolling above navbar */
-@media (max-width: 979px) {
-    .navbar-fixed-top,
-    .navbar-fixed-bottom {
-        position: relative;
-    }
-}
-
-/* Navbar title */
-a.brand {
-    margin-left: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-top: 10px !important;
-}
-
 /* HTML5 logo */
-a.brand img {
-    width: 95px;
-    margin-top: -5px;
+a.navbar-brand {
+    line-height: 14px;
+    font-size: 13px;
+    padding-bottom: 0;
+    padding-top: 11px;
+}
+
+a.navbar-brand img {
+    width: 28px;
+    margin-top: -16px;
+    margin-left: 10px;
+}
+
+/* To fit navbar on one line for small screens */
+.nav li a {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 /* Slide effect */
@@ -91,4 +66,68 @@ a.brand img {
 
 .myslide.ng-leave-active {
     transform: translateX(-100%);
+}
+
+/* Slider: in IE10/11 an annoying tooltip will show up unless you add the following css */
+::-ms-tooltip {
+    display: none;
+}
+
+slider {
+    display:     block;
+    position:    relative;
+    height:      20px;
+    width:       300px;
+}
+
+slider span.bar {
+    height:     50%;
+    z-index:    0;
+    background: #ace;
+    left:       0;
+    top:        25%;
+    cursor:     pointer;
+    border-radius: 10px;
+}
+
+slider span.bar.selection {
+    background: #0a0;
+    opacity:    0.5;
+}
+
+slider span.bar.unselected {
+    width:      auto;
+    background: #a00;
+    opacity:    0.5;
+}
+
+slider span.pointer {
+    cursor:           pointer;
+    width:            20px;
+    top:              0;
+    bottom:           0;
+    background-color: #00a;
+    border-radius: 20px;
+}
+
+slider span.bubble {
+    font-size:   1.2em;
+    line-height: 1.4em;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align:  center;
+    text-shadow: none;
+    top:         -1.3em;
+    cursor:      pointer;
+}
+
+slider span.bubble.selection {
+    top: 1.1em;
+}
+
+slider span.bubble.limit {
+    top: -1.1em;
+}
+
+.notetitle,.tagLookup {
+    cursor:pointer;
 }

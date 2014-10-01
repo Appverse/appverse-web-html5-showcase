@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
+angular.module('App.Controllers', []);
 
+angular.module('App', ['COMMONAPI', 'App.Controllers'])
 
-.run(['$rootScope', '$location', '$log', 'AuthenticationService', 'RoleService', 'AUTHORIZATION_DATA', 'SECURITY_GENERAL',
-    function ($rootScope, $location, $log, AuthenticationService, RoleService, AUTHORIZATION_DATA, SECURITY_GENERAL) {
+.run(['$rootScope', '$location', '$log', 'AuthenticationService', 'RoleService', 'Oauth_AccessToken', 'AUTHORIZATION_DATA', 'SECURITY_GENERAL',
+            function ($rootScope, $location, $log, AuthenticationService, RoleService, Oauth_AccessToken, AUTHORIZATION_DATA, SECURITY_GENERAL) {
 
         /**
          * @function
@@ -51,37 +52,42 @@ angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
          */
         $rootScope.$on('$stateChangeStart', function (ev, to, toParams, from, fromParams) {
             if (SECURITY_GENERAL.securityEnabled) {
-                $log.debug('to: ' + to);
-                // if route requires auth and user is not logged in
+                // If route requires auth and user is not logged in
                 if (routeClean(to.url) == false) {
                     if (AuthenticationService.isLoggedIn() == true) {
                         if (RoleService.validateRoleAdmin() == false) {
                             alert("YOU DO NOT HAVE THE NEEDED ROLE.");
                             ev.preventDefault();
-                            //$location.path('/error');
+                        } else {
+                            // If we have a valid token
+                            if (!Oauth_AccessToken.get()) {
+                                alert("YOU DO NOT HAVE A VALID TOKEN.");
+                                ev.preventDefault();
+                            }
                         }
                     } else {
-                        $log.debug('ROUTE NOT CLEAN AND USER NOT LOGGED');
-                        $log.debug('User is not logged and is rediercted to main page (REDIRECTION!!!!!!!!)');
+                        $log.debug('User is not logged and is redirected to main page.');
                         //Use event.preventDefault() to prevent the transition from happening.
                         ev.preventDefault();
                         // Redirects back to main page
                         $location.path('/home');
                     }
                 }
+
             }
         });
-    }])
+
+            }])
 
 /**
  * @description
  * Intercepts 401 status response
  */
 .config(['$httpProvider',
-    function ($httpProvider) {
+            function ($httpProvider) {
 
         var logsOutUserOn401 = ['$q', '$location',
-            function ($q, $location) {
+                    function ($q, $location) {
                 var success = function (response) {
                     return response;
                 };
@@ -100,7 +106,7 @@ angular.module('appverseClientIncubatorApp', ['COMMONAPI'])
                 return function (promise) {
                     return promise.then(success, error);
                 };
-            }];
+                    }];
 
         $httpProvider.responseInterceptors.push(logsOutUserOn401);
-    }]);
+            }]);

@@ -34,32 +34,6 @@
         "FlashPolicyPort": "",
         "ForceNewConnection": false
     },
-    "REST_CONFIG": {
-        "BaseUrl": "/api/v1",
-        "ExtraFields": [],
-        "ParentLess": false,
-        "NoCacheHttpMethods": {
-            "get": false,
-            "post": true,
-            "put": false,
-            "delete": true,
-            "option": false
-        },
-        "ElementTransformer": [],
-        "RequestInterceptor": null,
-        "FullRequestInterceptor": null,
-        "RestangularFields": {
-            "id": "id",
-            "route": "route"
-        },
-        "MethodOverriders": [],
-        "DefaultRequestParams": {},
-        "FullResponse": false,
-        "DefaultHeaders": {},
-        "RequestSuffix": ".json",
-        "UseCannonicalId": false,
-        "EncodeIds": true
-    },
     "AD_CONFIG": {
         "ConsumerKey": "",
         "ConsumerSecret": ""
@@ -67,5 +41,20 @@
     "I18N_CONFIG": {
         "PreferredLocale": "en-US",
         "DetectLocale": true
+    },
+    "WEBSOCKETS_CONFIG": {
+        "WS_ECHO_URL": "ws://echo.websocket.org",
+        "WS_CPU_URL": "ws://localhost:8080/websocket/services/websocket/statistics/get/cpuload",
+        "WS_CPU_INTERVAL": 30,
+        "WS_CONNECTED": "Connected",
+        "WS_DISCONNECTED": "Disconnected",
+        "WS_CONNECTING": "Connecting Websocket...",
+        "WS_CLOSED": "Websocket connection closed",
+        "WS_CLOSING": "Websocket connection closing...",
+        "WS_OPEN": "Websocket connection is open",
+        "WS_UNKNOWN": "Websocket status is unknown",
+        "WS_FAILED_CONNECTION": "Failed to open a Websocket connection",
+        "WS_NOT_SUPPORTED": "HTML5 Websockets specification is not supported in this browser.",
+        "WS_SUPPORTED": "HTML5 Websockets specification is supported in this browser."
     }
 }

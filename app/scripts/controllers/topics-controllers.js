@@ -4,7 +4,7 @@
  * Controllers for development topics management.
  * Pay attention to injection of dependencies (factories, entities and Angular objects).
  */
-angular.module('appverseClientIncubatorApp')
+angular.module('App.Controllers')
 
 .controller('TopicsController', ['$log', '$scope', '$state', '$stateParams', 'utils', 'RESTFactory',
         function ($log, $scope, $state, $stateParams, utils, RESTFactory) {

@@ -4,7 +4,7 @@
  * Controllers for server messages demo.
  * Pay attention to injection of dependencies (factories, entities and Angular objects).
  */
-angular.module('appverseClientIncubatorApp')
+angular.module('App.Controllers')
 
 .controller('serverPushController', ['$scope', '$log', 'SocketFactory',
         function ($scope, $log, SocketFactory) {
@@ -153,4 +153,183 @@ angular.module('appverseClientIncubatorApp')
             }
         };
 
-    }]);
+    }])
+
+.controller('wsController_ECHO', ['$scope', '$log', 'WebSocketFactory', 'WEBSOCKETS_CONFIG',
+        function ($scope, $log, WebSocketFactory, WEBSOCKETS_CONFIG) {
+
+            $scope.endpointURL = WEBSOCKETS_CONFIG.WsUrl;
+            $scope.connStatus;
+            $scope.messages = [];
+            $scope.wsSupported = Modernizr.websockets;
+            $scope.status = WebSocketFactory.statusAsText();
+            $scope.wsIsSupportedMessage = WEBSOCKETS_CONFIG.WS_SUPPORTED;
+            $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;
+
+            function updateStatus(){
+                $scope.status = WebSocketFactory.statusAsText();
+            };
+
+            WebSocketFactory.subscribe(function(message) {
+                $scope.messages.push(message);
+                updateStatus();
+                $scope.$apply();
+            });
+
+            /**
+            @ngdoc method
+            @name AppServerPush.factory:WebSocketFactory#connect
+            @methodOf AppServerPush.factory:WebSocketFactory
+            @param {string} itemId The id of the item
+            @description Establishes a connection to the swebsocket endpoint.
+            */
+            $scope.connect = function() {
+                WebSocketFactory.connect();
+                updateStatus();
+                $log.debug("Connected TO the websockets peer server.");
+            }
+
+
+            $scope.send = function() {
+                 WebSocketFactory.send($scope.text);
+                 $log.debug("Sent message '" + $scope.text + "' to websockets peer server.");
+            }
+
+            /**
+            @ngdoc method
+            @name AppServerPush.factory:WebSocketFactory#disconnect
+            @methodOf AppServerPush.factory:WebSocketFactory
+            @param {string} itemId The id of the item
+            @description Close the WebSocket connection.
+            */
+            $scope.disconnect = function () {
+                WebSocketFactory.disconnect();
+                updateStatus();
+                $log.debug("Disconnected FROM the websockets peer server.");
+            };
+
+            $scope.$watch('status', function(newValue, oldValue) {
+                $scope.status = newValue;
+                $log.debug('OLD STATUS' + oldValue);
+                $log.debug('NEW STATUS' + newValue);
+            });
+
+
+
+
+}])
+
+
+.controller('wsController_CPU', ['$scope', '$log', 'WebSocketFactory', 'WEBSOCKETS_CONFIG',
+        function ($scope, $log, WebSocketFactory, WEBSOCKETS_CONFIG) {
+            var ws;
+            $scope.showButton = true;
+            $scope.wsSupported = Modernizr.websockets;
+            $scope.wsIsSupportedMessage = WEBSOCKETS_CONFIG.WS_SUPPORTED;
+            $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;
+
+            $scope.stats = function(){
+                    $scope.showButton = false;
+                    //Making loading spinner disappear
+                    $('#load_statistics_loading').hide();
+                    $('#load_statistics_content').show();
+
+                    var options = {
+                        series: {
+                            shadowSize: 1
+                        },
+                        lines: {
+                            show: true,
+                            lineWidth: 0.5,
+                            fill: true,
+                            fillColor: {
+                                colors: [{
+                                    opacity: 0.1
+                                }, {
+                                    opacity: 1
+                                }
+                                ]
+                            }
+                        },
+                        yaxis: {
+                            min: 0,
+                            max: 100,
+                            tickFormatter: function (v) {
+                                return v + "%";
+                            }
+                        },
+                        xaxis: {
+                            show: false
+                        },
+                        colors: ["#6ef146"],
+                        grid: {
+                            tickColor: "#a8a3a3",
+                            borderWidth: 0
+                        }
+                    };
+
+                    var data = [];
+                    var totalPoints = 250;
+
+                    // random data generator for plot charts
+                    function getRandomData() {
+                        if (data.length > 0) data = data.slice(1);
+                        // do a random walk
+                        while (data.length < totalPoints) {
+                            var prev = data.length > 0 ? data[data.length - 1] : 50;
+                            var y = 0;
+                            if (y < 0) y = 0;
+                            if (y > 100) y = 100;
+                            data.push(0);
+                        }
+                        // zip the generated y values with the x values
+                        var res = [];
+                        for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
+                        return res;
+                    }
+
+                    //var updateInterval = 30;
+                    var updateInterval = WEBSOCKETS_CONFIG.WS_CPU_INTERVAL;
+
+                    var plot = $.plot($("#load_statistics"), [getRandomData()], options);
+
+                    WebSocketFactory.subscribe(function(message) {
+                        if(event.data && JSON){
+                            var a= JSON.parse(event.data);
+                            var res = plot.getData();
+                            while(res.length<249){
+                                res.push([0,0]);
+                            }
+                            while(res.length>250){
+                                res.shift();
+                            }
+                            for (var i = 0; i <a.data.length; ++i){
+                                res.push([i, a.data[i].value]);
+                            }
+                            plot.setData([res]);
+                            plot.draw();
+                        }
+
+
+                        //$scope.$apply();
+                    });
+
+                    function echo() {
+                        if (ws != null) {
+                            ws.send('');
+                        } else {
+                            alert('WebSocket connection not established, please connect.');
+                        }
+                    }
+
+                    function update() {
+                        plot.setData([getRandomData()]);
+                        plot.draw();
+                        setTimeout(update, updateInterval);
+                    }
+                    WebSocketFactory.connect(WEBSOCKETS_CONFIG.WS_CPU_URL);
+
+
+            };
+
+}]);

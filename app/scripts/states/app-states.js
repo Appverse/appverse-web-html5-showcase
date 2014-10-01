@@ -7,7 +7,7 @@
 
 'use strict';
 
-angular.module('appverseClientIncubatorApp')
+angular.module('App')
     .config(
     ['$stateProvider', '$urlRouterProvider',
       function ($stateProvider, $urlRouterProvider) {
@@ -38,9 +38,10 @@ angular.module('appverseClientIncubatorApp')
                 // topics.detail
                 // topics.detail.item
                 // ui.list
-                // serverpush
+                // server push
+                // translation
+                // performance
                 // about
-                //
                 //////////////////////////
 
                 // We must configure states using $stateProvider.
@@ -54,9 +55,12 @@ angular.module('appverseClientIncubatorApp')
 
                     // Use a url of "/" to set a states as the "index".
                     url: "/home",
-                    templateUrl: 'views/main.html'
+                    templateUrl: 'views/main_oauth.html',
+                    //templateUrl: 'views/main.html'
+                    controller: 'OauthLoginCtrl'
 
                 })
+
 
                 ///////////////////
                 // State: Topics //
@@ -243,11 +247,11 @@ angular.module('appverseClientIncubatorApp')
                     controller: 'cacheState2Controller'
                 })
 
-                .state('cache.idb', {
+                .state('cache.simpleidb', {
 
-                    url: '/idb',
-                    templateUrl: 'views/cache/cache.idb.html',
-                    controller: 'cacheIDBController'
+                    url: '/simpleidb',
+                    templateUrl: 'views/cache/cache.simpleidb.html',
+                    controller: 'simpleIDBController'
                 })
 
                 ///////////////////
@@ -282,6 +286,24 @@ angular.module('appverseClientIncubatorApp')
 
                 })
 
+//                .state('websockets', {
+//
+//                    abstract: false,
+//                    url: '/websockets',
+//                    templateUrl: 'views/demo/serverpush/websockets_echo.html',
+//                    controller: 'wsController_ECHO'
+//
+//                })
+
+                .state('websockets', {
+
+                    abstract: false,
+                    url: '/websockets',
+                    templateUrl: 'views/demo/serverpush/websockets_cpu.html',
+                    controller: 'wsController_CPU'
+
+                })
+
                 //////////////////////////
                 // SECTION: Translation //
                 //////////////////////////
@@ -291,6 +313,41 @@ angular.module('appverseClientIncubatorApp')
                     templateUrl: 'views/translation/translation.html',
                     controller: 'translationController'
                 })
+
+                //////////////////////////
+                // SECTION: PERFORMANCE //
+                //////////////////////////
+                    .state('performance', {
+
+                        abstract: true,
+                        url: '/performance',
+                        templateUrl: 'views/demo/performance/performance.html',
+                        controller: 'performanceController'
+                    })
+
+                    .state('performance.webworkers', {
+
+                        url: '/webworkers',
+                        templateUrl: 'views/demo/performance/performance.webworkers.html'
+                    })
+
+                    .state('performance.hpcontrols', {
+
+                        url: '/hpcontrols',
+                        templateUrl: 'views/demo/performance/performance.hpcontrols.html',
+                        controller: ''
+                    })
+
+                //////////////////////////
+                // SECTION: Modals //
+                //////////////////////////
+                .state('modals', {
+
+                    url: '/modals',
+                    templateUrl: 'views/modals/modal.html',
+                    controller: 'dialogCtrl'
+                })
+
 
                 ////////////////////
                 // SECTION: About //

@@ -1,0 +1,164 @@
+<div class="container">
+    <div id="OAuth2Logo">
+        <a ng-href="http://oauth.net/2/">
+            <img ng-src="images/OAuth2.png" style="width: 50px; height: 50px" />Based on OAuth2</a>
+    </div>
+
+
+
+    <div ng-controller="OauthLoginCtrl" ng-cloak>
+        <div>
+            <p><b>User Status: {{ login_status }} </b></p>
+        </div>
+        <div ng-show="login_status == 'connected'">
+            <p><b>Welcome {{ user.name }}!</b></p>
+        </div>
+
+    
+        <div ng-hide="login_status == 'connected' || login_status == 'Security not enabled'">
+            <button class="btn" ng-click="open({name: '', password: ''})">Click here to login</button>
+        </div>
+         <div ng-show="login_status == 'connected'">
+            <button class="btn" ng-click="logout()">Click here to logout</button>
+        </div>
+    
+
+    
+        <div ng-controller="CollapseDemoCtrl" ng-show="login_status == 'connected' || login_status == 'Security not enabled'">
+            <p class="lead">
+                <h3>This is the Appverse Web HTML5/JavaScript Demo</h3>
+            </p>
+            <p class="lead">
+                <h2>Have a look on planned features..</h2>
+            </p>
+
+            <div>
+                <a href="" ng-click="routingCollapsed = !routingCollapsed">
+                    <p class="lead">Routing</p>
+                </a>
+                <div collapse="routingCollapsed">
+                    <p>Routing features are not only based on default AngularJS routing mechanism.</p>
+                    <p>Unlike the built-in ngRoute service, UI-Router can nest views as it works based on states, not URLs.</p>
+                    <p>Use the menu bar to navigate.
+                        <!--            Pay attention to the <code>$state</code> and <code>$stateParams</code> values.-->
+                    </p>
+                    <p>Regarding of links, click on these links—
+                        <a href="#/c?id=1">Security</a>or ' +
+                        <a href="#/user/2">Styling</a>—to see a url redirect in action.</p>
+                </div>
+            </div>
+
+            <div>
+                <a href="" ng-click="stylingCollapsed = !stylingCollapsed">
+                    <p class="lead">Styling</p>
+                </a>
+                <div collapse="stylingCollapsed">
+                    <p>Bootstrap if completely integrated into the framework with UI-Bootstrap. Pay attention to specific directives.</p>
+                    <p>It contains a set of native AngularJS directives based on Twitter Bootstrap's markup and CSS.</p>
+                    <p>As a result no dependency on jQuery or Bootstrap's JavaScript is required.</p>
+                    <p>Go to the
+                        <a href="#/ui">UI Demo</a>section to see some samples about UIs.</p>
+                    <p>Warning: IE7 and IE8 are not supported!</p>
+                </div>
+            </div>
+
+            <div>
+                <a href="" ng-click="securityCollapsed = !securityCollapsed">
+                    <p class="lead">Security</p>
+                </a>
+                <div collapse="securityCollapsed">
+                    <p>Security issues are handled including features as:</p>
+                    <ul>
+                        <li>Encrypted information traffic and storage</li>
+                        <li>Certificate Management</li>
+                        <li>
+                            It provides built-in protection from basic security holes including cross-site scripting and HTML injection attacks.
+                        </li>
+                        <li>
+                            It does round-trip escaping on all strings for you and even offers XSRF protection for server-side communication.
+                        </li>
+                    </ul>
+                    <p>Furthermore, it is designed to be compatible with other security measures like:</p>
+                    <ul>
+                        <li>Content Security Policy (CSP)</li>
+                        <li>HTTPS (SSL/TLS)</li>
+                        <li>
+                            Server-side authentication and authorization(reduce the possible attack vectors and it is strongly recommended).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <a href="" ng-click="integrationCollapsed = !integrationCollapsed">
+                    <p class="lead">External Integration</p>
+                </a>
+                <div collapse="integrationCollapsed">
+                    <p>The framework supports integration to external backends in several ways:</p>
+                    <ul>
+                        <li>Configuration: Services can be configured without.</li>
+                        <li>Directives including the response into two-way data binding in views/templates.</li>
+                        <li>Security Issues are handled by common framework services.</li>
+                    </ul>
+                    <p>HTML5's Websockets and REST Services aer supported.</p>
+                </div>
+            </div>
+
+
+
+            <div>
+                <a href="" ng-click="configurationCollapsed = !configurationCollapsed">
+                    <p class="lead">Configuration</p>
+                </a>
+                <div collapse="configurationCollapsed">
+                    <p>The framework counts on configuration of features and functionalities.</p>
+                    <p>Configuration is written in properties files and can be dynamically changed.</p>
+                    <p>Encrypted configuration is supported with server-side support.</p>
+                    <ul>
+                        <li>Configuration: Services can be configured without.</li>
+                        <li>Directives including the response into two-way data binding in views/templates.</li>
+                        <li>Security Issues are handled by common framework services.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <a href="" ng-click="performanceCollapsed = !performanceCollapsed">
+                    <p class="lead">Performance</p>
+                </a>
+                <div collapse="performanceCollapsed">
+                    <p>The framework programmatically strengths performance of certain features that need a powered performance.</p>
+                    <p>Based on multithreading HTML5 features, the framework dynamically generates performance components.</p>
+                    <p>This approach is based on:</p>
+                    <ul>
+                        <li>HTML5's webworker specification.</li>
+                        <li>Browser Storage</li>
+                        <li>Abstraction of implementation in the Common API.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <a href="" ng-click="servercommunicationCollapsed = !servercommunicationCollapsed">
+                    <p class="lead">Server Communication</p>
+                </a>
+                <div collapse="servercommunicationCollapsed">
+                    <p>Real-Time features are implemented by using server push techniques.</p>
+                </div>
+            </div>
+
+            <div>
+                <p>..and many others features like:</p>
+                <ul>
+                    <li>Project LifeCycle Management</li>
+                    <li>Testing</li>
+                    <li>Code Quality</li>
+                    <li>Mobile View</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

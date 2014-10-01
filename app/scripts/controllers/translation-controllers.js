@@ -4,7 +4,7 @@
  * Controllers for translation demo.
  * Pay attention to injection of dependencies (factories, entities and Angular objects).
  */
-angular.module('appverseClientIncubatorApp')
+angular.module('App.Controllers')
 
 .controller('translationController', ['$scope', '$translate', 'tmhDynamicLocale',
         function ($scope, $translate, tmhDynamicLocale) {

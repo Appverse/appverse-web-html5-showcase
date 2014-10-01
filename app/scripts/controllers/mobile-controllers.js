@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('appverseClientIncubatorApp')
+angular.module('App.Controllers')
 
 .controller('mobileController', ['$log', '$scope', 'Detection',
         function ($log, $scope, Detection) {
