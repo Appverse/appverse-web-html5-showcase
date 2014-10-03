@@ -16,25 +16,27 @@ This is the repository of the Appverse Web HTML5 subproject. Appverse Web is a m
 * install npm
 * bower and grunt (run the following commands):
 
-`shell
+```script
 npm install -g bower
 npm install -g grunt
-`
+```
 
 ## Running
 * configure project:
-`shell
+
+```script
+npm install
 bower install
-`
+```
 * run project
-`shell
-grunt server
-`
+
+`grunt server`
 
 ## Testing
-`shell
-grunt test
-`
+
+Exexecute the following command to launch tests
+
+`grunt test`
 
 ## License
 
