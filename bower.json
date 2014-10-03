@@ -1,21 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "appverseHTML5Incubator",
-  "version": "0.3.0",
-  "dependencies": {
-    "appverse-web-html5-core": "~0.2.1",
-    "appverse-web-html5-security": "~0.2.1",
-    "appverse-web-html5-ui": "~0.2.1"
-  },
-  "devDependencies": {
-    "angular-mocks": "1.2.20",
-    "angular-scenario": "1.2.20",
-    "angularjs-scope.safeapply": "*"
-  },
-  "resolutions": {
-    "angular": "1.2.20"
-  }
-=======
     "name": "appverseHTML5Incubator",
     "version": "0.3.0",
     "dependencies": {
@@ -54,5 +37,4 @@
         "angular": "1.2.20",
         "angular-mocks": "1.2.20"
     }
->>>>>>> parent of a6362a8... bowerized project
 }
