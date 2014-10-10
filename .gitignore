@@ -2,6 +2,7 @@ node_modules
 dist
 .tmp
 .sass-cache
+licenses.json
 app/bower_components
 /nbproject
 /.idea/
