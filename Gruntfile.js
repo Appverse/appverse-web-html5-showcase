@@ -540,10 +540,18 @@ module.exports = function (grunt) {
                 dir: '<%= yeoman.coverage %>/e2e',
                 print: 'detail'
             }
+        },
+	    license: {
+	       options: {             
+	       },
+            licence: {
+                output:'licenses.json'
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-license');
 
     grunt.registerTask('server', [
         'clean:server',
@@ -630,6 +638,7 @@ module.exports = function (grunt) {
  //        'open:doc',
         'watch'
     ]);
+   
 
     grunt.registerTask('default', [
         'server'
