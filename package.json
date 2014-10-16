@@ -49,6 +49,8 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
+    "grunt-license": "^0.1.5",
+    "treeify": "^1.0.1",
     "webdriver-manager": "0.0.8"
   }
 }
