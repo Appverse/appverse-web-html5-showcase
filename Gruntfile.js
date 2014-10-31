@@ -608,8 +608,13 @@ module.exports = function (grunt) {
         'makeReport'
     ]);
 
-    grunt.registerTask('doc', [
-        'docular',
+ grunt.registerTask('doc', [
+    	'clean:doc',
+        'docular'
+    ]);
+    
+    grunt.registerTask('doc:watch', [
+        'doc',
         'connect:doc',
         'open:doc',
         'watch:doc'
@@ -630,15 +635,14 @@ module.exports = function (grunt) {
         'uglify',
         'rev',
         'usemin',
-        'htmlmin',
-        'connect:dist',
- //        'docular',
- //        'connect:doc',
-        'open:server',
- //        'open:doc',
-        'watch'
+        'htmlmin'
     ]);
-   
+       
+    grunt.registerTask('dist:dev', [
+        'clean:dist',
+        'copy:dev_dist',
+        'compass:dev_dist'
+    ]);
 
     grunt.registerTask('default', [
         'server'
