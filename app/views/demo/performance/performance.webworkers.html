@@ -1,3 +1,4 @@
+<!doctype html>
 <div ng-controller="imageWebworkerController">
 
     <div>
@@ -5,27 +6,27 @@
         <div ng-show="execTime != null && execTime != 0">
             <p>Time for execution: {{ execTime }} ms.</p>
         </div>
-            <span  class="nullable">
+        <span class="nullable">
                 <label>Number of pooled workers:</label>
                 <select ng-model="poolSize" ng-options="threadsNumber.value for threadsNumber in threadsNumbers">
                     <option value="">-- choose execution mode --</option>
                 </select>
-            </span><br/>
+            </span>
+        <br/>
 
-            <button class="btn-primary" ng-click="run()">Run</button>
-        </div>
+        <button class="btn-primary" ng-click="run()">Run</button>
     </div>
-
-    <hr>
-
-    <div class="row">
-        <div class="span6"><img src="images/angularPerformance.jpg" id="source"></div>
-        <div class="span6" id="target"/>
-    </div>
-
-
 </div>
 
+<hr>
+
+<div class="row">
+    <div class="col-xs-6">
+        <img src="images/angularPerformance.jpg" id="source" style="width:100%">
+    </div>
+    <div class="col-xs-6" id="target" />
+</div>
+<br>
 <pre>
     EXPLANATION
     This section includes a heavy load process. The process select an area in the picture and extracts the dominant
@@ -39,8 +40,3 @@
     A high number of threads does not guarantee a better performance. Search for the most appropriate number of threads
     for each specific process. Then, include the value in the configuration (PERFORMANCE_CONFIG.webworker_pooled_threads).
 </pre>
-
-
-
-
-

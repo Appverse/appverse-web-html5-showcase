@@ -67,17 +67,23 @@ angular.module('App.Controllers')
             $scope.execTime = 0;
 
             // determine size of image
-            var imgwidth = $("#source").width();
-            var imgheight = $("#source").height();
+            var img = $("#source")[0]; // Get my img elem
 
-            // create a canvas and make context available
-            var targetCanvas = createTargetCanvas(imgwidth, imgheight);
-            targetContext = targetCanvas.getContext("2d");
+            $("<img/>") // Make in memory copy of image to avoid css issues
+            .attr("src", $(img).attr("src"))
+                .load(function () {
+                    var imgwidth = this.width;
+                    var imgheight = this.height;
 
-            // render elements
-            starttime = new Date().getTime();
+                    // create a canvas and make context available
+                    var targetCanvas = createTargetCanvas(imgwidth, imgheight);
+                    targetContext = targetCanvas.getContext("2d");
 
-            renderElements(imgwidth, imgheight, $("#source").get()[0], $scope.poolSize.key);
+                    // render elements
+                    starttime = new Date().getTime();
+
+                    renderElements(imgwidth, imgheight, $("#source").get()[0], $scope.poolSize.key);
+                });
         };
 
         // defines a workpacke object that can be sent to the worker

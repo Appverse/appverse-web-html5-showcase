@@ -9,7 +9,7 @@ angular.module('App.Controllers')
     function ($scope) {
         $scope.alerts = [
             {
-                    type: 'danger',
+                type: 'danger',
                 msg: 'Oh snap! Change a few things up and try submitting again.'
                 },
             {
@@ -47,16 +47,11 @@ angular.module('App.Controllers')
     })
 
 .controller('DatepickerDemoCtrl',
-    function ($scope, $timeout) {
+    function ($scope, $timeout, datepickerConfig) {
         $scope.today = function () {
             $scope.dt = new Date();
         };
         $scope.today();
-
-        $scope.showWeeks = true;
-        $scope.toggleWeeks = function () {
-            $scope.showWeeks = !$scope.showWeeks;
-        };
 
         $scope.clear = function () {
             $scope.dt = null;
@@ -68,23 +63,29 @@ angular.module('App.Controllers')
         };
 
         $scope.toggleMin = function () {
-            $scope.minDate = ($scope.minDate) ? null : new Date();
+            $scope.minDate = $scope.minDate ? null : new Date();
         };
         $scope.toggleMin();
 
-        $scope.open = function () {
-            $timeout(function () {
-                $scope.opened = true;
-            });
+        $scope.toggleWeeks = function () {
+            $scope.showWeeks = !$scope.showWeeks;
+        };
+
+        $scope.open = function ($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.opened = true;
         };
 
         $scope.dateOptions = {
-            'year-format': "'yy'",
-            'starting-day': 1
+            formatYear: 'yy',
+            startingDay: 1
         };
+
+        $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+        $scope.format = $scope.formats[0];
     })
-
-
 
 .controller('ModalDemoCtrl', ['$scope', '$modal', '$log',
     function ($scope, $modal, $log) {
@@ -93,11 +94,6 @@ angular.module('App.Controllers')
 
         $scope.open = function () {
             var ModalInstanceCtrl = /* @ngInject */ function ($scope, $modalInstance, items) {
-
-                //        $scope.input = {};
-                //        $scope.ok = function () {
-                //            alert($scope.input.abc);
-                //        };
 
                 $scope.items = items;
                 $scope.selected = {

@@ -39,9 +39,9 @@ module.exports = function () {
             'app/bower_components/angular-ui-router/release/angular-ui-router.min.js',
             'app/bower_components/angular-cache/dist/angular-cache.min.js',
             'app/bower_components/angular-resource/angular-resource.min.js',
-            'app/bower_components/ng-grid/ng-grid-2.0.11.debug.js',
+            'app/bower_components/ng-grid/build/ng-grid.min.js',
             'app/bower_components/socket.io-client/dist/socket.io.min.js',
-//            'http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js',
+ //            'http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js',
 
             //App-specific Code
             'app/bower_components/lodash/dist/lodash.underscore.min.js',

@@ -1,74 +1,56 @@
-<div >
-    <div>
-        <h3>Performance Strategies in data loading</h3>
-        <p>This demo shows different approaches to show a big chunk of data (more than 24000) from a REST endpoint.</p>
-    </div>
-    <div class="row">
-        <div class="span4" ng-controller="normalGridController">
-            <p><b>No Caching</b></p>
-            <div ng-show="execTime != null && execTime != 0">
-                <p>Time for render: {{ execTime }} ms.</p>
-            </div>
-            <div class="gridStyle" ng-grid="gridOptions"></div>
-        </div>
-
-        <div class="span4"></div>
-        <div class="span4">
-            <img src="images/griddata1.png">
-        </div>
-    </div>
-    <pre>
-        EXPLANATION
-        In this case the function (RESTFactory#readList) used to retrieve a big chunk of data is not appropriate. This function
-        has been designed to retrieve a tree of records with metadata about ancestors and related data in a single request.
-        So, the big amount of data is increased its weight in 150% (average).
-        Moreover, we do not use cache for the GET method.
-        Evidently, it is not very efficient!
-    </pre>
-    <div class="row">
-        <div class="span4" ng-controller="optimizedGridController">
-            <p><b>Using Cache</b></p>
-            <div ng-show="execTime != null && execTime != 0">
-                <p>Time for render: {{ execTime }} ms.</p>
-            </div>
-            <div class="gridStyle" ng-grid="gridOptions"></div>
-        </div>
-
-        <div class="span4"></div>
-        <div class="span4">
-            <img src="images/griddata2.png">
-        </div>
-    </div>
-    <pre>
-        EXPLANATION
-        In this case we use a different strategy, using caching and the AngularJS's $http service to avoid metadata retrieving.
-        The initial data load is lightly better but the performance is dramatically improved in navigation across pages of data.
-    </pre>
+<!doctype html>
+<div>
+    <h3>Performance Strategies in data loading</h3>
+    <p>This demo shows different approaches to show a big chunk of data (more than 24000) from a REST endpoint.</p>
 </div>
-
-<div >
-
-    <div class="row">
-        <div class="span4" ng-controller="concurrentCallingDataController">
-            <p><b>Concurrent Calling</b></p>
-            <div ng-show="execTime != null && execTime != 0">
-                <p>Time for render: {{ execTime }} ms.</p>
-            </div>
-            <div class="gridStyle" ng-grid="gridOptions"></div>
-        </div>
-        <div class="span4"></div>
-        <div class="span4">
-            <img src="images/griddata3.png">
+<div class="row">
+    <div class="col-sm-7" ng-controller="normalGridController">
+        <p><b>No Caching</b><span ng-show="execTime != null && execTime != 0">&nbsp;- Time for render: {{ execTime }} ms.</span>
+        </p>
+        <div class="gridStyle" ng-grid="gridOptions"></div>
+    </div>
+    <div class="col-sm-5">
+        <img src="images/griddata1.png">
+        <br>
+        <div class="well">
+            EXPLANATION:
+            <br>In this case the function (RESTFactory#readList) used to retrieve a big chunk of data is not appropriate.
+            <br>This function has been designed to retrieve a tree of records with metadata about ancestors and related data in a single request. So, the big amount of data is increased its weight in 150% (average). Moreover, we do not use cache for the GET method.
+            <br>Evidently, it is not very efficient!
         </div>
     </div>
-    <pre>
-        EXPLANATION
-        In this case we use a parallelized call to several REST resources, separately retrieving them an d combining in a
-        single resource. This approach significatively improves the initial load of data.
-        Moreover, navigation across data pages has a good performance. Maybe this is the best strategy to load
-        a big chunk of data.
-    </pre>
 </div>
-
-
-
+<hr>
+<div class="row">
+    <div class="col-sm-7" ng-controller="optimizedGridController">
+        <p><b>Using Cache</b><span ng-show="execTime != null && execTime != 0">&nbsp;- Time for render: {{ execTime }} ms.</span>
+        </p>
+        <div class="gridStyle" ng-grid="gridOptions"></div>
+    </div>
+    <div class="col-sm-5">
+        <img src="images/griddata2.png">
+        <br>
+        <div class="well">
+            EXPLANATION:
+            <br>In this case we use a different strategy, using caching and the AngularJS's $http service to avoid metadata retrieving.
+            <br>The initial data load is lightly better but the performance is dramatically improved in navigation across pages of data.
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-7" ng-controller="concurrentCallingDataController">
+        <p><b>Concurrent Calling</b><span ng-show="execTime != null && execTime != 0">&nbsp;- Time for render: {{ execTime }} ms.</span>
+        </p>
+        <div class="gridStyle" ng-grid="gridOptions"></div>
+    </div>
+    <div class="col-sm-5">
+        <img src="images/griddata3.png">
+        <br>
+        <div class="well">
+            EXPLANATION:
+            <br>In this case we use a parallelized call to several REST resources, separately retrieving them an d combining in a single resource. This approach significatively improves the initial load of data.
+            <br>Moreover, navigation across data pages has a good performance. Maybe this is the best strategy to load a big chunk of data.
+        </div>
+    </div>
+</div>
