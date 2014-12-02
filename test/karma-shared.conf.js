@@ -6,7 +6,7 @@ module.exports = function () {
         frameworks: ['mocha'],
 
         // coverage reporter generates the coverage
-        reporters: ['progress', 'coverage'],
+        reporters: ['progress', 'junit', 'coverage'],
 
         preprocessors: {
             // source files, that you wanna generate coverage for
@@ -64,7 +64,7 @@ module.exports = function () {
             'app/scripts/api/modules/api-translate.js',
             'app/bower_components/angular-translate/angular-translate.min.js',
             'app/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js',
-            'app/bower_components/angular-dynamic-locale/src/tmhDinamicLocale.js',
+            'app/bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js',
 
             'app/scripts/api/modules/api-performance.js',
 

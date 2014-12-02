@@ -7,6 +7,10 @@ module.exports = function (config) {
 
     conf.browsers = ['PhantomJS'];
 
+    conf.junitReporter = {
+        outputFile: 'test/reports/unit-test-results.xml'
+    };
+
     conf.coverageReporter.dir += 'unit';
 
     conf.files = conf.files.concat([

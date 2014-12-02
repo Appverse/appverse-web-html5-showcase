@@ -5,6 +5,10 @@ var sharedConfig = require('./karma-shared.conf');
 module.exports = function (config) {
     var conf = sharedConfig();
 
+    conf.junitReporter = {
+        outputFile: 'test/reports/midway-test-results.xml'
+    };
+
     conf.coverageReporter.dir += 'midway';
 
     conf.files = conf.files.concat([
