@@ -8,8 +8,7 @@
         </div>
         <span class="nullable">
                 <label>Number of pooled workers:</label>
-                <select ng-model="poolSize" ng-options="threadsNumber.value for threadsNumber in threadsNumbers">
-                    <option value="">-- choose execution mode --</option>
+                <select ng-model="poolSize" ng-options="threadsNumber.key as threadsNumber.value for threadsNumber in threadsNumbers">
                 </select>
             </span>
         <br/>

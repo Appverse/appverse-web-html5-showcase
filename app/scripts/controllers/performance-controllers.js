@@ -23,8 +23,7 @@ angular.module('App.Controllers')
         var count = 0;
         var starttime = 0;
         var callback;
-        var wTask;;
-        var poolSize;;
+        var wTask;
         var workerTasks;
         var workerData;
 
@@ -60,6 +59,8 @@ angular.module('App.Controllers')
             }
             ];
 
+        $scope.poolSize = '1';
+
         $scope.run = function () {
             total = 0;
             count = 0;
@@ -82,7 +83,7 @@ angular.module('App.Controllers')
                     // render elements
                     starttime = new Date().getTime();
 
-                    renderElements(imgwidth, imgheight, $("#source").get()[0], $scope.poolSize.key);
+                    renderElements(imgwidth, imgheight, $("#source").get()[0], $scope.poolSize);
                 });
         };
 
