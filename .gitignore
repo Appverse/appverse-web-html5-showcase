@@ -9,3 +9,4 @@ app/bower_components
 .sonar/
 coverage/
 doc/
+app/styles/*.css
