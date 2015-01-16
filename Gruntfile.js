@@ -105,9 +105,9 @@ module.exports = function (grunt) {
     grunt.initConfig({
         yeoman: yeomanConfig,
         watch: {
-            compass: {
+            sass: {
                 files: ['<%= yeoman.app %>/styles/**/*.{scss,sass}'],
-                tasks: ['compass:server', 'autoprefixer:tmp']
+                tasks: ['sass', 'autoprefixer:tmp']
             },
             styles: {
                 files: ['<%= yeoman.app %>/styles/**/*.css'],
@@ -121,7 +121,7 @@ module.exports = function (grunt) {
                     '<%= yeoman.app %>/**/*.html',
                     '{.tmp,<%= yeoman.app %>}/styles/**/*.css',
                     '{.tmp,<%= yeoman.app %>}/scripts/**/*.js',
-                    '{.tmp,<%= yeoman.app %>}/configuration/**/*.json',
+                    '{.tmp,<%= yeoman.app %>}/resources/**/*.json',
                     '<%= yeoman.app %>/images/**/*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
             }
@@ -229,7 +229,8 @@ module.exports = function (grunt) {
                 }]
             },
             server: '.tmp',
-            coverage: 'test/coverage'
+            coverage: 'test/coverage',
+            doc: 'doc'
         },
         jshint: {
             options: {
@@ -240,28 +241,15 @@ module.exports = function (grunt) {
                 '<%= yeoman.app %>/scripts/{,*/}*.js'
             ]
         },
-        compass: {
+        sass: {
             options: {
-                sassDir: '<%= yeoman.app %>/styles',
-                cssDir: '<%= yeoman.app %>/styles',
-                generatedImagesDir: '<%= yeoman.app %>/images/generated',
-                imagesDir: '<%= yeoman.app %>/images',
-                javascriptsDir: '<%= yeoman.app %>/scripts',
-                fontsDir: '<%= yeoman.app %>/styles/fonts',
-                importPath: '<%= yeoman.app %>/bower_components',
-                httpImagesPath: '/images',
-                httpGeneratedImagesPath: '/images/generated',
-                httpFontsPath: '/styles/fonts',
-                relativeAssets: false
+                includePaths: ['<%= yeoman.app %>/bower_components'],
+                sourceMap: true
             },
             dist: {
-                options: {
-                    debugInfo: false
-                }
-            },
-            server: {
-                options: {
-                    debugInfo: true
+                files: {
+                    '.tmp/styles/bootstrap.css': '<%= yeoman.app %>/styles/bootstrap.scss',
+                    '.tmp/styles/main.css': '<%= yeoman.app %>/styles/main.scss'
                 }
             }
         },
@@ -360,6 +348,17 @@ module.exports = function (grunt) {
         },
         // Put files not handled in other tasks here
         copy: {
+            dev_dist: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.dist %>',
+                    src: [
+                        '**'
+                    ]
+  }]
+            },
             dist: {
                 files: [{
                     expand: true,
@@ -390,9 +389,9 @@ module.exports = function (grunt) {
                     ]
                 }, {
                     expand: true,
-                    cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass/fonts',
-                    dest: '<%= yeoman.dist %>/fonts',
-                    src: '*'
+                    cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass-official/vendor/assets/fonts',
+                    dest: '<%= yeoman.dist %>/styles',
+                    src: '**'
                 }]
             },
             i18n: {
@@ -408,9 +407,9 @@ module.exports = function (grunt) {
             },
             fonts: {
                 expand: true,
-                cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass/fonts',
-                dest: '.tmp/fonts',
-                src: '*'
+                cwd: '<%= yeoman.app %>/bower_components/bootstrap-sass-official/vendor/assets/fonts',
+                dest: '.tmp/styles',
+                src: '**'
             },
             png: {
                 expand: true,
@@ -421,12 +420,12 @@ module.exports = function (grunt) {
         },
         concurrent: {
             server: [
-                'compass:server',
+                'sass',
                 'copy:i18n',
                 'copy:fonts'
             ],
             dist: [
-                'compass:dist',
+                'sass',
                 'imagemin'
             ]
         },
@@ -541,6 +540,7 @@ module.exports = function (grunt) {
         }
     });
 
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-license');
 
@@ -638,7 +638,7 @@ module.exports = function (grunt) {
     grunt.registerTask('dist:dev', [
         'clean:dist',
         'copy:dev_dist',
-        'compass:dev_dist'
+        'sass'
     ]);
 
     grunt.registerTask('default', [

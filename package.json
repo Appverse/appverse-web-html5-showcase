@@ -10,7 +10,6 @@
     "grunt-cli": "^0.1.13",
     "grunt-concurrent": "0.3.0",
     "grunt-contrib-clean": "0.5.0",
-    "grunt-contrib-compass": "0.5.0",
     "grunt-contrib-concat": "0.3.0",
     "grunt-contrib-connect": "0.3.0",
     "grunt-contrib-copy": "0.4.1",
@@ -30,6 +29,7 @@
     "grunt-protractor-coverage": "0.2.10",
     "grunt-protractor-webdriver": "0.1.8",
     "grunt-rev": "0.1.0",
+    "grunt-sass": "^0.17.0",
     "grunt-shell": "0.2.2",
     "grunt-tinypng": "0.5",
     "grunt-usemin": "2.1.1",
@@ -51,5 +51,10 @@
   },
   "engines": {
     "node": ">=0.8.0"
+  },
+  "dependencies": {
+    "grunt-license": "^0.1.5",
+    "treeify": "^1.0.1",
+    "webdriver-manager": "0.0.8"
   }
 }

@@ -12,7 +12,7 @@
         "angular-sanitize": "1.2.20",
         "angular-bootstrap": "0.11.0",
         "angular-ui-router": "0.2.8-bowratic-tedium",
-        "angular-translate": "1.1.0",
+    "angular-translate": "1.1.1",
         "angular-translate-loader-static-files": "0.1.6",
         "angular-i18n": "1.0.8",
         "angular-dynamic-locale" : "0.1.21",

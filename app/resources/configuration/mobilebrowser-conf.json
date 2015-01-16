@@ -1,10 +1,1 @@
-{
-    "LOGGING_CONFIG": {
-        "ServerEnabled": false,
-        "EnabledLogLevel": true,
-        "EnabledErrorLevel": true,
-        "EnabledDebugLevel": false,
-        "EnabledWarnLevel": true,
-        "EnabledInfoLevel": true
-    }
-}
+{}
