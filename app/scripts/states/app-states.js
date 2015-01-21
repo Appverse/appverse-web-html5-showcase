@@ -286,18 +286,8 @@ angular.module('App')
 
                 })
 
-//                .state('websockets', {
-//
-//                    abstract: false,
-//                    url: '/websockets',
-//                    templateUrl: 'views/demo/serverpush/websockets_echo.html',
-//                    controller: 'wsController_ECHO'
-//
-//                })
-
                 .state('websockets', {
 
-                    abstract: false,
                     url: '/websockets',
                     templateUrl: 'views/demo/serverpush/websockets_cpu.html',
                     controller: 'wsController_CPU'
@@ -317,26 +307,26 @@ angular.module('App')
                 //////////////////////////
                 // SECTION: PERFORMANCE //
                 //////////////////////////
-                    .state('performance', {
+                .state('performance', {
 
-                        abstract: true,
-                        url: '/performance',
-                        templateUrl: 'views/demo/performance/performance.html',
-                        controller: 'performanceController'
-                    })
+                    abstract: true,
+                    url: '/performance',
+                    templateUrl: 'views/demo/performance/performance.html',
+                    controller: 'performanceController'
+                })
 
-                    .state('performance.webworkers', {
+                .state('performance.webworkers', {
 
-                        url: '/webworkers',
-                        templateUrl: 'views/demo/performance/performance.webworkers.html'
-                    })
+                    url: '/webworkers',
+                    templateUrl: 'views/demo/performance/performance.webworkers.html'
+                })
 
-                    .state('performance.hpcontrols', {
+                .state('performance.hpcontrols', {
 
-                        url: '/hpcontrols',
-                        templateUrl: 'views/demo/performance/performance.hpcontrols.html',
-                        controller: ''
-                    })
+                    url: '/hpcontrols',
+                    templateUrl: 'views/demo/performance/performance.hpcontrols.html',
+                    controller: ''
+                })
 
                 //////////////////////////
                 // SECTION: Modals //

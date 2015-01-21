@@ -1,56 +1,61 @@
 <div class="container">
-            <div class="portlet box blue">
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption"><i class="icon-cogs"></i>WebSockets Demo</div>
+        </div>
+
+        <div class="portlet-body">
+            <div class="portlet solid bordered light-grey">
                 <div class="portlet-title">
-                    <div class="caption"><i class="icon-cogs"></i>WebSockets Demo</div>
+                    <div class="caption"><i class="icon-signal"></i>CPU Load</div>
+
                 </div>
-
                 <div class="portlet-body">
-                    <div class="portlet solid bordered light-grey">
-                        <div class="portlet-title">
-                            <div class="caption"><i class="icon-signal"></i>CPU Load</div>
 
+                    <div ng-show="wsSupported" id="webSocketSupp">
+                        <div style="float: left;">
+                            <img src="images/check.png" width="36" height="36" align="absmiddle">
                         </div>
-                        <div class="portlet-body">
+                        <div style="float: left; width: 600px; margin-left: 10px; position:relative; top: 8px;">
+                            {{ wsIsSupportedMessage }}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
 
-                            <div ng-show="wsSupported" id="webSocketSupp">
-                                <div style="float: left;">
-                                  <img src="images/check.png" width="36" height="36" align="absmiddle">
-                                </div>
-                                <div style="float: left; width: 600px; margin-left: 10px; position:relative; top: 8px;">
-                                  {{ wsIsSupportedMessage }}
-                                </div>
-                                <div class="clearfix"></div>
-                              </div>
+                    <div ng-hide="wsSupported" id="noWebSocketSupp">
+                        <div style="float: left;">
+                            <img src="images/cross.png" width="36" height="36" align="absmiddle">
+                        </div>
+                        <div style="float: left; width: 600px; margin-left: 10px;">
+                            <p>{{ wsIsNotSupportedMessage }}</p>
+                            <p>The <a href="http://caniuse.com/#feat=websockets">following link</a> lists the browsers that support WebSockets.</p>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="clearfix"></div>
+                    <div ng-if="wsSupported">
+                        <button class="btn btn-primary" ng-click="start()" ng-disabled="wsf.ws">Start</button>
+                        <button class="btn btn-danger" ng-click="stop()" ng-disabled="!wsf.ws">Stop</button>
+                        <br>
+                        <br>
+                        <p>Status: {{status}}</p>
+                    </div>
 
-                              <div ng-hide="wsSupported" id="noWebSocketSupp">
-                                <div style="float: left;">
-                                  <img src="images/cross.png" width="36" height="36" align="absmiddle">
+                    <div id="load_statistics_content" class="display-none">
+                        <div class="btn-toolbar margin-bottom-10">
+                            <div class="tools">
+                                <div class="btn-group pull-right" data-toggle="buttons-radio">
                                 </div>
-                                <div style="float: left; width: 600px; margin-left: 10px;">
-                                  <p>{{ wsIsNotSupportedMessage }}</p>
-                                  <p>The <a href="http://caniuse.com/#feat=websockets">following link</a> lists the browsers that support WebSockets.</p>
-                                </div>
-                              </div>
-                              <div ng-hide="showButton == false">
-                                <button class="btn btn-info btn-primary" ng-click="stats()" >Start</button>
-                              </div>
-
-
-                            <div id="load_statistics_content" class="display-none">
-                                <div class="btn-toolbar margin-bottom-10">
-                                    <div class="tools">
-                                        <div class="btn-group pull-right" data-toggle="buttons-radio">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="load_statistics" class="chart" style="max-height: 150px"></div>
                             </div>
                         </div>
+                        <div id="load_statistics" class="chart" style="max-height: 150px"></div>
                     </div>
                 </div>
             </div>
-        
-        <pre>
+        </div>
+    </div>
+
+    <pre>
             <p><strong>Instructions:</strong></p>
             <table class="instructions" cellspacing="0px" cellpadding="2px">
               <tr>
