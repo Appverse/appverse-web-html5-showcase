@@ -40,14 +40,6 @@ describe('Unit: Testing Controllers', function () {
         expect(scope.detect.hasAppverseMobile).to.be.a.boolean;
     });
 
-    it('should have a properly working AlertDemoCtrl', function () {
-
-        controller('AlertDemoCtrl', {
-            '$scope': scope
-        });
-        expect(scope.alerts).to.be.an.array;
-    });
-
     it('should have a properly working mobileController', function () {
 
         controller('mobileController', {
