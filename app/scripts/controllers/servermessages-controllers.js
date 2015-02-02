@@ -162,8 +162,8 @@ angular.module('App.Controllers')
 
         $scope.wsSupported = Modernizr.websockets;
         $scope.wsIsSupportedMessage = WEBSOCKETS_CONFIG.WS_SUPPORTED;
-        $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;
-        $scope.wsf = WebSocketFactory;
+        $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;        
+        $scope.wsf = WebSocketFactory;        
 
         //Making loading spinner disappear
         $('#load_statistics_loading').hide();
@@ -182,7 +182,8 @@ angular.module('App.Controllers')
                         opacity: 0.1
                     }, {
                         opacity: 1
-                    }]
+                    }
+                    ]
                 }
             },
             yaxis: {
@@ -206,53 +207,60 @@ angular.module('App.Controllers')
         var totalPoints = 250;
 
         // random data generator for plot charts
+
         function getRandomData() {
-            if (data.length > 0) {
-                data = data.slice(1);
-            }
+            if (data.length > 0) data = data.slice(1);
             // do a random walk
             while (data.length < totalPoints) {
+                var prev = data.length > 0 ? data[data.length - 1] : 50;
                 var y = 0;
-                if (y < 0) {
-                    y = 0;
-                }
-                if (y > 100) {
-                    y = 100;
-                }
+                if (y < 0) y = 0;
+                if (y > 100) y = 100;
                 data.push(0);
             }
             // zip the generated y values with the x values
             var res = [];
-            for (var i = 0; i < data.length; ++i) {
-                res.push([i, data[i]]);
+            for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
+            return res;
+        }
+        // random data generator for plot charts
+
+        function getCPUData() {
+            if (data.length > 0) data = data.slice(1);
+            // do a random walk
+            while (data.length < totalPoints) {
+                var prev = data.length > 0 ? data[data.length - 1] : 50;
+                var y = 0;
+                if (y < 0) y = 0;
+                if (y > 100) y = 100;
+                data.push(0);
             }
+            // zip the generated y values with the x values
+            var res = [];
+            for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
             return res;
         }
 
         var plot = $.plot($("#load_statistics"), [getRandomData()], options);
 
+            
         $scope.status = 'No connection.';
-        $scope.wsf = WebSocketFactory;
 
-        $scope.start = function () {
+        $scope.start = function () {      
+            
 
             $scope.status = 'Connecting...';
 
             WebSocketFactory.subscribe(function (message) {
 
-                if (message && message.charAt(0) === '{' && JSON) {
-                    var a = JSON.parse(message);
-                    var res = [];
-                    for (var i = 1; i < 250; ++i) {
-                        if (i <= a.data.length) {
-                            res.push([i, a.data[a.data.length - i].value]);
-                        }
-                    }
-                    plot.setData([res]);
-                    plot.draw();
-                } else {
+                //if (message && message.charAt(0) === '{' && JSON) {
+                var a = JSON.parse(message);
+                data.push(a);
+                plot.setData([getCPUData()]);
+                plot.draw();
+                /*} else {
                     $log.debug('Websocket message:', message);
-                }
+                }*/
             });
             WebSocketFactory.connect(WEBSOCKETS_CONFIG.WS_CPU_URL);
 
