@@ -5,7 +5,7 @@ This is the repository of the Appverse Web HTML5 subproject. Appverse Web is a m
 
 ## More Information
 
-* **About this project**: <http://appverse.github.com/appverse-web-html5>
+* **About this project**: <http://appverse.github.com/appverse-web-html5-showcase>
 * **About Appverse Web HTML5 Module**: <http://appverse.github.com/appverse-web-html5-core>
 * **About licenses & groups**: <http://appverse.github.com>
 * **About The Appverse Project**: <http://appverse.org>
