@@ -58,18 +58,30 @@ angular.module('showcaseApp')
 
                 })
 
-                   .state("components", {
+                .state("components", {
                     // Use a url of "/" to set a states as the "index".
                     url: "/components",
                     templateUrl: 'views/components.html',
                     controller: 'ComponentsController'
                 })
 
-                  .state("charts", {
+                .state("charts", {
                     // Use a url of "/" to set a states as the "index".
                     url: "/charts",
                     templateUrl: 'views/charts.html',
                     controller: 'ChartsController'
+                })
+
+                .state("translation", {
+                    // Use a url of "/" to set a states as the "index".
+                    url: "/translation",
+                    templateUrl: 'views/translation.html',
+                    controller: 'TranslationController'
+                })
+
+                .state('about', {
+                    url: '/about',
+                    templateUrl: 'views/about.html',
                 })
 
                 ;

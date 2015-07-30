@@ -6,7 +6,7 @@
  */
 angular.module('App.Controllers')
 
-.controller('translationController', ['$scope', '$translate', 'tmhDynamicLocale',
+.controller('TranslationController', ['$scope', '$translate', 'tmhDynamicLocale',
         function ($scope, $translate, tmhDynamicLocale) {
 
         $scope.now = new Date();
