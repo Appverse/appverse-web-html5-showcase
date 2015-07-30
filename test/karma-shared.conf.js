@@ -1,28 +1,32 @@
-"use strict";
+/*jshint node:true */
+'use strict';
 
 module.exports = function () {
     return {
         basePath: '../',
-        frameworks: ['mocha'],
+        frameworks: ['jasmine'],
 
         // coverage reporter generates the coverage
-        reporters: ['progress', 'junit', 'coverage'],
+        reporters: ['progress', 'coverage', 'junit'],
 
         preprocessors: {
             // source files, that you wanna generate coverage for
             // do not include tests or libraries
             // (these files will be instrumented by Istanbul)
-            //            'app/scripts/{*!(api)/*.js,!(app).js}': 'coverage'
             'app/scripts/**/*.js': 'coverage'
         },
 
         // optionally, configure the reporter
         coverageReporter: {
             type: 'lcov',
-            dir: 'test/coverage/'
+            dir: 'test/coverage/',
+            includeAllSources: true
         },
 
-        browsers: ['PhantomJS'],
+        junitReporter: {
+            outputFile: 'test/reports/unit/junit-results.xml'
+        },
+
         autoWatch: true,
 
         // these are default values anyway
@@ -30,56 +34,44 @@ module.exports = function () {
         colors: true,
 
         files: [
-
             //3rd Party Code
-            'app/bower_components/jquery/jquery.min.js',
+            'app/bower_components/jquery/dist/jquery.min.js',
             'app/bower_components/angular/angular.min.js',
+            'app/bower_components/angular-touch/angular-touch.min.js',
+            'app/bower_components/modernizr/modernizr.js',
+            'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
             'app/bower_components/angular-cookies/angular-cookies.min.js',
-            'app/bower_components/angular-sanitize/angular-sanitize.min.js',
             'app/bower_components/angular-ui-router/release/angular-ui-router.min.js',
-            'app/bower_components/angular-cache/dist/angular-cache.min.js',
             'app/bower_components/angular-resource/angular-resource.min.js',
+            'app/bower_components/angular-cache/dist/angular-cache.min.js',
             'app/bower_components/ng-grid/build/ng-grid.min.js',
-            'app/bower_components/socket.io-client/dist/socket.io.min.js',
- //            'http://cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js',
 
             //App-specific Code
-            'app/bower_components/lodash/dist/lodash.underscore.min.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse-cache/appverse-cache.js',
+//            'app/bower_components/appverse-web-html5-core/dist/appverse-detection/appverse-detection.js',
+            //'app/bower_components/appverse-web-html5-core/dist/appverse-logging/appverse-logging.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse-router/appverse-router.min.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse/appverse.min.js',
+
+            'app/bower_components/lodash/lodash.min.js',
             'app/bower_components/restangular/dist/restangular.min.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse-rest/appverse-rest.js',
 
-            'app/scripts/api/modules/api-cache.js',
-            'app/scripts/api/modules/api-configuration.js',
-            'app/scripts/api/modules/api-detection.js',
- //            'app/scripts/api/modules/api-logging.js',
-            'app/scripts/api/modules/api-main.js',
+            'app/bower_components/appverse-web-html5-security/dist/appverse-security/appverse-security.js',
 
-            'app/bower_components/lodash/dist/lodash.underscore.min.js',
-            'app/bower_components/restangular/dist/restangular.min.js',
-            'app/scripts/api/modules/api-rest.js',
+            'app/bower_components/socket.io-client/dist/socket.io.min.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse-serverpush/appverse-serverpush.js',
 
-            'app/scripts/api/modules/api-security.js',
-
-            'app/scripts/api/modules/api-serverpush.js',
-
-            'app/scripts/api/modules/api-translate.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse-translate/appverse-translate.js',
             'app/bower_components/angular-translate/angular-translate.min.js',
             'app/bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js',
             'app/bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js',
 
-            'app/scripts/api/modules/api-performance.js',
-
-            'app/scripts/api/modules/api-utils.js',
-
-            'app/scripts/api/directives/*.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse-utils/appverse-utils.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse-performance/appverse-performance.js',
             'app/scripts/app.js',
             'app/scripts/controllers/*.js',
-            'app/scripts/factories/*.js',
             'app/scripts/states/*.js',
-
-            //Test-Specific Code
-            'node_modules/chai/chai.js',
-            'test/lib/chai-should.js',
-            'test/lib/chai-expect.js'
         ]
     };
 };

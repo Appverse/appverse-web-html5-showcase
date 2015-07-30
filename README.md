@@ -1,7 +1,8 @@
-Appverse Web
+Appverse HTML5 Showcase
 ============
 
-This is the repository of the Appverse Web HTML5 subproject. Appverse Web is a multi-frontend technology capable web application framework incorporating the best-of-breed open source stack to meet the challenges of secure and robust server-side service development, integration and delivery.
+This is the repository of the Appverse HTML5 Showcase.
+Appverse Web is a multi-frontend technology capable web application framework incorporating the best-of-breed open source stack to meet the challenges of secure and robust server-side service development, integration and delivery.
 
 ## More Information
 
@@ -13,15 +14,17 @@ This is the repository of the Appverse Web HTML5 subproject. Appverse Web is a m
 ### Quick Start
 
 #### Before you start, tools you will need
+
 * install npm
 * bower and grunt (run the following commands):
 
 ```script
 npm install -g bower
-npm install -g grunt
+npm install -g grunt-cli
 ```
 
 ## Running
+
 * configure project:
 
 ```script
@@ -30,34 +33,18 @@ bower install
 ```
 * run project
 
+Run the application. 
+
 `grunt server`
+
+Run the appliction and open the browser.
+
+`grunt server:open` 
 
 ## Testing
 
-Exexecute the following command to launch tests
+Execute the following command to launch tests
 
 `grunt test`
-
-## License
-
-    Copyright (c) 2012 GFT Appverse, S.L., Sociedad Unipersonal.
-
-     This Source  Code Form  is subject to the  terms of  the Appverse Public License 
-     Version 2.0  ("APL v2.0").  If a copy of  the APL  was not  distributed with this 
-     file, You can obtain one at <http://appverse.org/legal/appverse-license/>.
-
-     Redistribution and use in  source and binary forms, with or without modification, 
-     are permitted provided that the  conditions  of the  AppVerse Public License v2.0 
-     are met.
-
-     THIS SOFTWARE IS PROVIDED BY THE  COPYRIGHT HOLDERS  AND CONTRIBUTORS "AS IS" AND
-     ANY EXPRESS  OR IMPLIED WARRANTIES, INCLUDING, BUT  NOT LIMITED TO,   THE IMPLIED
-     WARRANTIES   OF  MERCHANTABILITY   AND   FITNESS   FOR A PARTICULAR  PURPOSE  ARE
-     DISCLAIMED. EXCEPT IN CASE OF WILLFUL MISCONDUCT OR GROSS NEGLIGENCE, IN NO EVENT
-     SHALL THE  COPYRIGHT OWNER  OR  CONTRIBUTORS  BE LIABLE FOR ANY DIRECT, INDIRECT,
-     INCIDENTAL,  SPECIAL,   EXEMPLARY,  OR CONSEQUENTIAL DAMAGES  (INCLUDING, BUT NOT
-     LIMITED TO,  PROCUREMENT OF SUBSTITUTE  GOODS OR SERVICES;  LOSS OF USE, DATA, OR
-     PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-     WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE) 
-     ARISING  IN  ANY WAY OUT  OF THE USE  OF THIS  SOFTWARE,  EVEN  IF ADVISED OF THE 
-     POSSIBILITY OF SUCH DAMAGE.
+ 
+ <!-- Available Grunt task (generated running 'grunt list') -->

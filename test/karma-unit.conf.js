@@ -1,15 +1,13 @@
-"use strict";
+/*jshint node:true */
+'use strict';
 
 var sharedConfig = require('./karma-shared.conf');
 
 module.exports = function (config) {
+
     var conf = sharedConfig();
 
     conf.browsers = ['PhantomJS'];
-
-    conf.junitReporter = {
-        outputFile: 'test/reports/unit-test-results.xml'
-    };
 
     conf.coverageReporter.dir += 'unit';
 
@@ -17,14 +15,6 @@ module.exports = function (config) {
 
         //extra testing code
         'app/bower_components/angular-mocks/angular-mocks.js',
-        'node_modules/mockjaxify/index.js',
-
-        // mocks
-
-        'test/mocks/**/*.js',
-
-        //mocha stuff
-        'test/mocha.conf.js',
 
         //test files
         'test/unit/**/*.js'
