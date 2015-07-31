@@ -1,5 +1,4 @@
 /*jshint node:true */
-/*globals browser:false */
 "use strict";
 
 var waitPlugin = require('./waitPlugin');
@@ -17,8 +16,13 @@ exports.config = {
     framework: 'jasmine2',
     multiCapabilities: [
         {
-            browserName: 'chrome'
+            browserName: 'phantomjs',
+            'phantomjs.binary.path': require('phantomjs').path,
+            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
         }
+//        ,{
+//            browserName: 'chrome'
+//        }
 //        , {
 //            browserName: 'firefox'
 //        }, {
@@ -56,8 +60,7 @@ exports.config = {
     },
     onComplete: function () {
         istanbul.Report.create('lcov', {
-                dir: 'test/coverage/e2e',
-                includeAllSources: true
+                dir: 'test/coverage/e2e'
             })
             .writeReport(collector, true);
         waitPlugin.resolve();

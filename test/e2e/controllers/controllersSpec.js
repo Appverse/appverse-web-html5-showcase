@@ -1,3 +1,4 @@
+/*jshint node:true */
 "use strict";
 
 describe("E2E: Testing Controllers", function () {
