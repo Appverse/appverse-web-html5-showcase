@@ -1,6 +1,26 @@
-/* globals Modernizr:false */
+/*
+ Copyright (c) 2015 GFT Appverse, S.L., Sociedad Unipersonal.
+ This Source Code Form is subject to the terms of the Appverse Public License
+ Version 2.0 (“APL v2.0”). If a copy of the APL was not distributed with this
+ file, You can obtain one at http://www.appverse.mobi/licenses/apl_v2.0.pdf.
+ Redistribution and use in source and binary forms, with or without modification,
+ are permitted provided that the conditions of the AppVerse Public License v2.0
+ are met.
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. EXCEPT IN CASE OF WILLFUL MISCONDUCT OR GROSS NEGLIGENCE, IN NO EVENT
+ SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE)
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
+ */
 
 'use strict';
+/* globals Modernizr:false */
 
 /*
  * Controllers for server messages demo.
@@ -162,8 +182,8 @@ angular.module('App.Controllers')
 
         $scope.wsSupported = Modernizr.websockets;
         $scope.wsIsSupportedMessage = WEBSOCKETS_CONFIG.WS_SUPPORTED;
-        $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;        
-        $scope.wsf = WebSocketFactory;        
+        $scope.wsIsNotSupportedMessage = WEBSOCKETS_CONFIG.WS_NOT_SUPPORTED;
+        $scope.wsf = WebSocketFactory;
 
         //Making loading spinner disappear
         $('#load_statistics_loading').hide();
@@ -179,9 +199,9 @@ angular.module('App.Controllers')
                 fill: true,
                 fillColor: {
                     colors: [{
-                        opacity: 0.1
+                            opacity: 0.1
                     }, {
-                        opacity: 1
+                            opacity: 1
                     }
                     ]
                 }
@@ -209,21 +229,21 @@ angular.module('App.Controllers')
         // random data generator for plot charts
 
         function getRandomData() {
-            if (data.length > 0) data = data.slice(1);
-            // do a random walk
-            while (data.length < totalPoints) {
-                var prev = data.length > 0 ? data[data.length - 1] : 50;
-                var y = 0;
-                if (y < 0) y = 0;
-                if (y > 100) y = 100;
-                data.push(0);
+                if (data.length > 0) data = data.slice(1);
+                // do a random walk
+                while (data.length < totalPoints) {
+                    var prev = data.length > 0 ? data[data.length - 1] : 50;
+                    var y = 0;
+                    if (y < 0) y = 0;
+                    if (y > 100) y = 100;
+                    data.push(0);
+                }
+                // zip the generated y values with the x values
+                var res = [];
+                for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
+                return res;
             }
-            // zip the generated y values with the x values
-            var res = [];
-            for (var i = 0; i < data.length; ++i) res.push([i, data[i]])
-            return res;
-        }
-        // random data generator for plot charts
+            // random data generator for plot charts
 
         function getCPUData() {
             if (data.length > 0) data = data.slice(1);
@@ -243,11 +263,11 @@ angular.module('App.Controllers')
 
         var plot = $.plot($("#load_statistics"), [getRandomData()], options);
 
-            
+
         $scope.status = 'No connection.';
 
-        $scope.start = function () {      
-            
+        $scope.start = function () {
+
 
             $scope.status = 'Connecting...';
 
