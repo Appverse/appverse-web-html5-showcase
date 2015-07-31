@@ -33,6 +33,9 @@
             },
             'SERVERPUSH_CONFIG': {
                 'BaseUrl': 'http://127.0.0.1:3000'
+            },
+            'I18N_CONFIG': {
+                LocaleFilePattern: 'resources/i18n/angular/angular-locale_{{locale}}.js'
             }
         },
         appverseMobile: {},
