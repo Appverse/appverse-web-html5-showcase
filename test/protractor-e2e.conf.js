@@ -20,9 +20,9 @@ exports.config = {
             'phantomjs.binary.path': require('phantomjs').path,
             'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
         }
-//        ,{
-//            browserName: 'chrome'
-//        }
+//        , {
+     //            browserName: 'chrome'
+     //        }
 //        , {
 //            browserName: 'firefox'
 //        }, {
@@ -38,16 +38,6 @@ exports.config = {
 
         var jasmineEnv = jasmine.getEnv();
 
-        jasmineEnv.addReporter(new function () {
-            this.specDone = function (spec) {
-                if (spec.status !== 'failed') {
-                    browser.driver.executeScript('return __coverage__;').then(function (coverageResults) {
-                        collector.add(coverageResults);
-                    });
-                }
-            };
-        }());
-
         capsPromise.then(function (caps) {
             var browserName = caps.caps_.browserName.toUpperCase();
             var browserVersion = caps.caps_.version;
@@ -57,13 +47,22 @@ exports.config = {
                 filePrefix: prePendStr
             }));
         });
+
+        return capsPromise;
     },
     onComplete: function () {
-        istanbul.Report.create('lcov', {
-                dir: 'test/coverage/e2e'
-            })
-            .writeReport(collector, true);
-        waitPlugin.resolve();
+
+        browser.driver.executeScript('return __coverage__;').then(function (coverageResults) {
+            collector.add(coverageResults);
+
+            istanbul.Report
+                .create('lcov', {
+                    dir: 'test/coverage/e2e'
+                })
+                .writeReport(collector, true);
+
+            waitPlugin.resolve();
+        });
     },
     jasmineNodeOpts: {
         showColors: true,
