@@ -42,7 +42,8 @@
         'appverse.performance',
         'appverse.translate',
         'appverse.security',
-        'appverse'
+        'appverse',
+        'hljs'
     ]).run(function ($log) {
         $log.debug('showcaseApp run');
     });
