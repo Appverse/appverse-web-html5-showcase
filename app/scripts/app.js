@@ -20,9 +20,15 @@
         'appverse.performance',
         'appverse.translate',
         'appverse.security',
-        'appverse'
+        'appverse',
+        'hljs'
     ]).run(function ($log) {
         $log.debug('showcaseApp run');
+    }).config(function (hljsServiceProvider) {
+        hljsServiceProvider.setOptions({
+            // replace tab with 4 spaces
+            tabReplace: ''
+        });
     });
 
     AppInit.setConfig({
