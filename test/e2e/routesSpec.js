@@ -12,13 +12,4 @@ describe("E2E: Testing Routes", function () {
         browser.setLocation('home');
         expect(browser.getLocationAbsUrl()).toBe("/home");
     });
-
-//    it('should collect coverage', function (done) {
-//        browser.driver.executeScript('return __coverage__;').then(function (val) {
-//            console.log('my istanbul coverage: ' + val);
-//            console.log(val);
-//            browser.coverage=val;
-//            done();
-//        });
-//    });
 });
