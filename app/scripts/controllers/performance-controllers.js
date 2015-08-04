@@ -27,14 +27,13 @@
  */
 angular.module('App.Controllers')
 
-.controller('performanceController', ['$log',
-        function ($log) {
+.controller('PerformanceController',
+    function ($log) {
         $log.debug('performanceController loading');
-        }])
+    })
 
-
-.controller('imageWebworkerController', ['$scope', '$log', '$q', 'WebWorkerPoolFactory', 'PERFORMANCE_CONFIG',
-        function ($scope, $log, $q, WebWorkerPoolFactory, PERFORMANCE_CONFIG) {
+.controller('imageWebworkerController',
+    function ($scope, $log, $q, WebWorkerPoolFactory) {
 
         // some global shared variables
         var targetContext;
@@ -226,9 +225,7 @@ angular.module('App.Controllers')
             targetContext.fillStyle = "rgba(" + colors + ",1)";
             targetContext.fill();
         }
-        }])
-
-
+    })
 
 
 .controller('concurrentCallingDataController', ['$log', '$scope', '$q', 'RESTFactory',
@@ -342,8 +339,11 @@ angular.module('App.Controllers')
 
         }])
 
-.controller('normalGridController', ['$scope', '$log', 'RESTFactory',
-        function ($scope, $log, RESTFactory) {
+.controller('normalGridController',
+    function ($scope, $log, RESTFactory) {
+
+        $log.debug('normalGridController loading');
+
         var gridData = 'largeLoad';
         var starttime = 0;
         var currentTime = 0;
@@ -384,7 +384,7 @@ angular.module('App.Controllers')
                 RESTFactory.readListNoEmpty(gridData).then(
                     function (largeLoad) {
                         data = largeLoad.filter(function (item) {
-                            return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+                            return JSON.stringify(item).toLowerCase().indexOf(ft) !== -1;
                         });
                         $scope.setPagingData(data, page, pageSize);
                     },
@@ -398,7 +398,7 @@ angular.module('App.Controllers')
                     $log.error("Error calling data for grid: " + error);
                 });
 
-            };
+            }
         };
 
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
@@ -437,7 +437,7 @@ angular.module('App.Controllers')
                 }
                 ]
         };
-       }])
+    })
 
 .controller('optimizedGridController', ['$scope', '$log', 'RESTFactory',
         function ($scope, $log, RESTFactory) {

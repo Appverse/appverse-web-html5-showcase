@@ -1,0 +1,27 @@
+<!doctype html>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="page-header">
+                <h1 id="navbar">Demos</h1>
+            </div>
+
+            <ul class="nav nav-tabs">
+                <li role="presentation" ng-class="{ active: $state.includes('demos.translation') }">
+                    <a angular-ripple="" ui-sref=".translation"><i class="glyphicon glyphicon-globe"></i> Translation</a>
+                </li>
+                <li role="presentation" ng-class="{ active: $state.includes('demos.webworkers') }">
+                    <a angular-ripple="" ui-sref=".webworkers"><i class="glyphicon glyphicon-plane"></i> Web Workers</a>
+                </li>
+                <li role="presentation" ng-class="{ active: $state.includes('demos.dataloading') }">
+                    <a angular-ripple="" ui-sref=".dataloading"><i class="glyphicon glyphicon-plane"></i> Data Loading</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" ui-view autoscroll="false"></div>
+            </div>
+
+        </div>
+    </div>
+</div>

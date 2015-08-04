@@ -42,7 +42,8 @@
         'appverse.performance',
         'appverse.translate',
         'appverse.security',
-        'appverse'
+        'appverse',
+        'ngGrid'
     ]).run(function ($log) {
         $log.debug('showcaseApp run');
     });
@@ -50,8 +51,8 @@
     AppInit.setConfig({
         environment: {
             'REST_CONFIG': {
-                'BaseUrl': '/api',
-                'RequestSuffix': ''
+                'BaseUrl': '/api/v1',
+                'RequestSuffix': '.json'
             },
             'SERVERPUSH_CONFIG': {
                 'BaseUrl': 'http://127.0.0.1:3000'
