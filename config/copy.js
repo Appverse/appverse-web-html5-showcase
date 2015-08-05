@@ -12,6 +12,8 @@ module.exports = {
                 dest: '<%= paths.dist %>',
                 src: [
                         '*.{ico,html}',
+                        'api/**',
+                        'images/**',
                         'resources/**',
                         'styles/fonts/*',
                         'styles/images/**',
