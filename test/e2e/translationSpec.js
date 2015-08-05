@@ -4,12 +4,12 @@
 describe('E2E: Testing translation view', function () {
 
     beforeAll(function () {
-        browser.setLocation('translation');
+        browser.setLocation('demos/translation');
     });
 
-    it('should have a working /translation route', function () {
+    it('should have a working /demos/translation route', function () {
 
-        expect(browser.getLocationAbsUrl()).toBe('/translation');
+        expect(browser.getLocationAbsUrl()).toBe('/demos/translation');
     });
 
     it('should have a translated text in English', function () {
