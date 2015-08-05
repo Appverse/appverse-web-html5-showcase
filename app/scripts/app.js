@@ -43,6 +43,7 @@
         'appverse.translate',
         'appverse.security',
         'appverse',
+        'hljs',
         'ngGrid'
     ]).run(function ($log) {
         $log.debug('showcaseApp run');
