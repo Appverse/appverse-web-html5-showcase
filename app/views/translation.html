@@ -1,117 +1,105 @@
-<div class="container" scrolly-scroll>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="page-header">
-                <h1 id="navbar">Translate</h1>
-            </div>
-        </div>
+<!doctype html>
+<div class="row">
+    <div class="col-md-6">
+        <p>
+            <b>Select desired locale:</b>
+        </p>
+        <button class="btn btn-primary" ng-click="setLocale('es-ES')">es-ES</button>
+        <button class="btn btn-primary" ng-click="setLocale('en-US')">en-US</button>
+        <button class="btn btn-primary" ng-click="setLocale('ja-JP')">ja-JP</button>
+        <button class="btn btn-primary" ng-click="setLocale('ar-EG')">ar-EG</button>
 
-        <div class="col-md-6">
-            <p><b>Select desired locale:</b></p>
 
-            <button class="btn btn-primary" ng-click="setLocale('es-ES')">es-ES</button>
-            <button class="btn btn-primary" ng-click="setLocale('en-US')">en-US</button>
-            <button class="btn btn-primary" ng-click="setLocale('ja-JP')">ja-JP</button>
-            <button class="btn btn-primary" ng-click="setLocale('ar-EG')">ar-EG</button>
+        <h4>Date</h4>
 
-            <h4>Date</h4>
+        <p>{{now | date:'fullDate'}}</p>
 
-            <p>{{now | date:'fullDate'}}</p>
+        <h4>Currency</h4>
 
-            <h4>Currency</h4>
+        <p>{{100 | currency}}</p>
 
-            <p>{{100 | currency}}</p>
+        <h4>Number</h4>
 
-            <h4>Number</h4>
+        <!-- Number should be rounded using locale -->
+        <p>{{1200300.456789 | number}}</p>
 
-            <!-- Number should be rounded using locale -->
-            <p>{{1200300.456789 | number}}</p>
+        <h4>Text</h4>
 
-            <h4>Text</h4>
+        <p translate>WELCOME</p>
 
-            <p translate>WELCOME</p>
+        <!-- With values -->
+        <p translate translate-values="{'name': 'Alex'}">WELCOME_NAME</p>
 
-            <!-- With values -->
-            <p translate translate-values="{'name': 'Alex'}">WELCOME_NAME</p>
-
-            <p id="translation" translate translate-values="{'name': '{{name}}', 'age': {{age}} }">WELCOME_NAME_AGE</p>
-        </div>
-
-        <div class="col-md-6">
-            <h4>Summary</h4>
-
-            <p>This is a translation feature that provides i18n and i110 in order to be able to switch languages on the fly at runtime.</p>
-
-            <p>Date, Currency and Number are translated using tmhDynamicLocale.set() method in the controller, it’s used for changing angular $locale- which is used to format dates, numbers, currencies, etc.</p>
-
-            <p>Text is translated via $translate.uses() method in the controller, it’s used for handling language translations.</p>
-
-            <p>Just add the code snippets provided below to your Appverse project. Go to the path 'app/resources/i18n' and create a JSON file for the language that you want to support. Example: In the HTML markup there is a text named WELCOME, this is a key that corresponds to a key of the same name in the JSON file at the path 'app/resources/i18n'. You just have to create the value you want it to display. For example in a JSON file for Spanish translations you can write "WELCOME": "Bienvenido!" and in another JSON file for English  "WELCOME": "Welcome!".</p>
-
-            <p>*Note: You must add the text translate within the html tag or the translate feature will not work.</p>
-        </div>
+        <p id="translation" translate translate-values="{'name': '{{name}}', 'age': {{age}} }">WELCOME_NAME_AGE</p>
     </div>
 
-    <hr>
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Explanation</div>
+            <div class="panel-body">
+                <p>This is a translation feature that provides i18n and i110 in order to be able to switch languages on the fly at runtime.</p>
 
-    <div class="row">
-        <div class="col-md-12">
+                <p>Date, Currency and Number are translated using tmhDynamicLocale.set() method in the controller, it’s used for changing angular $locale- which is used to format dates, numbers, currencies, etc.</p>
 
-                <div>
-                    <tabset>
-                        <tab heading="Markup">
-                            <div hljs pre>
-    <p><b>Select desired locale:</b></p>
+                <p>Text is translated via $translate.uses() method in the controller, it’s used for handling language translations.</p>
 
-    <button class="btn btn-primary" ng-click="setLocale('es-ES')">es-ES</button>
-    <button class="btn btn-primary" ng-click="setLocale('en-US')">en-US</button>
-    <button class="btn btn-primary" ng-click="setLocale('ja-JP')">ja-JP</button>
-    <button class="btn btn-primary" ng-click="setLocale('ar-EG')">ar-EG</button>
+                <p>Just add the code snippets provided below to your Appverse project. Go to the path 'app/resources/i18n' and create a JSON file for the language that you want to support. Example: In the HTML markup there is a text named WELCOME, this is a key that corresponds to a key of the same name in the JSON file at the path 'app/resources/i18n'. You just have to create the value you want it to display. For example in a JSON file for Spanish translations you can write "WELCOME": "Bienvenido!" and in another JSON file for English "WELCOME": "Welcome!".</p>
 
-    <h4>Date</h4>
-
-    <p>{{now | date:'fullDate'}}</p>
-
-    <h4>Currency</h4>
-
-    <p>{{100 | currency}}</p>
-
-    <h4>Number</h4>
-
-    <!-- Number should be rounded using locale -->
-    <p>{{1200300.456789 | number}}</p>
-
-    <h4>Text</h4>
-
-    <p translate>WELCOME</p>
-
-    <!-- With values -->
-    <p translate translate-values="{'name': 'Alex'}">WELCOME_NAME</p>
-
-    <p id="translation" translate translate-values="{'name': '{{name}}', 'age': {{age}} }">WELCOME_NAME_AGE</p>
-                            </div>
-                        </tab>
-                        <tab heading="JavaScript">
-                            <div hljs pre>
-    angular.module('App.Controllers')
-
-        .controller('TranslationController', ['$scope', '$translate', 'tmhDynamicLocale',
-            function ($scope, $translate, tmhDynamicLocale) {
-
-            $scope.now = new Date();
-            $scope.name = 'Alicia';
-            $scope.age = '25';
-
-            $scope.setLocale = function (locale) {
-                $translate.uses(locale);
-                tmhDynamicLocale.set(locale.toLowerCase());
-            };
-        }]);
-                            </div>
-                        </tab>
-                    </tabset>
-                </div>
-
+                <p>*Note: You must add the text translate within the html tag or the translate feature will not work.</p>
+            </div>
         </div>
     </div>
 </div>
+
+<tabset>
+    <tab heading="Markup">
+        <pre hljs>
+<p><b>Select desired locale:</b></p>
+
+<button class="btn btn-primary" ng-click="setLocale('es-ES')">es-ES</button>
+<button class="btn btn-primary" ng-click="setLocale('en-US')">en-US</button>
+<button class="btn btn-primary" ng-click="setLocale('ja-JP')">ja-JP</button>
+<button class="btn btn-primary" ng-click="setLocale('ar-EG')">ar-EG</button>
+
+<h4>Date</h4>
+
+<p>{{now | date:'fullDate'}}</p>
+
+<h4>Currency</h4>
+
+<p>{{100 | currency}}</p>
+
+<h4>Number</h4>
+
+<!-- Number should be rounded using locale -->
+<p>{{1200300.456789 | number}}</p>
+
+<h4>Text</h4>
+
+<p translate>WELCOME</p>
+
+<!-- With values -->
+<p translate translate-values="{'name': 'Alex'}">WELCOME_NAME</p>
+
+<p id="translation" translate translate-values="{'name': '{{name}}', 'age': {{age}} }">WELCOME_NAME_AGE</p>
+                </pre>
+    </tab>
+    <tab heading="JavaScript">
+        <pre hljs>
+angular.module('App.Controllers')
+
+.controller('TranslationController',
+    function ($scope, $translate, tmhDynamicLocale) {
+
+        $scope.now = new Date();
+        $scope.name = 'Alicia';
+        $scope.age = '25';
+
+        $scope.setLocale = function (locale) {
+            $translate.uses(locale);
+            tmhDynamicLocale.set(locale.toLowerCase());
+        };
+    });
+                </pre>
+    </tab>
+</tabset>
