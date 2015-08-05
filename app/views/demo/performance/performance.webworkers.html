@@ -1,23 +1,21 @@
 <!doctype html>
 <div ng-controller="imageWebworkerController">
 
-    <div>
-        <h3>Using Multithreading for a task</h3>
-        <div ng-show="execTime != null && execTime != 0">
-            <p>Time for execution: {{ execTime }} ms.</p>
+    <h3>Using Multithreading for a task</h3>
+
+    <div class="form-inline">
+        <div class="form-group">
+            <label>Number of pooled workers:</label>
+            <select class="form-control" ng-model="poolSize" ng-options="threadsNumber.key as threadsNumber.value for threadsNumber in threadsNumbers">
+            </select>
         </div>
-        <span class="nullable">
-                <label>Number of pooled workers:</label>
-                <select ng-model="poolSize" ng-options="threadsNumber.key as threadsNumber.value for threadsNumber in threadsNumbers">
-                </select>
-            </span>
-        <br/>
-
-        <button class="btn-primary" ng-click="run()">Run</button>
+        <button class="btn btn-primary" ng-click="run()">Run</button>
     </div>
-</div>
 
-<hr>
+    <p>Time spent: {{ execTime }} ms.</p>
+
+</div>
+<br>
 
 <div class="row">
     <div class="col-xs-6">
@@ -26,7 +24,17 @@
     <div class="col-xs-6" id="target" />
 </div>
 <br>
-<div class="well">
-    <h4>Explanation:</h4>
-    <p>This section includes a heavy load process. The process select an area in the picture and extracts the dominant color from a set of complicated statistics. This step is repeated until all the picture area has been analyzed. When an area has been analyzed it is included in the DOM element. As you can see, this is the type of task you can include in a web worker. Select the "Only One Thread" option to check processing time using a single webworker (as commonly used). With the Pool of Workers you can attach a number of threads to parallelized the processing. Select the "Four threads" option and compare the values in "Time for Execution". Due to the busy threads of the available threads in your browser results can vary from one browser to another. A high number of threads does not guarantee a better performance. Search for the most appropriate number of threads for each specific process. Then, include the value in the configuration (PERFORMANCE_CONFIG.webworker_pooled_threads).</p>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Explanation</div>
+    <div class="panel-body">
+        <p>This section includes a heavy load process.
+            <br>The process select an area in the picture and extracts the dominant color from a set of complicated statistics. This step is repeated until all the picture area has been analyzed. When an area has been analyzed it is included in the DOM element.
+            <br>As you can see, this is the type of task you can include in a web worker.
+            <br>
+            <br>Select the <b>"Only One Thread"</b> option to check processing time using a single webworker (as commonly used). With the Pool of Workers you can attach a number of threads to parallelized the processing.
+            <br>
+            <br>Select the <b>"Four threads"</b> option and compare the values in <b>"Time for Execution"</b>.
+            <br>Due to the busy threads of the available threads in your browser results can vary from one browser to another. A high number of threads does not guarantee a better performance. Search for the most appropriate number of threads for each specific process. Then, include the value in the configuration (<b>PERFORMANCE_CONFIG.webworker_pooled_threads</b>).</p>
+    </div>
 </div>
