@@ -7,11 +7,23 @@ Make sure to include this after the core Bootstrap CSS.
 body {
     padding-top: 70px;
 }
-
 /* Style to add pointer for tabs as recommended by UI Angular bootstrap */
+
 .nav,
 .pagination,
 .carousel,
 .panel-title a {
     cursor: pointer;
+}
+
+/* Style pre tags for Markup and Javascript tabs */
+pre > pre {
+    margin-bottom: 0;
+    padding: 0;
+    border: 0;
+}
+
+pre[hljs] {
+    padding: 0;
+    background-color: #fff;
 }
