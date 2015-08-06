@@ -6,7 +6,7 @@
  Redistribution and use in source and binary forms, with or without modification,
  are permitted provided that the conditions of the AppVerse Public License v2.0
  are met.
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND
  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  DISCLAIMED. EXCEPT IN CASE OF WILLFUL MISCONDUCT OR GROSS NEGLIGENCE, IN NO EVENT
@@ -30,81 +30,62 @@
 'use strict';
 
 angular.module('showcaseApp')
-    .config(
-    ['$stateProvider', '$urlRouterProvider',
-      function ($stateProvider, $urlRouterProvider) {
 
-                ///////////////////////////////
-                // 1-Redirects and Otherwise //
-                ///////////////////////////////
+.config(
+    function ($stateProvider, $urlRouterProvider) {
 
-                // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
-                $urlRouterProvider
+        $urlRouterProvider.otherwise('/home');
 
-                // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
-                // Here we are just setting up some convenience urls.
-                //                .when('/t?id', '/topics/:id')
-                //                    .when('/t/:id', '/topics/:id')
+        $stateProvider.state('home', {
+            url: '/home',
+            templateUrl: 'views/home.html'
 
+        })
 
-                // If the url is ever invalid, e.g. '/asdf', then redirect to '/' aka the home state
-                    .otherwise('/home');
+        .state('theme', {
+            url: '/theme',
+            templateUrl: 'views/theme.html'
 
+        })
 
-                //////////////////////////
-                // 2-State Configurations
-                // Several states hav been configured:
-                // home
-                // tasks
-                //
-                //////////////////////////
+        .state('components', {
+            url: '/components',
+            templateUrl: 'views/components.html',
+            controller: 'ComponentsController'
+        })
 
-                // We must configure states using $stateProvider.
-                $stateProvider
+        .state('charts', {
+            url: '/charts',
+            templateUrl: 'views/charts.html',
+            controller: 'ChartsController'
+        })
 
-                //////////
-                // Home //
-                //////////
+        .state('demos', {
+            abstract: true,
+            url: '/demos',
+            templateUrl: 'views/demos.html'
+        })
 
-                    .state("home", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/home",
-                    templateUrl: 'views/home.html'
+        .state('demos.translation', {
+            url: '/translation',
+            templateUrl: 'views/translation.html',
+            controller: 'TranslationController'
+        })
 
-                })
+        .state('demos.webworkers', {
+            url: '/webworkers',
+            templateUrl: 'views/demo/performance/performance.webworkers.html'
+        })
 
-                .state("theme", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/theme",
-                    templateUrl: 'views/theme.html'
+        .state('demos.dataloading', {
+            url: '/dataloading',
+            templateUrl: 'views/demo/performance/performance.hpcontrols.html',
+            controller: 'PerformanceController'
+        })
 
-                })
+        .state('about', {
+            url: '/about',
+            templateUrl: 'views/about.html',
+        });
 
-                .state("components", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/components",
-                    templateUrl: 'views/components.html',
-                    controller: 'ComponentsController'
-                })
-
-                .state("charts", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/charts",
-                    templateUrl: 'views/charts.html',
-                    controller: 'ChartsController'
-                })
-
-                .state("translation", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/translation",
-                    templateUrl: 'views/translation.html',
-                    controller: 'TranslationController'
-                })
-
-                .state('about', {
-                    url: '/about',
-                    templateUrl: 'views/about.html',
-                })
-
-                ;
-            }]);
+    });

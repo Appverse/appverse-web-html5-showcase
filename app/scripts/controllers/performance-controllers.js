@@ -27,32 +27,24 @@
  */
 angular.module('App.Controllers')
 
-.controller('performanceController', ['$log',
-        function ($log) {
+.controller('PerformanceController',
+    function ($log) {
         $log.debug('performanceController loading');
-        }])
+    })
 
-
-.controller('imageWebworkerController', ['$scope', '$log', '$q', 'WebWorkerPoolFactory', 'PERFORMANCE_CONFIG',
-        function ($scope, $log, $q, WebWorkerPoolFactory, PERFORMANCE_CONFIG) {
+.controller('imageWebworkerController',
+    function ($scope, $log, $q, WebWorkerPoolFactory) {
 
         // some global shared variables
         var targetContext;
-        var worker;
         var bulletSize = 20;
         var total = 0;
         var count = 0;
         var starttime = 0;
-        var callback;
-        var wTask;
-        var workerTasks;
-        var workerData;
-
         var _this = this;
 
         $scope.execTime = 0;
 
-        //$scope.threadsNumbers = [1,2,4,6,8];
         $scope.threadsNumbers = [
             {
                 key: '1',
@@ -109,7 +101,7 @@ angular.module('App.Controllers')
         };
 
         // defines a workpacke object that can be sent to the worker
-        function workPackage() {
+        function WorkPackage() {
             this.data = [];
             this.pixelCount = 0;
             this.colors = 0;
@@ -120,9 +112,18 @@ angular.module('App.Controllers')
         }
 
         this.callback = function (event) {
+
+            var wpArray = event.data;
+
+            for (var i = 0; i < wpArray.length; i++) {
+                var wp = wpArray[i];
+
+                drawRectangle(targetContext, wp.x, wp.y, bulletSize, wp.result[0]);
+            }
+
             count++;
 
-            if (count == total) {
+            if (count === _this.workerTasks.length) {
                 var currentTime = new Date().getTime();
                 var diff = currentTime - starttime;
                 $log.debug("Processing done: " + diff);
@@ -131,15 +132,7 @@ angular.module('App.Controllers')
                     $scope.execTime = diff;
                 });
             }
-
-            var wp = event.data;
-
-            // get the colors
-            var colors = wp.result;
-
-            drawRectangle(targetContext, wp.x, wp.y, bulletSize, colors[0]);
-
-        }
+        };
 
         // process the image by splitting it in parts and sending it to the worker
         function renderElements(imgwidth, imgheight, image, poolSize) {
@@ -150,16 +143,16 @@ angular.module('App.Controllers')
             // how much to process
             total = nrX * nrY;
 
-            //var workerTasks = new Array();
             _this.wTask = null;
             _this.poolSize = poolSize;
             _this.workerTasks = [];
             _this.workerData = new WebWorkerPoolFactory.getWorkerFromId('w1', poolSize);
 
+            var wpArray = [];
 
             // iterate through all the parts of the image
             for (var x = 0; x < nrX; x++) {
-                for (var y = 0; y < nrX; y++) {
+                for (var y = 0; y < nrY; y++) {
                     // create a canvas element we use for temporary rendering
                     var canvas2 = document.createElement('canvas');
                     canvas2.width = bulletSize;
@@ -178,22 +171,26 @@ angular.module('App.Controllers')
                     }
 
                     // create a workpackage
-                    var wp = new workPackage();
+                    var wp = new WorkPackage();
                     wp.colors = 5;
                     wp.data = dataAsArray;
                     wp.pixelCount = bulletSize * bulletSize;
                     wp.x = x;
                     wp.y = y;
 
-                    //Create a new task for the worker pool and push it into the group
-                    _this.wTask = new WebWorkerPoolFactory.WorkerTask(_this.workerData, _this.callback, wp);
-                    _this.workerTasks.push(_this.wTask);
+                    wpArray.push(wp);
 
+                    if (wpArray.length > Math.floor(total / poolSize) || x * y === (nrX - 1) * (nrY - 1)) {
+                        //Create a new task for the worker pool and push it into the group
+                        _this.wTask = new WebWorkerPoolFactory.WorkerTask(_this.workerData, _this.callback, wpArray);
+                        _this.workerTasks.push(_this.wTask);
+                        wpArray = [];
+                    }
                 }
             }
 
             //Call to the worker pool passing the group of tasks for the worker
-            WebWorkerPoolFactory.runParallelTasksGroup(_this.workerData, _this.workerTasks, _this.poolSize);
+            WebWorkerPoolFactory.runParallelTasksGroup(_this.workerData, _this.workerTasks);
         }
 
         // create the target canvas where the result will be rendered
@@ -215,20 +212,7 @@ angular.module('App.Controllers')
             targetContext.fill();
         }
 
-        // draw a circle on the supplied context
-        function drawCircle(targetContext, x, y, bulletSize, colors) {
-            var centerX = x * bulletSize + bulletSize / 2;
-            var centerY = y * bulletSize + bulletSize / 2;
-            var radius = bulletSize / 2;
-
-            targetContext.beginPath();
-            targetContext.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-            targetContext.fillStyle = "rgba(" + colors + ",1)";
-            targetContext.fill();
-        }
-        }])
-
-
+    })
 
 
 .controller('concurrentCallingDataController', ['$log', '$scope', '$q', 'RESTFactory',
@@ -276,7 +260,7 @@ angular.module('App.Controllers')
                 RESTFactory.readParallelMultipleBatch(gridData).then(
                     function (largeLoad) {
                         data = largeLoad.filter(function (item) {
-                            return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+                            return JSON.stringify(item).toLowerCase().indexOf(ft) !== -1;
                         });
                         $scope.setPagingData(data, page, pageSize);
                     },
@@ -290,7 +274,7 @@ angular.module('App.Controllers')
                     var dst = [];
                     angular.forEach(largeLoad, function (largeLoadSubSet) {
                         $.merge(dst, largeLoadSubSet);
-                    })
+                    });
 
                     //                        $log.debug("largeLoad: " + JSON.stringify(dst));
                     $scope.setPagingData(dst, page, pageSize);
@@ -298,7 +282,7 @@ angular.module('App.Controllers')
                     $log.error("Error calling data for grid: " + error);
                 });
 
-            };
+            }
         };
 
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
@@ -342,8 +326,11 @@ angular.module('App.Controllers')
 
         }])
 
-.controller('normalGridController', ['$scope', '$log', 'RESTFactory',
-        function ($scope, $log, RESTFactory) {
+.controller('normalGridController',
+    function ($scope, $log, RESTFactory) {
+
+        $log.debug('normalGridController loading');
+
         var gridData = 'largeLoad';
         var starttime = 0;
         var currentTime = 0;
@@ -384,7 +371,7 @@ angular.module('App.Controllers')
                 RESTFactory.readListNoEmpty(gridData).then(
                     function (largeLoad) {
                         data = largeLoad.filter(function (item) {
-                            return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+                            return JSON.stringify(item).toLowerCase().indexOf(ft) !== -1;
                         });
                         $scope.setPagingData(data, page, pageSize);
                     },
@@ -398,7 +385,7 @@ angular.module('App.Controllers')
                     $log.error("Error calling data for grid: " + error);
                 });
 
-            };
+            }
         };
 
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
@@ -437,7 +424,7 @@ angular.module('App.Controllers')
                 }
                 ]
         };
-       }])
+    })
 
 .controller('optimizedGridController', ['$scope', '$log', 'RESTFactory',
         function ($scope, $log, RESTFactory) {
@@ -481,7 +468,7 @@ angular.module('App.Controllers')
                 RESTFactory.readBatch(gridData).then(
                     function (largeLoad) {
                         data = largeLoad.filter(function (item) {
-                            return JSON.stringify(item).toLowerCase().indexOf(ft) != -1;
+                            return JSON.stringify(item).toLowerCase().indexOf(ft) !== -1;
                         });
                         $scope.setPagingData(data, page, pageSize);
                     },
@@ -496,7 +483,7 @@ angular.module('App.Controllers')
                     $log.error("Error calling data for grid: " + error);
                 });
 
-            };
+            }
         };
 
         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);

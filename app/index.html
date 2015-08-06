@@ -87,8 +87,8 @@
                 <li data-ng-class="{ active: $state.includes('charts') }">
                     <a angular-ripple="" ui-sref="charts"><i class="glyphicon glyphicon-stats"></i> Charts</a>
                 </li>
-                <li data-ng-class="{ active: $state.includes('translation') }">
-                    <a angular-ripple="" ui-sref="translation"><i class="glyphicon glyphicon-globe"></i> Translation</a>
+                <li ng-class="{ active: $state.includes('demos.translation') }">
+                    <a angular-ripple="" ui-sref="demos.translation"><i class="glyphicon glyphicon-blackboard"></i> Demos</a>
                 </li>
                 <li data-ng-class="{ active: $state.includes('about') }">
                     <a angular-ripple="" ui-sref="about"><i class="glyphicon glyphicon-info-sign"></i> About</a>
@@ -110,8 +110,7 @@
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/angular-touch/angular-touch.min.js"></script>
-    <script src="bower_components/modernizr/modernizr.js"></script>
-    <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+    <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="bower_components/ng-grid/build/ng-grid.min.js"></script>
     <script src="bower_components/venturocket-angular-slider/build/angular-slider.min.js"></script>
@@ -131,37 +130,49 @@
     <script src="bower_components/highlightjs/highlight.pack.js"></script>
     <script src="bower_components/angular-highlightjs/angular-highlightjs.min.js"></script>
     <script src="scripts/app.js"></script>
+
     <script src="scripts/controllers/home-controller.js"></script>
     <script src="scripts/controllers/components-controller.js"></script>
     <script src="scripts/controllers/modal-controller.js"></script>
     <script src="scripts/controllers/charts-controller.js"></script>
+    <script src="scripts/controllers/performance-controllers.js"></script>
     <script src="scripts/controllers/translation-controllers.js"></script>
+
     <script src="scripts/states/app-states.js"></script>
+
     <!-- PERFORMANCE MODULE -->
     <script src="bower_components/appverse-web-html5-core/dist/appverse-performance/appverse-performance.min.js"></script>
+
     <!-- DETECTION MODULE -->
     <script src="bower_components/appverse-web-html5-core/dist/appverse-detection/appverse-detection.min.js"></script>
+
     <!-- TRANSLATE MODULE -->
     <script src="bower_components/angular-translate/angular-translate.min.js"></script>
     <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
     <script src="bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js"></script>
     <script src="bower_components/appverse-web-html5-core/dist/appverse-translate/appverse-translate.min.js"></script>
+
     <!-- SERVER PUSH MODULE -->
     <script src="bower_components/socket.io-client/dist/socket.io.min.js"></script>
     <script src="bower_components/appverse-web-html5-core/dist/appverse-serverpush/appverse-serverpush.min.js"></script>
+
     <!-- REST MODULE -->
     <script src="bower_components/lodash/lodash.min.js"></script>
     <script src="bower_components/restangular/dist/restangular.min.js"></script>
     <script src="bower_components/appverse-web-html5-core/dist/appverse-rest/appverse-rest.min.js"></script>
+
     <!-- LOGGING MODULE -->
     <script src="bower_components/appverse-web-html5-core/dist/appverse-logging/appverse-logging.min.js"></script>
+
     <!-- CACHE MODULE -->
     <script src="bower_components/angular-cache/dist/angular-cache.min.js"></script>
     <script src="bower_components/appverse-web-html5-core/dist/appverse-cache/appverse-cache.min.js"></script>
+
     <!-- SECURITY MODULE -->
     <script src="bower_components/angular-resource/angular-resource.min.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
     <script src="bower_components/appverse-web-html5-security/dist/appverse-html5-security.min.js"></script>
+
     <!-- endbuild -->
 </body>
 

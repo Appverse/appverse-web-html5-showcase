@@ -23,8 +23,10 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test:e2e', [
+        'clean:reports',
+        'instrument',
         'testserver',
-        'karma:e2e_auto'
+        'shell:protractor'
     ]);
 
 };
