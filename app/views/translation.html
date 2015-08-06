@@ -7,34 +7,7 @@
         </div>
 
         <div class="col-md-6">
-            <p><b>Select desired locale:</b></p>
-
-            <button class="btn btn-primary" ng-click="setLocale('es-ES')">es-ES</button>
-            <button class="btn btn-primary" ng-click="setLocale('en-US')">en-US</button>
-            <button class="btn btn-primary" ng-click="setLocale('ja-JP')">ja-JP</button>
-            <button class="btn btn-primary" ng-click="setLocale('ar-EG')">ar-EG</button>
-
-            <h4>Date</h4>
-
-            <p>{{now | date:'fullDate'}}</p>
-
-            <h4>Currency</h4>
-
-            <p>{{100 | currency}}</p>
-
-            <h4>Number</h4>
-
-            <!-- Number should be rounded using locale -->
-            <p>{{1200300.456789 | number}}</p>
-
-            <h4>Text</h4>
-
-            <p translate>WELCOME</p>
-
-            <!-- With values -->
-            <p translate translate-values="{'name': 'Alex'}">WELCOME_NAME</p>
-
-            <p id="translation" translate translate-values="{'name': '{{name}}', 'age': {{age}} }">WELCOME_NAME_AGE</p>
+            <div ng-include src="'views/translation-markup.html'"></div>
         </div>
 
         <div class="col-md-6">
@@ -46,71 +19,25 @@
 
             <p>Text is translated via $translate.uses() method in the controller, it’s used for handling language translations.</p>
 
-            <p>Just add the code snippets provided below to your Appverse project. Go to the path 'app/resources/i18n' and create a JSON file for the language that you want to support. Example: In the HTML markup there is a text named WELCOME, this is a key that corresponds to a key of the same name in the JSON file at the path 'app/resources/i18n'. You just have to create the value you want it to display. For example in a JSON file for Spanish translations you can write "WELCOME": "Bienvenido!" and in another JSON file for English  "WELCOME": "Welcome!".</p>
+            <p>Just add the code snippets provided below to your Appverse project. Go to the path 'app/resources/i18n' and create a JSON file for the language that you want to support. Example: In the HTML markup there is a text named WELCOME, this is a key that corresponds to a key of the same name in the JSON file at the path 'app/resources/i18n'. You just have to create the value you want it to display. For example in a JSON file for Spanish translations you can write "WELCOME": "Bienvenido!" and in another JSON file for English "WELCOME": "Welcome!".</p>
 
             <p>*Note: You must add the text translate within the html tag or the translate feature will not work.</p>
         </div>
     </div>
 
-    <hr>
-
     <div class="row">
         <div class="col-md-12">
 
-                <div>
-                    <tabset>
-                        <tab heading="Markup">
-                            <div hljs pre>
-    <p><b>Select desired locale:</b></p>
-
-    <button class="btn btn-primary" ng-click="setLocale('es-ES')">es-ES</button>
-    <button class="btn btn-primary" ng-click="setLocale('en-US')">en-US</button>
-    <button class="btn btn-primary" ng-click="setLocale('ja-JP')">ja-JP</button>
-    <button class="btn btn-primary" ng-click="setLocale('ar-EG')">ar-EG</button>
-
-    <h4>Date</h4>
-
-    <p>{{now | date:'fullDate'}}</p>
-
-    <h4>Currency</h4>
-
-    <p>{{100 | currency}}</p>
-
-    <h4>Number</h4>
-
-    <!-- Number should be rounded using locale -->
-    <p>{{1200300.456789 | number}}</p>
-
-    <h4>Text</h4>
-
-    <p translate>WELCOME</p>
-
-    <!-- With values -->
-    <p translate translate-values="{'name': 'Alex'}">WELCOME_NAME</p>
-
-    <p id="translation" translate translate-values="{'name': '{{name}}', 'age': {{age}} }">WELCOME_NAME_AGE</p>
-                            </div>
-                        </tab>
-                        <tab heading="JavaScript">
-                            <div hljs pre>
-    angular.module('App.Controllers')
-
-        .controller('TranslationController', ['$scope', '$translate', 'tmhDynamicLocale',
-            function ($scope, $translate, tmhDynamicLocale) {
-
-            $scope.now = new Date();
-            $scope.name = 'Alicia';
-            $scope.age = '25';
-
-            $scope.setLocale = function (locale) {
-                $translate.uses(locale);
-                tmhDynamicLocale.set(locale.toLowerCase());
-            };
-        }]);
-                            </div>
-                        </tab>
-                    </tabset>
-                </div>
+            <div>
+                <tabset>
+                    <tab heading="Markup">
+                        <pre hljs include="'views/translation-markup.html'"></pre>
+                    </tab>
+                    <tab heading="JavaScript">
+                        <pre hljs include="'views/translation-javascript.html'"></pre>
+                    </tab>
+                </tabset>
+            </div>
 
         </div>
     </div>
