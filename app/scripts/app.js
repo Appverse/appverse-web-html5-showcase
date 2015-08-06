@@ -52,7 +52,7 @@
     AppInit.setConfig({
         environment: {
             'REST_CONFIG': {
-                'BaseUrl': '/api/v1',
+                'BaseUrl': 'api/v1',
                 'RequestSuffix': '.json'
             },
             'SERVERPUSH_CONFIG': {
