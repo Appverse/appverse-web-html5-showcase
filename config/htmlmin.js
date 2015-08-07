@@ -15,6 +15,12 @@ module.exports = {
             removeEmptyAttributes: true,
             removeOptionalTags: true,
             keepClosingSlash: true,
+            ignoreCustomComments: [
+                /^\s+Number/,
+                /\/locale\s+$/,
+                /^\s+With/,
+                /\/values\s+$/,
+            ]
         },
         files: [{
             expand: true,
