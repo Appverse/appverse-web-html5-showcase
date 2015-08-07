@@ -7,8 +7,8 @@ Make sure to include this after the core Bootstrap CSS.
 body {
     padding-top: 70px;
 }
-/* Style to add pointer for tabs as recommended by UI Angular bootstrap */
 
+/* Style to add pointer for tabs as recommended by UI Angular bootstrap */
 .nav,
 .pagination,
 .carousel,
@@ -26,4 +26,10 @@ pre > pre {
 pre[hljs] {
     padding: 0;
     background-color: #fff;
+}
+
+/* Keep border color on focus */
+.nav-tabs>li.active a:focus {
+    border: none;
+    border-bottom: 3px solid #213e7f;
 }

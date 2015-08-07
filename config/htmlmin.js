@@ -14,7 +14,7 @@ module.exports = {
             useShortDoctype: true,
             removeEmptyAttributes: true,
             removeOptionalTags: true,
-            keepClosingSlash: true,
+            keepClosingSlash: true
         },
         files: [{
             expand: true,
@@ -22,6 +22,7 @@ module.exports = {
             src: [
                         '*.html',
                         'views/**/*.html',
+                        '!views/*-code.html',
                         'template/**/*.html'
                     ],
             dest: '<%= paths.dist %>'
