@@ -8,22 +8,17 @@ describe("E2E: Testing Routes", function () {
         expect(browser.getLocationAbsUrl()).toBe("/home");
     });
 
-    it('should have a working /home route', function () {
+    it('should have a working /theme route', function () {
         browser.setLocation('theme');
         expect(browser.getLocationAbsUrl()).toBe("/theme");
     });
 
-    it('should have a working /home route', function () {
-        browser.setLocation('components');
-        expect(browser.getLocationAbsUrl()).toBe("/components");
-    });
-
-    it('should have a working /home route', function () {
+    it('should have a working /charts route', function () {
         browser.setLocation('charts');
         expect(browser.getLocationAbsUrl()).toBe("/charts");
     });
 
-    it('should have a working /home route', function () {
+    it('should have a working /about route', function () {
         browser.setLocation('about');
         expect(browser.getLocationAbsUrl()).toBe("/about");
     });
