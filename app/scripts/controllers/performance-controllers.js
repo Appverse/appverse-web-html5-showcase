@@ -303,6 +303,8 @@ angular.module('App.Controllers')
 
         $scope.gridOptions = {
             data: 'myData',
+            rowHeight: 35,
+            headerRowHeight: 35,
             enablePaging: true,
             showFooter: true,
             totalServerItems: 'totalServerItems',
@@ -406,6 +408,8 @@ angular.module('App.Controllers')
 
         $scope.gridOptions = {
             data: 'myData',
+            rowHeight: 35,
+            headerRowHeight: 35,
             enablePaging: true,
             showFooter: true,
             totalServerItems: 'totalServerItems',
@@ -504,6 +508,8 @@ angular.module('App.Controllers')
 
         $scope.gridOptions = {
             data: 'myData',
+            rowHeight: 35,
+            headerRowHeight: 35,
             enablePaging: true,
             showFooter: true,
             totalServerItems: 'totalServerItems',
