@@ -14,13 +14,7 @@ module.exports = {
             useShortDoctype: true,
             removeEmptyAttributes: true,
             removeOptionalTags: true,
-            keepClosingSlash: true,
-            ignoreCustomComments: [
-                /^\s+Number/,
-                /\/locale\s+$/,
-                /^\s+With/,
-                /\/values\s+$/,
-            ]
+            keepClosingSlash: true
         },
         files: [{
             expand: true,
@@ -28,6 +22,7 @@ module.exports = {
             src: [
                         '*.html',
                         'views/**/*.html',
+                        '!views/*-code.html',
                         'template/**/*.html'
                     ],
             dest: '<%= paths.dist %>'
