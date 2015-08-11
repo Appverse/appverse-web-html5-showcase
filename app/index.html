@@ -87,7 +87,10 @@
                 <li data-ng-class="{ active: $state.includes('charts') }">
                     <a angular-ripple="" ui-sref="charts"><i class="glyphicon glyphicon-stats"></i> Charts</a>
                 </li>
-                <li ng-class="{ active: $state.includes('demos.translation') }">
+                <li data-ng-class="{ active: $state.includes('detection') }">
+                    <a angular-ripple="" ui-sref="detection"><i class="glyphicon glyphicon-eye-open"></i> Detection</a>
+                </li>
+                <li data-ng-class="{ active: $state.includes('demos.translation') }">
                     <a angular-ripple="" ui-sref="demos.translation"><i class="glyphicon glyphicon-blackboard"></i> Demos</a>
                 </li>
                 <li data-ng-class="{ active: $state.includes('about') }">
@@ -135,9 +138,9 @@
     <script src="scripts/controllers/components-controller.js"></script>
     <script src="scripts/controllers/modal-controller.js"></script>
     <script src="scripts/controllers/charts-controller.js"></script>
+    <script src="scripts/controllers/detection-controller.js"></script>
     <script src="scripts/controllers/performance-controllers.js"></script>
     <script src="scripts/controllers/translation-controllers.js"></script>
-
     <script src="scripts/states/app-states.js"></script>
 
     <!-- PERFORMANCE MODULE -->
