@@ -1,0 +1,67 @@
+<div class="modal-header">
+    <h3 class="modal-title">User</h3>
+</div>
+
+<div class="modal-body">
+    <form class="form-horizontal" name="userForm">
+
+        <div class="form-group" ng-class="{'has-success has-feedback': userForm.name.$valid && userForm.name.$dirty, 'has-error has-feedback': userForm.name.$invalid && userForm.name.$dirty}">
+            <label class="col-sm-2" for="name">Name</label>
+            <div class="col-sm-10">
+                <input type="text" name="name" class="form-control ng-touched" ng-model="user.name" ng-disabled="false" required>
+
+                <span ng-show="userForm.name.$valid && userForm.name.$dirty" class="form-control-feedback glyphicon glyphicon-ok"></span>
+                <span ng-show="userForm.name.$invalid && userForm.name.$dirty" class="form-control-feedback glyphicon glyphicon-remove"></span>
+
+                <span class="text-danger" ng-show="userForm.name.$error.required">Name is required.</span>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{'has-success has-feedback': userForm.gender.$valid && userForm.gender.$dirty, 'has-error has-feedback': userForm.gender.$invalid && userForm.gender.$dirty}">
+            <label class="col-sm-2" for="gender">Gender</label>
+            <div class="col-sm-10">
+                <select class="form-control" name="gender" ng-model="user.gender" required>
+                    <option value="male">male</option>
+                    <option value="female">female</option>
+                </select>
+
+
+                <span ng-show="userForm.gender.$valid && userForm.gender.$dirty" class="form-control-feedback glyphicon glyphicon-ok"></span>
+                <span ng-show="userForm.gender.$invalid && userForm.gender.$dirty" class="form-control-feedback glyphicon glyphicon-remove"></span>
+                <span class="text-danger" ng-show="userForm.gender.$error.required">Gender is required.</span>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{'has-success has-feedback': userForm.company.$valid && userForm.company.$dirty, 'has-error has-feedback': userForm.company.$invalid && userForm.company.$dirty}">
+            <label class="col-sm-2" for="company">Company</label>
+            <div class="col-sm-10">
+                <input type="text" name="company" class="form-control ng-touched" ng-model="user.company" ng-disabled="false" required>
+
+                <span ng-show="userForm.company.$valid && userForm.company.$dirty" class="form-control-feedback glyphicon glyphicon-ok"></span>
+                <span ng-show="userForm.company.$invalid && userForm.company.$dirty" class="form-control-feedback glyphicon glyphicon-remove"></span>
+
+                <span class="text-danger" ng-show="userForm.company.$error.required">Company is required.</span>
+            </div>
+        </div>
+
+        <div class="form-group" ng-class="{'has-success has-feedback': userForm.age.$valid && userForm.age.$dirty, 'has-error has-feedback': userForm.age.$invalid && userForm.age.$dirty}">
+
+            <span ng-show="userForm.age.$valid && userForm.age.$dirty" class="form-control-feedback glyphicon glyphicon-ok"></span>
+            <span ng-show="userForm.age.$invalid && userForm.age.$dirty" class="form-control-feedback glyphicon glyphicon-remove"></span>
+            <label class="col-sm-2" for="age">Age</label>
+            <div class="col-sm-10">
+                <input type="number" name="age" class="form-control  ng-touched" nane="age" ng-model="user.age" ng-disabled="false" max="150" min="0" required>
+
+                <span class="text-danger" ng-show="userForm.age.$error.required">Age is required.</span>
+
+                <span class="text-danger" ng-show="userForm.age.$error.max">Maximum age is 150.</span>
+                <span class="text-danger" ng-show="userForm.age.$error.min">Minimum age is 0.</span>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button angular-ripple type="submit" class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button angular-ripple type="submit" class="btn btn-action" ng-click="ok()" ng-disabled="!userForm.$valid">{{user.id ? 'Save' : 'Add'}}</button>
+</div>

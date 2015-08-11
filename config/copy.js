@@ -15,6 +15,7 @@ module.exports = {
                         'api/**',
                         'images/**',
                         'resources/**',
+                        'scripts/**/*-code.js',
                         'styles/fonts/*',
                         'styles/images/**',
                         'styles/theme/fonts/*',

@@ -1,0 +1,15 @@
+<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+    <span ng-bind-html="alert.msg"></span>
+</alert>
+
+<div class="form-inline clearfix ng-grid-header">
+    <button angular-ripple class="btn btn-action" ng-click="openUser()">Add User</button>
+
+    <div class="input-group pull-right">
+        <input type="text" class="form-control" placeholder="Filter..." ng-model="gridOptions.filterOptions.filterText">
+        <span class="input-group-addon glyphicon glyphicon-search"></span>
+    </div>
+</div>
+
+<div class="gridStyle" ng-grid="gridOptions">
+</div>

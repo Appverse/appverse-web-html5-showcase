@@ -90,8 +90,8 @@
                 <li data-ng-class="{ active: $state.includes('detection') }">
                     <a angular-ripple="" ui-sref="detection"><i class="glyphicon glyphicon-eye-open"></i> Detection</a>
                 </li>
-                <li data-ng-class="{ active: $state.includes('demos.translation') }">
-                    <a angular-ripple="" ui-sref="demos.translation"><i class="glyphicon glyphicon-blackboard"></i> Demos</a>
+                <li ng-class="{ active: $state.includes('demos.rest') }">
+                    <a angular-ripple="" ui-sref="demos.rest"><i class="glyphicon glyphicon-blackboard"></i> Demos</a>
                 </li>
                 <li data-ng-class="{ active: $state.includes('about') }">
                     <a angular-ripple="" ui-sref="about"><i class="glyphicon glyphicon-info-sign"></i> About</a>
@@ -177,6 +177,8 @@
     <script src="bower_components/appverse-web-html5-security/dist/appverse-html5-security.min.js"></script>
 
     <!-- endbuild -->
+
+    <script src="scripts/controllers/rest-controller-code.js"></script>
 </body>
 
 </html>

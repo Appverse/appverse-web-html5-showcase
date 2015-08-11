@@ -1,3 +1,4 @@
+/*jshint node:true */
 'use strict';
 //produce minified html in the dist folder
 module.exports = {
@@ -20,12 +21,11 @@ module.exports = {
             expand: true,
             cwd: '<%= paths.dist %>',
             src: [
-                        '*.html',
-                        'views/**/*.html',
-                        '!views/*-code.html',
-                        'template/**/*.html'
-                    ],
+                '*.html',
+                'views/**/*.html',
+                '!views/**/*-code.html'
+            ],
             dest: '<%= paths.dist %>'
-                }]
+        }]
     }
 };

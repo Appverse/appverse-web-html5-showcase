@@ -1,0 +1,34 @@
+<div class="row">
+    <div class="col-lg-6">
+        <div ng-include src="'views/rest/users-code.html'"></div>
+        <br>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Explanation</div>
+            <div class="panel-body">
+                <p>Example based on <a href="http://angular-ui.github.io/ui-grid" target="_blank">ng-grid</a> and <a href="https://github.com/mgonto/restangular" target="_blank">Restangular</a> plugins.</p>
+                <p>A list of users is retrieved using a <b>REST call</b>. It is then displayed in a grid where all CRUD operations can be performed as well as column ordering and grid filtering.</p>
+                <p>Operations that modifies the list fails on purpose in order to keep the example clean and also to showcase how errors can be displayed nicely using <b>alerts</b> and <b>promises</b>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <tabset>
+        <tab heading="users-view.html">
+            <pre hljs include="'views/rest/users-code.html'" language="html"></pre>
+        </tab>
+        <tab heading="user-modal.html">
+            <pre hljs include="'views/rest/user-modal-code.html'" language="html"></pre>
+        </tab>
+        <tab heading="users-controllers.js">
+            <pre hljs include="'scripts/controllers/rest-controller-code.js'" language="javascript"></pre>
+        </tab>
+        <tab heading="users.json">
+            <pre hljs include="'api/v1/users.json'" language="json"></pre>
+        </tab>
+    </tabset>
+</div>

@@ -18,21 +18,12 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
-
-
-//////////////////////////////////////////////////
-// The main module configuration section shows  //
-// how to define when (redirects) and otherwise //
-// (invalid urls) to arrangesite navigation     //
-// using ui-router.                             //
-//////////////////////////////////////////////////
-
-'use strict';
-
 angular.module('showcaseApp')
 
 .config(
     function ($stateProvider, $urlRouterProvider) {
+
+        'use strict';
 
         $urlRouterProvider.otherwise('/home');
 
@@ -64,6 +55,12 @@ angular.module('showcaseApp')
             abstract: true,
             url: '/demos',
             templateUrl: 'views/demos.html'
+        })
+
+        .state('demos.rest', {
+            url: '/rest',
+            templateUrl: 'views/rest/rest.html',
+            controller: 'UsersController'
         })
 
         .state('demos.translation', {
