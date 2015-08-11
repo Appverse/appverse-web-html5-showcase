@@ -74,11 +74,19 @@ angular.module('showcaseApp')
             templateUrl: 'views/demo/performance/performance.webworkers.html'
         })
 
+        .state("detection", {
+            // Use a url of "/" to set a states as the "index".
+            url: "/detection",
+            templateUrl: 'views/detection.html',
+            controller: 'DetectionController'
+        })
+
         .state('demos.dataloading', {
             url: '/dataloading',
             templateUrl: 'views/demo/performance/performance.hpcontrols.html',
             controller: 'PerformanceController'
         })
+
 
         .state('about', {
             url: '/about',
