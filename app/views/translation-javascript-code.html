@@ -1,0 +1,14 @@
+angular.module('App.Controllers')
+
+.controller('TranslationController', ['$scope', '$translate', 'tmhDynamicLocale',
+        function ($scope, $translate, tmhDynamicLocale) {
+
+        $scope.now = new Date();
+        $scope.name = 'Alicia';
+        $scope.age = '25';
+
+        $scope.setLocale = function (locale) {
+            $translate.uses(locale);
+            tmhDynamicLocale.set(locale.toLowerCase());
+        };
+    }]);

@@ -1,3 +1,25 @@
+/*
+ Copyright (c) 2015 GFT Appverse, S.L., Sociedad Unipersonal.
+ This Source Code Form is subject to the terms of the Appverse Public License
+ Version 2.0 (“APL v2.0”). If a copy of the APL was not distributed with this
+ file, You can obtain one at http://www.appverse.mobi/licenses/apl_v2.0.pdf.
+ Redistribution and use in source and binary forms, with or without modification,
+ are permitted provided that the conditions of the AppVerse Public License v2.0
+ are met.
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND
+ ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED. EXCEPT IN CASE OF WILLFUL MISCONDUCT OR GROSS NEGLIGENCE, IN NO EVENT
+ SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT(INCLUDING NEGLIGENCE OR OTHERWISE)
+ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
 //////////////////////////////////////////////////
 // The main module configuration section shows  //
 // how to define when (redirects) and otherwise //
@@ -8,75 +30,70 @@
 'use strict';
 
 angular.module('showcaseApp')
-    .config(
-    ['$stateProvider', '$urlRouterProvider',
-      function ($stateProvider, $urlRouterProvider) {
 
-                ///////////////////////////////
-                // 1-Redirects and Otherwise //
-                ///////////////////////////////
+.config(
+    function ($stateProvider, $urlRouterProvider) {
 
-                // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
-                $urlRouterProvider
+        $urlRouterProvider.otherwise('/home');
 
-                // The `when` method says if the url is ever the 1st param, then redirect to the 2nd param
-                // Here we are just setting up some convenience urls.
-                //                .when('/t?id', '/topics/:id')
-                //                    .when('/t/:id', '/topics/:id')
+        $stateProvider.state('home', {
+            url: '/home',
+            templateUrl: 'views/home.html'
+
+        })
+
+        .state('theme', {
+            url: '/theme',
+            templateUrl: 'views/theme.html'
+
+        })
+
+        .state('components', {
+            url: '/components',
+            templateUrl: 'views/components.html',
+            controller: 'ComponentsController'
+        })
+
+        .state('charts', {
+            url: '/charts',
+            templateUrl: 'views/charts.html',
+            controller: 'ChartsController'
+        })
+
+        .state('demos', {
+            abstract: true,
+            url: '/demos',
+            templateUrl: 'views/demos.html'
+        })
+
+        .state('demos.translation', {
+            url: '/translation',
+            templateUrl: 'views/translation.html',
+            controller: 'TranslationController'
+        })
+
+        .state('demos.webworkers', {
+            url: '/webworkers',
+            templateUrl: 'views/demo/performance/performance.webworkers.html'
+        })
+
+        .state("detection", {
+            // Use a url of "/" to set a states as the "index".
+            url: "/detection",
+            templateUrl: 'views/detection.html',
+            controller: 'DetectionController'
+        })
+
+        .state('demos.dataloading', {
+            url: '/dataloading',
+            templateUrl: 'views/demo/performance/performance.hpcontrols.html',
+            controller: 'PerformanceController'
+        })
 
 
-                // If the url is ever invalid, e.g. '/asdf', then redirect to '/' aka the home state
-                    .otherwise('/home');
+        .state('about', {
+            url: '/about',
+            templateUrl: 'views/about.html',
+        });
 
-
-                //////////////////////////
-                // 2-State Configurations
-                // Several states hav been configured:
-                // home
-                // tasks
-                //
-                //////////////////////////
-
-                // We must configure states using $stateProvider.
-                $stateProvider
-
-                //////////
-                // Home //
-                //////////
-
-                    .state("home", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/home",
-                    templateUrl: 'views/home.html'
-
-                })
-
-                .state("theme", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/theme",
-                    templateUrl: 'views/theme.html'
-
-                })
-
-                   .state("components", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/components",
-                    templateUrl: 'views/components.html',
-                    controller: 'ComponentsController'
-                })
-                 .state("detection", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/detection",
-                    templateUrl: 'views/detection.html',
-                    controller: 'DetectionController'
-                })
-
-                  .state("charts", {
-                    // Use a url of "/" to set a states as the "index".
-                    url: "/charts",
-                    templateUrl: 'views/charts.html',
-                    controller: 'ChartsController'
-                })
-
-                ;
-            }]);
+    });

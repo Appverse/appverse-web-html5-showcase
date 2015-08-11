@@ -376,17 +376,20 @@ img{
             }
             &:hover{
                 i{
-                    &.glyphicon-pencil{
-                        @extend .rotate;
-                    }
-                    &.glyphicon-home{
-                        @extend .zoom;
-                    }
-                    &.glyphicon-th-list{
-                        @extend .swingX;
-                    }
-                    &.glyphicon-apple{
-                        @extend .swingY;
+                    &.glyphicon{
+                         @extend .zoom;
+                        &.glyphicon-pencil{
+                            @extend .rotate;
+                        }
+                        &.glyphicon-home{
+                            @extend .zoom;
+                        }
+                        &.glyphicon-th-list{
+                            @extend .swingX;
+                        }
+                        &.glyphicon-apple{
+                            @extend .swingY;
+                        }
                     }
                 }
                 ng-md-icon{

@@ -1,3 +1,4 @@
+/*jshint node:true */
 'use strict';
 
 module.exports = function (grunt) {
@@ -11,7 +12,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', [
         'clean:reports',
-//        'karma:unit',
+        'karma:unit',
         'instrument',
         'testserver',
         'shell:protractor'
@@ -22,8 +23,10 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test:e2e', [
+        'clean:reports',
+        'instrument',
         'testserver',
-        'karma:e2e_auto'
+        'shell:protractor'
     ]);
 
 };

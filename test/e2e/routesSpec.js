@@ -8,17 +8,18 @@ describe("E2E: Testing Routes", function () {
         expect(browser.getLocationAbsUrl()).toBe("/home");
     });
 
-    it('should have a working /home route', function () {
-        browser.setLocation('home');
-        expect(browser.getLocationAbsUrl()).toBe("/home");
+    it('should have a working /theme route', function () {
+        browser.setLocation('theme');
+        expect(browser.getLocationAbsUrl()).toBe("/theme");
     });
 
-//    it('should collect coverage', function (done) {
-//        browser.driver.executeScript('return __coverage__;').then(function (val) {
-//            console.log('my istanbul coverage: ' + val);
-//            console.log(val);
-//            browser.coverage=val;
-//            done();
-//        });
-//    });
+    it('should have a working /charts route', function () {
+        browser.setLocation('charts');
+        expect(browser.getLocationAbsUrl()).toBe("/charts");
+    });
+
+    it('should have a working /about route', function () {
+        browser.setLocation('about');
+        expect(browser.getLocationAbsUrl()).toBe("/about");
+    });
 });

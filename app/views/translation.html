@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-md-6">
+        <div ng-include src="'views/translation-markup-code.html'"></div>
+    </div>
+
+
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Explanation</div>
+            <div class="panel-body">
+                <p>This is a translation feature that provides i18n and i110 in order to be able to switch languages on the fly at runtime.</p>
+
+                <p>Date, Currency and Number are translated using tmhDynamicLocale.set() method in the controller, it’s used for changing angular $locale- which is used to format dates, numbers, currencies, etc.</p>
+
+                <p>Text is translated via $translate.uses() method in the controller, it’s used for handling language translations.</p>
+
+                <p>Just add the code snippets provided below to your Appverse project. Go to the path 'app/resources/i18n' and create a JSON file for the language that you want to support. Example: In the HTML markup there is a text named WELCOME, this is a key that corresponds to a key of the same name in the JSON file at the path 'app/resources/i18n'. You just have to create the value you want it to display. For example in a JSON file for Spanish translations you can write "WELCOME": "Bienvenido!" and in another JSON file for English "WELCOME": "Welcome!".</p>
+
+                <p>*Note: You must add the text translate within the html tag or the translate feature will not work.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <p>
+                <a class="btn btn-primary" href="http://plnkr.co/edit/JP2x6jGvWpBThbc3dM9x?p=preview">View in Plunker</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div>
+            <tabset>
+                <tab heading="Markup">
+                    <pre hljs include="'views/translation-markup-code.html'"></pre>
+                </tab>
+                <tab heading="JavaScript">
+                    <pre hljs include="'views/translation-javascript-code.html'"></pre>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>

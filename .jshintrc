@@ -6,7 +6,11 @@
     "futurehostile": true,
     "globals": {
         "angular": false,
-        "Appverse": false
+        "Appverse": false,
+        "browser": false,
+        "element": false,
+        "by": false,
+        "protractor": false
     },
     "immed": true,
     "indent": 4,

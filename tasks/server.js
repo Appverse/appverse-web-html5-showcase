@@ -1,10 +1,10 @@
+/*jshint node:true */
 'use strict';
 
 module.exports = function (grunt) {
 
     grunt.registerTask('server', [
         'clean:server',
-        'configureProxies:livereload',
         'concurrent:server',
         'autoprefixer',
         'connect:livereload',
