@@ -7,16 +7,16 @@ Make sure to include this after the core Bootstrap CSS.
 body {
     padding-top: 70px;
 }
-
 /* Style to add pointer for tabs as recommended by UI Angular bootstrap */
+
 .nav,
 .pagination,
 .carousel,
 .panel-title a {
     cursor: pointer;
 }
-
 /* Style pre tags for Markup and Javascript tabs */
+
 pre > pre {
     margin-bottom: 0;
     padding: 0;
@@ -28,7 +28,13 @@ pre[hljs] {
     background-color: #fff;
 }
 
+code.javascript {
+    span.hljs-comment {
+        display: none;
+    }
+}
 /* Keep border color on focus */
+
 .nav-tabs>li.active a:focus {
     border: none;
     border-bottom: 3px solid #213e7f;

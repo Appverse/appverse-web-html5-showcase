@@ -8,6 +8,9 @@
             </div>
 
             <ul class="nav nav-tabs">
+                <li role="presentation" ng-class="{ active: $state.includes('demos.rest') }">
+                    <a angular-ripple="" ui-sref=".rest"><i class="glyphicon glyphicon-book"></i> REST Entity</a>
+                </li>
                 <li role="presentation" ng-class="{ active: $state.includes('demos.translation') }">
                     <a angular-ripple="" ui-sref=".translation"><i class="glyphicon glyphicon-globe"></i> Translation</a>
                 </li>
