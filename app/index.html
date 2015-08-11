@@ -86,6 +86,9 @@
                 <li data-ng-class="{ active: $state.includes('charts') }">
                     <a angular-ripple="" ui-sref="charts"><i class="glyphicon glyphicon-stats"></i> Charts</a>
                 </li>
+                <li data-ng-class="{ active: $state.includes('detection') }">
+                    <a angular-ripple="" ui-sref="detection"><i class="glyphicon glyphicon-eye-open"></i> Detection</a>
+                </li>
             </ul>
         </div>
 
@@ -126,6 +129,7 @@
     <script src="scripts/controllers/components-controller.js"></script>
     <script src="scripts/controllers/modal-controller.js"></script>
     <script src="scripts/controllers/charts-controller.js"></script>
+    <script src="scripts/controllers/detection-controller.js"></script>
     <script src="scripts/states/app-states.js"></script>
     <!-- PERFORMANCE MODULE -->
     <script src="bower_components/appverse-web-html5-core/dist/appverse-performance/appverse-performance.min.js"></script>

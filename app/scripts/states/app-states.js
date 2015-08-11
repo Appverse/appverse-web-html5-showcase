@@ -64,6 +64,12 @@ angular.module('showcaseApp')
                     templateUrl: 'views/components.html',
                     controller: 'ComponentsController'
                 })
+                 .state("detection", {
+                    // Use a url of "/" to set a states as the "index".
+                    url: "/detection",
+                    templateUrl: 'views/detection.html',
+                    controller: 'DetectionController'
+                })
 
                   .state("charts", {
                     // Use a url of "/" to set a states as the "index".

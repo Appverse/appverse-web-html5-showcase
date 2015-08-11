@@ -6,7 +6,7 @@
  */
 angular.module('App.Controllers')
 
-.controller('detectionController', ['$log', '$scope', 'Detection',
+.controller('DetectionController', ['$log', '$scope', 'Detection',
     function ($log, $scope, Detection) {
         $log.debug('detectionController loading');
 
@@ -14,4 +14,5 @@ angular.module('App.Controllers')
 
         Detection.testOnlineStatus();
         Detection.testBandwidth();
+        console.log(Detection);
     }]);
