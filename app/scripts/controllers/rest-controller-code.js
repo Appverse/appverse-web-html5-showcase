@@ -68,7 +68,7 @@ angular.module('App.Controllers')
 
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
-                templateUrl: 'views/rest/user-modal.html',
+                templateUrl: 'views/rest/user-modal-code.html',
                 controller: 'UserModalController',
                 resolve: {
                     user: function () {
