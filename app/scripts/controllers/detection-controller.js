@@ -18,22 +18,15 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
-
-'use strict';
-
-/*
- * Controllers for detection demo.
- * Pay attention to injection of dependencies (factories, entities and Angular objects).
- */
 angular.module('App.Controllers')
 
-.controller('DetectionController', ['$log', '$scope', 'Detection',
+.controller('DetectionController',
     function ($log, $scope, Detection) {
-        $log.debug('detectionController loading');
+        'use strict';
+        $log.debug('DetectionController loading');
 
         $scope.detect = Detection;
 
         Detection.testOnlineStatus();
         Detection.testBandwidth();
-        console.log(Detection);
-    }]);
+    });
