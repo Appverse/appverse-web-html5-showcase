@@ -39,11 +39,11 @@ angular.module('App.Controllers')
         var targetContext;
         var bulletSize = 20;
         var total = 0;
-        var count = 0;
-        var starttime = 0;
+        $scope.count = 0;
         var _this = this;
 
         $scope.execTime = 0;
+        $scope.starttime = 0;
 
         $scope.threadsNumbers = [
             {
@@ -76,7 +76,7 @@ angular.module('App.Controllers')
 
         $scope.run = function () {
             total = 0;
-            count = 0;
+            $scope.count = 0;
             $("#targetCanvas").remove();
             $scope.execTime = 0;
 
@@ -93,9 +93,11 @@ angular.module('App.Controllers')
                     var targetCanvas = createTargetCanvas(imgwidth, imgheight);
                     targetContext = targetCanvas.getContext("2d");
 
-                    // render elements
-                    starttime = new Date().getTime();
+                    $scope.$apply(function () {
+                        $scope.starttime = new Date().getTime();
+                    });
 
+                    // render elements
                     renderElements(imgwidth, imgheight, $("#source").get()[0], $scope.poolSize);
                 });
         };
@@ -121,15 +123,16 @@ angular.module('App.Controllers')
                 drawRectangle(targetContext, wp.x, wp.y, bulletSize, wp.result[0]);
             }
 
-            count++;
+            $scope.count++;
 
-            if (count === _this.workerTasks.length) {
+            if ($scope.count === _this.workerTasks.length) {
                 var currentTime = new Date().getTime();
-                var diff = currentTime - starttime;
+                var diff = currentTime - $scope.starttime;
                 $log.debug("Processing done: " + diff);
 
                 $scope.$apply(function () {
                     $scope.execTime = diff;
+                    $scope.starttime = 0;
                 });
             }
         };
