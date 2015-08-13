@@ -11,8 +11,8 @@ describe("E2E: Testing detection view", function () {
         expect(browser.getLocationAbsUrl()).toBe("/detection");
     });
 
-    it('should have a initial bandwidth at 0', function () {
-        expect(element(by.binding('detect.bandwidth')).getText()).toBe("0");
+    it('should have a initial bandwidth greater than 0', function () {
+        expect(element(by.binding('detect.bandwidth')).getText()).toBeGreaterThan(0);
     });
 
 });
