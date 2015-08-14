@@ -4,12 +4,12 @@
 describe('E2E: Testing rest view', function () {
 
     beforeAll(function () {
-        browser.setLocation('demos/rest');
+        browser.setLocation('rest');
     });
 
-    it('should have a working /demos/rest route', function () {
+    it('should have a working /rest route', function () {
 
-        expect(browser.getLocationAbsUrl()).toBe('/demos/rest');
+        expect(browser.getLocationAbsUrl()).toBe('/rest');
     });
 
     it('should open user modal and cancel it', function () {

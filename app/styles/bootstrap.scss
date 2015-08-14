@@ -47,3 +47,12 @@
 @import "bootstrap/responsive-utilities";
 //THEME
 @import "theme/theme";
+.jumbotron {
+    background-color: $brand-primary;
+    h1 {
+        color: white;
+    }
+    p {
+        color: $gray-light;
+    }
+}

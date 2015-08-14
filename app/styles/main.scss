@@ -5,8 +5,10 @@ Make sure to include this after the core Bootstrap CSS.
 */
 
 body {
-    padding-top: 70px;
+    padding-top: 61px;
 }
+
+
 /* Style to add pointer for tabs as recommended by UI Angular bootstrap */
 
 .nav,
@@ -15,6 +17,8 @@ body {
 .panel-title a {
     cursor: pointer;
 }
+
+
 /* Style pre tags for Markup and Javascript tabs */
 
 pre > pre {
@@ -33,6 +37,8 @@ code.javascript {
         display: none;
     }
 }
+
+
 /* Keep border color on focus */
 
 .nav-tabs>li.active a:focus {

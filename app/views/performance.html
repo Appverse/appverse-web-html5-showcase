@@ -1,0 +1,19 @@
+<!doctype html>
+<div class="jumbotron">
+    <div class="container">
+        <h1>Performance</h1>
+        <p>Making use of all the power the browser gives you.</p>
+    </div>
+</div>
+
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{ active: $state.includes('webworkers') }">
+            <a angular-ripple="" ui-sref="webworkers"><i class="glyphicon glyphicon-plane"></i> Web Workers</a>
+        </li>
+        <li role="presentation" ng-class="{ active: $state.includes('dataloading') }">
+            <a angular-ripple="" ui-sref="dataloading"><i class="glyphicon glyphicon-plane"></i> Data Loading</a>
+        </li>
+    </ul>
+    <div class="well" ui-view autoscroll="false"></div>
+</div>

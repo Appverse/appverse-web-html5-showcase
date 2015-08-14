@@ -1,0 +1,24 @@
+<!doctype html>
+<div class="jumbotron">
+    <div class="container">
+        <h1>UI</h1>
+        <p>Theme and UI components ready to use.</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{ active: $state.includes('theme') }">
+            <a angular-ripple="" ui-sref="theme"><i class="glyphicon glyphicon-pencil"></i> Theme</a>
+        </li>
+        <li role="presentation" ng-class="{ active: $state.includes('ui-bootstrap') }">
+            <a angular-ripple="" ui-sref="ui-bootstrap"><i class="glyphicon glyphicon-book"></i> UI Bootstrap</a>
+        </li>
+        <li role="presentation" ng-class="{ active: $state.includes('charts') }">
+            <a angular-ripple="" ui-sref="charts"><i class="glyphicon glyphicon-stats"></i> Charts</a>
+        </li>
+    </ul>
+    <div class="well" ui-view autoscroll="false"></div>
+
+</div>
