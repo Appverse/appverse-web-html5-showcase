@@ -78,20 +78,14 @@
                 <li data-ng-class="{ active: $state.includes('home') }">
                     <a angular-ripple="" ui-sref="home"><i class="glyphicon glyphicon-home"></i> Home</a>
                 </li>
-                <li data-ng-class="{ active: $state.includes('theme') }">
-                    <a angular-ripple="" ui-sref="theme"><i class="glyphicon glyphicon-pencil"></i> Theme</a>
+                <li data-ng-class="{ active: $state.includes('ui') }">
+                    <a angular-ripple="" ui-sref="theme"><i class="glyphicon glyphicon-pencil"></i> UI</a>
                 </li>
-                <li data-ng-class="{ active: $state.includes('components') }">
-                    <a angular-ripple="" ui-sref="components"><i class="glyphicon glyphicon-book"></i> Components</a>
+                <li ng-class="{ active: $state.includes('content') }">
+                    <a angular-ripple="" ui-sref="rest"><i class="glyphicon glyphicon-th"></i> Content</a>
                 </li>
-                <li data-ng-class="{ active: $state.includes('charts') }">
-                    <a angular-ripple="" ui-sref="charts"><i class="glyphicon glyphicon-stats"></i> Charts</a>
-                </li>
-                <li data-ng-class="{ active: $state.includes('detection') }">
-                    <a angular-ripple="" ui-sref="detection"><i class="glyphicon glyphicon-eye-open"></i> Detection</a>
-                </li>
-                <li ng-class="{ active: $state.includes('demos.rest') }">
-                    <a angular-ripple="" ui-sref="demos.rest"><i class="glyphicon glyphicon-blackboard"></i> Demos</a>
+                <li ng-class="{ active: $state.includes('performance') }">
+                    <a angular-ripple="" ui-sref="webworkers"><i class="glyphicon glyphicon-plane"></i> Performance</a>
                 </li>
                 <li data-ng-class="{ active: $state.includes('about') }">
                     <a angular-ripple="" ui-sref="about"><i class="glyphicon glyphicon-info-sign"></i> About</a>

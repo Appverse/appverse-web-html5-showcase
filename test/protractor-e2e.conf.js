@@ -17,14 +17,14 @@ exports.config = {
     baseUrl: 'http://localhost:9003',
     framework: 'jasmine2',
     multiCapabilities: [
+//        {
+//            browserName: 'phantomjs',
+//            'phantomjs.binary.path': require('phantomjs').path,
+//            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false']
+//        },
         {
-            browserName: 'phantomjs',
-            'phantomjs.binary.path': require('phantomjs').path,
-            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
+            browserName: 'chrome'
         }
-//        , {
-     //            browserName: 'chrome'
-     //        }
 //        , {
 //            browserName: 'firefox'
 //        }, {

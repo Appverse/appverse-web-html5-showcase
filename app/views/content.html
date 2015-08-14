@@ -1,0 +1,22 @@
+<!doctype html>
+<div class="jumbotron">
+    <div class="container">
+        <h1>Content</h1>
+        <p>Retrieving your content and managing it effortlessly.</p>
+    </div>
+</div>
+
+<div class="container">
+    <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{ active: $state.includes('rest') }">
+            <a angular-ripple="" ui-sref="rest"><i class="glyphicon glyphicon-list"></i> REST Entity</a>
+        </li>
+        <li role="presentation" ng-class="{ active: $state.includes('translation') }">
+            <a angular-ripple="" ui-sref="translation"><i class="glyphicon glyphicon-globe"></i> Translation</a>
+        </li>
+        <li role="presentation" ng-class="{ active: $state.includes('detection') }">
+            <a angular-ripple="" ui-sref="detection"><i class="glyphicon glyphicon-eye-open"></i> Detection</a>
+        </li>
+    </ul>
+    <div class="well" ui-view autoscroll="false"></div>
+</div>

@@ -1,15 +1,15 @@
 /*jshint node:true */
 'use strict';
 
-describe('E2E: Testing components view', function () {
+describe('E2E: Testing UI Bootstrap view', function () {
 
     beforeAll(function () {
-        browser.setLocation('components');
+        browser.setLocation('ui-bootstrap');
     });
 
-    it('should have a working /components route', function () {
+    it('should have a working /ui-bootstrap route', function () {
 
-        expect(browser.getLocationAbsUrl()).toBe('/components');
+        expect(browser.getLocationAbsUrl()).toBe('/ui-bootstrap');
     });
 
     it('should open a large modal and cancel it', function () {

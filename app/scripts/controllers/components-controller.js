@@ -146,7 +146,7 @@ angular.module('App.Controllers')
         $scope.openModal = function (size) {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
-                templateUrl: 'views/modal-template.html',
+                templateUrl: 'views/ui-bootstrap/modal-template.html',
                 controller: 'ModalController',
                 size: size,
                 resolve: {

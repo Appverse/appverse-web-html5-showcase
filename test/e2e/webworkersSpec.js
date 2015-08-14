@@ -4,10 +4,10 @@
 describe("E2E: Testing webworkers view", function () {
 
     beforeAll(function () {
-        browser.setLocation('demos/webworkers');
+        browser.setLocation('webworkers');
     });
 
-    it('should have a working /demos/webworkers route', function () {
-        expect(browser.getLocationAbsUrl()).toBe("/demos/webworkers");
+    it('should have a working /webworkers route', function () {
+        expect(browser.getLocationAbsUrl()).toBe("/webworkers");
     });
 });

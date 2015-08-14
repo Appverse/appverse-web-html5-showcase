@@ -30,63 +30,76 @@ angular.module('showcaseApp')
         $stateProvider.state('home', {
             url: '/home',
             templateUrl: 'views/home.html'
+        })
 
+        .state('ui', {
+            abstract: true,
+            templateUrl: 'views/ui.html'
         })
 
         .state('theme', {
+            parent: 'ui',
             url: '/theme',
             templateUrl: 'views/theme.html'
-
         })
 
-        .state('components', {
-            url: '/components',
-            templateUrl: 'views/components.html',
+        .state('ui-bootstrap', {
+            parent: 'ui',
+            url: '/ui-bootstrap',
+            templateUrl: 'views/ui-bootstrap/ui-bootstrap.html',
             controller: 'ComponentsController'
         })
 
         .state('charts', {
+            parent: 'ui',
             url: '/charts',
             templateUrl: 'views/charts.html',
             controller: 'ChartsController'
         })
 
-        .state('demos', {
+        .state('content', {
             abstract: true,
-            url: '/demos',
-            templateUrl: 'views/demos.html'
+            templateUrl: 'views/content.html'
         })
 
-        .state('demos.rest', {
+        .state('rest', {
+            parent: 'content',
             url: '/rest',
             templateUrl: 'views/rest/rest.html',
             controller: 'UsersController'
         })
 
-        .state('demos.translation', {
+        .state('translation', {
+            parent: 'content',
             url: '/translation',
-            templateUrl: 'views/translation.html',
+            templateUrl: 'views/translation/translation.html',
             controller: 'TranslationController'
         })
 
-        .state('demos.webworkers', {
-            url: '/webworkers',
-            templateUrl: 'views/demo/performance/performance.webworkers.html'
-        })
-
         .state("detection", {
-            // Use a url of "/" to set a states as the "index".
+            parent: 'content',
             url: "/detection",
-            templateUrl: 'views/detection.html',
+            templateUrl: 'views/detection/detection.html',
             controller: 'DetectionController'
         })
 
-        .state('demos.dataloading', {
-            url: '/dataloading',
-            templateUrl: 'views/demo/performance/performance.hpcontrols.html',
-            controller: 'PerformanceController'
+        .state('performance', {
+            abstract: true,
+            templateUrl: 'views/performance.html'
         })
 
+        .state('webworkers', {
+            parent: 'performance',
+            url: '/webworkers',
+            templateUrl: 'views/webworkers/webworkers.html'
+        })
+
+        .state('dataloading', {
+            parent: 'performance',
+            url: '/dataloading',
+            templateUrl: 'views/dataloading/dataloading.html',
+            controller: 'PerformanceController'
+        })
 
         .state('about', {
             url: '/about',

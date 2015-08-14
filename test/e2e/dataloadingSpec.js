@@ -4,11 +4,11 @@
 describe("E2E: Testing dataloading view", function () {
 
     beforeAll(function () {
-        browser.setLocation('demos/dataloading');
+        browser.setLocation('dataloading');
     });
 
-    it('should have a working /demos/dataloading route', function () {
-        expect(browser.getLocationAbsUrl()).toBe("/demos/dataloading");
+    it('should have a working /dataloading route', function () {
+        expect(browser.getLocationAbsUrl()).toBe("/dataloading");
     });
 
     it('should have indicate the number of rows in the footer', function () {

@@ -1,8 +1,7 @@
 <div class="row">
     <div class="col-md-6">
-        <div ng-include src="'views/translation-markup-code.html'"></div>
+        <div ng-include src="'views/translation/translation-markup-code.html'"></div>
     </div>
-
 
     <div class="col-md-6">
         <div class="panel panel-primary">
@@ -22,28 +21,19 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="pull-right">
-            <p>
-                <a class="btn btn-primary" href="http://plnkr.co/edit/JP2x6jGvWpBThbc3dM9x?p=preview">View in Plunker</a>
-            </p>
-        </div>
+<div class="clearfix">
+    <div class="pull-right">
+        <p>
+            <a class="btn btn-primary" href="http://plnkr.co/edit/JP2x6jGvWpBThbc3dM9x?p=preview">View in Plunker</a>
+        </p>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-
-        <div>
-            <tabset>
-                <tab heading="Markup">
-                    <pre hljs include="'views/translation-markup-code.html'"></pre>
-                </tab>
-                <tab heading="JavaScript">
-                    <pre hljs include="'views/translation-javascript-code.html'"></pre>
-                </tab>
-            </tabset>
-        </div>
-    </div>
-</div>
+<tabset>
+    <tab heading="Markup">
+        <pre hljs include="'views/translation/translation-markup-code.html'"></pre>
+    </tab>
+    <tab heading="JavaScript">
+        <pre hljs include="'views/translation/translation-javascript-code.html'"></pre>
+    </tab>
+</tabset>
