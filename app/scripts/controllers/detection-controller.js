@@ -22,7 +22,9 @@ angular.module('App.Controllers')
 
 .controller('DetectionController',
     function ($log, $scope, Detection) {
+
         'use strict';
+
         $log.debug('DetectionController loading');
 
         $scope.detect = Detection;
