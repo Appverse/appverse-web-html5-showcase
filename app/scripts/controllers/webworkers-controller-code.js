@@ -22,187 +22,186 @@ angular.module('App.Controllers')
 
 .controller('imageWebworkerController',
     function ($scope, $log, $q, WebWorkerPoolFactory) {
+        'use strict';
 
-    'use strict';
-
-    // some global shared variables
-    var targetContext;
-    var bulletSize = 20;
-    var total = 0;
-    $scope.count = 0;
-    var _this = this;
-
-    $scope.execTime = 0;
-    $scope.starttime = 0;
-
-    $scope.threadsNumbers = [
-        {
-            key: '1',
-            value: 'Only one thread'
-        },
-        {
-            key: '2',
-            value: 'Two Threads'
-        },
-        {
-            key: '4',
-            value: 'Four Threads'
-        },
-        {
-            key: '6',
-            value: 'Six Threads'
-        },
-        {
-            key: '8',
-            value: 'Eight Threads'
-        },
-        {
-            key: '12',
-            value: 'Twelve Threads (gulp!)'
-        }
-    ];
-
-    $scope.poolSize = '1';
-
-    $scope.run = function () {
-        total = 0;
+        // some global shared variables
+        var targetContext;
+        var bulletSize = 20;
+        var total = 0;
         $scope.count = 0;
-        $("#targetCanvas").remove();
+        var _this = this;
+
         $scope.execTime = 0;
+        $scope.starttime = 0;
 
-        // determine size of image
-        var img = $("#source")[0]; // Get my img elem
+        $scope.threadsNumbers = [
+            {
+                key: '1',
+                value: 'Only one thread'
+            },
+            {
+                key: '2',
+                value: 'Two Threads'
+            },
+            {
+                key: '4',
+                value: 'Four Threads'
+            },
+            {
+                key: '6',
+                value: 'Six Threads'
+            },
+            {
+                key: '8',
+                value: 'Eight Threads'
+            },
+            {
+                key: '12',
+                value: 'Twelve Threads (gulp!)'
+            }
+        ];
 
-        $("<img/>") // Make in memory copy of image to avoid css issues
-            .attr("src", $(img).attr("src"))
-            .load(function () {
-            var imgwidth = this.width;
-            var imgheight = this.height;
+        $scope.poolSize = '1';
 
-            // create a canvas and make context available
-            var targetCanvas = createTargetCanvas(imgwidth, imgheight);
-            targetContext = targetCanvas.getContext("2d");
+        $scope.run = function () {
+            total = 0;
+            $scope.count = 0;
+            $("#targetCanvas").remove();
+            $scope.execTime = 0;
 
-            $scope.$apply(function () {
-                $scope.starttime = new Date().getTime();
+            // determine size of image
+            var img = $("#source")[0]; // Get my img elem
+
+            $("<img/>") // Make in memory copy of image to avoid css issues
+                .attr("src", $(img).attr("src"))
+                .load(function () {
+                var imgwidth = this.width;
+                var imgheight = this.height;
+
+                // create a canvas and make context available
+                var targetCanvas = createTargetCanvas(imgwidth, imgheight);
+                targetContext = targetCanvas.getContext("2d");
+
+                $scope.$apply(function () {
+                    $scope.starttime = new Date().getTime();
+                });
+
+                // render elements
+                renderElements(imgwidth, imgheight, $("#source").get()[0], $scope.poolSize);
             });
+        };
 
-            // render elements
-            renderElements(imgwidth, imgheight, $("#source").get()[0], $scope.poolSize);
-        });
-    };
+        // defines a workpacke object that can be sent to the worker
+        function WorkPackage() {
+            this.data = [];
+            this.pixelCount = 0;
+            this.colors = 0;
+            this.x = 0;
+            this.y = 0;
 
-    // defines a workpacke object that can be sent to the worker
-    function WorkPackage() {
-        this.data = [];
-        this.pixelCount = 0;
-        this.colors = 0;
-        this.x = 0;
-        this.y = 0;
-
-        this.result = [0, 0, 0];
-    }
-
-    this.callback = function (event) {
-
-        var wpArray = event.data;
-
-        for (var i = 0; i < wpArray.length; i++) {
-            var wp = wpArray[i];
-
-            drawRectangle(targetContext, wp.x, wp.y, bulletSize, wp.result[0]);
+            this.result = [0, 0, 0];
         }
 
-        $scope.count++;
+        this.callback = function (event) {
 
-        if ($scope.count === _this.workerTasks.length) {
-            var currentTime = new Date().getTime();
-            var diff = currentTime - $scope.starttime;
-            $log.debug("Processing done: " + diff);
+            var wpArray = event.data;
 
-            $scope.$apply(function () {
-                $scope.execTime = diff;
-                $scope.starttime = 0;
-            });
-        }
-    };
+            for (var i = 0; i < wpArray.length; i++) {
+                var wp = wpArray[i];
 
-    // process the image by splitting it in parts and sending it to the worker
-    function renderElements(imgwidth, imgheight, image, poolSize) {
-        // determine image grid size
-        var nrX = Math.round(imgwidth / bulletSize);
-        var nrY = Math.round(imgheight / bulletSize);
+                drawRectangle(targetContext, wp.x, wp.y, bulletSize, wp.result[0]);
+            }
 
-        // how much to process
-        total = nrX * nrY;
+            $scope.count++;
 
-        _this.wTask = null;
-        _this.poolSize = poolSize;
-        _this.workerTasks = [];
-        _this.workerData = new WebWorkerPoolFactory.getWorkerFromId('w1', poolSize);
+            if ($scope.count === _this.workerTasks.length) {
+                var currentTime = new Date().getTime();
+                var diff = currentTime - $scope.starttime;
+                $log.debug("Processing done: " + diff);
 
-        var wpArray = [];
+                $scope.$apply(function () {
+                    $scope.execTime = diff;
+                    $scope.starttime = 0;
+                });
+            }
+        };
 
-        // iterate through all the parts of the image
-        for (var x = 0; x < nrX; x++) {
-            for (var y = 0; y < nrY; y++) {
-                // create a canvas element we use for temporary rendering
-                var canvas2 = document.createElement('canvas');
-                canvas2.width = bulletSize;
-                canvas2.height = bulletSize;
-                var context2 = canvas2.getContext('2d');
-                // render part of the image for which we want to determine the dominant color
-                context2.drawImage(image, x * bulletSize, y * bulletSize, bulletSize, bulletSize, 0, 0, bulletSize, bulletSize);
+        // process the image by splitting it in parts and sending it to the worker
+        function renderElements(imgwidth, imgheight, image, poolSize) {
+            // determine image grid size
+            var nrX = Math.round(imgwidth / bulletSize);
+            var nrY = Math.round(imgheight / bulletSize);
 
-                // get the data from the image
-                var data = context2.getImageData(0, 0, bulletSize, bulletSize).data;
-                // convert data, which is a canvas pixel array, to a normal array
-                // since we can't send the canvas array to a webworker
-                var dataAsArray = [];
-                for (var i = 0; i < data.length; i++) {
-                    dataAsArray.push(data[i]);
-                }
+            // how much to process
+            total = nrX * nrY;
 
-                // create a workpackage
-                var wp = new WorkPackage();
-                wp.colors = 5;
-                wp.data = dataAsArray;
-                wp.pixelCount = bulletSize * bulletSize;
-                wp.x = x;
-                wp.y = y;
+            _this.wTask = null;
+            _this.poolSize = poolSize;
+            _this.workerTasks = [];
+            _this.workerData = new WebWorkerPoolFactory.getWorkerFromId('w1', poolSize);
 
-                wpArray.push(wp);
+            var wpArray = [];
 
-                if (wpArray.length > Math.floor(total / poolSize) || x * y === (nrX - 1) * (nrY - 1)) {
-                    //Create a new task for the worker pool and push it into the group
-                    _this.wTask = new WebWorkerPoolFactory.WorkerTask(_this.workerData, _this.callback, wpArray);
-                    _this.workerTasks.push(_this.wTask);
-                    wpArray = [];
+            // iterate through all the parts of the image
+            for (var x = 0; x < nrX; x++) {
+                for (var y = 0; y < nrY; y++) {
+                    // create a canvas element we use for temporary rendering
+                    var canvas2 = document.createElement('canvas');
+                    canvas2.width = bulletSize;
+                    canvas2.height = bulletSize;
+                    var context2 = canvas2.getContext('2d');
+                    // render part of the image for which we want to determine the dominant color
+                    context2.drawImage(image, x * bulletSize, y * bulletSize, bulletSize, bulletSize, 0, 0, bulletSize, bulletSize);
+
+                    // get the data from the image
+                    var data = context2.getImageData(0, 0, bulletSize, bulletSize).data;
+                    // convert data, which is a canvas pixel array, to a normal array
+                    // since we can't send the canvas array to a webworker
+                    var dataAsArray = [];
+                    for (var i = 0; i < data.length; i++) {
+                        dataAsArray.push(data[i]);
+                    }
+
+                    // create a workpackage
+                    var wp = new WorkPackage();
+                    wp.colors = 5;
+                    wp.data = dataAsArray;
+                    wp.pixelCount = bulletSize * bulletSize;
+                    wp.x = x;
+                    wp.y = y;
+
+                    wpArray.push(wp);
+
+                    if (wpArray.length > Math.floor(total / poolSize) || x * y === (nrX - 1) * (nrY - 1)) {
+                        //Create a new task for the worker pool and push it into the group
+                        _this.wTask = new WebWorkerPoolFactory.WorkerTask(_this.workerData, _this.callback, wpArray);
+                        _this.workerTasks.push(_this.wTask);
+                        wpArray = [];
+                    }
                 }
             }
+
+            //Call to the worker pool passing the group of tasks for the worker
+            WebWorkerPoolFactory.runParallelTasksGroup(_this.workerData, _this.workerTasks);
         }
 
-        //Call to the worker pool passing the group of tasks for the worker
-        WebWorkerPoolFactory.runParallelTasksGroup(_this.workerData, _this.workerTasks);
-    }
+        // create the target canvas where the result will be rendered
+        function createTargetCanvas(imgwidth, imgheight) {
+            // create target canvas, with the correct size
+            return $("<canvas/>")
+                .attr("width", imgwidth)
+                .attr("height", imgheight)
+                .attr("id", "targetCanvas")
+                .appendTo("#target").get()[0];
+        }
 
-    // create the target canvas where the result will be rendered
-    function createTargetCanvas(imgwidth, imgheight) {
-        // create target canvas, with the correct size
-        return $("<canvas/>")
-            .attr("width", imgwidth)
-            .attr("height", imgheight)
-            .attr("id", "targetCanvas")
-            .appendTo("#target").get()[0];
-    }
+        // draw a rectangle on the supplied context
+        function drawRectangle(targetContext, x, y, bulletSize, colors) {
 
-    // draw a rectangle on the supplied context
-    function drawRectangle(targetContext, x, y, bulletSize, colors) {
+            targetContext.beginPath();
+            targetContext.rect(x * bulletSize, y * bulletSize, bulletSize, bulletSize);
+            targetContext.fillStyle = "rgba(" + colors + ",1)";
+            targetContext.fill();
+        }
 
-        targetContext.beginPath();
-        targetContext.rect(x * bulletSize, y * bulletSize, bulletSize, bulletSize);
-        targetContext.fillStyle = "rgba(" + colors + ",1)";
-        targetContext.fill();
-    }
-
-})
+    });
