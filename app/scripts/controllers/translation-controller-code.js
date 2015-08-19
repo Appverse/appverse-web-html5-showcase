@@ -19,8 +19,6 @@
  POSSIBILITY OF SUCH DAMAGE.
  */
 
-'use strict';
-
 /*
  * Controllers for translation demo.
  * Pay attention to injection of dependencies (factories, entities and Angular objects).
@@ -28,7 +26,8 @@
 angular.module('App.Controllers')
 
 .controller('TranslationController', ['$scope', '$translate', 'tmhDynamicLocale',
-        function ($scope, $translate, tmhDynamicLocale) {
+    function ($scope, $translate, tmhDynamicLocale) {
+        'use strict';
 
         $scope.now = new Date();
         $scope.name = 'Alicia';
