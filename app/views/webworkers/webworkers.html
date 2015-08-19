@@ -1,31 +1,6 @@
 <!doctype html>
-<div ng-controller="imageWebworkerController">
 
-    <h3>Using Multithreading for a task</h3>
-
-    <div class="form-inline">
-        <div class="form-group">
-            <label>Number of pooled workers:</label>
-            <select class="form-control" ng-model="poolSize" ng-options="threadsNumber.key as threadsNumber.value for threadsNumber in threadsNumbers" ng-change="count=0;execTime=0">
-            </select>
-        </div>
-        <button class="btn btn-primary" ng-click="run()">Run</button>
-    </div>
-    <br>
-
-    <div class="progress">
-        <div class="progress-bar" ng-class="{'progress-bar-striped':starttime, active:starttime, 'progress-bar-success':starttime||execTime}" role="progressbar" ng-style="{width: count / poolSize * 100 + '%'}" style="min-width:10%">
-            <span ng-bind="execTime"></span> ms
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-6">
-        <img src="images/angularPerformance.jpg" id="source" style="width:100%">
-    </div>
-    <div class="col-xs-6" id="target" />
-</div>
+<div ng-include src="'views/webworkers/webworkers-code.html'"></div>
 <br>
 
 <div class="panel panel-primary">
@@ -40,4 +15,23 @@
             <br>Select the <b>"Four threads"</b> option and compare the values in <b>"Time for Execution"</b>.
             <br>Due to the busy threads of the available threads in your browser results can vary from one browser to another. A high number of threads does not guarantee a better performance. Search for the most appropriate number of threads for each specific process. Then, include the value in the configuration (<b>PERFORMANCE_CONFIG.webworker_pooled_threads</b>).</p>
     </div>
+</div>
+
+<div class="clearfix">
+    <div class="pull-right">
+        <p>
+            <a class="btn btn-primary" href="http://plnkr.co/edit/qAlk8qCgC6JbJqzNcfMD?p=preview">View in Plunker</a>
+        </p>
+    </div>
+</div>
+
+<div>
+    <tabset>
+        <tab heading="webworkers-view.html">
+            <pre hljs include="'views/webworkers/webworkers-code.html'" language="html"></pre>
+        </tab>
+        <tab heading="webworkers-controller.js">
+            <pre hljs include="'scripts/controllers/webworkers-controller-code.js'" language="javascript"></pre>
+        </tab>
+    </tabset>
 </div>
