@@ -47,7 +47,14 @@ angular.module('showcaseApp')
             parent: 'ui',
             url: '/ui-bootstrap',
             templateUrl: 'views/ui-bootstrap/ui-bootstrap.html',
-            controller: 'ComponentsController'
+            controller: 'UIBootstrapController'
+        })
+
+        .state('ui-select', {
+            parent: 'ui',
+            url: '/ui-select',
+            templateUrl: 'views/ui-select/ui-select.html',
+            controller: 'UISelectController'
         })
 
         .state('charts', {
