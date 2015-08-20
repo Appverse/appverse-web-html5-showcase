@@ -1,22 +1,5 @@
 <div class="row">
-    <div class="col-md-6">
-        <!--        <div ng-include src="'views/translation/translation-markup-code.html'"></div>-->
-        <p>Is it a Mobile Browser ? <span class="{{detect.isMobileBrowser()?'text-success':'text-danger'}}" ng-cloak id="mobileBrowser">{{detect.isMobileBrowser()}}</span>
-        </p>
-
-        <p>Appverse Mobile library is present ? <span class="{{detect.hasAppverseMobile()?'text-success':'text-danger'}}" ng-cloak id="appverseMobile">{{detect.hasAppverseMobile()}}</span>
-        </p>
-
-        <p>Web Server status: <span class="{{detect.isOnline?'text-success':'text-error'}}">{{detect.isOnline?'Online':'Offline'}}</span>
-        </p>
-
-        <div class="form-inline form-group">
-            <label>Bandwidth: <b>{{detect.bandwidth}}</b> Kbytes/s</label>
-
-            <button ng-hide="detect.isPollingBandwidth" class="btn btn-primary" ng-click="detect.startPollingBandwidth(2000)">Start Polling</button>
-            <button ng-show="detect.isPollingBandwidth" class="btn btn-danger" ng-click="detect.stopPollingBandwidth()">Stop Polling</button>
-        </div>
-    </div>
+    <div ng-include src="'views/detection/detection-code.html'"></div>
 
     <div class="col-md-6">
         <div class="panel panel-primary">
@@ -26,4 +9,15 @@
             </div>
         </div>
     </div>
+</div>
+
+<div>
+    <tabset>
+        <tab heading="detection-view.html">
+            <pre hljs include="'views/detection/detection-code.html'" language="html"></pre>
+        </tab>
+        <tab heading="detection-controllers.js">
+            <pre hljs include="'scripts/controllers/detection-controller-code.js'" language="javascript"></pre>
+        </tab>
+    </tabset>
 </div>
