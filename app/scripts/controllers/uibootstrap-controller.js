@@ -199,4 +199,23 @@ angular.module('App.Controllers')
         }, 500);
         /*EO TABS*/
     }
-);
+)
+
+.controller('ModalController',
+    function ($scope, $modalInstance, items) {
+
+        'use strict';
+
+        $scope.items = items;
+        $scope.selected = {
+            item: $scope.items[0]
+        };
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.selected.item);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    });

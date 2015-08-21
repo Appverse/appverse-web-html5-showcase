@@ -64,6 +64,13 @@ angular.module('showcaseApp')
             controller: 'ChartsController'
         })
 
+        .state('ui-components', {
+            parent: 'ui',
+            url: '/ui-components',
+            templateUrl: 'views/ui-components/ui-components.html',
+            controller: 'UIComponentsController'
+        })
+
         .state('content', {
             abstract: true,
             templateUrl: 'views/content.html'
@@ -104,8 +111,7 @@ angular.module('showcaseApp')
         .state('dataloading', {
             parent: 'performance',
             url: '/dataloading',
-            templateUrl: 'views/dataloading/dataloading.html',
-            controller: 'PerformanceController'
+            templateUrl: 'views/dataloading/dataloading.html'
         })
 
         .state('about', {

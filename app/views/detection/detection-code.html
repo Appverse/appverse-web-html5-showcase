@@ -11,7 +11,7 @@
     <div class="form-inline form-group">
         <label>Bandwidth: <b>{{detect.bandwidth}}</b> Kbytes/s</label>
 
-        <button ng-hide="detect.isPollingBandwidth" class="btn btn-primary" ng-click="detect.startPollingBandwidth(2000)">Start Polling</button>
-        <button ng-show="detect.isPollingBandwidth" class="btn btn-danger" ng-click="detect.stopPollingBandwidth()">Stop Polling</button>
+        <button ng-hide="detect.isPollingBandwidth" class="btn btn-primary btn-xs" ng-click="detect.startPollingBandwidth(2000)">Start Polling</button>
+        <button ng-show="detect.isPollingBandwidth" class="btn btn-danger btn-xs" ng-click="detect.stopPollingBandwidth()">Stop Polling</button>
     </div>
 </div>
