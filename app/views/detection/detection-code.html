@@ -1,17 +1,19 @@
-<div class="col-md-6" ng-controller="DetectionController">
-    <p>Is it a Mobile Browser ? <span class="{{detect.isMobileBrowser()?'text-success':'text-danger'}}" ng-cloak id="mobileBrowser">{{detect.isMobileBrowser()}}</span>
-    </p>
+<p>Is it a Mobile Browser ? <span ng-class="detect.isMobileBrowser()?'text-success':'text-danger'" ng-cloak>{{detect.isMobileBrowser()}}</span>
+</p>
 
-    <p>Appverse Mobile library is present ? <span class="{{detect.hasAppverseMobile()?'text-success':'text-danger'}}" ng-cloak id="appverseMobile">{{detect.hasAppverseMobile()}}</span>
-    </p>
+<p>Appverse Mobile library is present ? <span ng-class="detect.hasAppverseMobile()?'text-success':'text-danger'" ng-cloak>{{detect.hasAppverseMobile()}}</span>
+</p>
 
-    <p>Web Server status: <span class="{{detect.isOnline?'text-success':'text-error'}}">{{detect.isOnline?'Online':'Offline'}}</span>
-    </p>
+<div class="form-inline form-group">
+    <label>Connectivity status: <span ng-class="detect.isOnline?'text-success':'text-danger'">{{detect.isOnline?'Online':'Offline'}}</span>
+    </label>
+    <button ng-hide="detect.isPollingOnlineStatus" class="btn btn-primary btn-xs" ng-click="detect.startPollingOnlineStatus(2000)">Start Polling</button>
+    <button ng-show="detect.isPollingOnlineStatus" class="btn btn-danger btn-xs" ng-click="detect.stopPollingOnlineStatus()">Stop Polling</button>
+</div>
 
-    <div class="form-inline form-group">
-        <label>Bandwidth: <b>{{detect.bandwidth}}</b> Kbytes/s</label>
+<div class="form-inline form-group">
+    <label>Bandwidth: <b>{{detect.bandwidth}}</b> Kbytes/s</label>
 
-        <button ng-hide="detect.isPollingBandwidth" class="btn btn-primary btn-xs" ng-click="detect.startPollingBandwidth(2000)">Start Polling</button>
-        <button ng-show="detect.isPollingBandwidth" class="btn btn-danger btn-xs" ng-click="detect.stopPollingBandwidth()">Stop Polling</button>
-    </div>
+    <button ng-hide="detect.isPollingBandwidth" class="btn btn-primary btn-xs" ng-click="detect.startPollingBandwidth(2000)">Start Polling</button>
+    <button ng-show="detect.isPollingBandwidth" class="btn btn-danger btn-xs" ng-click="detect.stopPollingBandwidth()">Stop Polling</button>
 </div>
