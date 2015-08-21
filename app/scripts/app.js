@@ -24,6 +24,7 @@
 (function () {
     'use strict';
     angular.module('App.Controllers', []);
+    angular.module('App.Filters', []);
     angular.module('showcaseApp', [
         'appverse.serverPush',
         'appverse.cache',
@@ -37,7 +38,9 @@
         'rt.resize',
         'chart.js',
         'appverse.router',
-        'App.Controllers', 'appverse.detection',
+        'App.Controllers',
+        'App.Filters',
+        'appverse.detection',
         'appverse.logging',
         'appverse.performance',
         'appverse.translate',

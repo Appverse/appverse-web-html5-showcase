@@ -19,36 +19,17 @@
  POSSIBILITY OF SUCH DAMAGE.
  */
 
-'use strict';
-/*
- * Controllers for cache demo.
- * Pay attention to injection of dependencies (factories, entities and Angular objects).
- */
 angular.module('App.Controllers')
 
-.controller('cacheController', ['$log',
-            function ($log) {
-        $log.debug('cacheController loading');
-            }])
-
-.controller('cacheState1Controller', ['$log',
-            function ($log) {
-        $log.debug('cacheState1Controller loading');
-            }])
-
-.controller('cacheState2Controller', ['$log',
-            function ($log) {
-        $log.debug('cacheState2Controller loading');
-            }])
-
-
-.controller('simpleIDBController', ['$scope', '$rootScope', '$stateParams', '$log', '$modal', 'IDBService', 'CACHE_CONFIG',
-            function ($scope, $rootScope, $stateParams, $log, $modal, IDBService, CACHE_CONFIG) {
+.controller('simpleIDBController', ['$scope', '$rootScope', '$stateParams', '$log', 'IDBService',
+    function ($scope, $rootScope, $stateParams, $log, IDBService) {
+        'use strict';
 
         if ($stateParams.key) {
             IDBService.getDefault(Number($stateParams.key)).then(function (note) {
                 $scope.note = note;
                 $scope.tagString = "";
+
                 if (note.tags.length) $scope.tagString = note.tags.join(",");
             });
         }
@@ -58,18 +39,16 @@ angular.module('App.Controllers')
             $scope.note.title = "";
             $scope.note.body = "";
             $scope.tagString = "";
-            $scope.note.id = ""
+            $scope.note.id = "";
         };
 
         $scope.saveNote = function () {
-
             var item = new IDBService.item(
                 $scope.note.id,
                 $scope.note.title,
                 $scope.note.body,
                 //$scope.note.tags
                 $scope.tagString
-
             );
 
             IDBService.saveDefault(item).then(function () {
@@ -105,27 +84,4 @@ angular.module('App.Controllers')
         }
 
 
-            }])
-
-.filter('dateFormat', function () {
-    return function (input) {
-        if (!input)
-            return "";
-        input = new Date(input);
-        var res = (input.getMonth() + 1) + "/" + input.getDate() + "/" + input.getFullYear() + " ";
-        var hour = input.getHours();
-        var ampm = "AM";
-        if (hour === 12)
-            ampm = "PM";
-        if (hour > 12) {
-            hour -= 12;
-            ampm = "PM";
-        }
-        var minute = input.getMinutes() + 1;
-        if (minute < 10)
-            minute = "0" + minute;
-        res += hour + ":" + minute + " " + ampm;
-        return res;
-
-    };
-});
+    }]);
