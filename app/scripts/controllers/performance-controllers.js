@@ -18,22 +18,15 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
-
 'use strict';
 
-/*
- * Controllers for performance demo.
- *
- */
 angular.module('App.Controllers')
 
-.controller('PerformanceController',
-    function ($log) {
-        $log.debug('performanceController loading');
-    })
+.controller('concurrentCallingDataController',
+    function ($log, $scope, $q, RESTFactory) {
 
-.controller('concurrentCallingDataController', ['$log', '$scope', '$q', 'RESTFactory',
-        function ($log, $scope, $q, RESTFactory) {
+        $log.debug('concurrentCallingDataController loading');
+
         var gridData = [];
         gridData.push('largeLoad_1');
         gridData.push('largeLoad_2');
@@ -143,7 +136,7 @@ angular.module('App.Controllers')
 
 
 
-        }])
+    })
 
 .controller('normalGridController',
     function ($scope, $log, RESTFactory) {
@@ -247,8 +240,11 @@ angular.module('App.Controllers')
         };
     })
 
-.controller('optimizedGridController', ['$scope', '$log', 'RESTFactory',
-        function ($scope, $log, RESTFactory) {
+.controller('optimizedGridController',
+    function ($scope, $log, RESTFactory) {
+
+        $log.debug('optimizedGridController loading');
+
         var gridData = 'largeLoad';
         var starttime = 0;
         var currentTime = 0;
@@ -345,4 +341,4 @@ angular.module('App.Controllers')
                 }
                 ]
         };
-        }]);
+    });

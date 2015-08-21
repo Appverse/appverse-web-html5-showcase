@@ -1,0 +1,8 @@
+<div class="form-group form-inline">
+    <label for="inputQR">Text to encode:</label>
+    <input id="inputQR" type="text" ng-model="qrText" ng-init="qrText='http://appverse.org'" class="form-control">
+</div>
+
+<a ng-href="{{qrText}}" target="_blank">
+    <qr correction-level="'M'" size="150" text="qrText"></qr>
+</a>

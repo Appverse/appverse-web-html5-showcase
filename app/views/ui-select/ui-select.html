@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<div class="panel panel-primary">
+    <div class="panel-heading">Explanation</div>
+    <div class="panel-body">
+        <p>UI Select components with Appverse theme applied.</p>
+        <p>More examples and code snippets on the <a href="https://github.com/angular-ui/ui-select" target="_blank">official website</a>.</p>
+    </div>
+</div>
+
+<div class="page-header">
+    <h1>UI Selects</h1>
+</div>
+
+<h3>Bootstrap theme</h3>
+<p>Selected: {{address.selected.formatted_address}}</p>
+<ui-select ng-model="address.selected" theme="bootstrap" ng-disabled="disabled" reset-search-input="false" style="width: 300px;">
+    <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
+    <ui-select-choices repeat="address in addresses track by $index" refresh="refreshAddresses($select.search)" refresh-delay="0">
+        <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
+    </ui-select-choices>
+</ui-select>
+
+<h3>Selectize theme</h3>
+<p>Selected: {{country.selected}}</p>
+<ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" style="width: 300px;">
+    <ui-select-match placeholder="Select or search a country in the list...">{{$select.selected.name}}</ui-select-match>
+    <ui-select-choices repeat="country in countries | filter: $select.search">
+        <span ng-bind-html="country.name | highlight: $select.search"></span>
+        <small ng-bind-html="country.code | highlight: $select.search"></small>
+    </ui-select-choices>
+</ui-select>
+
+<div class="page-header">
+    <h1>Multi Selection Demos</h1>
+</div>
+
+<h3>Array of strings</h3>
+<ui-select multiple ng-model="multipleDemo.colors" theme="bootstrap" ng-disabled="disabled" style="width: 300px;">
+    <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
+    <ui-select-choices repeat="color in availableColors | filter:$select.search">
+        {{color}}
+    </ui-select-choices>
+</ui-select>
+<p>Selected: {{multipleDemo.colors}}</p>
+<hr>
+<h3>Array of objects</h3>
+<ui-select multiple ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
+    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+    <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
+        <div ng-bind-html="person.name | highlight: $select.search"></div>
+        <small>
+                        email: {{person.email}}
+                        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+                    </small>
+    </ui-select-choices>
+</ui-select>
+<p>Selected: {{multipleDemo.selectedPeople}}</p>
+
+<hr>
+<h3>Array of objects with single property binding</h3>
+<ui-select multiple ng-model="multipleDemo.selectedPeopleSimple" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
+    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+    <ui-select-choices repeat="person.email as person in people | propsFilter: {name: $select.search, age: $select.search}">
+        <div ng-bind-html="person.name | highlight: $select.search"></div>
+        <small>
+                        email: {{person.email}}
+                        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+                    </small>
+    </ui-select-choices>
+</ui-select>
+<p>Selected: {{multipleDemo.selectedPeopleSimple}}</p>
+
+<hr>
+<h3>Array of objects (with groupBy)</h3>
+<ui-select multiple ng-model="multipleDemo.selectedPeopleWithGroupBy" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
+    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+    <ui-select-choices group-by="someGroupFn" repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
+        <div ng-bind-html="person.name | highlight: $select.search"></div>
+        <small>
+                        email: {{person.email}}
+                        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+                    </small>
+    </ui-select-choices>
+</ui-select>
+<p>Selected: {{multipleDemo.selectedPeopleWithGroupBy}}</p>

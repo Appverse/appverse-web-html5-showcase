@@ -47,7 +47,14 @@ angular.module('showcaseApp')
             parent: 'ui',
             url: '/ui-bootstrap',
             templateUrl: 'views/ui-bootstrap/ui-bootstrap.html',
-            controller: 'ComponentsController'
+            controller: 'UIBootstrapController'
+        })
+
+        .state('ui-select', {
+            parent: 'ui',
+            url: '/ui-select',
+            templateUrl: 'views/ui-select/ui-select.html',
+            controller: 'UISelectController'
         })
 
         .state('charts', {
@@ -55,6 +62,13 @@ angular.module('showcaseApp')
             url: '/charts',
             templateUrl: 'views/charts.html',
             controller: 'ChartsController'
+        })
+
+        .state('ui-components', {
+            parent: 'ui',
+            url: '/ui-components',
+            templateUrl: 'views/ui-components/ui-components.html',
+            controller: 'UIComponentsController'
         })
 
         .state('content', {
@@ -97,8 +111,7 @@ angular.module('showcaseApp')
         .state('dataloading', {
             parent: 'performance',
             url: '/dataloading',
-            templateUrl: 'views/dataloading/dataloading.html',
-            controller: 'PerformanceController'
+            templateUrl: 'views/dataloading/dataloading.html'
         })
 
         .state('cache', {
