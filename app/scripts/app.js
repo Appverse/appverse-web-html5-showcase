@@ -44,7 +44,9 @@
         'appverse.security',
         'appverse',
         'hljs',
-        'ngGrid'
+        'ngGrid',
+        'ja.qr',
+        'xeditable'
     ]).run(function ($log) {
         $log.debug('showcaseApp run');
     });

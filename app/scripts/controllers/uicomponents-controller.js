@@ -18,24 +18,14 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
-
-'use strict';
-
 angular.module('App.Controllers')
 
-.controller('ModalController',
-    function ($scope, $modalInstance, items) {
+.controller('UIComponentsController',
+    function ($scope, $log, editableOptions) {
 
-        $scope.items = items;
-        $scope.selected = {
-            item: $scope.items[0]
-        };
+        'use strict';
 
-        $scope.ok = function () {
-            $modalInstance.close($scope.selected.item);
-        };
+        $log.debug('UIComponentsController loading');
 
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-        };
+        editableOptions.theme = 'bs3';
     });
