@@ -101,6 +101,12 @@ angular.module('showcaseApp')
             controller: 'PerformanceController'
         })
 
+        .state('cache', {
+            parent: 'performance',
+            url: '/cache',
+            templateUrl: 'views/cache/cache-simpleidb.html'
+        })
+
         .state('about', {
             url: '/about',
             templateUrl: 'views/about.html',

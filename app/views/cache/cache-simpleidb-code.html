@@ -1,0 +1,56 @@
+<div data-ng-controller="simpleIDBController">
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Title
+                    <a ng-click="sortBy = 'title'" class="glyphicon glyphicon-chevron-down"></a><a ng-click="sortBy = '-title'" class="glyphicon glyphicon-chevron-up"></a>
+                </th>
+                <th>
+                    Description
+                    <a ng-click="sortBy = 'body'" class="glyphicon glyphicon-chevron-down"></a><a ng-click="sortBy = '-body'" class="glyphicon glyphicon-chevron-up"></a>
+                </th>
+                <th>
+                    Updated
+                    <a ng-click="sortBy = 'updated'" class="glyphicon glyphicon-chevron-down"></a><a ng-click="sortBy = '-updated'" class="glyphicon glyphicon-chevron-up"></a>
+                </th><th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="note in notes| filter: filter | orderBy: sortBy">
+                <td class="notetitle" ng-click="loadNote(note.key)">{{note.title}}</td>
+                <td class="notebody">{{note.body}}</td>
+                <td>{{note.updated| dateFormat}}</td>
+                <td><a class="btn btn-danger" ng-click="deleteNote(note.key)">Delete</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <form ng-submit="saveNote()">
+        <input type="hidden" id="key" ng-model="note.id">
+        <p>
+            <label>Title</label>
+            <input type="text" id="title" required class="form-control" ng-model="note.title">
+        </p>
+        <p>
+            <label>Item description:</label>
+            <textarea id="body" required class="form-control" ng-model="note.body"></textarea>
+        </p>
+        <p>
+            <label>Item tags:</label>
+            <input type="text" id="tags" class="form-control" ng-model="tagString">
+        </p>
+        <p>
+            <button id="saveNoteButton" class="btn btn-primary">Create/Update</button>
+        </p>
+    </form>
+
+    <p>
+        <button class="btn btn-primary" ng-click="clearForm()">Clear Form for a new Note</button>
+    </p>
+
+</div>
+
+
