@@ -84,4 +84,37 @@ angular.module('App.Controllers')
         }
 
 
+        IDBService.getDefaults().then(function (res) {
+            if(!res.length) {
+                createMultipleItems(4, res, createDefaultItem);
+            }
+        });
+
+        function createMultipleItems(num, data, callback) {
+            if(!num) { return; }
+
+            if(typeof callback === 'function') {
+                for(var i = 1; i<=num; i++) {
+                    callback(i, data);
+                }
+            }
+        }
+
+        function createDefaultItem(num, res) {
+            $scope.note = res;
+
+            var item = new IDBService.item(
+                $scope.note.id,
+                $scope.note.title = 'IndexedDB ' + num,
+                $scope.note.body = 'Description ' + num
+            );
+
+            IDBService.saveDefault(item).then(function () {
+                getNotes();
+            });
+
+            $scope.clearForm();
+        }
+
+
     }]);
