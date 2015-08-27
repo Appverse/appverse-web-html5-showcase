@@ -97,23 +97,18 @@ angular.module('App.Controllers')
                 for(var i = 1; i<=num; i++) {
                     callback(i, data);
                 }
+                getNotes();
             }
         }
 
         function createDefaultItem(num, res) {
-            $scope.note = res;
-
             var item = new IDBService.item(
-                $scope.note.id,
-                $scope.note.title = 'IndexedDB ' + num,
-                $scope.note.body = 'Description ' + num
+                res.id = null,
+                res.title = 'IndexedDB ' + num,
+                res.body = 'Description ' + num
             );
 
-            IDBService.saveDefault(item).then(function () {
-                getNotes();
-            });
-
-            $scope.clearForm();
+            IDBService.saveDefault(item);
         }
 
 
