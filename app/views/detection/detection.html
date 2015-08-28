@@ -1,11 +1,15 @@
 <div class="row">
-    <div ng-include src="'views/detection/detection-code.html'"></div>
-
+    <div class="col-md-6" ng-controller="DetectionController">
+        <div ng-include src="'views/detection/detection-code.html'"></div>
+    </div>
     <div class="col-md-6">
         <div class="panel panel-primary">
             <div class="panel-heading">Explanation</div>
             <div class="panel-body">
-                <p>Pending...</p>
+                <p><b>isMobileBrowser</b> function detects whether you are on a smartphone/tablet browser or not.</p>
+                <p><b>hasAppverseMobile</b> function detects when native calls can be made through Appverse Mobile. More info <a href="http://builder.gft.com/appstore/unity-docs/index.html#!/api" target="_blank">here</a>.</p>
+                <p>Connectivity status can be obtained using the <b>isOnline</b> variable or the polling functions.</p>
+                <p>Bandwidth can be obtained using the <b>bandwidth</b> variable or the polling functions.</p>
             </div>
         </div>
     </div>
