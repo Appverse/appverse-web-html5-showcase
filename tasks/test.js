@@ -10,6 +10,11 @@ module.exports = function (grunt) {
         'connect:test'
     ]);
 
+    grunt.registerTask('testserver:watch', [
+        'testserver',
+        'watch'
+    ]);
+
     grunt.registerTask('test', [
         'clean:reports',
         'karma:unit',
