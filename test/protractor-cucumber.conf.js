@@ -16,6 +16,7 @@ exports.config = {
     getPageTimeout: 20000,
     baseUrl: 'http://localhost:9003',
     framework: 'cucumber',
+    resultJsonOutputFile: './report.json',
     multiCapabilities: [
 //        {
 //            browserName: 'phantomjs',
