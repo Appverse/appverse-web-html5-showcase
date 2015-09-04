@@ -85,34 +85,49 @@ module.exports = function () {
             items[0].all(by.css('.glyphicon-trash')).then(function (items) {
                 expect(items).to.have.length(1);
                 items[0].click();
-                callback();
+                browser.waitForAngular().then(function () {
+                    callback();
+                });
             });
         });
     });
 
     this.Given(/^click OK on confirmation window$/, function (callback) {
-        browser.switchTo().alert().accept();
-        callback();
+        browser.switchTo().alert().accept().then(function () {
+            callback();
+        });
     });
 
     this.Then(/^an alert is shown indicating failed operation$/, function (callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+        element.all(by.css('button.close')).then(function (items) {
+            expect(items).to.have.length(1);
+            items[0].click();
+            callback();
+        });
     });
 
     this.Given(/^click Cancel on confirmation window$/, function (callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+        browser.switchTo().alert().dismiss().then(function () {
+            callback();
+        });
     });
 
     this.When(/^I click at (.*) tab$/, function (tabname, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+        element.all(by.cssContainingText('a.ng-binding', tabname)).then(function (items) {
+            expect(items).to.have.length(1);
+            items[0].click();
+            callback();
+        });
     });
 
     this.Then(/^tab content changed starting by: (.*)$/, function (content, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+        element.all(by.css('span.hljs-tag')).then(function (items) {
+            expect(items).to.have.length.above(0);
+            items[0].getText().then(function (text) {
+                expect(text).to.equal(content);
+                callback();
+            });
+        });
     });
 
 };

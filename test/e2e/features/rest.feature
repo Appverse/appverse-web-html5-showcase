@@ -5,14 +5,12 @@
   As a user
   I want to be able to execute end to end tests for the AppVerse Showcase
 
-  Background:
-  Given I go to Content/RestEntity
-    And data is shown in the table
-
   Scenario Outline: Filter the table at Content/RestEntity
   Meta:
 @scRestEntityFilter
 
+  Given I go to Content/RestEntity
+    And data is shown in the table
   When I set a filter text: <name>
   Then one row is shows in the table with name: <name>
 
@@ -27,6 +25,8 @@
   Meta:
 @scRestEntityModalMissing
 
+  Given I go to Content/RestEntity
+    And data is shown in the table
   When I click on AddUser button
     And enter name: <name>
   Then the add button is disabled
@@ -42,6 +42,8 @@
   Meta:
   @scRestEntityModalAddUser
 
+  Given I go to Content/RestEntity
+    And data is shown in the table
   When I click on AddUser button
     And enter name: <name>, gender: <gender>, company: <company>, age: <age>
     And click Add Button
@@ -59,6 +61,8 @@
   Meta:
   @scRestEntityDeleteConfirm
 
+  Given I go to Content/RestEntity
+    And data is shown in the table
   When I click at bin button for name: <name>
     And click OK on confirmation window
   Then an alert is shown indicating failed operation
@@ -76,6 +80,8 @@
   Meta:
   @scRestEntityDeleteCancel
 
+  Given I go to Content/RestEntity
+    And data is shown in the table
   When I click at bin button for name: <name>
     And click Cancel on confirmation window
   Then total items is 24
@@ -92,6 +98,8 @@
   Meta:
   @scRestEntityResizeScreen
 
+  Given I go to Content/RestEntity
+    And data is shown in the table
     And I resize window width to 1400
     And Explanation frame appears next to the table (float: left and width: 50%)
   When I resize window width to 700
@@ -102,6 +110,8 @@
   Meta:
   @scRestEntityChangeTab
 
+  Given I go to Content/RestEntity
+    And data is shown in the table
   When I click at <tabname> tab
   Then tab content changed starting by: <content>
 
