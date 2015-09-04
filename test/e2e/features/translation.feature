@@ -26,4 +26,3 @@ Then the welcome3 should be translated to <welcome3>
 | en-US  | $100.00       | 1,200,300.457 | Welcome!    | Welcome Alex !    | Welcome Alicia, you are 25 year(s) old! |
 | ja-JP  | ¥100.00       | 1,200,300.457 | Welcome!    | Welcome Alex !    | Welcome Alicia, you are 25 year(s) old! |
 | ar-EG  | £&nbsp;100٫00 | 1200300٫457   | Welcome!    | Welcome Alex !    | Welcome Alicia, you are 25 year(s) old! |
-

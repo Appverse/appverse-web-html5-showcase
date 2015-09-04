@@ -9,7 +9,7 @@ module.exports = function () {
 
     'use strict';
 
-    this.Given(/^I go to Content\/Translation/, function (callback) {
+    this.Given(/^I go to Content\/Translation$/, function (callback) {
         browser.get('#/translation');
         browser.waitForAngular();
         callback();
@@ -23,28 +23,28 @@ module.exports = function () {
     });
 
 
-    this.Then(/^the currency should be translated to (.*)/, getCurrencyTranslated);
+    this.Then(/^the currency should be translated to (.*)$/, getCurrencyTranslated);
     function getCurrencyTranslated(locale, callback) {
         getTextViaBinding('currency', locale, callback);
     }
 
-    this.Then(/^the number should be translated to (.*)/, getNumberTranslated);
+    this.Then(/^the number should be translated to (.*)$/, getNumberTranslated);
     function getNumberTranslated(locale, callback) {
         getTextViaBinding('number', locale, callback);
     }
 
 
-    this.Then(/^the welcome1 should be translated to (.*)/, getWelcome1Translated);
+    this.Then(/^the welcome1 should be translated to (.*)$/, getWelcome1Translated);
     function getWelcome1Translated(locale, callback) {
         getTextViaCss('p[translate="WELCOME"]', locale, callback);
     }
 
-    this.Then(/^the welcome2 should be translated to (.*)/, getWelcome2Translated);
+    this.Then(/^the welcome2 should be translated to (.*)$/, getWelcome2Translated);
     function getWelcome2Translated(locale, callback) {
         getTextViaCss('p[translate="WELCOME_NAME"]', locale, callback);
     }
 
-    this.Then(/^the welcome3 should be translated to (.*)/, getWelcome3Translated);
+    this.Then(/^the welcome3 should be translated to (.*)$/, getWelcome3Translated);
     function getWelcome3Translated(locale, callback) {
         getTextViaCss('p[translate="WELCOME_NAME_AGE"]', locale, callback);
     }
