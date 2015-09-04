@@ -11,8 +11,9 @@ module.exports = function () {
 
     this.Given(/^I go to Content\/RestEntity$/, function (callback) {
         browser.get('#/rest');
-        browser.waitForAngular();
-        callback();
+        browser.waitForAngular().then(function () {
+            callback();
+        });
     });
 
     this.Given(/^data is shown in the table$/, function (callback) {
@@ -55,7 +56,9 @@ module.exports = function () {
         element(by.cssContainingText('option', gender)).click();
         element(by.model('user.company')).sendKeys(company);
         element(by.model('user.age')).sendKeys(age);
-        callback();
+        browser.waitForAngular().then(function () {
+            callback();
+        });
     });
 
     this.Given(/^click Add Button$/, function (callback) {
@@ -84,15 +87,17 @@ module.exports = function () {
             expect(items).to.have.length(1);
             items[0].all(by.css('.glyphicon-trash')).then(function (items) {
                 expect(items).to.have.length(1);
-                items[0].click();
-                browser.waitForAngular().then(function () {
-                    callback();
+                items[0].click().then(function () {
+                    browser.waitForAngular().then(function () {
+                        callback();
+                    });
                 });
             });
         });
     });
 
     this.Given(/^click OK on confirmation window$/, function (callback) {
+        browser.switchTo().activeElement().click();
         browser.switchTo().alert().accept().then(function () {
             callback();
         });
@@ -101,12 +106,13 @@ module.exports = function () {
     this.Then(/^an alert is shown indicating failed operation$/, function (callback) {
         element.all(by.css('button.close')).then(function (items) {
             expect(items).to.have.length(1);
-            items[0].click();
+            //            items[0].click();
             callback();
         });
     });
 
     this.Given(/^click Cancel on confirmation window$/, function (callback) {
+        browser.switchTo().activeElement().click();
         browser.switchTo().alert().dismiss().then(function () {
             callback();
         });
@@ -121,13 +127,32 @@ module.exports = function () {
     });
 
     this.Then(/^tab content changed starting by: (.*)$/, function (content, callback) {
-        element.all(by.css('span.hljs-tag')).then(function (items) {
-            expect(items).to.have.length.above(0);
+        element.all(by.css('div.tab-pane.active>pre>pre>code')).then(function (items) {
+            expect(items).to.have.length(1);
             items[0].getText().then(function (text) {
-                expect(text).to.equal(content);
+                expect(text.replace(/\n/g, '').substr(0, content.length)).to.equal(content);
                 callback();
             });
         });
     });
 
+    this.Given(/^I resize window width to (\d+)$/, function (arg1, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback.pending();
+    });
+
+    this.Given(/^Explanation frame appears next to the table float left and width (\d+)$/, function (arg1, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback.pending();
+    });
+
+    this.When(/^I resize window width to (\d+)$/, function (arg1, callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback.pending();
+    });
+
+    this.Then(/^Explanation frame appears below the table$/, function (callback) {
+        // Write code here that turns the phrase above into concrete actions
+        callback.pending();
+    });
 };

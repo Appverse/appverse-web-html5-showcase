@@ -22,12 +22,13 @@ exports.config = {
 //            'phantomjs.binary.path': require('phantomjs').path,
 //            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
 //        }
+//        {
+//            browserName: 'chrome'
+//             }
         {
-            browserName: 'chrome'
-             }
+            browserName: 'firefox'
+        }
 //        , {
-//            browserName: 'firefox'
-//        }, {
 //            browserName: 'internet explorer'
 //        }
     ],

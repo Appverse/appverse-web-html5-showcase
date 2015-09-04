@@ -94,14 +94,14 @@
      | Trevino Moreno |
 
 
-  Scenario Outline: Resize screen
+  Scenario: Resize screen
   Meta:
   @scRestEntityResizeScreen
 
   Given I go to Content/RestEntity
-    And data is shown in the table
-    And I resize window width to 1400
-    And Explanation frame appears next to the table (float: left and width: 50%)
+  And data is shown in the table
+  And I resize window width to 1400
+  And Explanation frame appears next to the table float left and width 50
   When I resize window width to 700
   Then Explanation frame appears below the table
 
@@ -111,14 +111,14 @@
   @scRestEntityChangeTab
 
   Given I go to Content/RestEntity
-    And data is shown in the table
+  And data is shown in the table
   When I click at <tabname> tab
   Then tab content changed starting by: <content>
 
   Examples:
 
-     | tabname              | content                           |
-     | user-modal.html      |  <div class="modal-header">       |
-     | users-controllers.js | angular.module('App.Controllers') |
-     | users.json           | [  {  "id": 1,                    |
+     | tabname         | content                     |
+     | user-modal.html |  <div class="modal-header"> |
+#     | users-controllers.js | angular.module('App.Controllers') |
+     | users.json      | [    {        "id": 1, |
 
