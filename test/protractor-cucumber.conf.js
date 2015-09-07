@@ -18,20 +18,24 @@ exports.config = {
     framework: 'cucumber',
     resultJsonOutputFile: './report.json',
     multiCapabilities: [
-//        {
-//            browserName: 'phantomjs',
-//            'phantomjs.binary.path': require('phantomjs').path,
-//            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
-//        }
-//        {
-//            browserName: 'chrome'
-//             }
+        // {
+        //     browserName: 'phantomjs',
+        //     'phantomjs.binary.path': require('phantomjs').path,
+        //     'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
+        // }
+        //,{
+        //     browserName: 'chrome'
+        // }
+        //,
         {
             browserName: 'firefox'
         }
-//        , {
-//            browserName: 'internet explorer'
-//        }
+        //,{ Not working on Mac OSX (at least) due to problem installing SafariDriver
+        //     browserName: 'safari'
+        // }
+        // , {
+        //     browserName: 'internet explorer'
+        // }
     ],
     plugins: [{
         path: './waitPlugin.js'
