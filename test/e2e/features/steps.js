@@ -9,46 +9,49 @@ module.exports = function () {
 
     'use strict';
 
-    this.Given(/^I go to Content\/RestEntity$/, function (callback) {
-        browser.get('#/rest');
-        browser.waitForAngular().then(function () {
+    this.After(function (callback) {
+        browser.driver.executeScript('return __coverage__;').then(function (coverageResults) {
+            browser.collector.add(coverageResults);
             callback();
         });
     });
 
-    this.Given(/^data is shown in the table$/, function (callback) {
+    this.Given(/^I go to Content\/RestEntity$/, function () {
+        browser.ignoreSynchronization = true;
+        return browser.getCurrentUrl().then(function (url) {
+            browser.ignoreSynchronization = false;
+            if (url !== browser.baseUrl + '/#/rest') {
+                browser.get('#/rest');
+            }
+        });
+    });
 
-        element.all(by.css('div.ngRow')).then(function (items) {
+    this.Given(/^data is shown in the table$/, function () {
+        return element.all(by.css('div.ngRow')).then(function (items) {
             expect(items).to.have.length.above(0);
-            callback();
+            element(by.model('gridOptions.filterOptions.filterText')).clear();
         });
     });
 
-    this.When(/^I set a filter text: (.*)$/, function (name, callback) {
-        element(by.model('gridOptions.filterOptions.filterText')).sendKeys(name);
-        callback();
+    this.When(/^I set a filter text: (.*)$/, function (name) {
+        return element(by.model('gridOptions.filterOptions.filterText')).clear().sendKeys(name);
     });
 
-    this.Then(/^one row is shows in the table with name: (.*)$/, function (name, callback) {
-        element.all(by.css('div.ngRow')).then(function (items) {
+    this.Then(/^one row is shows in the table with name: (.*)$/, function (name) {
+        return element.all(by.css('div.ngRow')).then(function (items) {
             expect(items).to.have.length(1);
-            items[0].getInnerHtml().then(function (html) {
-                expect(html).to.include(name);
-                callback();
-            });
+            return items[0].getInnerHtml();
+        }).then(function (html) {
+            expect(html).to.include(name);
         });
     });
 
-    this.When(/^I click on AddUser button$/, function (callback) {
-        element(by.buttonText('Add User')).click();
-        browser.waitForAngular().then(function () {
-            callback();
-        });
+    this.When(/^I click on AddUser button$/, function () {
+        return element(by.buttonText('Add User')).click();
     });
 
-    this.Given(/^enter name: (.*)$/, function (name, callback) {
-        element(by.model('user.name')).sendKeys(name);
-        callback();
+    this.Given(/^enter name: (.*)$/, function (name) {
+        return element(by.model('user.name')).clear().sendKeys(name);
     });
 
     this.Given(/^enter name: (.*), gender: (.*), company: (.*), age: (.*)$/, function (name, gender, company, age, callback) {
@@ -61,17 +64,16 @@ module.exports = function () {
         });
     });
 
-    this.Given(/^click Add Button$/, function (callback) {
-        element(by.buttonText('Add')).click();
-        browser.waitForAngular().then(function () {
-            callback();
-        });
+    this.Given(/^click Add Button$/, function () {
+        return element(by.buttonText('Add')).click();
     });
 
     this.Then(/^the add button is disabled$/, function (callback) {
         element(by.buttonText('Add')).getAttribute('disabled').then(function (attr) {
             expect(attr).to.equal('true');
-            callback();
+            element(by.buttonText('Cancel')).click().then(function () {
+                callback();
+            });
         });
     });
 
@@ -105,8 +107,8 @@ module.exports = function () {
 
     this.Then(/^an alert is shown indicating failed operation$/, function (callback) {
         element.all(by.css('button.close')).then(function (items) {
-            expect(items).to.have.length(1);
-            //            items[0].click();
+            expect(items).to.have.length.above(0);
+            items[0].click();
             callback();
         });
     });
@@ -136,23 +138,54 @@ module.exports = function () {
         });
     });
 
-    this.Given(/^I resize window width to (\d+)$/, function (arg1, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Given(/^I resize window width to (\d+)$/, function (width, callback) {
+        browser.manage().window().setSize(parseInt(width), 1000).then(function () {
+            callback();
+        });
     });
 
-    this.Given(/^Explanation frame appears next to the table float left and width (\d+)$/, function (arg1, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Given(/^Explanation frame appears next to the table float left and width 50$/, function () {
+        return element(by.css('div.col-lg-6:nth-child(2)')).getCssValue('float').then(function (value) {
+            expect(value).to.equal('left');
+        });
     });
 
-    this.When(/^I resize window width to (\d+)$/, function (arg1, callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.When(/^I resize window width to (\d+)$/, function (width, callback) {
+        browser.manage().window().setSize(parseInt(width), 1000).then(function () {
+            callback();
+        });
     });
 
-    this.Then(/^Explanation frame appears below the table$/, function (callback) {
-        // Write code here that turns the phrase above into concrete actions
-        callback.pending();
+    this.Then(/^Explanation frame appears below the table$/, function () {
+        return element(by.css('div.col-lg-6:nth-child(2)')).getCssValue('float').then(function (value) {
+            expect(value).to.equal('none');
+        });
+    });
+
+    this.Given(/^I go to Performance\/WebWorkers$/, function () {
+        browser.ignoreSynchronization = true;
+        return browser.getCurrentUrl().then(function (url) {
+            browser.ignoreSynchronization = false;
+            if (url !== browser.baseUrl + '/#/webworkers') {
+                browser.get('#/webworkers');
+            }
+        });
+    });
+
+    this.When(/^shows blue result$/, function () {
+        return element.all(by.css('div.progress-bar')).then(function (items) {
+            expect(items).to.have.length(1);
+            return items[0].getCssValue('background-color');
+        }).then(function (value) {
+            expect(value).to.equal('rgba(33, 62, 127, 1)');
+        });
+    });
+
+    this.When(/^I click on Run button$/, function () {
+        element(by.buttonText('Run')).click();
+    });
+
+    this.Then(/^shows result in green after execution$/, function () {
+        return browser.wait(element.all(by.css('div.progress-bar-success')), 20000);
     });
 };

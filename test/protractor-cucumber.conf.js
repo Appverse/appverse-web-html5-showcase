@@ -15,8 +15,9 @@ exports.config = {
     allScriptsTimeout: 60000,
     getPageTimeout: 20000,
     baseUrl: 'http://localhost:9003',
+    //    baseUrl: 'https://appverse.gftlabs.com/showcase-html5/new',
     framework: 'cucumber',
-    resultJsonOutputFile: './report.json',
+    resultJsonOutputFile: 'test/cucumber-results.json',
     multiCapabilities: [
 //        {
 //            browserName: 'phantomjs',
@@ -37,36 +38,17 @@ exports.config = {
         path: './waitPlugin.js'
     }],
     onPrepare: function () {
-        //        var jasmineReporters = require('jasmine-reporters');
-        //        var capsPromise = browser.getCapabilities();
-        //
-        //        var jasmineEnv = jasmine.getEnv();
-        //
-        //        capsPromise.then(function (caps) {
-        //            var browserName = caps.caps_.browserName.toUpperCase();
-        //            var browserVersion = caps.caps_.version;
-        //            var prePendStr = browserName + "-" + browserVersion + "-junit";
-        //            jasmineEnv.addReporter(new jasmineReporters.JUnitXmlReporter({
-        //                savePath: 'test/reports/e2e',
-        //                filePrefix: prePendStr
-        //            }));
-        //        });
-        //
-        //        return capsPromise;
+        browser.collector = collector;
     },
     onComplete: function () {
 
-        browser.driver.executeScript('return __coverage__;').then(function (coverageResults) {
-            collector.add(coverageResults);
+        istanbul.Report
+            .create('lcov', {
+                dir: 'test/coverage/e2e'
+            })
+            .writeReport(browser.collector, true);
 
-            istanbul.Report
-                .create('lcov', {
-                    dir: 'test/coverage/e2e'
-                })
-                .writeReport(collector, true);
-
-            waitPlugin.resolve();
-        });
+        waitPlugin.resolve();
     },
     jasmineNodeOpts: {
         showColors: true,
