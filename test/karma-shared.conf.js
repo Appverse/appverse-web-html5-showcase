@@ -72,6 +72,7 @@ module.exports = function () {
             'app/scripts/app.js',
             'app/scripts/controllers/*.js',
             'app/scripts/states/*.js',
+            'app/scripts/filters/*.js',
         ]
     };
 };
