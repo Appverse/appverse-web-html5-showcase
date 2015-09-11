@@ -20,7 +20,7 @@ module.exports = function (grunt) {
         'karma:unit',
         'instrument',
         'testserver',
-        'shell:protractor'
+        'shell:jasmine2'
     ]);
 
     grunt.registerTask('test:unit', [
@@ -31,7 +31,14 @@ module.exports = function (grunt) {
         'clean:reports',
         'instrument',
         'testserver',
-        'shell:protractor'
+        'shell:jasmine2'
+    ]);
+
+    grunt.registerTask('test:cucumber', [
+        'clean:reports',
+        'instrument',
+        'testserver',
+        'shell:cucumber'
     ]);
 
 };

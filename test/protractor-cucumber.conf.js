@@ -1,9 +1,8 @@
 /*jshint node:true */
 "use strict";
 
-var waitPlugin = require('./waitPlugin');
 var istanbul = require('istanbul');
-var collector = new istanbul.Collector();
+var fs = require('fs');
 
 exports.config = {
     seleniumServerJar: '../node_modules/protractor/selenium/selenium-server-standalone-2.45.0.jar',
@@ -16,56 +15,47 @@ exports.config = {
     getPageTimeout: 20000,
     baseUrl: 'http://localhost:9003',
     framework: 'cucumber',
-    resultJsonOutputFile: './report.json',
+    resultJsonOutputFile: 'test/reports/e2e/cucumber-results.json',
     multiCapabilities: [
-//        {
-//            browserName: 'phantomjs',
-//            'phantomjs.binary.path': require('phantomjs').path,
-//            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
-//        }
+        // {
+        //     browserName: 'phantomjs',
+        //     'phantomjs.binary.path': require('phantomjs').path,
+        //     'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
+        // },
         {
             browserName: 'chrome'
-             }
-//        , {
-//            browserName: 'firefox'
-//        }, {
-//            browserName: 'internet explorer'
-//        }
+        },
+        // {
+        //     browserName: 'firefox'
+        // },
+        // { Not working on Mac OSX (at least) due to problem installing SafariDriver
+        //     browserName: 'safari'
+        // },
+        // {
+        //     browserName: 'internet explorer'
+        // }
     ],
-    plugins: [{
-        path: './waitPlugin.js'
-    }],
-    onPrepare: function () {
-        //        var jasmineReporters = require('jasmine-reporters');
-        //        var capsPromise = browser.getCapabilities();
-        //
-        //        var jasmineEnv = jasmine.getEnv();
-        //
-        //        capsPromise.then(function (caps) {
-        //            var browserName = caps.caps_.browserName.toUpperCase();
-        //            var browserVersion = caps.caps_.version;
-        //            var prePendStr = browserName + "-" + browserVersion + "-junit";
-        //            jasmineEnv.addReporter(new jasmineReporters.JUnitXmlReporter({
-        //                savePath: 'test/reports/e2e',
-        //                filePrefix: prePendStr
-        //            }));
-        //        });
-        //
-        //        return capsPromise;
+    onPrepare: function() {
+        browser.collector = new istanbul.Collector();
+        if (!fs.existsSync('test/reports')) {
+            fs.mkdirSync('test/reports');
+        }
+        if (!fs.existsSync('test/reports/e2e')) {
+            fs.mkdirSync('test/reports/e2e');
+        }
     },
-    onComplete: function () {
+    onComplete: function() {
 
-        browser.driver.executeScript('return __coverage__;').then(function (coverageResults) {
-            collector.add(coverageResults);
+        var browserName = browser.getProcessedConfig().value_.capabilities.browserName;
+        if (browserName === 'internet explorer') {
+            return;
+        }
 
-            istanbul.Report
-                .create('lcov', {
-                    dir: 'test/coverage/e2e'
-                })
-                .writeReport(collector, true);
-
-            waitPlugin.resolve();
-        });
+        istanbul.Report
+            .create('lcov', {
+                dir: 'test/coverage/e2e/' + browserName
+            })
+            .writeReport(browser.collector, true);
     },
     jasmineNodeOpts: {
         showColors: true,
