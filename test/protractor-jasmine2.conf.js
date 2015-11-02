@@ -17,30 +17,30 @@ exports.config = {
     baseUrl: 'http://localhost:9003',
     framework: 'jasmine2',
     multiCapabilities: [
+        //        {
+        //            browserName: 'phantomjs',
+        //            'phantomjs.binary.path': require('phantomjs').path,
+        //            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
+        //}
         {
-            browserName: 'phantomjs',
-            'phantomjs.binary.path': require('phantomjs').path,
-            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
+            browserName: 'chrome'
         }
-//        , {
-     //            browserName: 'chrome'
-     //        }
-//        , {
-//            browserName: 'firefox'
-//        }, {
-//            browserName: 'internet explorer'
-//        }
+        //        , {
+        //            browserName: 'firefox'
+        //        }, {
+        //            browserName: 'internet explorer'
+        //        }
     ],
     plugins: [{
         path: './waitPlugin.js'
     }],
-    onPrepare: function () {
+    onPrepare: function() {
         var jasmineReporters = require('jasmine-reporters');
         var capsPromise = browser.getCapabilities();
 
         var jasmineEnv = jasmine.getEnv();
 
-        capsPromise.then(function (caps) {
+        capsPromise.then(function(caps) {
             var browserName = caps.caps_.browserName.toUpperCase();
             var browserVersion = caps.caps_.version;
             var prePendStr = browserName + "-" + browserVersion + "-junit";
@@ -52,9 +52,9 @@ exports.config = {
 
         return capsPromise;
     },
-    onComplete: function () {
+    onComplete: function() {
 
-        browser.driver.executeScript('return __coverage__;').then(function (coverageResults) {
+        browser.driver.executeScript('return __coverage__;').then(function(coverageResults) {
             collector.add(coverageResults);
 
             istanbul.Report
@@ -62,6 +62,13 @@ exports.config = {
                     dir: 'reports/e2e/coverage'
                 })
                 .writeReport(collector, true);
+
+            istanbul.Report
+                .create('clover', {
+                    dir: 'reports/e2e/coverage'
+                })
+                .writeReport(collector, true);
+
 
             waitPlugin.resolve();
         });
