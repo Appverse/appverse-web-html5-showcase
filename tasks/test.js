@@ -1,12 +1,13 @@
 /*jshint node:true */
 'use strict';
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
     grunt.registerTask('testserver', [
         'clean:server',
         'concurrent:server',
         'autoprefixer',
+        'instrument',
         'connect:test'
     ]);
 
@@ -16,27 +17,24 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test', [
-        'clean:reports',
+        'clean:reportsUnit',
         'karma:unit',
-        'instrument',
-        'testserver',
-        'shell:jasmine2'
+        'test:e2e'
     ]);
 
     grunt.registerTask('test:unit', [
+        'clean:reportsUnit',
         'karma:unit_auto'
     ]);
 
     grunt.registerTask('test:e2e', [
-        'clean:reports',
-        'instrument',
+        'clean:reportsE2e',
         'testserver',
         'shell:jasmine2'
     ]);
 
     grunt.registerTask('test:cucumber', [
-        'clean:reports',
-        'instrument',
+        'clean:reportsE2e',
         'testserver',
         'shell:cucumber'
     ]);

@@ -25,7 +25,7 @@ module.exports = function() {
 
     this.After(function(scenario, callback) {
         browser.takeScreenshot().then(function(png) {
-            var stream = fs.createWriteStream('test/reports/e2e/' + browser.getProcessedConfig().value_.capabilities.browserName + ' - ' + scenario.getName().replace(/\//g, '-') + '.png');
+            var stream = fs.createWriteStream('reports/e2e/' + browser.getProcessedConfig().value_.capabilities.browserName + ' - ' + scenario.getName().replace(/\//g, '-') + '.png');
             stream.write(new Buffer(png, 'base64'));
             stream.end();
             callback();

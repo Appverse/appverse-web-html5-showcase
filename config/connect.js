@@ -15,14 +15,14 @@ module.exports = {
             base: [
                 '.tmp', '<%= paths.app %>'
             ],
-            middleware: function (connect, options) {
+            middleware: function(connect, options) {
                 if (!Array.isArray(options.base)) {
                     options.base = [options.base];
                 }
                 // Setup the proxy
                 var middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest];
                 // Serve static files.
-                options.base.forEach(function (base) {
+                options.base.forEach(function(base) {
                     middlewares.push(connect.static(base));
                 });
                 // Make directory browse-able.
@@ -31,23 +31,21 @@ module.exports = {
                 return middlewares;
             }
         },
-        proxies: [
-            {
-                context: '/api',
-                host: "http://127.0.0.1",
-                port: 8000,
-                https: false,
-                rewrite: {
-                    '^/api': ''
-                }
+        proxies: [{
+            context: '/api',
+            host: "http://127.0.0.1",
+            port: 8000,
+            https: false,
+            rewrite: {
+                '^/api': ''
             }
-        ]
+        }]
     },
     test: {
         options: {
             port: '<%= ports.test %>',
             base: [
-                '.tmp', 'test', 'test/coverage/instrument/app', '<%= paths.app %>'
+                '.tmp', 'test', 'reports/e2e/coverage/instrument/app', '<%= paths.app %>'
             ]
         }
     },

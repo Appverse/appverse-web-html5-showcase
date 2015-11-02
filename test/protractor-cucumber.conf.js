@@ -15,7 +15,7 @@ exports.config = {
     getPageTimeout: 20000,
     baseUrl: 'http://localhost:9003',
     framework: 'cucumber',
-    resultJsonOutputFile: 'test/reports/e2e/cucumber-results.json',
+    resultJsonOutputFile: 'reports/e2e/cucumber-results.json',
     multiCapabilities: [
         // {
         //     browserName: 'phantomjs',
@@ -37,11 +37,11 @@ exports.config = {
     ],
     onPrepare: function() {
         browser.collector = new istanbul.Collector();
-        if (!fs.existsSync('test/reports')) {
-            fs.mkdirSync('test/reports');
+        if (!fs.existsSync('reports')) {
+            fs.mkdirSync('reports');
         }
-        if (!fs.existsSync('test/reports/e2e')) {
-            fs.mkdirSync('test/reports/e2e');
+        if (!fs.existsSync('reports/e2e')) {
+            fs.mkdirSync('reports/e2e');
         }
     },
     onComplete: function() {
@@ -53,7 +53,7 @@ exports.config = {
 
         istanbul.Report
             .create('lcov', {
-                dir: 'test/coverage/e2e/' + browserName
+                dir: 'reports/e2e/coverage/' + browserName
             })
             .writeReport(browser.collector, true);
     },

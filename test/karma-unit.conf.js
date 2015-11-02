@@ -3,13 +3,11 @@
 
 var sharedConfig = require('./karma-shared.conf');
 
-module.exports = function (config) {
+module.exports = function(config) {
 
     var conf = sharedConfig();
 
     conf.browsers = ['PhantomJS'];
-
-    conf.coverageReporter.dir += 'unit';
 
     conf.files = conf.files.concat([
 

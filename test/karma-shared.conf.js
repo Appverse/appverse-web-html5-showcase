@@ -1,7 +1,7 @@
 /*jshint node:true */
 'use strict';
 
-module.exports = function () {
+module.exports = function() {
     return {
         basePath: '../',
         frameworks: ['jasmine'],
@@ -19,12 +19,12 @@ module.exports = function () {
         // optionally, configure the reporter
         coverageReporter: {
             type: 'lcov',
-            dir: 'test/coverage/',
+            dir: 'reports/unit/coverage',
             includeAllSources: true
         },
 
         junitReporter: {
-            outputFile: 'test/reports/unit/junit-results.xml'
+            outputFile: 'reports/unit/junit-results.xml'
         },
 
         autoWatch: true,
@@ -38,7 +38,6 @@ module.exports = function () {
             'app/bower_components/jquery/dist/jquery.min.js',
             'app/bower_components/angular/angular.min.js',
             'app/bower_components/angular-touch/angular-touch.min.js',
-            'app/bower_components/modernizr/modernizr.js',
             'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
             'app/bower_components/angular-cookies/angular-cookies.min.js',
             'app/bower_components/angular-ui-router/release/angular-ui-router.min.js',
@@ -48,7 +47,7 @@ module.exports = function () {
 
             //App-specific Code
             'app/bower_components/appverse-web-html5-core/dist/appverse-cache/appverse-cache.js',
-//            'app/bower_components/appverse-web-html5-core/dist/appverse-detection/appverse-detection.js',
+            //            'app/bower_components/appverse-web-html5-core/dist/appverse-detection/appverse-detection.js',
             //'app/bower_components/appverse-web-html5-core/dist/appverse-logging/appverse-logging.js',
             'app/bower_components/appverse-web-html5-core/dist/appverse-router/appverse-router.min.js',
             'app/bower_components/appverse-web-html5-core/dist/appverse/appverse.min.js',

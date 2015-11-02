@@ -1,3 +1,4 @@
+/*jshint node:true */
 'use strict';
 
 // Empties folders to start fresh
@@ -6,13 +7,14 @@ module.exports = {
         files: [{
             dot: true,
             src: [
-                        '.tmp',
-                        '<%= paths.dist %>/*',
-                        '!' + '<%= paths.dist %>/.git*'
-                    ]
-                }]
+                '.tmp',
+                '<%= paths.dist %>/*',
+                '!' + '<%= paths.dist %>/.git*'
+            ]
+        }]
     },
     server: '.tmp',
     doc: 'doc',
-    reports: ['test/reports', 'test/coverage']
+    reportsUnit: 'reports/unit',
+    reportsE2e: 'reports/e2e'
 };

@@ -45,7 +45,7 @@ exports.config = {
             var browserVersion = caps.caps_.version;
             var prePendStr = browserName + "-" + browserVersion + "-junit";
             jasmineEnv.addReporter(new jasmineReporters.JUnitXmlReporter({
-                savePath: 'test/reports/e2e',
+                savePath: 'reports/e2e',
                 filePrefix: prePendStr
             }));
         });
@@ -59,7 +59,7 @@ exports.config = {
 
             istanbul.Report
                 .create('lcov', {
-                    dir: 'test/coverage/e2e'
+                    dir: 'reports/e2e/coverage'
                 })
                 .writeReport(collector, true);
 
