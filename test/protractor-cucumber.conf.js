@@ -5,7 +5,7 @@ var istanbul = require('istanbul');
 var fs = require('fs');
 
 exports.config = {
-    seleniumServerJar: '../node_modules/protractor/selenium/selenium-server-standalone-2.45.0.jar',
+    seleniumServerJar: '../node_modules/protractor/selenium/selenium-server-standalone-2.47.1.jar',
     seleniumArgs: [
         '-Dwebdriver.ie.driver=node_modules/protractor/selenium/IEDriverServer.exe',
         '-browserTimeout=60'

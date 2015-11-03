@@ -6,7 +6,7 @@ var istanbul = require('istanbul');
 var collector = new istanbul.Collector();
 
 exports.config = {
-    seleniumServerJar: '../node_modules/protractor/selenium/selenium-server-standalone-2.45.0.jar',
+    seleniumServerJar: '../node_modules/protractor/selenium/selenium-server-standalone-2.47.1.jar',
     seleniumArgs: [
         '-Dwebdriver.ie.driver=node_modules/protractor/selenium/IEDriverServer.exe',
         '-browserTimeout=60'
@@ -59,13 +59,15 @@ exports.config = {
 
             istanbul.Report
                 .create('lcov', {
-                    dir: 'reports/e2e/coverage'
+                    dir: 'reports/e2e/coverage',
+                    includeAllSources: true
                 })
                 .writeReport(collector, true);
 
             istanbul.Report
                 .create('clover', {
-                    dir: 'reports/e2e/coverage'
+                    dir: 'reports/e2e/coverage',
+                    includeAllSources: true
                 })
                 .writeReport(collector, true);
 
