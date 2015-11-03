@@ -58,7 +58,6 @@ module.exports = function() {
 
             'app/bower_components/appverse-web-html5-security/dist/appverse-security/appverse-security.js',
 
-            'app/bower_components/socket.io-client/dist/socket.io.min.js',
             'app/bower_components/appverse-web-html5-core/dist/appverse-serverpush/appverse-serverpush.js',
 
             'app/bower_components/appverse-web-html5-core/dist/appverse-translate/appverse-translate.js',
