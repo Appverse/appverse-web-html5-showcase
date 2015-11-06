@@ -17,14 +17,14 @@ exports.config = {
     framework: 'cucumber',
     resultJsonOutputFile: 'reports/e2e/cucumber-results.json',
     multiCapabilities: [
-        // {
-        //     browserName: 'phantomjs',
-        //     'phantomjs.binary.path': require('phantomjs').path,
-        //     'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
-        // },
+        //        {
+        //            browserName: 'phantomjs',
+        //            'phantomjs.binary.path': require('phantomjs').path,
+        //            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false', '--local-storage-path=./html5-storage/'],
+        //        }
         {
             browserName: 'chrome'
-        },
+        }
         // {
         //     browserName: 'firefox'
         // },

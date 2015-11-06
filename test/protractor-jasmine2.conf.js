@@ -9,23 +9,23 @@ exports.config = {
     seleniumServerJar: '../node_modules/protractor/selenium/selenium-server-standalone-2.47.1.jar',
     seleniumArgs: [
         '-Dwebdriver.ie.driver=node_modules/protractor/selenium/IEDriverServer.exe',
-        '-browserTimeout=60'
+        '-browserTimeout=120000'
     ],
     specs: ['e2e/init.js', 'e2e/**/*.js'],
-    allScriptsTimeout: 60000,
-    getPageTimeout: 20000,
+    allScriptsTimeout: 120000,
+    getPageTimeout: 120000,
     baseUrl: 'http://localhost:9003',
     framework: 'jasmine2',
     multiCapabilities: [
+        //        {
+        //            browserName: 'phantomjs',
+        //            'phantomjs.binary.path': require('phantomjs').path,
+        //            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false', '--local-to-remote-url-access=true'],
+        //        }
         {
-            browserName: 'phantomjs',
-            'phantomjs.binary.path': require('phantomjs').path,
-            'phantomjs.cli.args': ['--ignore-ssl-errors=true', '--web-security=false'],
+            browserName: 'chrome'
         }
         //        , {
-     //            browserName: 'chrome'
-     //        }
-//        , {
         //            browserName: 'firefox'
         //        }, {
         //            browserName: 'internet explorer'
@@ -77,6 +77,6 @@ exports.config = {
     },
     jasmineNodeOpts: {
         showColors: true,
-        defaultTimeoutInterval: 30000
+        defaultTimeoutInterval: 120000
     }
 };
