@@ -1,22 +1,23 @@
 /*jshint node:true */
 'use strict';
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
-    grunt.registerTask('server', [
-        'clean:server',
-        'concurrent:server',
-        'autoprefixer',
-        'connect:livereload',
-        'watch'
-    ]);
-
-    grunt.registerTask('server:open', [
+    grunt.registerTask('server:only', [
         'clean:server',
         'configureProxies:livereload',
         'concurrent:server',
         'autoprefixer',
-        'connect:livereload',
+        'connect:livereload'
+    ]);
+
+    grunt.registerTask('server', [
+        'server:only',
+        'watch'
+    ]);
+
+    grunt.registerTask('server:open', [
+        'server:only',
         'open:server',
         'watch'
     ]);

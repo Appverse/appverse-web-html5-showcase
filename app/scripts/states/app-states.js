@@ -21,9 +21,11 @@
 angular.module('showcaseApp')
 
 .config(
-    function ($stateProvider, $urlRouterProvider) {
+    function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
         'use strict';
+
+        $httpProvider.useApplyAsync();
 
         $urlRouterProvider.otherwise('/home');
 
@@ -118,6 +120,12 @@ angular.module('showcaseApp')
             parent: 'performance',
             url: '/cache',
             templateUrl: 'views/cache/cache-simpleidb.html'
+        })
+
+        .state('security', {
+            url: '/security',
+            templateUrl: 'views/security/security.html',
+            controller: 'SecurityController'
         })
 
         .state('about', {

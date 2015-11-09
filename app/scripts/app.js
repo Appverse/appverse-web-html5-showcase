@@ -21,7 +21,7 @@
 
 
 /*globals AppInit:false */
-(function () {
+(function() {
     'use strict';
     angular.module('App.Controllers', []);
     angular.module('App.Filters', []);
@@ -50,8 +50,32 @@
         'ngGrid',
         'ja.qr',
         'xeditable'
-    ]).run(function ($log) {
-        $log.debug('showcaseApp run');
+    ]).run(function($log, $rootScope, $window) {
+
+        $log.debug('App run', $window.location.search);
+
+        $rootScope.$on('$locationChangeStart',
+            function(angularEvent, newUrl, oldUrl) {
+
+                $log.debug('$locationChangeStart', newUrl);
+                $log.debug('$locationChangeStart', oldUrl);
+
+                var code = $window.location.search.split('code=')[1];
+
+                if (code) {
+                    $log.debug('$locationChangeStart code', code);
+
+                    angularEvent.preventDefault();
+                    localStorage.setItem('code', code);
+                    $window.location.search = '';
+                }
+
+                if ($rootScope.preventNextLocation) {
+                    angularEvent.preventDefault();
+                    $rootScope.preventNextLocation = false;
+                }
+
+            });
     });
 
     AppInit.setConfig({
