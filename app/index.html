@@ -87,6 +87,9 @@
                 <li ng-class="{ active: $state.includes('performance') }">
                     <a angular-ripple="" ui-sref="webworkers"><i class="glyphicon glyphicon-plane"></i> Performance</a>
                 </li>
+                <li ng-class="{ active: $state.includes('security') }">
+                    <a angular-ripple="" ui-sref="security"><i class="glyphicon glyphicon-plane"></i> Security</a>
+                </li>
                 <li data-ng-class="{ active: $state.includes('about') }">
                     <a angular-ripple="" ui-sref="about"><i class="glyphicon glyphicon-info-sign"></i> About</a>
                 </li>
@@ -105,7 +108,7 @@
 
     <!-- build:js scripts/scripts.js -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-touch/angular-touch.min.js"></script>
     <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
@@ -138,6 +141,7 @@
     <script src="scripts/controllers/uicomponents-controller.js"></script>
     <script src="scripts/controllers/charts-controller.js"></script>
     <script src="scripts/controllers/performance-controllers.js"></script>
+    <script src="scripts/controllers/security-controllers.js"></script>
     <script src="scripts/states/app-states.js"></script>
 
     <!-- PERFORMANCE MODULE -->
