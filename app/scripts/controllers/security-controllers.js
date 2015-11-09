@@ -27,6 +27,8 @@ angular.module('App.Controllers')
 
         $log.debug('SecurityController');
 
+        $scope.url = $window.location.href;
+
         $scope.remembered = JSON.parse(localStorage.getItem('remember'));
 
         var response = JSON.parse(localStorage.getItem('oauth_response'));
