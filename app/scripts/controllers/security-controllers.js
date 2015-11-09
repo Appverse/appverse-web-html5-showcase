@@ -21,7 +21,7 @@
 angular.module('App.Controllers')
 
 .controller('SecurityController',
-    function($scope, $log, $http, $window, $interval, $rootScope) {
+    function($scope, $log, $http, $window, $interval) {
 
         'use strict';
 
@@ -125,7 +125,7 @@ angular.module('App.Controllers')
                     code: code,
                     grant_type: 'authorization_code',
                     client_id: 'oauth-server-showcase-client',
-                    redirect_uri: 'http://localhost:9000/#/security'
+                    redirect_uri: $window.location.href
                 }),
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
