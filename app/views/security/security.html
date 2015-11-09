@@ -8,7 +8,7 @@
 <div class="container">
     <div class="row">
         <div ng-show="isAuthenticated===false" class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-            <form action="/oauth/authorize" enctype="application/x-www-form-urlencoded" method="post">
+            <form action="/oauth-server/oauth/authorize" enctype="application/x-www-form-urlencoded" method="post">
                 <div class="form-group">
                     <label for="username">User</label>
                     <input type="text" class="form-control" name="username" placeholder="User" value="user">

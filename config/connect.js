@@ -24,14 +24,10 @@ module.exports = {
             }
         },
         proxies: [{
-            context: ['/oauth', '/api/remotelog', '/api/sec/logout'],
+            context: '/oauth-server',
             host: "appverse.gftlabs.com",
             port: 443,
-            https: true,
-            rewrite: {
-                '^/api/': '/oauth-server/api/',
-                '^/oauth/': '/oauth-server/oauth/'
-            }
+            https: true
         }]
     },
     test: {
