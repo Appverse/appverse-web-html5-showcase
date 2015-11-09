@@ -21,7 +21,7 @@
 angular.module('App.Controllers')
 
 .controller('SecurityController',
-    function ($scope, $log, $http, $window, $interval, $rootScope) {
+    function($scope, $log, $http, $window, $interval, $rootScope) {
 
         'use strict';
 
@@ -59,7 +59,7 @@ angular.module('App.Controllers')
 
                 $scope.oauth_response = response;
 
-                expirationInterval = $interval(function () {
+                expirationInterval = $interval(function() {
                     $scope.expiration_seconds = Math.round((response.expires_in * 1000 - new Date().getTime() + new Date(parseInt(token_date)).getTime()) / 1000);
                     if ($scope.expiration_seconds < 1) {
                         $interval.cancel(expirationInterval);
@@ -68,7 +68,7 @@ angular.module('App.Controllers')
                     $scope.$applyAsync();
                 }, 1000, 0, false);
 
-                $scope.$on('$destroy', function () {
+                $scope.$on('$destroy', function() {
                     if (expirationInterval) {
                         $interval.cancel(expirationInterval);
                     }
@@ -88,7 +88,7 @@ angular.module('App.Controllers')
 
             $http({
                 method: 'POST',
-                url: '/oauth/token',
+                url: '/oauth-server/oauth/token',
                 data: $.param({
                     code: code,
                     grant_type: 'refresh_token',
@@ -98,7 +98,7 @@ angular.module('App.Controllers')
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'authorization': 'Basic ' + btoa('oauth-server-showcase-client:our-secret')
                 }
-            }).then(function (response) {
+            }).then(function(response) {
                 $log.debug('refreshToken response', response);
 
                 $scope.oauth_response = response.data;
@@ -120,7 +120,7 @@ angular.module('App.Controllers')
 
             $http({
                 method: 'POST',
-                url: '/oauth/token',
+                url: '/oauth-server/oauth/token',
                 data: $.param({
                     code: code,
                     grant_type: 'authorization_code',
@@ -131,7 +131,7 @@ angular.module('App.Controllers')
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'authorization': 'Basic ' + btoa('oauth-server-showcase-client:our-secret')
                 }
-            }).success(function (response) {
+            }).success(function(response) {
                 $log.debug('getToken success', response);
 
                 $scope.oauth_response = response;
@@ -144,7 +144,7 @@ angular.module('App.Controllers')
                 localStorage.setItem('token_date', new Date().getTime());
 
                 checkResponse($scope.oauth_response);
-            }).error(function (response, statusCode) {
+            }).error(function(response, statusCode) {
                 $log.debug('getToken error', response);
 
                 if (statusCode === 400) {
@@ -153,7 +153,7 @@ angular.module('App.Controllers')
             });
         }
 
-        $scope.remember = function () {
+        $scope.remember = function() {
 
             $log.debug('remembered', $scope.remembered);
 
@@ -164,15 +164,15 @@ angular.module('App.Controllers')
             }
         };
 
-        $scope.logOut = function () {
+        $scope.logOut = function() {
 
             $http({
                 method: 'POST',
-                url: '/api/sec/logout',
+                url: '/oauth-server/api/sec/logout',
                 data: $.param({
                     access_token: $scope.oauth_response.access_token
                 })
-            }).then(function (response) {
+            }).then(function(response) {
                 $log.debug('logOut response', response);
                 $scope.logOutSuccess = true;
 
@@ -184,7 +184,7 @@ angular.module('App.Controllers')
             });
         };
 
-        $scope.sendLog = function () {
+        $scope.sendLog = function() {
 
             $log.debug('sendLog');
 
@@ -199,7 +199,7 @@ angular.module('App.Controllers')
 
             $http({
                 method: 'POST',
-                url: '/api/remotelog/log',
+                url: '/oauth-server/api/remotelog/log',
                 data: {
                     "logLevel": "DEBUG",
                     "message": "string",
@@ -208,7 +208,7 @@ angular.module('App.Controllers')
                 headers: {
                     'authorization': 'Bearer ' + $scope.oauth_response.access_token
                 },
-            }).success(function (data, status, headers) {
+            }).success(function(data, status, headers) {
                 $log.debug('remotelog response', status);
                 $scope.isSending = false;
                 $scope.sendLogResponse = {
@@ -216,7 +216,7 @@ angular.module('App.Controllers')
                     body: data,
                     headers: headers()
                 };
-            }).error(function (response) {
+            }).error(function(response) {
                 $log.debug('remotelog error', response);
                 $scope.isSending = false;
                 $scope.sendLogResponse = response;
