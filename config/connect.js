@@ -25,9 +25,12 @@ module.exports = {
         },
         proxies: [{
             context: '/oauth-server',
-            host: "appverse.gftlabs.com",
-            port: 443,
-            https: true
+            host: 'localhost',
+            port: 8080,
+            https: false,
+            rewrite: {
+                '^/oauth-server': ''
+            }
         }]
     },
     test: {

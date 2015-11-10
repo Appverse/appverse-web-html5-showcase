@@ -38,15 +38,38 @@
             <p>Oauth data:
                 <pre hljs hljs-language="json" hljs-source="oauth_response | json"></pre>
             </p>
-            <p ng-show="expiration_seconds >= 1">Token expires in: <span ng-bind="expiration_seconds"></span> seconds</p>
-            <p ng-show="expiration_seconds < 1">Refreshing token...</p>
+            <p ng-show="expiration_seconds >= 1">Access token expires in: <span ng-bind="expiration_seconds"></span> seconds</p>
+            <p ng-show="expiration_seconds < 1 && !refreshingToken" class="text-warning">Access token expired.</p>
+            <p ng-show="refreshingToken">Refreshing access token using refresh token...</p>
         </div>
     </div>
-
     <hr>
-    <button angular-ripple class="btn btn-primary" ng-click="sendLog()">Send log to server</button>
-    <br>
-    <br>
-    <p ng-show="isSending">Sending log to server using secured API ...</p>
-    <div ng-show="sendLogResponse">Server response: <pre hljs hljs-language="json" hljs-source="sendLogResponse | json"></pre></div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Token refresh with expiration time</div>
+                <div class="panel-body">
+                    <p>Time when access token is retrieved is kept on localStorage, Before every call to the server, we calculate if token as expired and refresh it if needed.</p>
+                </div>
+            </div>
+            <button angular-ripple class="btn btn-primary" ng-click="sendLog(true)">Send log to server</button>
+            <br>
+            <br>
+            <p ng-show="isSending">Sending log to server using secured API ...</p>
+            <div ng-show="sendLogResponse">Server response: <pre hljs hljs-language="json" hljs-source="sendLogResponse | json"></pre></div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Token refresh with error 401</div>
+                <div class="panel-body">
+                    <p>Time when access token is retrieved is not kept. If a call to the server fails with error 401, we then make the call to refresh the token.</p>
+                </div>
+            </div>
+            <button angular-ripple class="btn btn-primary" ng-click="sendLog()">Send log to server</button>
+            <br>
+            <br>
+            <p ng-show="isSending2">Sending log to server using secured API ...</p>
+            <div ng-show="sendLogResponse2">Server response: <pre hljs hljs-language="json" hljs-source="sendLogResponse2 | json"></pre></div>
+        </div>
+    </div>
 </div>
