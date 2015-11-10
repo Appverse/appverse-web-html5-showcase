@@ -21,7 +21,7 @@
 angular.module('App.Controllers')
 
 .controller('SecurityController',
-    function($scope, $log, $http, $window, $interval) {
+    function($scope, $log, $http, $window, $interval, $rootScope) {
 
         'use strict';
 
