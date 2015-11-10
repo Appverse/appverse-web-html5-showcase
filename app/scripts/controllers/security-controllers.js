@@ -65,7 +65,6 @@ angular.module('App.Controllers')
                     $scope.expiration_seconds = Math.round((response.expires_in * 1000 - new Date().getTime() + new Date(parseInt(token_date)).getTime()) / 1000);
                     if ($scope.expiration_seconds < 1) {
                         $interval.cancel(expirationInterval);
-                        refreshToken();
                     }
                     $scope.$applyAsync();
                 }, 1000, 0, false);
@@ -85,10 +84,18 @@ angular.module('App.Controllers')
             $log.debug('refreshToken');
 
             if (!$scope.oauth_response || !$scope.oauth_response.refresh_token) {
-                return;
+                return {
+                    then: function(callback) {
+                        callback({
+                            status: 400
+                        });
+                    }
+                };
             }
 
-            $http({
+            $scope.refreshingToken = true;
+
+            return $http({
                 method: 'POST',
                 url: '/oauth-server/oauth/token',
                 data: $.param({
@@ -101,7 +108,7 @@ angular.module('App.Controllers')
                     'authorization': 'Basic ' + btoa('oauth-server-showcase-client:our-secret')
                 }
             }).then(function(response) {
-                $log.debug('refreshToken response', response);
+                $log.debug('refreshToken success', response);
 
                 $scope.oauth_response = response.data;
 
@@ -113,6 +120,15 @@ angular.module('App.Controllers')
                 localStorage.setItem('token_date', new Date().getTime());
 
                 checkResponse($scope.oauth_response);
+
+                setTimeout(function() {
+                    $scope.refreshingToken = false;
+                }, 1000);
+
+                return response;
+            }, function(response) {
+                $log.debug('refreshToken error', response);
+                return response;
             });
         }
 
@@ -186,9 +202,9 @@ angular.module('App.Controllers')
             });
         };
 
-        $scope.sendLog = function() {
+        $scope.sendLog = function(refresh) {
 
-            $log.debug('sendLog');
+            $log.debug('sendLog', refresh);
 
             if (!$scope.oauth_response || !$scope.oauth_response.access_token) {
                 $scope.oauth_response = {
@@ -196,8 +212,26 @@ angular.module('App.Controllers')
                 };
             }
 
-            $scope.isSending = true;
-            $scope.sendLogResponse = null;
+            if ($scope.expiration_seconds < 1 && refresh) {
+                refreshToken().then(function(response) {
+                    if (response.status === 200) {
+                        send(refresh);
+                    }
+                });
+            } else {
+                send(refresh);
+            }
+        };
+
+        function send(refresh) {
+
+            if (refresh) {
+                $scope.isSending = true;
+                $scope.sendLogResponse = null;
+            } else {
+                $scope.isSending2 = true;
+                $scope.sendLogResponse2 = null;
+            }
 
             $http({
                 method: 'POST',
@@ -211,18 +245,39 @@ angular.module('App.Controllers')
                     'authorization': 'Bearer ' + $scope.oauth_response.access_token
                 },
             }).success(function(data, status, headers) {
-                $log.debug('remotelog response', status);
-                $scope.isSending = false;
-                $scope.sendLogResponse = {
-                    statusCode: status,
-                    body: data,
-                    headers: headers()
-                };
-            }).error(function(response) {
+                $log.debug('remotelog response', data);
+                if (refresh) {
+                    $scope.isSending = false;
+                    $scope.sendLogResponse = {
+                        statusCode: status,
+                        body: data,
+                        headers: headers()
+                    };
+                } else {
+                    $scope.isSending2 = false;
+                    $scope.sendLogResponse2 = {
+                        statusCode: status,
+                        body: data,
+                        headers: headers()
+                    };
+                }
+            }).error(function(response, statusCode) {
                 $log.debug('remotelog error', response);
-                $scope.isSending = false;
-                $scope.sendLogResponse = response;
                 $rootScope.preventNextLocation = true;
+                if (refresh) {
+                    $scope.isSending = false;
+                    $scope.sendLogResponse = response;
+                } else {
+                    $scope.isSending2 = false;
+                    $scope.sendLogResponse2 = response;
+                    if (statusCode === 401) {
+                        refreshToken().then(function(response) {
+                            if (response.status === 200) {
+                                send();
+                            }
+                        });
+                    }
+                }
             });
-        };
+        }
     });
