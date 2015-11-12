@@ -21,13 +21,13 @@
 angular.module('App.Controllers')
 
 .controller('SecurityController',
-    function($scope, $log, $http, $window, $interval, $rootScope) {
+    function($scope, $log, $http, $window, $interval, $rootScope, $state) {
 
         'use strict';
 
         $log.debug('SecurityController');
 
-        $scope.url = $window.location.href;
+        $scope.url = $window.location.origin + $window.location.pathname + '#' + $state.current.url;
 
         $scope.remembered = JSON.parse(localStorage.getItem('remember'));
 
