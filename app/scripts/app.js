@@ -21,7 +21,7 @@
 
 
 /*globals AppInit:false */
-(function() {
+(function () {
     'use strict';
     angular.module('App.Controllers', []);
     angular.module('App.Filters', []);
@@ -50,12 +50,12 @@
         'ngGrid',
         'ja.qr',
         'xeditable'
-    ]).run(function($log, $rootScope, $window) {
+    ]).run(function ($log, $rootScope, $window) {
 
         $log.debug('App run', $window.location.search);
 
         $rootScope.$on('$locationChangeStart',
-            function(angularEvent, newUrl, oldUrl) {
+            function (angularEvent, newUrl, oldUrl) {
 
                 $log.debug('$locationChangeStart', newUrl);
                 $log.debug('$locationChangeStart', oldUrl);
@@ -80,14 +80,17 @@
 
     AppInit.setConfig({
         environment: {
-            'REST_CONFIG': {
-                'BaseUrl': 'api/v1',
-                'RequestSuffix': '.json'
+            REST_CONFIG: {
+                BaseUrl: 'api/v1',
+                RequestSuffix: '.json'
             },
-            'SERVERPUSH_CONFIG': {
-                'BaseUrl': 'http://127.0.0.1:3000'
+            WEBSOCKETS_CONFIG: {
+                WS_URL: 'https://appverse.gftlabs.com/websocket',
+                WS_TYPE: 'auto',
+                WS_PROTOCOL_TYPE: 'auto',
+                WS_INTERVAL: 0
             },
-            'I18N_CONFIG': {
+            I18N_CONFIG: {
                 LocaleFilePattern: 'resources/i18n/angular/angular-locale_{{locale}}.js'
             }
         },
