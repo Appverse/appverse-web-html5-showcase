@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-md-6">
+        <div ng-include src="'views/websocket/websocket-code.html'"></div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Explanation</div>
+            <div class="panel-body">
+                <p>CPU utilization values are sent by a WebSsocket server to the web client. The client is using a STOMP connection over the WebSocket protocol using the SockJS implementation.
+                    <br>
+                    <br> Library used :
+                    <br>
+                    <a href="https://github.com/jmesnil/stomp-websocket">STOMP.js</a>.
+                    <br>
+                    <a href="https://github.com/sockjs/sockjs-client">SockJS</a>.</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<tabset>
+    <tab heading="HTML">
+        <pre hljs include="'views/websocket/websocket-code.html'" language="html"></pre>
+    </tab>
+    <tab heading="JS">
+        <pre hljs include="'scripts/controllers/websocket-controller-code.js'" language="javascript"></pre>
+    </tab>
+</tabset>

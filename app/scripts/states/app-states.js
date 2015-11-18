@@ -122,6 +122,13 @@ angular.module('showcaseApp')
             templateUrl: 'views/cache/cache-simpleidb.html'
         })
 
+        .state('websocket', {
+            parent: 'performance',
+            url: '/websocket',
+            templateUrl: 'views/websocket/websocket.html',
+            controller: 'WebsocketController'
+        })
+
         .state('security', {
             url: '/security',
             templateUrl: 'views/security/security.html',
