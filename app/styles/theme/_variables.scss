@@ -592,7 +592,7 @@ $tooltip-max-width:           200px;
 //** Tooltip text color
 $tooltip-color:               #fff;
 //** Tooltip background color
-$tooltip-bg:                  #000;
+$tooltip-bg:                  $gray;
 $tooltip-opacity:             .9;
 
 //** Tooltip arrow width
@@ -864,7 +864,7 @@ $breadcrumb-bg:                 #f5f5f5;
 //** Breadcrumb text color
 $breadcrumb-color:              #ccc;
 //** Text color of current page in the breadcrumb
-$breadcrumb-active-color:       $gray-light;
+$breadcrumb-active-color:       $gray;
 //** Textual separator for between breadcrumb elements
 $breadcrumb-separator:          "/";
 
