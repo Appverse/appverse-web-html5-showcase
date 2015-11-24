@@ -1,84 +1,109 @@
+def jobName = "${env.JOB_NAME}"
+def jenkinsHome = "${env.JENKINS_HOME}"
+
+def Properties props = new Properties()
+def File propertiesFile 
+
+if ( jobName.startsWith("develop") )
+	propertiesFile = new File(jenkinsHome + '/jobs/' + jobName + '/workspace@script/Jenkinsfile.properties')
+else
+{
+	def pos = jobName.indexOf ( "/" )
+	def firstPartJob = jobName.substring ( 0,  pos);
+	def secondPartJob = jobName.substring ( pos + 1);
+
+	propertiesFile = new File(jenkinsHome + '/jobs/' + firstPartJob + '/branches/' + secondPartJob + '/workspace@script/Jenkinsfile.properties')
+}
+
+props.load(propertiesFile.newDataInputStream())
 
 
 node('docker'){
+	def branchName = currentBranch()
 	
-	def Properties props = new Properties()
+	def applicationRepo = props.applicationRepo
+	def credentials = props.credentials
+	def dataVolume = props.dataVolume
+	def distFolder = props.distFolder
+	def workspaceNode = props.workspaceNode
+	
+	def dockerImageName = props.dockerImageName
+	def dockerContainerName = props.dockerContainerName
+	def contextPath = props.contextPath
+	def host= props.host
+	def sonarHost = props.sonarHost
+	def sonarJdbc = props.sonarJdbc
+	def port = props.port
+	
+	def developmentHost = props.developmentHost
+	def registryPort = props.registryPort
+	
+	def enableBinaryArchive = props.enableBinaryArchive.toBoolean()
+	def enableTestResultArchive = props.enableTestResultArchive.toBoolean()
+	def enableE2ETesting = props.enableE2ETesting.toBoolean()
+	def enableStressTesting = props.enableStressTesting.toBoolean()
+	def enableSecurityTesting = props.enableSecurityTesting.toBoolean()
+	def enableSCA = props.enableSCA.toBoolean()
+	def enableMashupReporting = props.enableMashupReporting.toBoolean()
+	
+	def enableDeploy = props.enableDeploy.toBoolean()
+	def enableTagRelease = props.enableTagRelease.toBoolean()
+	def enableNextSnapshot = props.enableNextSnapshot.toBoolean()
+	def deployUserName = props.deployUserName
+	def deployMail = props.deployMail
+	
+	def enableBuildImage = props.enableBuildImage.toBoolean()
+	//enableDeployCI = true requires buildImage must be true too
+	def enableDeployCI = props.enableDeployCI.toBoolean()
+	//enableRegistryPublish = true requires enableBuildImage must be true too
+	def enableRegistryPublish = props.enableRegistryPublish.toBoolean()
+	//enableDeployDev = true requires enableRegistryPublish must be true too
+	def enableDeployDev = props.enableDeployDev.toBoolean()
+	def deploymentJob = props.deploymentJob
+	def deploymentUrl = props.deploymentUrl
+	
+	def image
+	def version = null
+	def registryHost = developmentHost + ':' + registryPort
 	
 	stage 'clean'
-		//clean job workspace
-		sh 'sudo rm -rf * && sudo rm -rf .git && sudo rm -fr .tmp && sudo rm -fr .sonar'
-
-		//deleteDir()
-	
-	stage 'checkout project'
-		checkout scm
-	
-	
-	stage 'read properties'
-		
-	
-		def properties = readFile ('Jenkinsfile.properties')
-	
-		props.load(new StringReader(properties))
-		
-		def branchName = currentBranch()
-		
-		def applicationRepo = props.applicationRepo
-		def credentials = props.credentials
-		def dataVolume = props.dataVolume
-		def distFolder = props.distFolder
-		
-		def dockerImageName = props.dockerImageName
-		def dockerContainerName = props.dockerContainerName
-		def contextPath = props.contextPath
-		def host= props.host
-		def sonarHost = props.sonarHost
-		def sonarJdbc = props.sonarJdbc
-		def port = props.port
-		
-		def developmentHost = props.developmentHost
-		def registryPort = props.registryPort
-		
-		def enableBinaryArchive = props.enableBinaryArchive.toBoolean()
-		def enableTestResultArchive = props.enableTestResultArchive.toBoolean()
-		def enableE2ETesting = props.enableE2ETesting.toBoolean()
-		def enableStressTesting = props.enableStressTesting.toBoolean()
-		def enableSecurityTesting = props.enableSecurityTesting.toBoolean()
-		def enableSCA = props.enableSCA.toBoolean()
-		def enableMashupReporting = props.enableMashupReporting.toBoolean()
-		
-		def enableDeploy = props.enableDeploy.toBoolean()
-		def enableTagRelease = props.enableTagRelease.toBoolean()
-		def enableNextSnapshot = props.enableNextSnapshot.toBoolean()
-		def deployUserName = props.deployUserName
-		def deployMail = props.deployMail
-		
-		def enableBuildImage = props.enableBuildImage.toBoolean()
-		//enableDeployCI = true requires buildImage must be true too
-		def enableDeployCI = props.enableDeployCI.toBoolean()
-		//enableRegistryPublish = true requires enableBuildImage must be true too
-		def enableRegistryPublish = props.enableRegistryPublish.toBoolean()
-		//enableDeployDev = true requires enableRegistryPublish must be true too
-		def enableDeployDev = props.enableDeployDev.toBoolean()
-		def deploymentJob = props.deploymentJob
-		
-		def image
-		def version = null
-		def registryHost = developmentHost + ':' + registryPort
-
+	//clean job workspace
+	sh 'sudo rm -rf * && sudo rm -rf .git && sudo rm -fr .tmp && sudo rm -fr .sonar'
+	//remove everything except node_modules, app/bower_components and folders starting with dot
+	//sh 'sudo find . ! -path \"./node_modules*\" ! -path \"./app/bower_components*\" ! -path \"./.*\"  ! -name \"app\" -print'
+	//sh 'sudo find . ! -path \"./node_modules*\" ! -path \"./app/bower_components*\" ! -path \"./.*\"  ! -name \"app\" -delete'
+	//remove .git
+	//sh 'sudo rm -rf .git'
+	//sh 'sudo rm -rf .tmp'
 	
 	stage 'build'
 	//Run build inside maven container
 	//docker.image('digitallyseamless/nodejs-bower-grunt').inside('-v '+ workspaceNode + ':' + workspaceNode + ' -v ' + dataVolume + ":" + dataVolume + ' -v /data/node_modules:/usr/local/lib/node_modules -u=\"root\"' )
-	docker.image('digitallyseamless/nodejs-bower-grunt').inside('-v ' + dataVolume + ":" + dataVolume + ' -v ' + dataVolume + '/npm_cache:/root/.npm -u=\"root\"')
+	docker.image('digitallyseamless/nodejs-bower-grunt').inside('-v '+ workspaceNode + ':' + workspaceNode + ' -v ' + dataVolume + ":" + dataVolume + ' -v ' + dataVolume + '/npm_cache:/root/.npm -u=\"root\"')
 	{
-		
-		version = getVersion()
-		echo "Version " + version
+		configureSshKeys ( dataVolume )
+				
+		if ( isDevelopBranch( branchName ) )
+		{
+			echo "Branch Develop"
+			git branch: branchName, credentialsId: credentials, changelog: true, poll: false, url: applicationRepo
+			version = getVersion()
+			echo "Version " + version
+			//version = getVersion()
+			//echo "Version " + versionOld + " changed to: " + version
+			
+		}
+		//multibranch job
+		else
+		{
+			checkout scm
+			version = getVersion()
+			echo "Version " + version
+		}
 		
 		try
 		{
-			sh 'git config --global url.\"https://\".insteadOf git://'  
+			sh 'git config --global url.\"git@github.com:\".insteadOf git://github.com/'  
 			//sh 'npm install -g bower grunt-cli'
 			sh 'npm install'
 			sh 'bower install'
@@ -87,7 +112,6 @@ node('docker'){
 		}
 		finally
 		{
-			sh 'git config --global --unset url.\"https://\".insteadOf git://'
 			if ( enableBinaryArchive )
 				archive 'dist/web/**'
 			if (enableTestResultArchive)
@@ -173,11 +197,15 @@ node('docker'){
 			//image = docker.image ("pierrevincent/sonar-runner -Dsonar.branch=" + branchName + " -Dsonar.host.url=http://172.22.4.39:9000 -Dsonar.jdbc.url=jdbc:mysql://172.22.4.39:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true" )
 			//image = docker.image ("pierrevincent/sonar-runner")
 			//image.run("-v " + workspaceNode + "/" + jobName + ":/data")
-			def pwd = "${env.PWD}"
-			def fullJob = "${env.JOB_NAME}"
-			def currentFolder = pwd + '/workspace/' + fullJob
 	
-			sh "docker run -d -v " + currentFolder + ":/data pierrevincent/sonar-runner -Dsonar.branch=" + branchName + 
+			try {
+				sh "docker stop sonar-runner-" + dockerContainerName
+				sh "docker rm sonar-runner-" + dockerContainerName
+			} catch (Exception _) {
+				echo "no container to stop"
+			}
+				
+			sh "docker run --name=sonar-runner-" + dockerContainerName + " -d -v " + workspaceNode + "/" + jobName + ":/data pierrevincent/sonar-runner -Dsonar.branch=" + branchName + 
 				" -Dsonar.host.url=" + sonarHost + " '-Dsonar.jdbc.url=" + sonarJdbc + "'"
 			
 	}
@@ -226,11 +254,10 @@ node('docker'){
 		{
 		    //Run build inside maven container
 			
-			docker.image('digitallyseamless/nodejs-bower-grunt').inside('-v ' + dataVolume + ":" + dataVolume + ' -v ' + dataVolume + '/npm_cache:/root/.npm -u=\"root\"')
+			docker.image('digitallyseamless/nodejs-bower-grunt').inside('-v '+ workspaceNode + ':' + workspaceNode + ' -v ' + dataVolume + ":" + dataVolume + ' -v ' + dataVolume + '/npm_cache:/root/.npm -u=\"root\"')
 			//docker.image('maven:3.3.3-jdk-8').inside('-v '+ workspaceNode + ':' + workspaceNode + ' -v ' + dataVolume + ":" + dataVolume + ' -u=\"root\"' )
 			{
-				if (enableTagRelease || enableNextSnapshot)
-					configureSshKeys ( dataVolume )
+				configureSshKeys ( dataVolume )
 				
 				if ( enableTagRelease )
 				{
@@ -246,7 +273,7 @@ node('docker'){
 				{
 					stage name: 'Next Snapshot', concurrency: 1
 					
-						nextSnapshot(branchName, dataVolume)
+						nextSnapshot(branchName, dataVolume, workspaceNode)
 				}
 				else
 					echo "Next Snapshot disabled"
@@ -277,9 +304,15 @@ node('docker'){
 			stage name: 'Deploy DEV', concurrency: 1
 	
 				//Although job is develop-deployment, it will work also with hot-fixes
-				build deploymentJob
+				//build deploymentJob
+				sh 'curl ' + deploymentUrl
 		  }
 	}
+	
+	stage 'end clean'
+	//clean job workspace
+	sh 'sudo rm -rf * && sudo rm -rf .git && sudo rm -fr .tmp && sudo rm -fr .sonar'
+
 }
 
 def configureSshKeys ( dataVolume )
@@ -326,7 +359,7 @@ def tagRelease(version, branchName, deployUserName, deployMail) {
 }
 
 
-def nextSnapshot(branchName, dataVolume) {
+def nextSnapshot(branchName, dataVolume, workspaceNode) {
 	
 	echo 'Next Snapshot'
 	
@@ -369,16 +402,16 @@ def isHotFixBranch ( jobName ) {
 }
 
 def currentBranch() {
-	
-	def jobName = "${env.JOB_NAME}"
-	
-	def posFirstSlash = jobName.indexOf ( "/" )
-	def posLastSlash = jobName.lastIndexOf ("/")
-	def organizationName = jobName.substring ( 0,  posFirstSlash);
-	def repoName = jobName.substring ( posFirstSlash + 1, posLastSlash);
-	def branchName = jobName.substring ( posLastSlash + 1)
-	
-    return branchName
+  def jobName = "${env.JOB_NAME}"
+  if ( isDevelopBranch(jobName) )
+	return "develop"
+  else
+  {
+	  def pos = jobName.indexOf ( "/" )
+	  //String.substring is blocked by script-security-plugin. It's needed to active in Jenkins Management
+	  //https://issues.jenkins-ci.org/browse/JENKINS-30252
+	  return jobName.substring ( pos + 1);
+  }
 }
 
 def Properties parsePropertiesString(String s) {

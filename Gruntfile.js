@@ -150,6 +150,42 @@ module.exports = function (grunt) {
                 }]
             }
         },
+		  options: {
+	      bump: true, //default: true
+	      changelog: false, //default: false
+	      //changelogText: '<%= version %>\n', //default: '### <%= version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n'
+	      file: 'package.json', //default: package.json
+	      additionalFiles: ['bower.json'],
+	      add: false, //default: true
+	      commit: false, //default: true
+	      tag: false, //default: true
+	      push: false, //default: true
+	      pushTags: false, //default: true
+	      npm: false, //default: true
+	      npmtag: true, //default: no tag
+	      indentation: '\t' //default: '  ' (two spaces)
+	      //folder: 'folder/to/publish/to/npm' //default project root
+	      //tagName: 'some-tag-<%= version %>', //default: '<%= version %>'
+	      //commitMessage: 'check out my release <%= version %>', //default: 'release <%= version %>'
+	      //tagMessage: 'tagging version <%= version %>', //default: 'Version <%= version %>',
+	      /*
+	      beforeBump: [], // optional grunt tasks to run before file versions are bumped
+	      afterBump: [], // optional grunt tasks to run after file versions are bumped
+	      beforeRelease: [], // optional grunt tasks to run after release version is bumped up but before release is packaged
+	      afterRelease: [], // optional grunt tasks to run after release is packaged
+	      updateVars: [], // optional grunt config objects to update (this will update/set the version property on the object specified)
+	      
+	      github: {
+	        apiRoot: 'https://git.example.com/v3', // Default: https://github.com
+	        repo: 'geddski/grunt-release', //put your user/repo here
+	        accessTokenVar: 'GITHUB_ACCESS_TOKE', //ENVIRONMENT VARIABLE that contains GitHub Access Token
+
+	        // Or you can use username and password env variables, we discourage you to do so
+	        usernameVar: 'GITHUB_USERNAME', //ENVIRONMENT VARIABLE that contains GitHub username
+	        passwordVar: 'GITHUB_PASSWORD' //ENVIRONMENT VARIABLE that contains GitHub password
+	      }
+	      */
+	    },
         connect: {
             options: {
                 protocol: 'http',

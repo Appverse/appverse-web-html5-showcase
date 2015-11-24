@@ -20,6 +20,7 @@
     "grunt-contrib-watch": "0.5.2",
     "grunt-docular": "0.1.2",
     "grunt-google-cdn": "0.2.0",
+	"grunt-release": "^0.13.0",
     "grunt-istanbul": "0.3.0",
     "grunt-karma": "0.8",
     "grunt-ng-annotate": "0.1",
