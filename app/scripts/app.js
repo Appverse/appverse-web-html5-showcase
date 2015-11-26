@@ -26,9 +26,6 @@
     angular.module('App.Controllers', []);
     angular.module('App.Filters', []);
     angular.module('showcaseApp', [
-        'appverse.serverPush',
-        'appverse.cache',
-        'appverse.rest',
         'ngAnimate',
         'ui.bootstrap',
         'angularRipple',
@@ -37,14 +34,16 @@
         'rzModule',
         'rt.resize',
         'chart.js',
-        'appverse.router',
         'App.Controllers',
         'App.Filters',
+        'appverse.cache',
         'appverse.detection',
         'appverse.logging',
         'appverse.performance',
+        'appverse.rest',
+        'appverse.router',
+        'appverse.serverPush',
         'appverse.translate',
-        'appverse.security',
         'appverse',
         'hljs',
         'ngGrid',
@@ -83,12 +82,6 @@
             REST_CONFIG: {
                 BaseUrl: 'api/v1',
                 RequestSuffix: '.json'
-            },
-            WEBSOCKETS_CONFIG: {
-                WS_URL: 'https://appverse.gftlabs.com/websocket',
-                WS_TYPE: 'auto',
-                WS_PROTOCOL_TYPE: 'auto',
-                WS_INTERVAL: 0
             },
             I18N_CONFIG: {
                 LocaleFilePattern: 'resources/i18n/angular/angular-locale_{{locale}}.js'
