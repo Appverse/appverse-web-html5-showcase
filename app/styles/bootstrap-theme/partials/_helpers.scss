@@ -1,0 +1,173 @@
+//Text Right
+.text-right {
+    text-align: right;
+}
+
+//Margins
+
+//Margin top
+.mt-xs {
+    margin-top: .5em;
+}
+
+.mt-sm {
+    margin-top: 1em;
+}
+
+.mt-md {
+    margin-top: 1.5em;
+}
+
+.mt-lg {
+    margin-top: 2em;
+}
+
+//Margin bottom
+.mb-xs {
+    margin-bottom: .5em;
+}
+
+.mb-sm {
+    margin-bottom: 1em;
+}
+
+.mb-md {
+    margin-bottom: 1.5em;
+}
+
+.mb-lg {
+    margin-bottom: 2em;
+}
+
+//Margin left
+.ml-xs {
+    margin-left: .5em;
+}
+
+.ml-sm {
+    margin-left: 1em;
+}
+
+.ml-md {
+    margin-left: 1.5em;
+}
+
+.ml-lg {
+    margin-left: 2em;
+}
+
+//Margin right
+.mr-xs {
+    margin-right: .5em;
+}
+
+.mr-sm {
+    margin-right: 1em;
+}
+
+.mr-md {
+    margin-right: 1.5em;
+}
+
+.mr-lg {
+    margin-right: 2em;
+}
+
+//Paddings
+
+//Padding top
+.pt-xs {
+    padding-top: .5em;
+}
+
+.pt-sm {
+    padding-top: 1em;
+}
+
+.pt-md {
+    padding-top: 1.5em;
+}
+
+.pt-lg {
+    padding-top: 2em;
+}
+
+//Padding bottom
+.pb-xs {
+    padding-bottom: .5em;
+}
+
+.pb-sm {
+    padding-bottom: 1em;
+}
+
+.pb-md {
+    padding-bottom: 1.5em;
+}
+
+.pb-lg {
+    padding-bottom: 2em;
+}
+
+//Padding left
+.pl-xs {
+    padding-left: .5em;
+}
+
+.pl-sm {
+    padding-left: 1em;
+}
+
+.pl-md {
+    padding-left: 1.5em;
+}
+
+.pl-lg {
+    padding-left: 2em;
+}
+
+//Padding right
+.pr-xs {
+    padding-right: .5em;
+}
+
+.pr-sm {
+    padding-right: 1em;
+}
+
+.pr-md {
+    padding-right: 1.5em;
+}
+
+.pr-lg {
+    padding-right: 2em;
+}
+
+/* Style to add pointer for tabs as recommended by UI Angular bootstrap */
+
+.nav,
+.pagination,
+.carousel,
+.panel-title a {
+    cursor: pointer;
+}
+
+
+/* Style pre tags for Markup and Javascript tabs */
+
+pre > pre {
+    margin-bottom: 0;
+    padding: 0;
+    border: 0;
+}
+
+pre[hljs] {
+    padding: 0;
+    background-color: #fff;
+}
+
+code.javascript {
+    span.hljs-comment {
+        display: none;
+    }
+}

@@ -1,0 +1,32 @@
+//MODAL COMPONENT
+.modal-overall {
+    z-index: 100000 !important;
+}
+
+.modal-dialog {
+    .modal-content {
+        .modal-header {
+            border: none;
+
+            .modal-title {
+                font-weight: 500;
+                font-size: 14px;
+                color: $text-color;
+            }
+        }
+
+        .modal-body {
+            margin: 0 15px;
+            border-radius: 4px;
+            background-color: #ededed;
+        }
+
+        .modal-footer {
+            border: none;
+
+            .btn {
+                min-width: 80px;
+            }
+        }
+    }
+}

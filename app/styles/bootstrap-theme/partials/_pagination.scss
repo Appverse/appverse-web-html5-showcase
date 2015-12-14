@@ -1,0 +1,50 @@
+//PAGINATION
+.pagination {
+    background: #fff;
+    border: 1px solid #d2d2d2;
+    height: 45px;
+
+    >li {
+        display: inline-block;
+        padding: 10px;
+
+        >a {
+            padding: 1px 6px;
+            border-radius: 50%;
+            height: 23px;
+            width: 23px;
+            line-height: 20px;
+            text-align: center;
+        }
+        &:first-child > a,
+        &:last-child > a {
+            width: auto;
+            border-radius: 5px;
+        }
+    }
+
+    &.pagination-lg {
+        height: 52px;
+
+        >li {
+            >a {
+                height: 30px;
+                width: 30px;
+                line-height: 27px;
+            }
+        }
+    }
+
+    &.pagination-sm {
+        height: 38px;
+
+        >li {
+            >a {
+                height: 18px;
+                width: 18px;
+                line-height: 15px;
+                padding: 1px;
+            }
+        }
+    }
+}

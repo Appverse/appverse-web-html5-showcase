@@ -1,0 +1,313 @@
+// NAVBAR STYLES
+// Navbar =====================================================================
+.navbar {
+    filter:none;
+
+    &-default {
+        .badge {
+            background-color: #fff;
+            color: $navbar-default-bg;
+        }
+
+        .navbar-toggle {
+            border-radius: 5px;
+
+            .icon-bar {
+                background-color: $text-color;
+            }
+
+            &[aria-expanded="true"] {
+                border-color: $brand-primary;
+
+                .icon-bar {
+                    background-color: $brand-primary;
+                }
+            }
+        }
+    }
+
+    .navbar-header {
+        .user-panel {
+            display: none;
+        }
+    }
+
+    .navbar-collapse {
+        float: left;
+
+        .searchbar {
+            display: none;
+        }
+    }
+
+    .navbar-brand {
+        min-width: 80px;
+        width: 100px;
+        background-image: url('images/logo.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center;
+        color: transparent !important;
+        margin: 0 20px !important;
+
+        &:hover,
+        &:focus {
+            color: transparent !important;
+        }
+    }
+
+    .user-panel {
+        .user-menu {
+            >a {
+                .user-picture {
+                    width: 25px;
+                    display: inline-block;
+
+                    img {
+                        border-radius: 50%;
+                    }
+                }
+            }
+
+            .dropdown-toggle {
+
+            }
+        }
+
+        .nav {
+            >li {
+                >a {
+                    padding-left: 8px;
+                    padding-right: 8px;
+                }
+            }
+        }
+
+        .dropdown {
+            .dropdown-menu {
+                left: initial;
+                right: 0;
+            }
+
+            &.help {
+                .caret {
+                    margin-top: -3px;
+                }
+            }
+        }
+    }
+
+    .navbar-nav > li > a,
+    &-brand {
+        text-shadow: none;
+
+        &:hover {
+            color: $brand-primary !important;
+        }
+    }
+
+    .navbar-nav > li {
+        >a {
+            max-height: 60px;
+
+            i {
+                margin-right: .5em;
+                transition: all .2s linear;
+            }
+
+            ng-md-icon {
+                fill: $text-color;
+                transition: all .2s linear;
+            }
+
+            &:hover {
+                i {
+                    &.glyphicon {
+                        @extend .zoom;
+
+                        &.glyphicon-pencil {
+                            @extend .rotate;
+                        }
+
+                        &.glyphicon-home {
+                            @extend .zoom;
+                        }
+
+                        &.glyphicon-th-list {
+                            @extend .swingX;
+                        }
+
+                        &.glyphicon-apple {
+                            @extend .swingY;
+                        }
+                    }
+                }
+
+                ng-md-icon {
+                    fill: $brand-primary;
+
+                    &[icon="border_all"] {
+                        @extend .swingX;
+                    }
+
+                    &[icon="edit"] {
+                        @extend .rotate;
+                    }
+
+                    &[icon="home"] {
+                        @extend .fancyRotate;
+                    }
+
+                    &[icon="extension"] {
+                        @extend .rotateQuarter;
+                    }
+
+                    &[icon="insert_chart"] {
+                        @extend .pulse;
+                    }
+                }
+            }
+        }
+
+        &.active {
+            a {
+                border-bottom: 3px solid $brand-primary;
+                padding-bottom: 17px;
+
+                ng-md-icon {
+                    fill: $brand-primary;
+                }
+            }
+        }
+    }
+
+    .navbar-form {
+        input {
+            height: 30px;
+        }
+        margin: 15px 0;
+    }
+
+    &-inverse {
+        filter:none;
+        border-bottom: 1px solid darken($navbar-inverse-bg, 10%);
+
+        .navbar-nav> li {
+            &.active {
+                a {
+                    border-bottom: 3px solid #fff;
+                    padding-bottom: 17px;
+                }
+            }
+
+            >a {
+                &:hover {
+                    color: lighten($navbar-inverse-bg, 25%) !important;
+                }
+            }
+        }
+
+        .badge {
+            background-color: #fff;
+            color: $navbar-inverse-bg;
+        }
+
+        .navbar-brand {
+            background-image: url('images/logo_inverse.png');
+
+            &:hover {
+                color: lighten($navbar-inverse-bg, 25%);
+            }
+        }
+
+        .dropdown-menu {
+            background-color: #fff;
+
+            >li {
+                >a {
+                    color: $text-color;
+
+                    &:hover {
+                        background-color: $brand-primary;
+                        color: #fff;
+                    }
+                }
+
+                &.divider {
+                    background-color: $gray-light;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $grid-float-breakpoint-max) {
+    .navbar {
+        >.user-panel {
+            display: none;
+        }
+
+        .navbar-collapse {
+            float: none;
+
+            .searchbar {
+                display: block;
+                border: none;
+                margin: 0;
+                padding: 0;
+                padding-top: 15px;
+            }
+        }
+
+        .navbar-header {
+            .user-panel {
+                display: block;
+                margin-right: 15px;
+
+                >ul {
+                    margin-bottom: 0;
+                    margin-top: 7px;
+
+                    >li {
+                        float: left;
+                    }
+                }
+
+                .dropdown-menu {
+                    position: absolute;
+                    background-color: $brand-primary;
+                    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+
+                    >li {
+                        >a {
+                            color: #fff;
+
+                            &:hover {
+                                color: $brand-primary;
+                                background-color: #fff;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .dropdown-header {
+            color: #fff;
+        }
+
+        .dropdown-menu {
+            a {
+                color: #fff;
+            }
+        }
+
+        .navbar-nav > li {
+            &.active {
+                >a {
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+}

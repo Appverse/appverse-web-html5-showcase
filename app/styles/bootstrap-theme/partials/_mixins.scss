@@ -1,0 +1,130 @@
+//MIXINS
+//MIXINS AND FUNCTIONS
+//CUSTOM BACKGROUND IMAGE
+@mixin bgimage($path, $size, $position, $repeat) {
+    background-image: url($path);
+    background-size: $size;
+    background-position: $position;
+    background-repeat: $repeat;
+}
+//DISPLAY FLEX - BOX
+@mixin flexbox {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+//FLEX VALUE
+@mixin flex($fg: 1, $fs: null, $fb: null) {
+
+    // Set a variable to be used by box-flex properties
+    $fg-boxflex: $fg;
+
+    // Box-Flex only supports a flex-grow value so let's grab the
+    // first item in the list and just return that.
+
+    @if type-of($fg) 'list' {
+        $fg-boxflex: nth($fg, 1);
+    }
+    -webkit-box-flex: $fg-boxflex;
+    -webkit-flex: $fg $fs $fb;
+    -moz-box-flex: $fg-boxflex;
+    -moz-flex: $fg $fs $fb;
+    -ms-flex: $fg $fs $fb;
+    flex: $fg $fs $fb;
+}
+//FLEX DIRECTION
+@mixin flex-direction($value: row) {
+    @if $value row-reverse {
+        -webkit-box-direction: reverse;
+        -webkit-box-orient: horizontal;
+    }@else if $value column {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: vertical;
+    }@else if $value column-reverse {
+        -webkit-box-direction: reverse;
+        -webkit-box-orient: vertical;
+    }@else {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: horizontal;
+    }
+
+    -webkit-flex-direction: $value;
+    -moz-flex-direction: $value;
+    -ms-flex-direction: $value;
+    flex-direction: $value;
+}
+//JUSTIFY CONTENT
+@mixin justify-content($value: flex-start) {
+    @if $value flex-start {
+        -webkit-box-pack: start;
+        -ms-flex-pack: start;
+    }@else if $value flex-end {
+        -webkit-box-pack: end;
+        -ms-flex-pack: end;
+    }@else if $value space-between {
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+    }@else if $value space-around {
+        -ms-flex-pack: distribute;
+    }@else {
+        -webkit-box-pack: $value;
+        -ms-flex-pack: $value;
+    }
+
+    -webkit-justify-content: $value;
+    -moz-justify-content: $value;
+    justify-content: $value;
+}
+//ALIGN ITEMS
+@mixin align-items($value: stretch) {
+    @if $value flex-start {
+        -webkit-box-align: start;
+        -ms-flex-align: start;
+    }@else if $value flex-end {
+        -webkit-box-align: end;
+        -ms-flex-align: end;
+    }@else {
+        -webkit-box-align: $value;
+        -ms-flex-align: $value;
+    }
+
+    -webkit-align-items: $value;
+    -moz-align-items: $value;
+    align-items: $value;
+}
+//TARGET / BASE UNIT CONVERSION
+@function toUnit($targetUnit, $base, $unit) {
+    $result: $targetUnit / $base;
+
+    @if $unit 'em' {
+        @return $result + em;
+    }@else {
+        @return $result * 100%;
+    }
+}
+//ALIGN SELF MIXIN
+@mixin align-self($value: auto) {
+
+    // No Webkit Box Fallback.
+    -webkit-align-self: $value;
+    -moz-align-self: $value;
+
+    @if $value flex-start {
+        -ms-flex-item-align: start;
+    }@else if $value flex-end {
+        -ms-flex-item-align: end;
+    }@else {
+        -ms-flex-item-align: $value;
+    }
+    align-self: $value;
+}
+
+@mixin btn-shadow($color) {
+    @include gradient-vertical-three-colors(lighten($color, 8%), $color, 60%, darken($color, 4%));
+    filter:none;
+    border-bottom: 1px solid darken($color, 10%);
+}
+
+//END OF MIXINS AND FUNCTIONS

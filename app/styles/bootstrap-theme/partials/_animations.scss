@@ -1,0 +1,418 @@
+//FADE
+//make keyframes that tell the start state and the end state of our object
+
+@-webkit-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    opacity: 0;
+    /* make things invisible upon start */
+
+    -webkit-animation: fadeIn ease-in 1;
+    /* call our keyframe named fadeIn, use animattion ease-in and repeat it only 1 time */
+
+    -moz-animation: fadeIn ease-in 1;
+    animation: fadeIn ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    /* this makes sure that after animation is done we remain at the last keyframe value (opacity: 1)*/
+
+    -moz-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-duration: 0.5s;
+    -moz-animation-duration: 0.5s;
+    animation-duration: 0.5s;
+}
+
+.fade-in.ng-enter {
+    animation: fadeIn 1s;
+}
+
+.fade-in.ng-leave {
+    animation: fadeOut 1s;
+}
+
+.fade-enter-setup, .fade-leave-setup {
+  transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s;
+}
+
+.fade-enter-setup,
+
+.fade-leave-setup.fade-leave-start {
+  opacity: 0;
+}
+
+.fade-leave-setup,
+
+.fade-enter-setup.fade-enter-start {
+  opacity: 1;
+}
+
+/*ANIMATIONS*/
+.rotate {
+    transform: rotate(360deg);
+}
+
+.counter-rotate {
+    transform: rotate(-360deg);
+}
+
+.rotateQuarter {
+    transform: rotate(45deg);
+}
+
+.zoom {
+    transform: scale(1.2);
+}
+
+.swingX {
+    -webkit-animation: swingX .7s ease;
+    animation: swingX .7s ease;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+}
+
+.swingY {
+    -webkit-animation: swingY .7s ease;
+    animation: swingY .7s ease;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+}
+
+.fancyRotate {
+    -webkit-animation: fancyRotate .7s ease;
+    animation: fancyRotate .7s ease;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+}
+
+@-webkit-keyframes swingX {
+    15% {
+        -webkit-transform: translateX(5px);
+        transform: translateX(5px);
+    }
+
+    30% {
+        -webkit-transform: translateX(-5px);
+        transform: translateX(-5px);
+    }
+
+    50% {
+        -webkit-transform: translateX(3px);
+        transform: translateX(3px);
+    }
+
+    65% {
+        -webkit-transform: translateX(-3px);
+        transform: translateX(-3px);
+    }
+
+    80% {
+        -webkit-transform: translateX(2px);
+        transform: translateX(2px);
+    }
+
+    100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+}
+
+@keyframes swingX {
+    15% {
+        -webkit-transform: translateX(5px);
+        transform: translateX(5px);
+    }
+
+    30% {
+        -webkit-transform: translateX(-5px);
+        transform: translateX(-5px);
+    }
+
+    50% {
+        -webkit-transform: translateX(3px);
+        transform: translateX(3px);
+    }
+
+    65% {
+        -webkit-transform: translateX(-3px);
+        transform: translateX(-3px);
+    }
+
+    80% {
+        -webkit-transform: translateX(2px);
+        transform: translateX(2px);
+    }
+
+    100% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+    }
+}
+
+@-webkit-keyframes swingY {
+    15% {
+        -webkit-transform: translateY(5px);
+        transform: translateY(5px);
+    }
+
+    30% {
+        -webkit-transform: translateY(-5px);
+        transform: translateY(-5px);
+    }
+
+    50% {
+        -webkit-transform: translateY(3px);
+        transform: translateY(3px);
+    }
+
+    65% {
+        -webkit-transform: translateY(-3px);
+        transform: translateY(-3px);
+    }
+
+    80% {
+        -webkit-transform: translateY(2px);
+        transform: translateY(2px);
+    }
+
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+
+@keyframes swingY {
+    15% {
+        -webkit-transform: translateY(5px);
+        transform: translateY(5px);
+    }
+
+    30% {
+        -webkit-transform: translateY(-5px);
+        transform: translateY(-5px);
+    }
+
+    50% {
+        -webkit-transform: translateY(3px);
+        transform: translateY(3px);
+    }
+
+    65% {
+        -webkit-transform: translateY(-3px);
+        transform: translateY(-3px);
+    }
+
+    80% {
+        -webkit-transform: translateY(2px);
+        transform: translateY(2px);
+    }
+
+    100% {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
+/*CUSTOM ANIMATION KEYFRAME*/
+@keyframes fancyRotate {
+    15% {
+        -webkit-transform: rotate(35deg);
+        transform: rotate(35deg);
+    }
+
+    30% {
+        -webkit-transform: rotate(-35deg);
+        transform: rotate(-35deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    65% {
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+    }
+
+    80% {
+        -webkit-transform: rotate(35deg);
+        transform: rotate(35deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+}
+
+.pulse {
+    animation-name: pulse;
+    -webkit-animation-name: pulse;
+    animation-duration: 1.5s;
+    -webkit-animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.9);
+        opacity: .7;
+    }
+
+    50% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(0.9);
+        opacity: .7;
+    }
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-transform: scale(0.95);
+        opacity: .7;
+    }
+
+    50% {
+        -webkit-transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        -webkit-transform: scale(0.95);
+        opacity: .7;
+    }
+}
+
+/*RIPPLE EFFECT STYLES ON CLICKABLE ELEMENTS*/
+[angular-ripple] {
+    position: relative;
+    overflow: hidden;
+}
+
+.angular-ripple {
+    display: block;
+    position: absolute;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 50%;
+    transform: scale(0);
+}
+
+.angular-ripple.animate {
+    animation: ripple .35s linear;
+}
+
+@keyframes ripple {
+    100% {
+        opacity: 0;
+        transform: scale(2.5);
+    }
+}
+
+/*KEYFRAMES IN ORDER TO MAKE ANIMATIONS POSSIBLE*/
+@keyframes checkbox-on {
+    0% {
+        box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0 0 20px, 0 32px 0 20px, -5px 5px 0 10px, 15px 2px 0 11px;
+    }
+
+    50% {
+        box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0 0 20px, 0 32px 0 20px, -5px 5px 0 10px, 20px 2px 0 11px;
+    }
+
+    100% {
+        box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0 0 20px, 0 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px;
+    }
+}
+
+@keyframes checkbox-off {
+    0% {
+        box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0 0 20px, 0 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px, 0 0 0 0 inset;
+    }
+
+    25% {
+        box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0 0 20px, 0 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px, 0 0 0 0 inset;
+    }
+
+    50% {
+        transform: rotate(45deg);
+        margin-top: -4px;
+        margin-left: 6px;
+        width: 0;
+        height: 0;
+        box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0 0 20px, 0 32px 0 20px, -5px 5px 0 10px, 15px 2px 0 11px, 0 0 0 0 inset;
+    }
+
+    51% {
+        transform: rotate(0deg);
+        margin-top: -2px;
+        margin-left: -2px;
+        width: 20px;
+        height: 20px;
+        box-shadow: 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 10px inset;
+    }
+
+    100% {
+        transform: rotate(0deg);
+        margin-top: -2px;
+        margin-left: -2px;
+        width: 20px;
+        height: 20px;
+        box-shadow: 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0, 0 0 0 0 inset;
+    }
+}
+
+@keyframes rippleOn {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: .2;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes rippleOff {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: .2;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

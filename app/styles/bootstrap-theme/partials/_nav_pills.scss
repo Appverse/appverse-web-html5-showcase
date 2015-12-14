@@ -1,0 +1,28 @@
+//PILLS PANEL
+.nav-pills {
+    >li {
+        >a {
+            border-radius: 5px;
+        }
+    }
+
+    .open {
+        .dropdown-toggle {
+            background-color: $brand-primary !important;
+            color: #fff;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+
+            .caret {
+                border-top-color: #fff;
+            }
+        }
+
+        .dropdown-menu {
+            margin-top: 0;
+            margin-left: -1px;
+            border-radius: 5px;
+            border-top-left-radius: 0;
+        }
+    }
+}

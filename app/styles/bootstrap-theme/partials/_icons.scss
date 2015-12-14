@@ -1,0 +1,29 @@
+/*MATERIAL ICONS*/
+ng-md-icon {
+    fill: $brand_primary;
+    display: inline-table;
+    -webkit-transition: fill 750ms ease-in-out;
+    -moz-transition: fill 750ms ease-in-out;
+    -o-transition: fill 750ms ease-in-out;
+    transition: fill 750ms ease-in-out;
+}
+
+ng-md-icon > svg {
+    -webkit-transition: width 750ms ease-in-out, height 750ms ease-in-out;
+    -moz-transition: width 750ms ease-in-out, height 750ms ease-in-out;
+    -o-transition: width 750ms ease-in-out, height 750ms ease-in-out;
+    transition: width 750ms ease-in-out, height 750ms ease-in-out;
+}
+
+.md-icon {
+    width: 180px;
+    display: inline-block;
+    text-align: center;
+    white-space: wrap;
+    vertical-align: top;
+    padding: 6px;
+    color: $brand_primary;
+    background-color: #fff;
+    margin: .2em;
+    border-radius: 5px;
+}
