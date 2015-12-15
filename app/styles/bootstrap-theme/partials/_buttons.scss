@@ -44,6 +44,11 @@
     border: 1px solid $btn-action-border;
     background-color: $btn-action-bg;
     color: $btn-action-color;
+
+    &:hover {
+        background-color: darken($btn-action-bg, 10%);
+        border: 1px solid darken($btn-action-border, 10%);
+    }
 }
 
 /*OUT OF TOOLBAR DROPDOWN MENU*/

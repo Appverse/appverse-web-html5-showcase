@@ -34,7 +34,11 @@
         }
 
         &:hover {
-            color: lighten($text-color, 25%);
+            color: $white;
+            background-color: $gray-light;
+            .text-muted{
+              color: #EEEEEE;
+            }
         }
 
         &.active {
@@ -44,6 +48,13 @@
 
             .text-info {
                 color: #fff;
+            }
+        }
+
+        &[disabled] {
+            &:hover {
+                background-color: transparent;
+                color: $text-color;
             }
         }
     }
@@ -60,6 +71,10 @@
                 background: none;
                 color: $text-color;
                 border-color: lighten($text-color, 25%);
+                &:hover{
+                  background-color: $gray-light;
+                  color: $white;
+                }
             }
         }
     }
