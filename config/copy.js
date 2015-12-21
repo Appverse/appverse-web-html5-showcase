@@ -16,9 +16,8 @@ module.exports = {
                         'images/**',
                         'resources/**',
                         'scripts/**/*-code.js',
-                        'styles/fonts/*',
                         'styles/images/**',
-                        'styles/theme/fonts/*',
+                        'styles/bootstrap-theme/fonts/**',
                         'views/**/*.html'
                     ]
             }, {
