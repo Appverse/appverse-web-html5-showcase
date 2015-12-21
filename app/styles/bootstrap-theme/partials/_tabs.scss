@@ -1,0 +1,59 @@
+//TAB PANEL
+.nav-tabs {
+    background-color: #fff;
+    border: 1px solid #e1e1e4;
+
+    >li {
+        a {
+            border: none;
+            color: $text-color;
+
+            &:hover {
+                color: $brand-primary;
+            }
+        }
+
+        &.active {
+            a {
+                border: none;
+                border-bottom: 3px solid $brand-primary;
+
+                &:hover {
+                    border: none;
+                    border-bottom: 3px solid $brand-primary;
+                }
+            }
+        }
+    }
+
+    .dropdown-menu {
+        background-color: #fff;
+
+        >li {
+            >a {
+                color: $text-color;
+
+                &:hover {
+                    background-color: $brand-primary;
+                    color: #fff;
+                }
+            }
+
+            &.divider {
+                background-color: $gray-light;
+            }
+        }
+    }
+}
+
+.tab-pane {
+    background-color: #fff;
+    padding: 1em;
+}
+
+/* Keep border color on focus */
+
+.nav-tabs>li.active a:focus {
+    border: none;
+    border-bottom: 3px solid #213e7f;
+}

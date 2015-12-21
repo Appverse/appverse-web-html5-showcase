@@ -1,0 +1,14 @@
+//BREADCRUMBS COMPONENT
+.breadcrumb {
+    >li {
+        &[angular-ripple] {
+            overflow: initial;
+        }
+
+        >a {
+            &[angular-ripple] {
+                overflow: initial;
+            }
+        }
+    }
+}

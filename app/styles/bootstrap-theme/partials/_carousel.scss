@@ -1,0 +1,31 @@
+//CAROUSEL
+.carousel {
+    h4,
+    p {
+        color: #fff;
+    }
+
+    .carousel-control {
+        background: none;
+        background-color: transparent;
+
+        span {
+            background-color: rgba(0,0,0,.3);
+            text-shadow: none;
+            border-radius: 50%;
+            font-size: 16px;
+            line-height: 30px;
+        }
+    }
+
+    .carousel-indicators {
+        li {
+            margin-right: .5em;
+            box-shadow: 0 1px 3px rgba(0,0,0,.3);
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}

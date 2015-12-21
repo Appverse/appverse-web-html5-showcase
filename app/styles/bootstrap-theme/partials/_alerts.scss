@@ -1,0 +1,22 @@
+//ALERTS STYLES
+.alert {
+    color: #fff;
+    border: none;
+
+    a {
+        color: #fff !important;
+    }
+
+    .close {
+        color: #fff;
+        opacity: .7;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}

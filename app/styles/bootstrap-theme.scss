@@ -1,5 +1,5 @@
 //bootstrap variables
-@import "theme/variables";
+@import "bootstrap-theme/variables";
 @import "bootstrap/variables";
 // Core variables and mixins
 @import "bootstrap/mixins";
@@ -46,13 +46,4 @@
 @import "bootstrap/utilities";
 @import "bootstrap/responsive-utilities";
 //THEME
-@import "theme/theme";
-.jumbotron {
-    background-color: $brand-primary;
-    h1 {
-        color: white;
-    }
-    p {
-        color: $gray-light;
-    }
-}
+@import "bootstrap-theme/partials";

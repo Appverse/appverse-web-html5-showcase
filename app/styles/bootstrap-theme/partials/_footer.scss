@@ -1,0 +1,46 @@
+//STICKY APP FOOTER
+.footer {
+    hr {
+        border: none;
+    }
+}
+
+div[ui-view],
+.mainview {
+
+    // equal to footer height
+    min-height: calc(100% - 120px);
+    margin-bottom: -120px;
+
+    &:after {
+        content: '';
+        display: block;
+    }
+}
+
+.sticky-footer,
+div[ui-view]:after,
+.mainview:after {
+    height: 120px;
+}
+
+.sticky-footer {
+    background-color: #f6f6f6;
+    padding: 2em 0;
+    position: absolute;
+    width: 100%;
+
+    .links {
+        display: inline-block;
+        list-style: none;
+
+        li {
+            float: left;
+            margin: 0 1em;
+
+            a {
+                font-size: toUnit(18px, 14px, 'em');
+            }
+        }
+    }
+}

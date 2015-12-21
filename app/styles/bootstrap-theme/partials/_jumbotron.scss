@@ -1,0 +1,58 @@
+//JUMBOTRON PANEL STYLES
+
+.jumbotron {
+    background-color: $brand-primary;
+
+    h1 {
+        color: white;
+    }
+
+    p {
+        font-weight: 300;
+        color: $gray-light;
+    }
+
+    &.home {
+        margin: 5% 12%;
+
+        h1 {
+            font-size: 48px;
+        }
+
+        p {
+            font-size: 18px;
+        }
+    }
+}
+
+@media (max-width: $grid-float-breakpoint-max) {
+    .jumbotron {
+        &.home {
+            margin: 3% 7%;
+
+            h1 {
+                font-size: 32px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+@media (max-width:480px) {
+    .jumbotron {
+        padding: 10px 20px;
+
+        &.home {
+            h1 {
+                font-size: 26px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+        }
+    }
+}
