@@ -21,14 +21,12 @@
 angular.module('App.Controllers')
 
 .controller('WebsocketController',
-    function($scope, WebSocketFactory, $log) {
+    function ($scope, WebSocketFactory, $log) {
         'use strict';
 
         var subscription, lastMessage;
 
-        WebSocketFactory.open('https://appverse.gftlabs.com/websockets/services/websocket/stats');
-
-        WebSocketFactory.connect('user', 'password', function(frame) {
+        WebSocketFactory.connect('user', 'password', function (frame) {
 
             $log.debug('connected', frame);
         });
@@ -46,9 +44,9 @@ angular.module('App.Controllers')
             last: 10
         };
 
-        $scope.start = function() {
+        $scope.start = function () {
 
-            subscription = WebSocketFactory.subscribe("/cpu", function(message) {
+            subscription = WebSocketFactory.subscribe("/cpu", function (message) {
 
                 var now = new Date();
 
@@ -68,18 +66,18 @@ angular.module('App.Controllers')
             });
         };
 
-        $scope.stop = function() {
+        $scope.stop = function () {
             if (subscription) {
                 subscription.unsubscribe();
             }
         };
 
-        $scope.$on('$destroy', function() {
+        $scope.$on('$destroy', function () {
 
             $log.debug('$destroy');
 
             $scope.stop();
-            WebSocketFactory.client.disconnect(function() {
+            WebSocketFactory.client.disconnect(function () {
                 $log.debug('disconnected');
                 WebSocketFactory.client = null;
             });

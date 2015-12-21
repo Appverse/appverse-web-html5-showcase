@@ -21,40 +21,44 @@
 angular.module('App.Controllers')
 
 .controller('UIBootstrapController',
-    function ($scope, $modal, $log) {
+    function ($scope, $uibModal, $log) {
 
         'use strict';
 
-        /*COLLAPSIBLE MENU*/
+        /*ACCORDION*/
         $scope.oneAtATime = true;
+
         $scope.groups = [
             {
                 title: 'Dynamic Group Header - 1',
                 content: 'Dynamic Group Body - 1'
-                    },
-            {
+            }, {
                 title: 'Dynamic Group Header - 2',
                 content: 'Dynamic Group Body - 2'
-                    }
-                ];
+            }
+        ];
+
+        $scope.items = ['Item 1', 'Item 2', 'Item 3'];
+
+        $scope.addItem = function () {
+            var newItemNo = $scope.items.length + 1;
+            $scope.items.push('Item ' + newItemNo);
+        };
 
         $scope.status = {
             isFirstOpen: true,
             isFirstDisabled: false
         };
-        $scope.status2 = {
-            isFirstOpen: true,
-            isFirstDisabled: false
-        };
-        /*EO COLLAPSIBLE MENU*/
+        /*EO ACCORDION*/
 
         /*CAROUSEL*/
         $scope.myInterval = 5000;
+        $scope.noWrapSlides = false;
         var slides = $scope.slides = [];
         $scope.addSlide = function () {
             var newWidth = 600 + slides.length + 1;
             slides.push({
-                image: 'https://placekitten.com/' + newWidth + '/300',
+                image: '//placekitten.com/' + newWidth + '/300',
                 text: ['More', 'Extra', 'Lots of', 'Surplus'][slides.length % 4] + ' ' + ['Cats', 'Kittys', 'Felines', 'Cutes'][slides.length % 4]
             });
         };
@@ -133,15 +137,16 @@ angular.module('App.Controllers')
         /*EO CALENDAR*/
 
         /*MODALS*/
-        $scope.animationsEnabled = true;
-
         $scope.items = ['item1', 'item2', 'item3'];
 
+        $scope.animationsEnabled = true;
+
         $scope.openModal = function (size) {
-            var modalInstance = $modal.open({
+
+            var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'views/ui-bootstrap/modal-template.html',
-                controller: 'ModalController',
+                controller: 'ModalInstanceCtrl',
                 size: size,
                 resolve: {
                     items: function () {
@@ -151,7 +156,7 @@ angular.module('App.Controllers')
             });
 
             modalInstance.result.then(function (selectedItem) {
-                $log.info('Selected item: ' + selectedItem);
+                $scope.selected = selectedItem;
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
@@ -160,8 +165,6 @@ angular.module('App.Controllers')
         $scope.toggleAnimation = function () {
             $scope.animationsEnabled = !$scope.animationsEnabled;
         };
-
-
         /*EO MODALS*/
 
         /*PAGINATION*/
@@ -201,8 +204,8 @@ angular.module('App.Controllers')
     }
 )
 
-.controller('ModalController',
-    function ($scope, $modalInstance, items) {
+.controller('ModalInstanceCtrl',
+    function ($scope, $uibModalInstance, items) {
 
         'use strict';
 
@@ -212,10 +215,10 @@ angular.module('App.Controllers')
         };
 
         $scope.ok = function () {
-            $modalInstance.close($scope.selected.item);
+            $uibModalInstance.close($scope.selected.item);
         };
 
         $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         };
     });

@@ -21,7 +21,7 @@
 angular.module('App.Controllers')
 
 .controller('UsersController',
-    function ($scope, Restangular, $modal, $log) {
+    function ($scope, Restangular, $uibModal, $log) {
 
         'use strict';
 
@@ -66,7 +66,7 @@ angular.module('App.Controllers')
                 user = Restangular.copy(user);
             }
 
-            var modalInstance = $modal.open({
+            var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'views/rest/user-modal-code.html',
                 controller: 'UserModalController',
@@ -130,17 +130,17 @@ angular.module('App.Controllers')
 
     })
 
-.controller('UserModalController', function ($scope, $modalInstance, user) {
+.controller('UserModalController', function ($scope, $uibModalInstance, user) {
 
     'use strict';
 
     $scope.user = user;
 
     $scope.ok = function () {
-        $modalInstance.close($scope.user);
+        $uibModalInstance.close($scope.user);
     };
 
     $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
+        $uibModalInstance.dismiss('cancel');
     };
 });

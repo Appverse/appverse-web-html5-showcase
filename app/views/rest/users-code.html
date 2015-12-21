@@ -1,6 +1,6 @@
-<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
     <span ng-bind-html="alert.msg"></span>
-</alert>
+</uib-alert>
 
 <div class="form-inline clearfix ng-grid-header">
     <button angular-ripple class="btn btn-action" ng-click="openUser()">Add User</button>

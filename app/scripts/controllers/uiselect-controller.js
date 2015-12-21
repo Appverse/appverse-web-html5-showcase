@@ -21,7 +21,7 @@
 angular.module('App.Controllers')
 
 .controller('UISelectController',
-    function ($scope, $modal, $log, $http, $timeout) {
+    function ($scope, $uibModal, $log, $http, $timeout) {
 
         'use strict';
 

@@ -7,7 +7,7 @@ module.exports = {
         port: '<%= ports.app %>',
         livereload: '<%= ports.livereload %>',
         // Change this to '0.0.0.0' to access the server from outside
-        hostname: '0.0.0.0'
+        hostname: '*'
     },
     livereload: {
         options: {
@@ -16,7 +16,7 @@ module.exports = {
                 '.tmp',
                 '<%= paths.app %>'
             ],
-            middleware: function(connect, options, middlewares) {
+            middleware: function (connect, options, middlewares) {
 
                 var proxy = require('grunt-connect-proxy/lib/utils').proxyRequest;
 

@@ -8,30 +8,55 @@
 </div>
 
 <div class="page-header">
-    <h1>Collapsible Panels</h1>
+    <h1>Accordion</h1>
 </div>
 
-<p><b>Only one at a time</b></p>
+<script type="text/ng-template" id="group-template.html">
+    <div class="panel {{panelClass || 'panel-default'}}">
+        <div class="panel-heading">
+            <h4 class="panel-title" style="color:#fa39c3">
+          <a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading"><span
+            ng-class="{'text-muted': isDisabled}">{{heading}}</span></a>
+        </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" style="text-align: right" ng-transclude></div>
+        </div>
+    </div>
+</script>
 
-<accordion close-others="oneAtATime">
-    <accordion-group heading="Static Header, initially expanded" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
+<div class="checkbox">
+    <label>
+        <input type="checkbox" ng-model="oneAtATime"> Open only one at a time
+    </label>
+</div>
+
+<uib-accordion close-others="oneAtATime">
+    <uib-accordion-group heading="Static Header, initially expanded" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
         This content is straight in the template.
-    </accordion-group>
-    <accordion-group heading="{{group.title}}" ng-repeat="group in groups">
+    </uib-accordion-group>
+    <uib-accordion-group heading="{{group.title}}" ng-repeat="group in groups">
         {{group.content}}
-    </accordion-group>
-</accordion>
-
-<p><b>All at the same time</b></p>
-
-<accordion close-others="">
-    <accordion-group heading="Static Header, initially expanded" is-open="status2.isFirstOpen" is-disabled="status2.isFirstDisabled">
-        This content is straight in the template.
-    </accordion-group>
-    <accordion-group heading="{{group.title}}" ng-repeat="group in groups">
-        {{group.content}}
-    </accordion-group>
-</accordion>
+    </uib-accordion-group>
+    <uib-accordion-group heading="Dynamic Body Content">
+        <p>The body of the uib-accordion group grows to fit the contents</p>
+        <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
+        <div ng-repeat="item in items">{{item}}</div>
+    </uib-accordion-group>
+    <uib-accordion-group heading="Custom template" template-url="group-template.html">
+        Hello
+    </uib-accordion-group>
+    <uib-accordion-group heading="Delete account" panel-class="panel-danger">
+        <p>Please, to delete your account, click the button below</p>
+        <button class="btn btn-danger">Delete</button>
+    </uib-accordion-group>
+    <uib-accordion-group is-open="status.open">
+        <uib-accordion-heading>
+            I can have markup, too! <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </uib-accordion-heading>
+        This is just some content to illustrate fancy headings.
+    </uib-accordion-group>
+</uib-accordion>
 
 <div class="page-header">
     <h1>Carousel</h1>
@@ -39,15 +64,33 @@
 
 <div class="row">
     <div class="col-md-6">
-        <carousel interval="myInterval">
-            <slide ng-repeat="slide in slides" active="slide.active">
-                <img ng-src="{{slide.image}}" style="margin:auto;">
-                <div class="carousel-caption">
-                    <h4>Slide {{$index}}</h4>
-                    <p>{{slide.text}}</p>
+        <div style="height: 305px">
+            <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
+                <uib-slide ng-repeat="slide in slides" active="slide.active">
+                    <img ng-src="{{slide.image}}" style="margin:auto;">
+                    <div class="carousel-caption">
+                        <h4>Slide {{$index}}</h4>
+                        <p>{{slide.text}}</p>
+                    </div>
+                </uib-slide>
+            </uib-carousel>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-info" ng-click="addSlide()">Add Slide</button>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="noWrapSlides"> Disable Slide Looping
+                    </label>
                 </div>
-            </slide>
-        </carousel>
+            </div>
+            <div class="col-md-6">
+                Interval, in milliseconds:
+                <input type="number" class="form-control" ng-model="myInterval">
+                <br />Enter a negative number or 0 to stop the interval.
+            </div>
+        </div>
     </div>
 </div>
 
@@ -58,7 +101,7 @@
 <p><b>Inline</b></p>
 
 <div>
-    <datepicker ng-model="dt" min-date="minDate" show-weeks="false" class="datepicker" custom-class="getDayClass(date, mode)"></datepicker>
+    <uib-datepicker ng-model="dt" min-date="minDate" show-weeks="false" class="datepicker" custom-class="getDayClass(date, mode)"></uib-datepicker>
 </div>
 
 <br>
@@ -67,7 +110,7 @@
 <div class="row">
     <div class="col-md-6">
         <p class="input-group">
-            <input type="text" class="form-control datepicker" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2099-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+            <input type="text" class="form-control datepicker" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2099-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
             <span class="input-group-btn">
                 <button type="button" angular-ripple class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
             </span>
@@ -82,28 +125,30 @@
 <button class="btn btn-default" angular-ripple ng-click="openModal()">Open me!</button>
 <button class="btn btn-default" angular-ripple ng-click="openModal('lg')">Large modal</button>
 <button class="btn btn-default" angular-ripple ng-click="openModal('sm')">Small modal</button>
+<button type="button" class="btn btn-default" ng-click="toggleAnimation()">Toggle Animation ({{ animationsEnabled }})</button>
+<div ng-show="selected">Selection from a modal: {{ selected }}</div>
 
 <div class="page-header">
     <h1>Pagination</h1>
 </div>
 
-<pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></pagination>
+<uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
 
 <div class="page-header">
     <h1>Tooltip</h1>
 </div>
 
 <p>This is a
-    <button angular-ripple class="btn btn-primary" tooltip="{{dynamicTooltip}}">{{dynamicTooltipText}}</button>
+    <button angular-ripple class="btn btn-primary" uib-tooltip="{{dynamicTooltip}}">{{dynamicTooltipText}}</button>
 </p>
 
 <div class="page-header">
     <h1>Tabs</h1>
 </div>
 
-<tabset>
-    <tab heading="Static title">Static content</tab>
-    <tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled">
+<uib-tabset>
+    <uib-tab heading="Static title">Static content</uib-tab>
+    <uib-tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled">
         {{tab.content}}
-    </tab>
-</tabset>
+    </uib-tab>
+</uib-tabset>

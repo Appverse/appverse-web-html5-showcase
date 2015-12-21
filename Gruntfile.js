@@ -1,7 +1,7 @@
 /*jshint node:true */
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     //Load all .js tasks definitions at tasks folder
     grunt.loadTasks('./tasks');
     require('load-grunt-tasks')(grunt);
@@ -22,7 +22,7 @@ module.exports = function(grunt) {
             dist: '9091',
             doc: '9002',
             test: '9003',
-            livereload: '35729'
+            livereload: 35729
         }
     };
 
