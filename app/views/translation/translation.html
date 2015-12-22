@@ -7,15 +7,19 @@
         <div class="panel panel-primary">
             <div class="panel-heading">Explanation</div>
             <div class="panel-body">
-                <p>This is a translation feature that provides i18n and i110 in order to be able to switch languages on the fly at runtime.</p>
+                <p>We provide <b>i18n (Internationalization)</b> and <b>l10n (Localization)</b> to be able to switch languages on the fly at runtime.</p>
 
-                <p>Date, Currency and Number are translated using tmhDynamicLocale.set() method in the controller, it’s used for changing angular $locale- which is used to format dates, numbers, currencies, etc.</p>
+                <p><b>Date, Currency and Number</b> are translated using tmhDynamicLocale plugin which uses <b>angular-locale</b> scripts.</p>
 
-                <p>Text is translated via $translate.uses() method in the controller, it’s used for handling language translations.</p>
+                <p><b>Text</b> is translated via <b>angular-translate</b> plugin: <b><a href="https://angular-translate.github.io/" target="_blank">Official site</a></b></p>
 
-                <p>Just add the code snippets provided below to your Appverse project. Go to the path 'app/resources/i18n' and create a JSON file for the language that you want to support. Example: In the HTML markup there is a text named WELCOME, this is a key that corresponds to a key of the same name in the JSON file at the path 'app/resources/i18n'. You just have to create the value you want it to display. For example in a JSON file for Spanish translations you can write "WELCOME": "Bienvenido!" and in another JSON file for English "WELCOME": "Welcome!".</p>
+                <p>Just add the code snippets provided below to your Appverse project. Go to the path 'app/resources/i18n' and create a JSON file for the language that you want to support.</p>
 
-                <p>*Note: You must add the text translate within the html tag or the translate feature will not work.</p>
+                <p>If the JSON file is <b>not found</b> for a specific locale, the text will be kept as it is, non translated. It allows to support localization but not internationalization. <b>Japanese and Arabic</b> are examples of what can be done.</p>
+
+                <p><u>Example</u>: In the HTML there is a key named WELCOME. This key corresponds to the key found in the JSON file at the path 'app/resources/i18n'. You just have to assign the key with desired the value. For example, in a JSON file for Spanish translations you can write "WELCOME": "Bienvenido!" and in another JSON file for English, "WELCOME": "Welcome!".</p>
+
+                <p><u>Note</u>: Please use the translate and translate-values attribute like in the examples for full compatibility.</p>
             </div>
         </div>
     </div>
