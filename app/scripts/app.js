@@ -75,6 +75,11 @@
                 }
 
             });
+
+        $rootScope.hideMenu = function () {
+            $log.debug('hideMenu');
+            $('#main-navbar-collapse').collapse('hide');
+        };
     });
 
     AppInit.setConfig({
