@@ -66,7 +66,7 @@
 
                     angularEvent.preventDefault();
                     localStorage.setItem('code', code);
-                    $window.location.search = '';
+                    $window.location.href = $window.location.href.replace($window.location.search, '');
                 }
 
                 if ($rootScope.preventNextLocation) {
