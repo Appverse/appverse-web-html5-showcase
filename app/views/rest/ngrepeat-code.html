@@ -1,0 +1,100 @@
+<div ng-controller="RestNgRepeatController">
+    <uib-alert ng-repeat="error in usersErrors" type="danger" close="closeAlert($index)">
+        <span ng-bind-html="'Error <b>' + error.status + '</b> with method <b>' + error.config.method + '</b> on <b>' + error.config.data.name + '</b>'"></span>
+    </uib-alert>
+
+    <div class="form-inline clearfix ng-grid-header">
+        <button angular-ripple class="btn btn-action" av-rest-add="users">Add User</button>
+
+        <div class="input-group pull-right">
+            <input type="text" class="form-control" placeholder="Filter..." ng-model="filterText">
+            <span class="input-group-addon glyphicon glyphicon-search"></span>
+        </div>
+    </div>
+
+    <form name="userForm">
+        <div ng-show="usersGetting">
+            <div class="progress">
+                <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    Getting users...
+                </div>
+            </div>
+        </div>
+        <table av-rest-get="users" class="table table-hover table-condensed">
+            <tr class="active">
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Company</th>
+                <th>Age</th>
+                <th>Actions</th>
+            </tr>
+            <tr ng-repeat="user in users | filter:filterText">
+                <td style="width:26%">
+                    <div ng-hide="user.editing">
+                        <p class="form-control-static" ng-bind="user.name"></p>
+                    </div>
+                    <div ng-if="user.editing">
+                        <input class="form-control" ng-model="user.name" name="name" required>
+                        <span class="text-danger" ng-show="userForm.name.$error.required && userForm.name.$dirty">Name is required.</span>
+                    </div>
+                </td>
+                <td>
+                    <div ng-hide="user.editing">
+                        <p class="form-control-static" ng-bind="user.company"></p>
+                    </div>
+                    <div ng-if="user.editing">
+                        <input class="form-control" ng-model="user.company" name="company" required>
+                        <span class="text-danger" ng-show="userForm.company.$error.required && userForm.company.$dirty">Company is required.</span>
+                    </div>
+                </td>
+                <td style="width:110px">
+                    <div ng-hide="user.editing">
+                        <p class="form-control-static" ng-bind="user.gender"></p>
+                    </div>
+                    <div ng-if="user.editing">
+                        <select class="form-control" ng-options="item as item for item in ['male','female']" ng-model="user.gender"></select>
+                    </div>
+                </td>
+                <td style="width:80px">
+                    <div ng-hide="user.editing">
+                        <p class="form-control-static" ng-bind="user.age"></p>
+                    </div>
+                    <div ng-if="user.editing">
+                        <input class="form-control" ng-model="user.age" type="number" name="age" max="150" min="0" required>
+                        <span class="text-danger" ng-show="userForm.age.$error.required && userForm.age.$dirty">Age is required.</span>
+                        <span class="text-danger" ng-show="userForm.age.$error.max">Maximum age is 150.</span>
+                        <span class="text-danger" ng-show="userForm.age.$error.min">Minimum age is 0.</span>
+                    </div>
+                </td>
+                <td style="width:175px">
+                    <div ng-show="user.editing && !usersSaving">
+                        <button av-rest-save="user" type="button" class="btn btn-primary" ng-disabled="!userForm.$valid">OK</button>
+                        <button av-rest-cancel="user" type="button" class="btn btn-default">Cancel</button>
+                    </div>
+
+                    <div ng-hide="user.editing || usersRemoving || usersSaving">
+                        <button av-rest-edit="user" class="btn btn-primary glyphicon glyphicon-pencil"></button>
+                        <button av-rest-clone="user" class="btn btn-default glyphicon glyphicon-duplicate"></button>
+                        <button av-rest-remove="user" rest-if="confirmUser(user)" class="btn btn-danger glyphicon glyphicon-trash"></button>
+                    </div>
+
+                    <div ng-show="usersRemoving">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                Removing...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="usersSaving">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                Saving...
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
