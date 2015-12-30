@@ -1,60 +1,49 @@
 //REGULAR GRID
-
 .table {
     border-radius: 5px;
-
     tr {
         th {
             text-transform: uppercase;
             color: #a6a6a6;
             font-weight: 200;
         }
-
         td {
             color: #606060;
         }
-
         &.info {
             td {
                 background-color: #cadfed !important;
             }
-
             &:hover {
                 td {
                     background-color: darken(#cadfed, 5%) !important;
                 }
             }
         }
-
         &.danger {
             td {
                 background-color: #fcebe8 !important;
             }
-
             &:hover {
                 td {
                     background-color: darken(#fcebe8, 5%) !important;
                 }
             }
         }
-
         &.success {
             td {
                 background-color: #ecfce8 !important;
             }
-
             &:hover {
                 td {
                     background-color: darken(#ecfce8, 5%) !important;
                 }
             }
         }
-
         &.warning {
             td {
                 background-color: #fdf5cb !important;
             }
-
             &:hover {
                 td {
                     background-color: darken(#fdf5cb, 5%) !important;
@@ -64,7 +53,9 @@
     }
 }
 
+
 /*NG-GRID STYLES*/
+
 .ng-grid-header {
     padding: 15px;
     background: #fff;
@@ -76,41 +67,34 @@
     border-radius: 5px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-
     &.gridStyle {
         border: 1px solid $ng-grid-border-color;
         border-top: none;
         background-color: $ng-grid-bg;
+        height: 400px;
     }
-
     .ngTopPanel {
         background-color: transparent;
     }
-
     .ngHeaderCell {
         text-transform: uppercase;
         color: #a6a6a6;
         font-weight: 200;
         background-color: transparent;
         border-bottom: 1px solid $ng-grid-border-color;
-
         .ngHeaderText {
             padding: $ng-grid-cell-padding;
         }
     }
-
     .ngRow {
         background-color: transparent;
-
         .ngCell {
             color: #606060;
             background-color: transparent;
             border-bottom: 1px solid $ng-grid-border-color;
-
             .ngCellText {
                 padding: $ng-grid-cell-padding;
             }
-
             &:last-child {
                 .ngCellText {
                     padding: 12px 20px;
@@ -118,17 +102,14 @@
             }
         }
     }
-
     .ngVerticalBar {
         display: none;
     }
-
     .ngTotalSelectContainer {
         margin-right: 20px;
         font-size: 12px;
         margin-top: 15px;
     }
-
     .ngSortButtonDown,
     .ngSortButtonUp {
         position: absolute;
@@ -146,11 +127,9 @@
         line-height: 1;
         -webkit-font-smoothing: antialiased;
     }
-
     .ngSortButtonDown:after {
         content: '\e093';
     }
-
     .ngSortButtonUp:after {
         content: '\e094';
     }

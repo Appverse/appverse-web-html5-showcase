@@ -1,5 +1,5 @@
-<uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-    <span ng-bind-html="alert.msg"></span>
+<uib-alert ng-repeat="error in usersErrors" type="danger" close="closeAlert($index)">
+    <span ng-bind-html="'Error <b>' + error.status + '</b> with method <b>' + error.config.method + '</b> on <b>' + error.config.data.name + '</b>'"></span>
 </uib-alert>
 
 <div class="form-inline clearfix ng-grid-header">
@@ -10,6 +10,5 @@
         <span class="input-group-addon glyphicon glyphicon-search"></span>
     </div>
 </div>
-
-<div class="gridStyle" ng-grid="gridOptions">
+<div av-rest-get="users" class="gridStyle" ng-grid="gridOptions">
 </div>
