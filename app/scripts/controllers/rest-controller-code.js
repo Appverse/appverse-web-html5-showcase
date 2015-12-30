@@ -25,9 +25,7 @@ angular.module('App.Controllers')
 
         'use strict';
 
-        Restangular.all('users').getList().then(function (data) {
-            $scope.users = data;
-        });
+        $log.debug('UsersController');
 
         $scope.gridOptions = {
             rowHeight: 65,
@@ -48,25 +46,26 @@ angular.module('App.Controllers')
                 width: 60
             }, {
                 displayName: '',
-                cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text><button ng-click="openUser(row.entity)" class="btn btn-primary glyphicon glyphicon-pencil"></button>&nbsp;<button ng-click="deleteUser(row.entity)" class="btn btn-danger glyphicon glyphicon-trash"></button></span></div>',
+                cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text><button ng-click="openUser(row.entity)" class="btn btn-primary glyphicon glyphicon-pencil"></button>&nbsp;<button ng-click="openUser(row.entity,true)" class="btn btn-default glyphicon glyphicon-duplicate"></button>&nbsp;<button av-rest-remove="row.entity" rest-if="removeUser(row.entity)" class="btn btn-danger glyphicon glyphicon-trash"></button></span></div>',
                 sortable: false,
-                width: 120
+                width: 168
              }]
         };
 
-        $scope.alerts = [];
-
         $scope.closeAlert = function (index) {
-            $scope.alerts.splice(index, 1);
+            $scope.usersErrors.splice(index, 1);
         };
 
-        $scope.openUser = function (user) {
+        $scope.openUser = function (user, duplicate) {
 
             if (user) {
                 user = Restangular.copy(user);
+                if (duplicate) {
+                    user = user.plain();
+                }
             }
 
-            var modalInstance = $uibModal.open({
+            $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'views/rest/user-modal-code.html',
                 controller: 'UserModalController',
@@ -76,56 +75,10 @@ angular.module('App.Controllers')
                     }
                 }
             });
-
-            modalInstance.result.then(function (user) {
-                if (user.id) {
-                    user.put().then(function () {
-
-                        $scope.users.some(function (element, index) {
-                            if (element.id === user.id) {
-                                $scope.users[index] = user;
-                                var rowCache = $scope.gridOptions.ngGrid.rowCache[index]; //Refresh bug in ng-grid
-                                rowCache.clone.entity = user;
-                                rowCache.entity = user;
-                                return true;
-                            }
-                        });
-                    }, function () {
-                        $scope.alerts.push({
-                            type: 'danger',
-                            msg: 'Updating <b>' + user.name + '</b> failed.'
-                        });
-                    });
-                } else {
-                    $scope.users.post(user).then(function (responseData) {
-                        $scope.user.push(responseData);
-                    }, function () {
-                        $scope.alerts.push({
-                            type: 'danger',
-                            msg: 'Adding <b>' + user.name + '</b> failed.'
-                        });
-                    });
-                }
-            }, function () {
-                $log.debug('Modal dismissed at: ' + new Date());
-            });
         };
 
-        $scope.deleteUser = function (user) {
-            var confirmed = confirm('Are you sure you want to delete user ' + user.name + ' ?');
-            if (confirmed) {
-                user.remove().then(function () {
-                    var index = $scope.users.indexOf(user);
-                    if (index > -1) {
-                        $scope.users.splice(index, 1);
-                    }
-                }, function () {
-                    $scope.alerts.push({
-                        type: 'danger',
-                        msg: 'Deleting <b>' + user.name + '</b> failed.'
-                    });
-                });
-            }
+        $scope.removeUser = function (user) {
+            return confirm('Are you sure you want to delete user ' + user.name + ' ?');
         };
 
     })
@@ -137,7 +90,7 @@ angular.module('App.Controllers')
     $scope.user = user;
 
     $scope.ok = function () {
-        $uibModalInstance.close($scope.user);
+        $uibModalInstance.close();
     };
 
     $scope.cancel = function () {

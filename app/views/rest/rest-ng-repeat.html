@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-lg-8">
+        <div ng-include src="'views/rest/ngrepeat-code.html'"></div>
+        <br>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Explanation</div>
+            <div class="panel-body">
+                <p>Example based on ngRepeat directive and <a href="https://github.com/mgonto/restangular" target="_blank">Restangular</a> plugins.</p>
+                <p>A list of users is retrieved using a <b>REST call</b>. It is then displayed in a grid where all CRUD operations can be performed as well as column ordering and grid filtering.</p>
+                <p>Operations that modifies the list fails on purpose in order to keep the example clean and also to showcase how errors can be displayed nicely using <b>alerts</b> and <b>promises</b>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix">
+    <div class="pull-right">
+        <p>
+            <a class="btn btn-primary" href="http://plnkr.co/edit/kkr77lqJtgghbOTOuErc?p=preview">View in Plunker</a>
+        </p>
+    </div>
+</div>
+
+<div>
+    <uib-tabset>
+        <uib-tab heading="users-view.html">
+            <pre hljs include="'views/rest/ngrepeat-code.html'" language="html"></pre>
+        </uib-tab>
+        <uib-tab heading="user-modal.html">
+            <pre hljs include="'views/rest/user-modal-code.html'" language="html"></pre>
+        </uib-tab>
+        <uib-tab heading="controller.js">
+            <pre hljs include="'scripts/controllers/rest-ng-repeat-code.js'" language="javascript"></pre>
+        </uib-tab>
+        <uib-tab heading="users.json">
+            <pre hljs include="'api/v1/users.json'" language="json"></pre>
+        </uib-tab>
+    </uib-tabset>
+</div>

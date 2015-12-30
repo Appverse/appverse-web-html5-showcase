@@ -29,6 +29,7 @@
 
     <!-- build:css(.tmp) styles/styles.css -->
     <link rel="stylesheet" href="styles/bootstrap-theme.css">
+    <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 </head>
 
@@ -72,22 +73,22 @@
                 <!-- Here you can see ui-sref in action again. Also notice the use of $state.includes, which
                  will set the links to 'active' if, for example on the first link, 'contacts' or any of
                  its descendant states are activated. -->
-                <li data-ng-class="{ active: $state.includes('home') }">
+                <li ui-sref-active="active">
                     <a angular-ripple="" ui-sref="home"><i class="glyphicon glyphicon-home"></i> Home</a>
                 </li>
-                <li data-ng-class="{ active: $state.includes('ui') }">
+                <li ui-sref-active="active">
                     <a angular-ripple="" ui-sref="theme"><i class="glyphicon glyphicon-pencil"></i> UI</a>
                 </li>
-                <li ng-class="{ active: $state.includes('content') }">
+                <li ui-sref-active="active">
                     <a angular-ripple="" ui-sref="rest"><i class="glyphicon glyphicon-th"></i> Content</a>
                 </li>
-                <li ng-class="{ active: $state.includes('performance') }">
+                <li ui-sref-active="active">
                     <a angular-ripple="" ui-sref="webworkers"><i class="glyphicon glyphicon-plane"></i> Performance</a>
                 </li>
-                <li ng-class="{ active: $state.includes('security') }">
+                <li ui-sref-active="active">
                     <a angular-ripple="" ui-sref="security"><i class="glyphicon glyphicon-lock"></i> Security</a>
                 </li>
-                <li data-ng-class="{ active: $state.includes('about') }">
+                <li ui-sref-active="active">
                     <a angular-ripple="" ui-sref="about"><i class="glyphicon glyphicon-info-sign"></i> About</a>
                 </li>
             </ul>
@@ -163,6 +164,9 @@
     <script src="bower_components/restangular/dist/restangular.min.js"></script>
     <script src="bower_components/appverse-web-html5-core/dist/appverse-rest/appverse-rest.js"></script>
 
+    <!-- IONIC MODULE -->
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-ionic/appverse-ionic.min.js"></script>
+
     <!-- LOGGING MODULE -->
     <script src="bower_components/appverse-web-html5-core/dist/appverse-logging/appverse-logging.js"></script>
 
@@ -173,6 +177,7 @@
     <!-- endbuild -->
 
     <script src="scripts/controllers/rest-controller-code.js"></script>
+    <script src="scripts/controllers/rest-ng-repeat-code.js"></script>
     <script src="scripts/controllers/detection-controller-code.js"></script>
     <script src="scripts/controllers/webworkers-controller-code.js"></script>
     <script src="scripts/controllers/translation-controller-code.js"></script>
