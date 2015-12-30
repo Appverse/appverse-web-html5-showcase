@@ -38,6 +38,7 @@
         'App.Filters',
         'appverse.cache',
         'appverse.detection',
+        'appverse.ionic',
         'appverse.logging',
         'appverse.performance',
         'appverse.rest',
