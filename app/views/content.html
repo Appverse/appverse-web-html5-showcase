@@ -8,13 +8,16 @@
 
 <div class="container">
     <ul class="nav nav-tabs">
-        <li role="presentation" ng-class="{ active: $state.includes('rest') }">
-            <a angular-ripple="" ui-sref="rest"><i class="glyphicon glyphicon-list"></i> REST Entity</a>
+        <li role="presentation" ui-sref-active="active">
+            <a angular-ripple="" ui-sref="rest-ng-repeat"><i class="glyphicon glyphicon-list"></i> REST ngRepeat</a>
         </li>
-        <li role="presentation" ng-class="{ active: $state.includes('translation') }">
+        <li role="presentation" ui-sref-active="active">
+            <a angular-ripple="" ui-sref="rest"><i class="glyphicon glyphicon-list"></i> REST ngGrid</a>
+        </li>
+        <li role="presentation" ui-sref-active="active">
             <a angular-ripple="" ui-sref="translation"><i class="glyphicon glyphicon-globe"></i> Translation</a>
         </li>
-        <li role="presentation" ng-class="{ active: $state.includes('detection') }">
+        <li role="presentation" ui-sref-active="active">
             <a angular-ripple="" ui-sref="detection"><i class="glyphicon glyphicon-eye-open"></i> Detection</a>
         </li>
     </ul>
