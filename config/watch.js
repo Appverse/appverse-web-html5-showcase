@@ -16,7 +16,8 @@ module.exports = {
             livereload: '<%= ports.livereload %>'
         },
         files: [
-            '<%=paths.app%>/**/*.html',
+            '<%=paths.app%>/index.html',
+            '<%=paths.app%>/views/**/*.html',
             '{.tmp, <%= paths.app %>}/styles/**/*.css',
             '<%= paths.app %>/scripts/**/*.js',
             '<%= paths.app %>/resources/**/*'

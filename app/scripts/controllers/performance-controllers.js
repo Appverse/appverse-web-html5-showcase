@@ -139,7 +139,7 @@ angular.module('App.Controllers')
     })
 
 .controller('normalGridController',
-    function ($scope, $log, RESTFactory) {
+    function ($scope, $log, RESTFactory, Restangular) {
 
         $log.debug('normalGridController loading');
 
@@ -180,7 +180,7 @@ angular.module('App.Controllers')
                 $log.debug('hi searchText: ' + searchText);
                 var ft = searchText.toLowerCase();
 
-                RESTFactory.readListNoEmpty(gridData).then(
+                Restangular.all(gridData).getList().then(
                     function (largeLoad) {
                         data = largeLoad.filter(function (item) {
                             return JSON.stringify(item).toLowerCase().indexOf(ft) !== -1;
@@ -191,7 +191,7 @@ angular.module('App.Controllers')
                         $log.error("Error calling data for grid: " + error);
                     });
             } else {
-                RESTFactory.readListNoEmpty(gridData).then(function (data) {
+                Restangular.all(gridData).getList().then(function (data) {
                     $scope.setPagingData(data, page, pageSize);
                 }, function (error) {
                     $log.error("Error calling data for grid: " + error);

@@ -16,9 +16,8 @@
         <div class="panel panel-primary">
             <div class="panel-heading">Explanation</div>
             <div class="panel-body">
-                In this case the function (RESTFactory#readList) used to retrieve a big chunk of data is not appropriate.
-                <br>This function has been designed to retrieve a tree of records with metadata about ancestors and related data in a single request. So, the big amount of data is increased its weight in 150% (average). Moreover, we do not use cache for the GET method.
-                <br>Evidently, it is not very efficient!
+                In this case, we do not use cache for the GET method.
+                <br>Obviously, it is not very efficient!
             </div>
         </div>
     </div>
