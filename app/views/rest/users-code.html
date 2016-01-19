@@ -1,14 +1,17 @@
-<uib-alert ng-repeat="error in usersErrors" type="danger" close="closeAlert($index)">
-    <span ng-bind-html="'Error <b>' + error.status + '</b> with method <b>' + error.config.method + '</b> on <b>' + error.config.data.name + '</b>'"></span>
-</uib-alert>
+<div ng-controller="UsersController" av-rest-get="users">
+    <uib-alert ng-repeat="error in usersErrors" type="danger" close="closeAlert($index)">
+        <span ng-bind-html="'Error <b>' + error.status + '</b> with method <b>' + error.config.method + '</b> on <b>' + error.config.data.name + '</b>'"></span>
+    </uib-alert>
 
-<div class="form-inline clearfix ng-grid-header">
-    <button angular-ripple class="btn btn-action" ng-click="openUser()">Add User</button>
+    <div class="form-inline clearfix ng-grid-header">
+        <button angular-ripple class="btn btn-action" ng-click="openUser()">Add User</button>
 
-    <div class="input-group pull-right">
-        <input type="text" class="form-control" placeholder="Filter..." ng-model="gridOptions.filterOptions.filterText">
-        <span class="input-group-addon glyphicon glyphicon-search"></span>
+        <div class="input-group pull-right">
+            <input type="text" class="form-control" placeholder="Filter..." ng-model="gridOptions.filterOptions.filterText">
+            <span class="input-group-addon glyphicon glyphicon-search"></span>
+        </div>
     </div>
-</div>
-<div av-rest-get="users" class="gridStyle" ng-grid="gridOptions">
+
+    <div class="gridStyle" ng-grid="gridOptions">
+    </div>
 </div>

@@ -81,8 +81,7 @@ angular.module('showcaseApp')
         .state('rest', {
             parent: 'content',
             url: '/rest',
-            templateUrl: 'views/rest/rest.html',
-            controller: 'UsersController'
+            templateUrl: 'views/rest/rest.html'
         })
 
         .state('rest-ng-repeat', {
