@@ -61,8 +61,14 @@ angular.module('App.Controllers')
             if (user) {
                 user = Restangular.copy(user);
                 if (duplicate) {
-                    user = user.plain();
+                    user.fromServer = false;
                 }
+            } else {
+                user = {
+                    getParentList: function () {
+                        return $scope.users;
+                    }
+                };
             }
 
             $uibModal.open({
