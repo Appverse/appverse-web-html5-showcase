@@ -93,18 +93,10 @@ angular.module('App.Controllers')
                 // get the data from the image
                 var imageData = context.getImageData(t * size, 0, size, imgheight);
 
-                var dataAsArray = [];
-                for (var e = 0; e < imageData.data.length; e++) {
-                    dataAsArray.push(imageData.data[e]);
-                }
-
                 var work = {};
-                work.data = dataAsArray;
+                work.imageData = imageData;
                 work.radius = $scope.radius;
                 work.xoffset = t * size;
-                work.size = size;
-                work.width = imageData.width;
-                work.height = imageData.height;
 
                 Webworker
                     .create(function (work) {
@@ -112,11 +104,19 @@ angular.module('App.Controllers')
                         var r = work.radius;
                         var rs = Math.ceil(r * 2.57);
 
-                        for (var i = 0; i < work.width; i++) {
+                        var width = work.imageData.width;
+                        var height = work.imageData.height;
+
+                        var data = [];
+                        for (var e = 0; e < work.imageData.data.length; e++) {
+                            data.push(work.imageData.data[e]);
+                        }
+
+                        for (var i = 0; i < width; i++) {
 
                             var wpa = [];
 
-                            for (var j = 0; j < work.height; j++) {
+                            for (var j = 0; j < height; j++) {
 
                                 var red = 0,
                                     g = 0,
@@ -132,14 +132,14 @@ angular.module('App.Controllers')
                                 // http://blog.ivank.net/fastest-gaussian-blur.html
                                 for (var ix = i - rs; ix < i + rs + 1; ix++) {
                                     for (var iy = j - rs; iy < j + rs + 1; iy++) {
-                                        var x = Math.min(work.width - 1, Math.max(0, ix));
-                                        var y = Math.min(work.height - 1, Math.max(0, iy));
+                                        var x = Math.min(width - 1, Math.max(0, ix));
+                                        var y = Math.min(height - 1, Math.max(0, iy));
                                         var dsq = (iy - j) * (iy - j) + (ix - i) * (ix - i);
                                         var wght = Math.exp(-dsq / (2 * r * r)) / (Math.PI * 2 * r * r);
-                                        red += work.data[(y * work.width + x) * 4] * wght;
-                                        g += work.data[(y * work.width + x) * 4 + 1] * wght;
-                                        b += work.data[(y * work.width + x) * 4 + 2] * wght;
-                                        a += work.data[(y * work.width + x) * 4 + 3] * wght;
+                                        red += data[(y * width + x) * 4] * wght;
+                                        g += data[(y * width + x) * 4 + 1] * wght;
+                                        b += data[(y * width + x) * 4 + 2] * wght;
+                                        a += data[(y * width + x) * 4 + 3] * wght;
                                         wsum += wght;
                                     }
                                 }
