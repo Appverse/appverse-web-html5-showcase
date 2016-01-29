@@ -18,44 +18,23 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
-
 /*globals notify,complete */
-
 angular.module('App.Controllers')
 
 .controller('imageWebworkerController',
-    function($scope, $log, $q, Webworker) {
+    function ($scope, $log, $q, Webworker) {
         'use strict';
 
-        // some global shared variables
-        var bulletSize = 15;
-        $scope.count = 0;
+        $scope.radiuses = [2, 3, 5, 8];
+        $scope.radius = 3;
+
         var _this = this;
 
         $scope.execTime = 0;
         $scope.starttime = 0;
 
-        $scope.threadsNumbers = [{
-            key: '1',
-            value: 'Only one thread'
-        }, {
-            key: '2',
-            value: 'Two Threads'
-        }, {
-            key: '4',
-            value: 'Four Threads'
-        }, {
-            key: '6',
-            value: 'Six Threads'
-        }, {
-            key: '8',
-            value: 'Eight Threads'
-        }, {
-            key: '12',
-            value: 'Twelve Threads (gulp!)'
-        }];
-
-        $scope.poolSize = '1';
+        $scope.threadsNumbers = [1, 2, 4, 6, 8, 10];
+        $scope.poolSize = 1;
 
         var sourceCanvas = document.getElementById("source");
         sourceCanvas.width = 600;
@@ -63,7 +42,7 @@ angular.module('App.Controllers')
         var sourceContext = sourceCanvas.getContext("2d");
 
         var img = new Image();
-        img.onload = function() {
+        img.onload = function () {
             sourceContext.drawImage(img, 0, 0);
         };
         img.src = "images/angularPerformance.jpg";
@@ -73,13 +52,15 @@ angular.module('App.Controllers')
         targetCanvas.height = sourceCanvas.height;
         var targetContext = targetCanvas.getContext("2d");
 
-        $scope.run = function() {
+        $scope.width = sourceCanvas.width;
+
+        $scope.run = function () {
             $scope.count = 0;
             $scope.execTime = 0;
 
             targetContext.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
 
-            $scope.$applyAsync(function() {
+            $scope.$applyAsync(function () {
                 $scope.starttime = new Date().getTime();
             });
 
@@ -87,19 +68,16 @@ angular.module('App.Controllers')
             renderElements(targetCanvas.width, targetCanvas.height, sourceContext, $scope.poolSize);
         };
 
-        this.callback = function() {
+        this.callback = function () {
 
-            $scope.count++;
-
-            if ($scope.count === _this.workerTasks) {
+            if ($scope.count === sourceCanvas.width) {
                 var currentTime = new Date().getTime();
                 var diff = currentTime - $scope.starttime;
                 $log.debug("Processing done: " + diff);
 
-                $scope.$applyAsync(function() {
-                    $scope.execTime = diff;
-                    $scope.starttime = 0;
-                });
+                $scope.execTime = diff;
+                $scope.starttime = 0;
+                $scope.$applyAsync();
             }
         };
 
@@ -115,77 +93,82 @@ angular.module('App.Controllers')
                 // get the data from the image
                 var imageData = context.getImageData(t * size, 0, size, imgheight);
 
-                var work = {};
-                work.imageData = imageData;
-                work.bulletSize = bulletSize;
-                work.xoffset = t * size;
+                var dataAsArray = [];
+                for (var e = 0; e < imageData.data.length; e++) {
+                    dataAsArray.push(imageData.data[e]);
+                }
 
-                console.log(work);
+                var work = {};
+                work.data = dataAsArray;
+                work.radius = $scope.radius;
+                work.xoffset = t * size;
+                work.size = size;
+                work.width = imageData.width;
+                work.height = imageData.height;
 
                 Webworker
-                    .create(function(work) {
+                    .create(function (work) {
 
-                        var dataAsArray = [];
-                        for (var e = 0; e < work.imageData.data.length; e++) {
-                            dataAsArray.push(work.imageData.data[e]);
-                        }
+                        var r = work.radius;
+                        var rs = Math.ceil(r * 2.57);
 
-                        var dx = Math.round(work.imageData.width / work.bulletSize);
-                        var dy = Math.round(work.imageData.height / work.bulletSize);
+                        for (var i = 0; i < work.width; i++) {
 
-                        for (var x = 0; x < dx; x++) {
-                            for (var y = 0; y < dy; y++) {
+                            var wpa = [];
+
+                            for (var j = 0; j < work.height; j++) {
+
+                                var red = 0,
+                                    g = 0,
+                                    b = 0,
+                                    a = 0,
+                                    wsum = 0;
 
                                 var wp = {};
 
-                                wp.x = x * work.bulletSize;
-                                wp.y = y * work.bulletSize;
+                                wp.x = i;
+                                wp.y = j;
 
-                                var r = 0,
-                                    g = 0,
-                                    b = 0,
-                                    a = 0;
-
-                                for (var i = 0; i < work.bulletSize; i++) {
-                                    for (var j = 0; j < work.bulletSize; j++) {
-                                        var index = (wp.x + i) * 4 + (wp.y + j) * work.imageData.width * 4;
-
-                                        r += dataAsArray[index];
-                                        g += dataAsArray[index + 1];
-                                        b += dataAsArray[index + 2];
-                                        a += dataAsArray[index + 3];
+                                // http://blog.ivank.net/fastest-gaussian-blur.html
+                                for (var ix = i - rs; ix < i + rs + 1; ix++) {
+                                    for (var iy = j - rs; iy < j + rs + 1; iy++) {
+                                        var x = Math.min(work.width - 1, Math.max(0, ix));
+                                        var y = Math.min(work.height - 1, Math.max(0, iy));
+                                        var dsq = (iy - j) * (iy - j) + (ix - i) * (ix - i);
+                                        var wght = Math.exp(-dsq / (2 * r * r)) / (Math.PI * 2 * r * r);
+                                        red += work.data[(y * work.width + x) * 4] * wght;
+                                        g += work.data[(y * work.width + x) * 4 + 1] * wght;
+                                        b += work.data[(y * work.width + x) * 4 + 2] * wght;
+                                        a += work.data[(y * work.width + x) * 4 + 3] * wght;
+                                        wsum += wght;
                                     }
                                 }
-
-                                wp.result = [Math.round(r / work.bulletSize / work.bulletSize) + ',' + Math.round(g / work.bulletSize / work.bulletSize) + ',' + Math.round(b / work.bulletSize / work.bulletSize) + ',' + Math.round(a / work.bulletSize / work.bulletSize)];
+                                wp.result = Math.round(red / wsum) + ',' + Math.round(g / wsum) + ',' + Math.round(b / wsum) + ',' + Math.round(a / wsum / 25.5) / 10;
 
                                 wp.x += work.xoffset;
 
-                                notify(wp);
+                                wpa.push(wp);
                             }
+                            notify(wpa);
                         }
                         complete();
                     }, {
                         async: true
                     })
                     .run(work)
-                    .then(function() {
+                    .then(function () {
                             _this.callback();
                         }, null,
-                        function(wp) {
-                            drawRectangle(targetContext, wp.x, wp.y, bulletSize, wp.result[0]);
+                        function (wpa) {
+                            for (var j = 0; j < wpa.length; j++) {
+                                var wp = wpa[j];
+                                targetContext.fillStyle = "rgba(" + wp.result + ")";
+                                targetContext.fillRect(wp.x, wp.y, 1, 1);
+                            }
+                            $scope.count++;
+                            $scope.$applyAsync();
                         });
                 _this.workerTasks++;
             }
         }
-
-        // draw a rectangle on the supplied context
-        function drawRectangle(targetContext, x, y, bulletSize, colors) {
-
-            targetContext.beginPath();
-            targetContext.rect(x, y, bulletSize, bulletSize);
-            targetContext.fillStyle = "rgba(" + colors + ")";
-            targetContext.fill();
-        }
-
     });

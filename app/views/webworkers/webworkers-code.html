@@ -4,8 +4,13 @@
 
     <div class="form-inline">
         <div class="form-group">
-            <label>Number of pooled workers:</label>
-            <select class="form-control" ng-model="poolSize" ng-options="threadsNumber.key as threadsNumber.value for threadsNumber in threadsNumbers" ng-change="count=0;execTime=0">
+            <label>Number of web workers:</label>
+            <select class="form-control" ng-model="poolSize" ng-options="threadsNumber for threadsNumber in threadsNumbers" ng-change="count=0;execTime=0">
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Gaussian radius:</label>
+            <select class="form-control" ng-model="radius" ng-options="radius for radius in radiuses" ng-change="count=0;execTime=0">
             </select>
         </div>
         <button class="btn btn-primary" ng-click="run()">Run</button>
@@ -13,7 +18,7 @@
     <br>
 
     <div class="progress">
-        <div class="progress-bar" ng-class="{'progress-bar-striped':starttime, active:starttime, 'progress-bar-success':starttime||execTime}" role="progressbar" ng-style="{width: count / poolSize * 100 + '%'}" style="min-width:10%">
+        <div class="progress-bar" ng-class="{'progress-bar-striped':starttime, active:starttime, 'progress-bar-success':starttime||execTime}" role="progressbar" ng-style="{width: count / width * 100 + '%'}" style="min-width:5%">
             <span ng-bind="execTime"></span> ms
         </div>
     </div>
