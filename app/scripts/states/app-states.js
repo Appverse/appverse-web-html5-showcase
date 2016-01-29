@@ -21,9 +21,12 @@
 angular.module('showcaseApp')
 
 .config(
-    function ($stateProvider, $urlRouterProvider, $httpProvider) {
+    function($stateProvider, $urlRouterProvider, $httpProvider, $opbeatProvider, WebworkerProvider) {
 
         'use strict';
+
+        WebworkerProvider.setHelperPath("/bower_components/ng-webworker/src/worker_wrapper.min.js");
+        WebworkerProvider.setUseHelper(true);
 
         $httpProvider.useApplyAsync();
 

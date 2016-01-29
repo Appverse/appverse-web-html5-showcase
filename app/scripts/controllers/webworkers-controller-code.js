@@ -18,108 +18,85 @@
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  */
+
+/*globals notify,complete */
+
 angular.module('App.Controllers')
 
 .controller('imageWebworkerController',
-    function ($scope, $log, $q, WebWorkerPoolFactory) {
+    function($scope, $log, $q, Webworker) {
         'use strict';
 
         // some global shared variables
-        var targetContext;
-        var bulletSize = 20;
-        var total = 0;
+        var bulletSize = 15;
         $scope.count = 0;
         var _this = this;
 
         $scope.execTime = 0;
         $scope.starttime = 0;
 
-        $scope.threadsNumbers = [
-            {
-                key: '1',
-                value: 'Only one thread'
-            },
-            {
-                key: '2',
-                value: 'Two Threads'
-            },
-            {
-                key: '4',
-                value: 'Four Threads'
-            },
-            {
-                key: '6',
-                value: 'Six Threads'
-            },
-            {
-                key: '8',
-                value: 'Eight Threads'
-            },
-            {
-                key: '12',
-                value: 'Twelve Threads (gulp!)'
-            }
-        ];
+        $scope.threadsNumbers = [{
+            key: '1',
+            value: 'Only one thread'
+        }, {
+            key: '2',
+            value: 'Two Threads'
+        }, {
+            key: '4',
+            value: 'Four Threads'
+        }, {
+            key: '6',
+            value: 'Six Threads'
+        }, {
+            key: '8',
+            value: 'Eight Threads'
+        }, {
+            key: '12',
+            value: 'Twelve Threads (gulp!)'
+        }];
 
         $scope.poolSize = '1';
 
-        $scope.run = function () {
-            total = 0;
+        var sourceCanvas = document.getElementById("source");
+        sourceCanvas.width = 600;
+        sourceCanvas.height = 600;
+        var sourceContext = sourceCanvas.getContext("2d");
+
+        var img = new Image();
+        img.onload = function() {
+            sourceContext.drawImage(img, 0, 0);
+        };
+        img.src = "images/angularPerformance.jpg";
+
+        var targetCanvas = document.getElementById("target");
+        targetCanvas.width = sourceCanvas.width;
+        targetCanvas.height = sourceCanvas.height;
+        var targetContext = targetCanvas.getContext("2d");
+
+        $scope.run = function() {
             $scope.count = 0;
-            $("#targetCanvas").remove();
             $scope.execTime = 0;
 
-            // determine size of image
-            var img = $("#source")[0]; // Get my img elem
+            targetContext.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
 
-            $("<img/>") // Make in memory copy of image to avoid css issues
-                .attr("src", $(img).attr("src"))
-                .load(function () {
-                var imgwidth = this.width;
-                var imgheight = this.height;
-
-                // create a canvas and make context available
-                var targetCanvas = createTargetCanvas(imgwidth, imgheight);
-                targetContext = targetCanvas.getContext("2d");
-
-                $scope.$apply(function () {
-                    $scope.starttime = new Date().getTime();
-                });
-
-                // render elements
-                renderElements(imgwidth, imgheight, $("#source").get()[0], $scope.poolSize);
+            $scope.$applyAsync(function() {
+                $scope.starttime = new Date().getTime();
             });
+
+            // render elements
+            renderElements(targetCanvas.width, targetCanvas.height, sourceContext, $scope.poolSize);
         };
 
-        // defines a workpacke object that can be sent to the worker
-        function WorkPackage() {
-            this.data = [];
-            this.pixelCount = 0;
-            this.colors = 0;
-            this.x = 0;
-            this.y = 0;
-
-            this.result = [0, 0, 0];
-        }
-
-        this.callback = function (event) {
-
-            var wpArray = event.data;
-
-            for (var i = 0; i < wpArray.length; i++) {
-                var wp = wpArray[i];
-
-                drawRectangle(targetContext, wp.x, wp.y, bulletSize, wp.result[0]);
-            }
+        this.callback = function() {
 
             $scope.count++;
 
-            if ($scope.count === _this.workerTasks.length) {
+            if ($scope.count === _this.workerTasks) {
                 var currentTime = new Date().getTime();
                 var diff = currentTime - $scope.starttime;
                 $log.debug("Processing done: " + diff);
 
-                $scope.$apply(function () {
+                $scope.$applyAsync(function() {
                     $scope.execTime = diff;
                     $scope.starttime = 0;
                 });
@@ -127,80 +104,87 @@ angular.module('App.Controllers')
         };
 
         // process the image by splitting it in parts and sending it to the worker
-        function renderElements(imgwidth, imgheight, image, poolSize) {
-            // determine image grid size
-            var nrX = Math.round(imgwidth / bulletSize);
-            var nrY = Math.round(imgheight / bulletSize);
+        function renderElements(imgwidth, imgheight, context, poolSize) {
 
-            // how much to process
-            total = nrX * nrY;
+            var size = Math.round(imgwidth / poolSize);
 
-            _this.wTask = null;
-            _this.poolSize = poolSize;
-            _this.workerTasks = [];
-            _this.workerData = new WebWorkerPoolFactory.getWorkerFromId('w1', poolSize);
+            _this.workerTasks = 0;
 
-            var wpArray = [];
+            for (var t = 0; t < poolSize; t++) {
 
-            // iterate through all the parts of the image
-            for (var x = 0; x < nrX; x++) {
-                for (var y = 0; y < nrY; y++) {
-                    // create a canvas element we use for temporary rendering
-                    var canvas2 = document.createElement('canvas');
-                    canvas2.width = bulletSize;
-                    canvas2.height = bulletSize;
-                    var context2 = canvas2.getContext('2d');
-                    // render part of the image for which we want to determine the dominant color
-                    context2.drawImage(image, x * bulletSize, y * bulletSize, bulletSize, bulletSize, 0, 0, bulletSize, bulletSize);
+                // get the data from the image
+                var imageData = context.getImageData(t * size, 0, size, imgheight);
 
-                    // get the data from the image
-                    var data = context2.getImageData(0, 0, bulletSize, bulletSize).data;
-                    // convert data, which is a canvas pixel array, to a normal array
-                    // since we can't send the canvas array to a webworker
-                    var dataAsArray = [];
-                    for (var i = 0; i < data.length; i++) {
-                        dataAsArray.push(data[i]);
-                    }
+                var work = {};
+                work.imageData = imageData;
+                work.bulletSize = bulletSize;
+                work.xoffset = t * size;
 
-                    // create a workpackage
-                    var wp = new WorkPackage();
-                    wp.colors = 5;
-                    wp.data = dataAsArray;
-                    wp.pixelCount = bulletSize * bulletSize;
-                    wp.x = x;
-                    wp.y = y;
+                console.log(work);
 
-                    wpArray.push(wp);
+                Webworker
+                    .create(function(work) {
 
-                    if (wpArray.length > Math.floor(total / poolSize) || x * y === (nrX - 1) * (nrY - 1)) {
-                        //Create a new task for the worker pool and push it into the group
-                        _this.wTask = new WebWorkerPoolFactory.WorkerTask(_this.workerData, _this.callback, wpArray);
-                        _this.workerTasks.push(_this.wTask);
-                        wpArray = [];
-                    }
-                }
+                        var dataAsArray = [];
+                        for (var e = 0; e < work.imageData.data.length; e++) {
+                            dataAsArray.push(work.imageData.data[e]);
+                        }
+
+                        var dx = Math.round(work.imageData.width / work.bulletSize);
+                        var dy = Math.round(work.imageData.height / work.bulletSize);
+
+                        for (var x = 0; x < dx; x++) {
+                            for (var y = 0; y < dy; y++) {
+
+                                var wp = {};
+
+                                wp.x = x * work.bulletSize;
+                                wp.y = y * work.bulletSize;
+
+                                var r = 0,
+                                    g = 0,
+                                    b = 0,
+                                    a = 0;
+
+                                for (var i = 0; i < work.bulletSize; i++) {
+                                    for (var j = 0; j < work.bulletSize; j++) {
+                                        var index = (wp.x + i) * 4 + (wp.y + j) * work.imageData.width * 4;
+
+                                        r += dataAsArray[index];
+                                        g += dataAsArray[index + 1];
+                                        b += dataAsArray[index + 2];
+                                        a += dataAsArray[index + 3];
+                                    }
+                                }
+
+                                wp.result = [Math.round(r / work.bulletSize / work.bulletSize) + ',' + Math.round(g / work.bulletSize / work.bulletSize) + ',' + Math.round(b / work.bulletSize / work.bulletSize) + ',' + Math.round(a / work.bulletSize / work.bulletSize)];
+
+                                wp.x += work.xoffset;
+
+                                notify(wp);
+                            }
+                        }
+                        complete();
+                    }, {
+                        async: true
+                    })
+                    .run(work)
+                    .then(function() {
+                            _this.callback();
+                        }, null,
+                        function(wp) {
+                            drawRectangle(targetContext, wp.x, wp.y, bulletSize, wp.result[0]);
+                        });
+                _this.workerTasks++;
             }
-
-            //Call to the worker pool passing the group of tasks for the worker
-            WebWorkerPoolFactory.runParallelTasksGroup(_this.workerData, _this.workerTasks);
-        }
-
-        // create the target canvas where the result will be rendered
-        function createTargetCanvas(imgwidth, imgheight) {
-            // create target canvas, with the correct size
-            return $("<canvas/>")
-                .attr("width", imgwidth)
-                .attr("height", imgheight)
-                .attr("id", "targetCanvas")
-                .appendTo("#target").get()[0];
         }
 
         // draw a rectangle on the supplied context
         function drawRectangle(targetContext, x, y, bulletSize, colors) {
 
             targetContext.beginPath();
-            targetContext.rect(x * bulletSize, y * bulletSize, bulletSize, bulletSize);
-            targetContext.fillStyle = "rgba(" + colors + ",1)";
+            targetContext.rect(x, y, bulletSize, bulletSize);
+            targetContext.fillStyle = "rgba(" + colors + ")";
             targetContext.fill();
         }
 
