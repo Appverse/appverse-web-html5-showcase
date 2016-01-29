@@ -21,7 +21,7 @@
 angular.module('showcaseApp')
 
 .config(
-    function($stateProvider, $urlRouterProvider, $httpProvider, $opbeatProvider, WebworkerProvider) {
+    function ($stateProvider, $urlRouterProvider, $httpProvider, WebworkerProvider) {
 
         'use strict';
 
