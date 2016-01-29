@@ -13,6 +13,7 @@ module.exports = {
                 src: [
                         '*.{ico,html}',
                         'api/**',
+                        'bower_components/ng-webworker/src/worker_wrapper.min.js',
                         'images/**',
                         'resources/**',
                         'scripts/**/*-code.js',
