@@ -21,7 +21,7 @@
 
 
 /*globals AppInit:false */
-(function () {
+(function() {
     'use strict';
     angular.module('App.Controllers', []);
     angular.module('App.Filters', []);
@@ -49,13 +49,14 @@
         'hljs',
         'ngGrid',
         'ja.qr',
-        'xeditable'
-    ]).run(function ($log, $rootScope, $window) {
+        'xeditable',
+        'ngWebworker'
+    ]).run(function($log, $rootScope, $window) {
 
         $log.debug('App run', $window.location.search);
 
         $rootScope.$on('$locationChangeStart',
-            function (angularEvent, newUrl, oldUrl) {
+            function(angularEvent, newUrl, oldUrl) {
 
                 $log.debug('$locationChangeStart', newUrl);
                 $log.debug('$locationChangeStart', oldUrl);
@@ -77,7 +78,7 @@
 
             });
 
-        $rootScope.hideMenu = function () {
+        $rootScope.hideMenu = function() {
             $log.debug('hideMenu');
             $('#main-navbar-collapse').collapse('hide');
         };
