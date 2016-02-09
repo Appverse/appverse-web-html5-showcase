@@ -12,6 +12,8 @@ rzslider {
             &.rz-selection {
                 background: $brand-primary;
                 border-radius: 6px 0 0 6px;
+                border-right: 8px solid $brand-primary;
+                box-sizing: content-box;
             }
         }
 
