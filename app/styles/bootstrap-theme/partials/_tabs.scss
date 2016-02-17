@@ -4,17 +4,20 @@
     border: 1px solid #e1e1e4;
 
     >li {
-        a {
+        a,
+        div {
             border: none;
             color: $text-color;
 
             &:hover {
                 color: $brand-primary;
+                background-color: transparent;
             }
         }
 
         &.active {
-            a {
+            a,
+            div {
                 border: none;
                 border-bottom: 3px solid $brand-primary;
 
@@ -26,11 +29,40 @@
         }
     }
 
+    >.uib-tab {
+        >div {
+            &:hover {
+                border-color: transparent;
+            }
+        }
+
+        &.active {
+            >div {
+                border-color: $brand-primary;
+
+                &:hover {
+                    border-color: $brand-primary;
+                }
+            }
+        }
+
+        &.disabled {
+            >div {
+                border: none;
+
+                &:hover {
+                    border: none;
+                }
+            }
+        }
+    }
+
     .dropdown-menu {
         background-color: #fff;
 
         >li {
-            >a {
+            >a,
+            div {
                 color: $text-color;
 
                 &:hover {
@@ -49,11 +81,12 @@
 .tab-pane {
     background-color: #fff;
     padding: 1em;
+    border: 1px solid $body-bg;
 }
 
 /* Keep border color on focus */
-
-.nav-tabs>li.active a:focus {
+.nav-tabs>li.active a:focus,
+.nav-tabs>li.active div:focus {
     border: none;
     border-bottom: 3px solid #213e7f;
 }
