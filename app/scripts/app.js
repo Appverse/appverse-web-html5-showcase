@@ -50,7 +50,8 @@
         'ngGrid',
         'ja.qr',
         'xeditable',
-        'ngWebworker'
+        'ngWebworker',
+        'ngclipboard'
     ]).run(function($log, $rootScope, $window) {
 
         $log.debug('App run', $window.location.search);

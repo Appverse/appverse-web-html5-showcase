@@ -10,11 +10,17 @@
         background-color: transparent;
 
         span {
-            background-color: rgba(0,0,0,.3);
+            background-color: transparent;
             text-shadow: none;
             border-radius: 50%;
-            font-size: 16px;
+            font-size: 20px;
             line-height: 30px;
+            opacity: .6;
+        }
+        &:hover{
+          span{
+            opacity: 1;
+          }
         }
     }
 

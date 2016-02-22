@@ -20,6 +20,21 @@
     </ui-select-choices>
 </ui-select>
 
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#ui-select-bootstrap-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-select-bootstrap-code.html'" language="html" id="ui-select-bootstrap-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#ui-select-bootstrap-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-select-bootstrap-code.js'" language="javascript" id="ui-select-bootstrap-js"></pre>
+    </uib-tab>
+</uib-tabset>
+
 <h3>Selectize theme</h3>
 <p>Selected: {{country.selected}}</p>
 <ui-select ng-model="country.selected" theme="selectize" ng-disabled="disabled" style="width: 300px;">
@@ -29,6 +44,21 @@
         <small ng-bind-html="country.code | highlight: $select.search"></small>
     </ui-select-choices>
 </ui-select>
+
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#ui-select-selectize-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-select-selectize-code.html'" language="html" id="ui-select-selectize-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#ui-select-selectize-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-select-selectize-code.js'" language="javascript" id="ui-select-selectize-js"></pre>
+    </uib-tab>
+</uib-tabset>
 
 <div class="page-header">
     <h1>Multi Selection Demos</h1>
@@ -42,7 +72,22 @@
     </ui-select-choices>
 </ui-select>
 <p>Selected: {{multipleDemo.colors}}</p>
-<hr>
+
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#ui-multiselect-strings-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-multiselect-strings-code.html'" language="html" id="ui-multiselect-strings-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#ui-multiselect-strings-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-multiselect-strings-code.js'" language="javascript" id="ui-multiselect-strings-js"></pre>
+    </uib-tab>
+</uib-tabset>
+
 <h3>Array of objects</h3>
 <ui-select multiple ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
@@ -56,7 +101,21 @@
 </ui-select>
 <p>Selected: {{multipleDemo.selectedPeople}}</p>
 
-<hr>
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#ui-multiselect-objects-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-multiselect-objects-code.html'" language="html" id="ui-multiselect-objects-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#ui-multiselect-objects-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-multiselect-objects-code.js'" language="javascript" id="ui-multiselect-objects-js"></pre>
+    </uib-tab>
+</uib-tabset>
+
 <h3>Array of objects with single property binding</h3>
 <ui-select multiple ng-model="multipleDemo.selectedPeopleSimple" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
@@ -70,7 +129,21 @@
 </ui-select>
 <p>Selected: {{multipleDemo.selectedPeopleSimple}}</p>
 
-<hr>
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#ui-multiselect-objects-binding-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-multiselect-objects-binding-code.html'" language="html" id="ui-multiselect-objects-binding-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#ui-multiselect-objects-binding-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-multiselect-objects-binding-code.js'" language="javascript" id="ui-multiselect-objects-binding-js"></pre>
+    </uib-tab>
+</uib-tabset>
+
 <h3>Array of objects (with groupBy)</h3>
 <ui-select multiple ng-model="multipleDemo.selectedPeopleWithGroupBy" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
     <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
@@ -83,3 +156,18 @@
     </ui-select-choices>
 </ui-select>
 <p>Selected: {{multipleDemo.selectedPeopleWithGroupBy}}</p>
+
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#ui-multiselect-objects-groupby-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-multiselect-objects-groupby-code.html'" language="html" id="ui-multiselect-objects-groupby-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#ui-multiselect-objects-groupby-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-select/ui-multiselect-objects-groupby-code.js'" language="javascript" id="ui-multiselect-objects-groupby-js"></pre>
+    </uib-tab>
+</uib-tabset>

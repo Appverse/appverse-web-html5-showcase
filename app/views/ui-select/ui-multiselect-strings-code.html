@@ -1,0 +1,7 @@
+<ui-select multiple ng-model="multipleDemo.colors" theme="bootstrap" ng-disabled="disabled" style="width: 300px;">
+    <ui-select-match placeholder="Select colors...">{{$item}}</ui-select-match>
+    <ui-select-choices repeat="color in availableColors | filter:$select.search">
+        {{color}}
+    </ui-select-choices>
+</ui-select>
+<p>Selected: {{multipleDemo.colors}}</p>
