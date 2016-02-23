@@ -64,7 +64,7 @@
 
 <uib-tabset class="mt-md mb-md">
     <uib-tab heading="HTML">
-        <button class="btn btn-action" data-clipboard-target="#uib-accordion-html" ngclipboard>
+        <button angular-ripple class="btn btn-action" data-clipboard-target="#uib-accordion-html" ngclipboard>
             Copy
         </button>
         <pre hljs include="'views/ui-bootstrap/uib-accordion-code.html'" language="html" id="uib-accordion-html"></pre>
@@ -264,7 +264,6 @@
     </uib-tab>
 </uib-tabset>
 
-
 <div class="page-header">
     <h1>Tabs</h1>
 </div>
@@ -288,5 +287,26 @@
             Copy
         </button>
         <pre hljs include="'views/ui-bootstrap/uib-tabset-code.js'" language="javascript" id="uib-tabset-js"></pre>
+    </uib-tab>
+</uib-tabset>
+
+<h2>Justified</h2>
+
+<uib-tabset justified="true">
+    <uib-tab heading="Static title 1">Static content 1</uib-tab>
+    <uib-tab heading="Static title 2">Static content 2</uib-tab>
+    <uib-tab heading="Static title 3">Static content 3</uib-tab>
+</uib-tabset>
+
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#uib-tabset-justified-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs language="html" id="uib-tabset-justified-html"><uib-tabset justified="true">
+    <uib-tab heading="Static title 1">Static content 1</uib-tab>
+    <uib-tab heading="Static title 2">Static content 2</uib-tab>
+    <uib-tab heading="Static title 3">Static content 3</uib-tab>
+</uib-tabset></pre>
     </uib-tab>
 </uib-tabset>

@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+<div class="panel panel-primary">
+    <div class="panel-heading">Explanation</div>
+    <div class="panel-body">
+        <p>Examples based on
+            <a href="http://jtblin.github.io/angular-chart.js" target="_blank">Angular Chart</a>, that uses <a href="http://www.chartjs.org/" target="_blank">charts.js</a></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Line</div>
+            <div class="panel-body">
+                <canvas class="chart chart-line" click="onClick" data="data" id="line" labels="labels" legend="true" series="series"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <uib-tabset>
+            <uib-tab heading="HTML">
+                <button class="btn btn-action" data-clipboard-target="#chart-line-html" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs language="html" id="chart-line-html"><canvas class="chart chart-line" click="onClick" data="data" id="line" labels="labels" legend="true" series="series"></canvas>
+                </pre>
+            </uib-tab>
+            <uib-tab heading="JS">
+                <button class="btn btn-action" data-clipboard-target="#chart-line-js" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs include="'views/charts/chart-line-code.js'" language="javascript" id="chart-line-js"></pre>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Bar</div>
+            <div class="panel-body">
+                <canvas class="chart chart-bar" click="onClick" data="data" id="bar" labels="labels"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <uib-tabset>
+            <uib-tab heading="HTML">
+                <button class="btn btn-action" data-clipboard-target="#chart-bar-html" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs language="html" id="chart-line-html"><canvas class="chart chart-bar" click="onClick" data="data" id="bar" labels="labels"></canvas></pre>
+            </uib-tab>
+            <uib-tab heading="JS">
+                <button class="btn btn-action" data-clipboard-target="#chart-bar-js" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs include="'views/charts/chart-bar-code.js'" language="javascript" id="chart-bar-js"></pre>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Radar</div>
+            <div class="panel-body">
+                <div class="chart-container">
+                    <canvas class="chart chart-radar" click="onClick" data="radarData" id="radar" labels="radarLabels"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <uib-tabset>
+            <uib-tab heading="HTML">
+                <button class="btn btn-action" data-clipboard-target="#chart-radar-html" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs language="html" id="chart-radar-html"><canvas class="chart chart-radar" click="onClick" data="radarData" id="radar" labels="radarLabels"></canvas></pre>
+            </uib-tab>
+            <uib-tab heading="JS">
+                <button class="btn btn-action" data-clipboard-target="#chart-radar-js" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs include="'views/charts/chart-radar-code.js'" language="javascript" id="chart-radar-js"></pre>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Pie</div>
+            <div class="panel-body">
+                <div class="chart-container">
+                    <canvas class="chart chart-pie chart-xs ng-isolate-scope" click="onClick" data="pieData" id="pie" labels="pieLabels" legend="true"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <uib-tabset>
+            <uib-tab heading="HTML">
+                <button class="btn btn-action" data-clipboard-target="#chart-pie-html" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs language="html" id="chart-pie-html"><canvas class="chart chart-pie chart-xs ng-isolate-scope" click="onClick" data="pieData" id="pie" labels="pieLabels" legend="true"></canvas></pre>
+            </uib-tab>
+            <uib-tab heading="JS">
+                <button class="btn btn-action" data-clipboard-target="#chart-pie-js" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs include="'views/charts/chart-pie-code.js'" language="javascript" id="chart-pie-js"></pre>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Polar Area
+            </div>
+            <div class="panel-body">
+                <div class="chart-container">
+                    <canvas class="chart chart-polar-area" click="onClick" data="polarData" id="polar-area" labels="polarLabels" legend="true"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <uib-tabset>
+            <uib-tab heading="HTML">
+                <button class="btn btn-action" data-clipboard-target="#chart-polar-html" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs language="html" id="chart-polar-html"><canvas class="chart chart-polar-area" click="onClick" data="polarData" id="polar-area" labels="polarLabels" legend="true"></canvas></pre>
+            </uib-tab>
+            <uib-tab heading="JS">
+                <button class="btn btn-action" data-clipboard-target="#chart-polar-js" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs include="'views/charts/chart-polar-code.js'" language="javascript" id="chart-polar-js"></pre>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Doughnut</div>
+            <div class="panel-body">
+                <div class="chart-container">
+                    <canvas class="chart chart-doughnut" click="onClick" data="doughnutData" id="doughnut" labels="doughnutLabels" legend="true"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <uib-tabset>
+            <uib-tab heading="HTML">
+                <button class="btn btn-action" data-clipboard-target="#chart-doughnut-html" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs language="html" id="chart-doughnut-html"><canvas class="chart chart-doughnut" click="onClick" data="doughnutData" id="doughnut" labels="doughnutLabels" legend="true"></canvas></pre>
+            </uib-tab>
+            <uib-tab heading="JS">
+                <button class="btn btn-action" data-clipboard-target="#chart-doughnut-js" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs include="'views/charts/chart-doughnut-code.js'" language="javascript" id="chart-doughnut-js"></pre>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Dynamic (switch interval - 10s)
+            </div>
+            <div class="panel-body">
+                <div class="chart-container">
+                    <canvas chart-type="dynType" class="chart-base" data="dynData" id="base" labels="dynLabels" legend="true"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <uib-tabset>
+            <uib-tab heading="HTML">
+                <button class="btn btn-action" data-clipboard-target="#chart-dynamic-html" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs language="html" id="chart-dynamic-html"><canvas chart-type="dynType" class="chart-base" data="dynData" id="base" labels="dynLabels" legend="true"></canvas></pre>
+            </uib-tab>
+            <uib-tab heading="JS">
+                <button class="btn btn-action" data-clipboard-target="#chart-dynamic-js" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs include="'views/charts/chart-dynamic-code.js'" language="javascript" id="chart-dynamic-js"></pre>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">Reactive (random data - 5s)</div>
+            <div class="panel-body">
+                <div class="chart-container">
+                    <canvas class="chart chart-line ng-isolate-scope" colours="reactColours" data="reactData" id="tables" labels="reactLabels"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <uib-tabset>
+            <uib-tab heading="HTML">
+                <button class="btn btn-action" data-clipboard-target="#chart-reactive-html" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs language="html" id="chart-reactive-html"><canvas chart-type="dynType" class="chart-base" data="dynData" id="base" labels="dynLabels" legend="true"></canvas></pre>
+            </uib-tab>
+            <uib-tab heading="JS">
+                <button class="btn btn-action" data-clipboard-target="#chart-reactive-js" ngclipboard>
+                    Copy
+                </button>
+                <pre hljs include="'views/charts/chart-reactive-code.js'" language="javascript" id="chart-reactive-js"></pre>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>

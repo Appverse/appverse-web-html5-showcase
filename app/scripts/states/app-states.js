@@ -45,7 +45,7 @@ angular.module('showcaseApp')
         .state('theme', {
             parent: 'ui',
             url: '/theme',
-            templateUrl: 'views/theme.html'
+            templateUrl: 'views/theme/theme.html'
         })
 
         .state('ui-bootstrap', {
@@ -65,7 +65,7 @@ angular.module('showcaseApp')
         .state('charts', {
             parent: 'ui',
             url: '/charts',
-            templateUrl: 'views/charts.html',
+            templateUrl: 'views/charts/charts.html',
             controller: 'ChartsController'
         })
 
