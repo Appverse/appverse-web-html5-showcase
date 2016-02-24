@@ -1,0 +1,6 @@
+<button angular-ripple class="btn btn-default" ng-click="openModal()">Open me!</button>
+<button angular-ripple class="btn btn-default" ng-click="openModal('lg')">Large modal</button>
+<button angular-ripple class="btn btn-default" ng-click="openModal('sm')">Small modal</button>
+<button class="btn btn-default" ng-click="toggleAnimation()" type="button">Toggle Animation ({{ animationsEnabled }})</button>
+<div ng-show="selected">Selection from a modal:
+    {{ selected }}</div>
