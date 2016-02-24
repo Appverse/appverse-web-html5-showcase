@@ -3,7 +3,8 @@
     <div class="panel-heading">Explanation</div>
     <div class="panel-body">
         <p>UI Bootstrap components with Appverse theme applied.</p>
-        <p>More examples and code snippets on the <a href="https://angular-ui.github.io/bootstrap" target="_blank">official website</a>.</p>
+        <p>More examples and code snippets on the
+            <a href="https://angular-ui.github.io/bootstrap" target="_blank">official website</a>.</p>
     </div>
 </div>
 
@@ -11,28 +12,30 @@
     <h1>Accordion</h1>
 </div>
 
-<script type="text/ng-template" id="group-template.html">
+<script id="group-template.html" type="text/ng-template">
     <div class="panel {{panelClass || 'panel-default'}}">
         <div class="panel-heading">
             <h4 class="panel-title" style="color:#fa39c3">
-          <a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading"><span
-            ng-class="{'text-muted': isDisabled}">{{heading}}</span></a>
-        </h4>
+                <a class="accordion-toggle" href ng-click="toggleOpen()" tabindex="0" uib-accordion-transclude="heading">
+                    <span ng-class="{'text-muted': isDisabled}">{{heading}}</span>
+                </a>
+            </h4>
         </div>
         <div class="panel-collapse collapse" uib-collapse="!isOpen">
-            <div class="panel-body" style="text-align: right" ng-transclude></div>
+            <div class="panel-body" ng-transclude style="text-align: right"></div>
         </div>
     </div>
 </script>
 
 <div class="checkbox">
     <label>
-        <input type="checkbox" ng-model="oneAtATime"> Open only one at a time
+        <input ng-model="oneAtATime" type="checkbox">
+        Open only one at a time
     </label>
 </div>
 
 <uib-accordion close-others="oneAtATime">
-    <uib-accordion-group heading="Static Header, initially expanded" is-open="status.isFirstOpen" is-disabled="status.isFirstDisabled">
+    <uib-accordion-group heading="Static Header, initially expanded" is-disabled="status.isFirstDisabled" is-open="status.isFirstOpen">
         This content is straight in the template.
     </uib-accordion-group>
     <uib-accordion-group heading="{{group.title}}" ng-repeat="group in groups">
@@ -40,7 +43,7 @@
     </uib-accordion-group>
     <uib-accordion-group heading="Dynamic Body Content">
         <p>The body of the uib-accordion group grows to fit the contents</p>
-        <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
+        <button class="btn btn-default btn-sm" ng-click="addItem()" type="button">Add Item</button>
         <div ng-repeat="item in items">{{item}}</div>
     </uib-accordion-group>
     <uib-accordion-group heading="Custom template" template-url="group-template.html">
@@ -52,11 +55,27 @@
     </uib-accordion-group>
     <uib-accordion-group is-open="status.open">
         <uib-accordion-heading>
-            I can have markup, too! <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            I can have markup, too!
+            <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
         </uib-accordion-heading>
         This is just some content to illustrate fancy headings.
     </uib-accordion-group>
 </uib-accordion>
+
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button angular-ripple class="btn btn-action" data-clipboard-target="#uib-accordion-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-accordion-code.html'" language="html" id="uib-accordion-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#uib-accordion-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-accordion-code.js'" language="javascript" id="uib-accordion-js"></pre>
+    </uib-tab>
+</uib-tabset>
 
 <div class="page-header">
     <h1>Carousel</h1>
@@ -66,10 +85,11 @@
     <div class="col-md-6">
         <div style="height: 305px">
             <uib-carousel interval="myInterval" no-wrap="noWrapSlides">
-                <uib-slide ng-repeat="slide in slides" active="slide.active">
+                <uib-slide active="slide.active" ng-repeat="slide in slides">
                     <img ng-src="{{slide.image}}" style="margin:auto;">
                     <div class="carousel-caption">
-                        <h4>Slide {{$index}}</h4>
+                        <h4>Slide
+                            {{$index}}</h4>
                         <p>{{slide.text}}</p>
                     </div>
                 </uib-slide>
@@ -78,61 +98,149 @@
 
         <div class="row">
             <div class="col-md-6">
-                <button type="button" class="btn btn-info" ng-click="addSlide()">Add Slide</button>
+                <button class="btn btn-info" ng-click="addSlide()" type="button">Add Slide</button>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" ng-model="noWrapSlides"> Disable Slide Looping
+                        <input ng-model="noWrapSlides" type="checkbox">
+                        Disable Slide Looping
                     </label>
                 </div>
             </div>
             <div class="col-md-6">
                 Interval, in milliseconds:
-                <input type="number" class="form-control" ng-model="myInterval">
-                <br />Enter a negative number or 0 to stop the interval.
+                <input class="form-control" ng-model="myInterval" type="number">
+                <br/>Enter a negative number or 0 to stop the interval.
             </div>
         </div>
     </div>
 </div>
 
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#uib-carousel-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-carousel-code.html'" language="html" id="uib-carousel-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#uib-carousel-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-carousel-code.js'" language="javascript" id="uib-carousel-js"></pre>
+    </uib-tab>
+</uib-tabset>
+
 <div class="page-header">
     <h1>Datepicker</h1>
 </div>
 
-<p><b>Inline</b></p>
+<p>
+    <b>Inline</b>
+</p>
 
 <div>
-    <uib-datepicker ng-model="dt" min-date="minDate" show-weeks="false" class="datepicker" custom-class="getDayClass(date, mode)"></uib-datepicker>
+    <uib-datepicker class="datepicker" custom-class="getDayClass(date, mode)" min-date="minDate" ng-model="dt" show-weeks="false"></uib-datepicker>
 </div>
 
-<br>
-<p><b>With input</b></p>
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#uib-datepicker-inline-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-datepicker-inline-code.html'" language="html" id="uib-datepicker-inline-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#uib-datepicker-inline-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-datepicker-inline-code.js'" language="javascript" id="uib-datepicker-inline-js"></pre>
+    </uib-tab>
+</uib-tabset>
+
+<p>
+    <b>With input</b>
+</p>
 
 <div class="row">
     <div class="col-md-6">
         <p class="input-group">
-            <input type="text" class="form-control datepicker" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2099-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+            <input class="form-control datepicker" close-text="Close" datepicker-options="dateOptions" is-open="opened" max-date="'2099-06-22'" min-date="minDate" ng-model="dt" ng-required="true" type="text" uib-datepicker-popup="{{format}}"/>
             <span class="input-group-btn">
-                <button type="button" angular-ripple class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                <button angular-ripple class="btn btn-default" ng-click="open($event)" type="button">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </button>
             </span>
         </p>
     </div>
 </div>
 
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#uib-datepicker-input-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-datepicker-input-code.html'" language="html" id="uib-datepicker-input-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#uib-datepicker-input-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-datepicker-input-code.js'" language="javascript" id="uib-datepicker-input-js"></pre>
+    </uib-tab>
+</uib-tabset>
+
 <div class="page-header">
     <h1>Modals</h1>
 </div>
 
-<button class="btn btn-default" angular-ripple ng-click="openModal()">Open me!</button>
-<button class="btn btn-default" angular-ripple ng-click="openModal('lg')">Large modal</button>
-<button class="btn btn-default" angular-ripple ng-click="openModal('sm')">Small modal</button>
-<button type="button" class="btn btn-default" ng-click="toggleAnimation()">Toggle Animation ({{ animationsEnabled }})</button>
-<div ng-show="selected">Selection from a modal: {{ selected }}</div>
+<button angular-ripple class="btn btn-default" ng-click="openModal()">Open me!</button>
+<button angular-ripple class="btn btn-default" ng-click="openModal('lg')">Large modal</button>
+<button angular-ripple class="btn btn-default" ng-click="openModal('sm')">Small modal</button>
+<button class="btn btn-default" ng-click="toggleAnimation()" type="button">Toggle Animation ({{ animationsEnabled }})</button>
+<div ng-show="selected">Selection from a modal:
+    {{ selected }}</div>
+
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#uib-modal-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-modal-code.html'" language="html" id="uib-modal-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#uib-modal-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-modal-code.js'" language="javascript" id="uib-modal-js"></pre>
+    </uib-tab>
+    <uib-tab heading="Modal Template">
+        <button class="btn btn-action" data-clipboard-target="#uib-modal-template-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/modal-template.html'" language="javascript" id="uib-modal-template-html"></pre>
+    </uib-tab>
+</uib-tabset>
 
 <div class="page-header">
     <h1>Pagination</h1>
 </div>
 
-<uib-pagination total-items="totalItems" ng-model="currentPage" ng-change="pageChanged()"></uib-pagination>
+<uib-pagination ng-change="pageChanged()" ng-model="currentPage" total-items="totalItems"></uib-pagination>
+
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#uib-pagination-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-pagination-code.html'" language="html" id="uib-pagination-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#uib-pagination-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-pagination-code.js'" language="javascript" id="uib-pagination-js"></pre>
+    </uib-tab>
+</uib-tabset>
 
 <div class="page-header">
     <h1>Tooltip</h1>
@@ -141,6 +249,20 @@
 <p>This is a
     <button angular-ripple class="btn btn-primary" uib-tooltip="{{dynamicTooltip}}">{{dynamicTooltipText}}</button>
 </p>
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#uib-tooltip-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-tooltip-code.html'" language="html" id="uib-tooltip-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#uib-tooltip-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-tooltip-code.js'" language="javascript" id="uib-tooltip-js"></pre>
+    </uib-tab>
+</uib-tabset>
 
 <div class="page-header">
     <h1>Tabs</h1>
@@ -148,7 +270,43 @@
 
 <uib-tabset>
     <uib-tab heading="Static title">Static content</uib-tab>
-    <uib-tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled">
+    <uib-tab active="tab.active" disable="tab.disabled" heading="{{tab.title}}" ng-repeat="tab in tabs">
         {{tab.content}}
+    </uib-tab>
+</uib-tabset>
+
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#uib-tabset-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-tabset-code.html'" language="html" id="uib-tabset-html"></pre>
+    </uib-tab>
+    <uib-tab heading="JS">
+        <button class="btn btn-action" data-clipboard-target="#uib-tabset-js" ngclipboard>
+            Copy
+        </button>
+        <pre hljs include="'views/ui-bootstrap/uib-tabset-code.js'" language="javascript" id="uib-tabset-js"></pre>
+    </uib-tab>
+</uib-tabset>
+
+<h2>Justified</h2>
+
+<uib-tabset justified="true">
+    <uib-tab heading="Static title 1">Static content 1</uib-tab>
+    <uib-tab heading="Static title 2">Static content 2</uib-tab>
+    <uib-tab heading="Static title 3">Static content 3</uib-tab>
+</uib-tabset>
+
+<uib-tabset class="mt-md mb-md">
+    <uib-tab heading="HTML">
+        <button class="btn btn-action" data-clipboard-target="#uib-tabset-justified-html" ngclipboard>
+            Copy
+        </button>
+        <pre hljs language="html" id="uib-tabset-justified-html"><uib-tabset justified="true">
+    <uib-tab heading="Static title 1">Static content 1</uib-tab>
+    <uib-tab heading="Static title 2">Static content 2</uib-tab>
+    <uib-tab heading="Static title 3">Static content 3</uib-tab>
+</uib-tabset></pre>
     </uib-tab>
 </uib-tabset>

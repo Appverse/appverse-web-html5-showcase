@@ -1,0 +1,11 @@
+<ui-select multiple ng-model="multipleDemo.selectedPeople" theme="bootstrap" ng-disabled="disabled" style="width: 800px;">
+    <ui-select-match placeholder="Select person...">{{$item.name}} &lt;{{$item.email}}&gt;</ui-select-match>
+    <ui-select-choices repeat="person in people | propsFilter: {name: $select.search, age: $select.search}">
+        <div ng-bind-html="person.name | highlight: $select.search"></div>
+        <small>
+                        email: {{person.email}}
+                        age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
+                    </small>
+    </ui-select-choices>
+</ui-select>
+<p>Selected: {{multipleDemo.selectedPeople}}</p>

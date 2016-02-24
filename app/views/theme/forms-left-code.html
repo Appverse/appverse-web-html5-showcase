@@ -1,0 +1,90 @@
+<form class="form-horizontal">
+    <fieldset>
+        <legend>Legend</legend>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="inputEmail">Email</label>
+            <div class="col-lg-10">
+                <input class="form-control" id="inputEmail" placeholder="Email" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="inputPassword">Password</label>
+            <div class="col-lg-10">
+                <input class="form-control" id="inputPassword" placeholder="Password" type="password">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">
+                        <span class="checkbox-material">
+                            <span class="check"></span>
+                        </span>
+                        Checkbox
+                    </label>
+                </div>
+                <br>
+                <div class="toggle-button">
+                    <label>
+                        <input checked="" type="checkbox">
+                        <span class="toggle"></span>
+                        Toggle Button
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="textArea">Textarea</label>
+            <div class="col-lg-10">
+                <textarea class="form-control" id="textArea" rows="3"></textarea>
+                <span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">Radios</label>
+            <div class="col-lg-10">
+
+                <div class="radio">
+                    <label>
+                        <input checked="checked" id="optionsRadios1" name="optionsRadios" type="radio" value="option1">
+                        <span class="circle"></span>
+                        <span class="check"></span>
+                        Option one is this
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input id="optionsRadios2" name="optionsRadios" type="radio" value="option2">
+                        <span class="circle"></span>
+                        <span class="check"></span>
+                        Option two is this
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label" for="select">Selects</label>
+            <div class="col-lg-10">
+                <select angular-ripple class="form-control" id="select">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+                <br>
+                <select angular-ripple class="form-control" multiple="">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 col-lg-offset-2">
+                <button angular-ripple class="btn btn-default" type="reset">Cancel</button>
+                <button angular-ripple class="btn btn-action" type="submit">Submit</button>
+            </div>
+        </div>
+    </fieldset>
+</form>

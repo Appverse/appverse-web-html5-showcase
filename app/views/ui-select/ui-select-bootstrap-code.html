@@ -1,0 +1,7 @@
+<p>Selected: {{address.selected.formatted_address}}</p>
+<ui-select ng-model="address.selected" theme="bootstrap" ng-disabled="disabled" reset-search-input="false" style="width: 300px;">
+    <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
+    <ui-select-choices repeat="address in addresses track by $index" refresh="refreshAddresses($select.search)" refresh-delay="0">
+        <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
+    </ui-select-choices>
+</ui-select>

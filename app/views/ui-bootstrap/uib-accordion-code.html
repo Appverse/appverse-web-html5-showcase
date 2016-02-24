@@ -1,0 +1,49 @@
+<script id="group-template.html" type="text/ng-template">
+    <div class="panel {{panelClass || 'panel-default'}}">
+        <div class="panel-heading">
+            <h4 class="panel-title" style="color:#fa39c3">
+                <a class="accordion-toggle" href ng-click="toggleOpen()" tabindex="0" uib-accordion-transclude="heading">
+                    <span ng-class="{'text-muted': isDisabled}">{{heading}}</span>
+                </a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" uib-collapse="!isOpen">
+            <div class="panel-body" ng-transclude style="text-align: right"></div>
+        </div>
+    </div>
+</script>
+
+<div class="checkbox">
+    <label>
+        <input ng-model="oneAtATime" type="checkbox">
+        Open only one at a time
+    </label>
+</div>
+
+<uib-accordion close-others="oneAtATime">
+    <uib-accordion-group heading="Static Header, initially expanded" is-disabled="status.isFirstDisabled" is-open="status.isFirstOpen">
+        This content is straight in the template.
+    </uib-accordion-group>
+    <uib-accordion-group heading="{{group.title}}" ng-repeat="group in groups">
+        {{group.content}}
+    </uib-accordion-group>
+    <uib-accordion-group heading="Dynamic Body Content">
+        <p>The body of the uib-accordion group grows to fit the contents</p>
+        <button class="btn btn-default btn-sm" ng-click="addItem()" type="button">Add Item</button>
+        <div ng-repeat="item in items">{{item}}</div>
+    </uib-accordion-group>
+    <uib-accordion-group heading="Custom template" template-url="group-template.html">
+        Hello
+    </uib-accordion-group>
+    <uib-accordion-group heading="Delete account" panel-class="panel-danger">
+        <p>Please, to delete your account, click the button below</p>
+        <button class="btn btn-danger">Delete</button>
+    </uib-accordion-group>
+    <uib-accordion-group is-open="status.open">
+        <uib-accordion-heading>
+            I can have markup, too!
+            <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </uib-accordion-heading>
+        This is just some content to illustrate fancy headings.
+    </uib-accordion-group>
+</uib-accordion>

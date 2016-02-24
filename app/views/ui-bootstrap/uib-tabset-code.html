@@ -1,0 +1,6 @@
+<uib-tabset>
+    <uib-tab heading="Static title">Static content</uib-tab>
+    <uib-tab active="tab.active" disable="tab.disabled" heading="{{tab.title}}" ng-repeat="tab in tabs">
+        {{tab.content}}
+    </uib-tab>
+</uib-tabset>
