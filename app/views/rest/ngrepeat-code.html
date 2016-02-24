@@ -60,18 +60,18 @@
                     </div>
                 </td>
                 <td>
-                    <div ng-show="user.editing && !usersSaving">
+                    <div ng-show="user.editing && !user.$saving">
                         <button av-rest-save="user" type="button" class="btn btn-primary" ng-disabled="!userForm.$valid">OK</button>
                         <button av-rest-cancel="user" type="button" class="btn btn-default">Cancel</button>
                     </div>
 
-                    <div ng-hide="user.editing || usersRemoving || usersSaving">
+                    <div ng-hide="user.editing || user.$removing || user.$saving">
                         <button av-rest-edit="user" class="btn btn-primary glyphicon glyphicon-pencil"></button>
                         <button av-rest-clone="user" class="btn btn-default glyphicon glyphicon-duplicate"></button>
                         <button av-rest-remove="user" rest-if="confirmUser(user)" class="btn btn-danger glyphicon glyphicon-trash"></button>
                     </div>
 
-                    <div ng-show="usersRemoving">
+                    <div ng-show="user.$removing">
                         <div class="progress">
                             <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                                 Removing...
@@ -79,7 +79,7 @@
                         </div>
                     </div>
 
-                    <div ng-show="usersSaving">
+                    <div ng-show="user.$saving">
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                                 Saving...

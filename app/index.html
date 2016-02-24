@@ -1,23 +1,23 @@
 <!doctype html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
 <!--<html class="no-js" manifest="cache.manifest">-->
 <html class="no-js">
     <!--<![endif]-->
 
     <head>
-        <title data-ng-bind="$state.current.name">
-            showcase
-        </title>
-        <meta charset="utf-8">
+    <title data-ng-bind="$state.current.name">
+        showcase
+    </title>
+    <meta charset="utf-8">
         <meta content="IE=edge" http-equiv="X-UA-Compatible">
         <meta content="" name="description">
         <meta content="width=device-width" name="viewport">
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <!-- build:css styles/vendor.css -->
+    <!-- build:css styles/vendor.css -->
         <link href="bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
         <link href="bower_components/ng-grid/ng-grid.min.css" rel="stylesheet">
         <link href="bower_components/angular-ui-select/dist/select.min.css" rel="stylesheet">
@@ -25,12 +25,12 @@
         <link href="bower_components/selectize/dist/css/selectize.css" rel="stylesheet">
         <link href="bower_components/angular-chart.js/dist/angular-chart.css" rel="stylesheet">
         <link href="bower_components/highlightjs/styles/github.css" rel="stylesheet">
-        <!-- endbuild -->
+    <!-- endbuild -->
 
-        <!-- build:css(.tmp) styles/styles.css -->
+    <!-- build:css(.tmp) styles/styles.css -->
         <link href="styles/bootstrap-theme.css" rel="stylesheet">
         <link href="styles/main.css" rel="stylesheet">
-        <!-- endbuild -->
+    <!-- endbuild -->
     </head>
 
     <!--Include the module with the app scope-->
@@ -40,70 +40,70 @@
 
         <!--[if lt IE 9]> <script src="bower_components/es5-shim/es5-shim.js"></script> <script src="bower_components/json3/lib/json3.min.js"></script> <![endif]-->
 
-        <!-- HEADER/NAVIGATION BAR
+    <!-- HEADER/NAVIGATION BAR
      This is the unnamed root, aka index.html
      You can place here your views in the ui-view points.
     -->
-        <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top">
 
-            <div class="navbar-header">
+        <div class="navbar-header">
                 <button class="navbar-toggle" data-target="#main-navbar-collapse" data-toggle="collapse" type="button">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <!-- ui-sref is a directive from ui-router for linking a state location with an anchor link.
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <!-- ui-sref is a directive from ui-router for linking a state location with an anchor link.
                  We should almost always use ui-sref instead of href on our links when we want
                  then to navigate to a state. When this link is clicked it will take the application
                  to the 'home' state. Behind the scenes the directive also adds the correct href attr
                  and url. -->
-                <a class="navbar-brand" ui-sref="home">
-                    showcase
-                </a>
-            </div>
+            <a class="navbar-brand" ui-sref="home">
+                showcase
+            </a>
+        </div>
 
-            <div class="collapse navbar-collapse" id="main-navbar-collapse">
-                <ul class="nav navbar-nav" ng-click="hideMenu()">
-                    <!-- Here you can see ui-sref in action again. Also notice the use of $state.includes, which
+        <div class="collapse navbar-collapse" id="main-navbar-collapse">
+            <ul class="nav navbar-nav" ng-click="hideMenu()">
+                <!-- Here you can see ui-sref in action again. Also notice the use of $state.includes, which
                  will set the links to 'active' if, for example on the first link, 'contacts' or any of
                  its descendant states are activated. -->
-                    <li ui-sref-active="active">
+                <li ui-sref-active="active">
                         <a angular-ripple="" ui-sref="home">
                             <i class="glyphicon glyphicon-home"></i>
                             Home</a>
-                    </li>
-                    <li ui-sref-active="active">
+                </li>
+                <li ui-sref-active="active">
                         <a angular-ripple="" ui-sref="theme">
                             <i class="glyphicon glyphicon-pencil"></i>
                             UI</a>
-                    </li>
-                    <li ui-sref-active="active">
+                </li>
+                <li ui-sref-active="active">
                         <a angular-ripple="" ui-sref="rest">
                             <i class="glyphicon glyphicon-th"></i>
                             Content</a>
-                    </li>
-                    <li ui-sref-active="active">
+                </li>
+                <li ui-sref-active="active">
                         <a angular-ripple="" ui-sref="webworkers">
                             <i class="glyphicon glyphicon-plane"></i>
                             Performance</a>
-                    </li>
-                    <li ui-sref-active="active">
+                </li>
+                <li ui-sref-active="active">
                         <a angular-ripple="" ui-sref="security">
                             <i class="glyphicon glyphicon-lock"></i>
                             Security</a>
-                    </li>
-                    <li ui-sref-active="active">
+                </li>
+                <li ui-sref-active="active">
                         <a angular-ripple="" ui-sref="about">
                             <i class="glyphicon glyphicon-info-sign"></i>
                             About</a>
-                    </li>
-                </ul>
-            </div>
+                </li>
+            </ul>
+        </div>
 
-        </nav>
+    </nav>
 
-        <!-- MAIN INSERTION POINT
+    <!-- MAIN INSERTION POINT
          Here is the main ui-view (it is unnamed) as the main content insertion point.
          It replaces the default Angular's ng-view directive.
          It will be populate by its immediate children's templates/views unless otherwise
@@ -111,90 +111,92 @@
      -->
         <div autoscroll="false" class="fade-in" ui-view=""></div>
 
-        <!-- build:js scripts/scripts.js -->
-        <script src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/angular-touch/angular-touch.min.js"></script>
-        <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
-        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-        <script src="bower_components/ng-grid/build/ng-grid.min.js"></script>
-        <script src="bower_components/angular-animate/angular-animate.min.js"></script>
-        <script src="bower_components/angular-xeditable/dist/js/xeditable.min.js"></script>
-        <script src="bower_components/appverse-web-html5-core/dist/appverse/appverse.js"></script>
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-router/appverse-router.js"></script>
-        <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-utils/appverse-utils.js"></script>
-        <script src="bower_components/angular-ripple/angular-ripple.js"></script>
-        <script src="bower_components/angular-ui-select/dist/select.min.js"></script>
-        <script src="bower_components/angularjs-slider/dist/rzslider.min.js"></script>
-        <script src="bower_components/angular-resize/dist/angular-resize.min.js"></script>
-        <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-        <script src="bower_components/Chart.js/Chart.min.js"></script>
-        <script src="bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
-        <script src="bower_components/highlightjs/highlight.pack.js"></script>
-        <script src="bower_components/angular-highlightjs/angular-highlightjs.min.js"></script>
+    <!-- build:js scripts/scripts.js -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.min.js"></script>
+    <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="bower_components/ng-grid/build/ng-grid.min.js"></script>
+    <script src="bower_components/ag-grid/dist/ag-grid.min.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-xeditable/dist/js/xeditable.min.js"></script>
+    <script src="bower_components/appverse-web-html5-core/dist/appverse/appverse.js"></script>
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-router/appverse-router.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-utils/appverse-utils.js"></script>
+    <script src="bower_components/angular-ripple/angular-ripple.js"></script>
+    <script src="bower_components/angular-ui-select/dist/select.min.js"></script>
+    <script src="bower_components/angularjs-slider/dist/rzslider.min.js"></script>
+    <script src="bower_components/angular-resize/dist/angular-resize.min.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="bower_components/Chart.js/Chart.min.js"></script>
+    <script src="bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
+    <script src="bower_components/highlightjs/highlight.pack.js"></script>
+    <script src="bower_components/angular-highlightjs/angular-highlightjs.min.js"></script>
         <script src="bower_components/clipboard/dist/clipboard.min.js"></script>
         <script src="bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
-        <script src="bower_components/qrcode/lib/qrcode.min.js"></script>
-        <script src="bower_components/angular-qr/angular-qr.min.js"></script>
-        <script src="bower_components/IndexedDBShim/dist/indexeddbshim.min.js"></script>
-        <script src="bower_components/ng-webworker/src/ng-webworker.min.js"></script>
+    <script src="bower_components/qrcode/lib/qrcode.min.js"></script>
+    <script src="bower_components/angular-qr/angular-qr.min.js"></script>
+    <script src="bower_components/IndexedDBShim/dist/indexeddbshim.min.js"></script>
+    <script src="bower_components/ng-webworker/src/ng-webworker.min.js"></script>
 
-        <script src="scripts/app.js"></script>
+    <script src="scripts/app.js"></script>
 
-        <script src="scripts/filters/date-format.js"></script>
-        <script src="scripts/controllers/home-controller.js"></script>
-        <script src="scripts/controllers/uibootstrap-controller.js"></script>
-        <script src="scripts/controllers/uiselect-controller.js"></script>
-        <script src="scripts/controllers/uicomponents-controller.js"></script>
-        <script src="scripts/controllers/charts-controller.js"></script>
-        <script src="scripts/controllers/performance-controllers.js"></script>
-        <script src="scripts/controllers/security-controllers.js"></script>
-        <script src="scripts/states/app-states.js"></script>
+    <script src="scripts/filters/date-format.js"></script>
+    <script src="scripts/controllers/home-controller.js"></script>
+    <script src="scripts/controllers/uibootstrap-controller.js"></script>
+    <script src="scripts/controllers/uiselect-controller.js"></script>
+    <script src="scripts/controllers/uicomponents-controller.js"></script>
+    <script src="scripts/controllers/charts-controller.js"></script>
+    <script src="scripts/controllers/performance-controllers.js"></script>
+    <script src="scripts/controllers/security-controllers.js"></script>
+    <script src="scripts/states/app-states.js"></script>
 
-        <!-- PERFORMANCE MODULE -->
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-performance/appverse-performance.js"></script>
+    <!-- PERFORMANCE MODULE -->
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-performance/appverse-performance.js"></script>
 
-        <!-- DETECTION MODULE -->
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-detection/appverse-detection.js"></script>
+    <!-- DETECTION MODULE -->
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-detection/appverse-detection.js"></script>
 
-        <!-- TRANSLATE MODULE -->
-        <script src="bower_components/angular-translate/angular-translate.min.js"></script>
-        <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
-        <script src="bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js"></script>
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-translate/appverse-translate.js"></script>
+    <!-- TRANSLATE MODULE -->
+    <script src="bower_components/angular-translate/angular-translate.min.js"></script>
+    <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+    <script src="bower_components/angular-dynamic-locale/src/tmhDynamicLocale.js"></script>
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-translate/appverse-translate.js"></script>
 
-        <!-- SERVER PUSH MODULE -->
-        <script src="bower_components/sockjs-client/dist/sockjs.min.js"></script>
-        <script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-serverpush/appverse-serverpush.js"></script>
+    <!-- SERVER PUSH MODULE -->
+    <script src="bower_components/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-serverpush/appverse-serverpush.js"></script>
 
-        <!-- REST MODULE -->
-        <script src="bower_components/lodash/lodash.min.js"></script>
-        <script src="bower_components/restangular/dist/restangular.min.js"></script>
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-rest/appverse-rest.js"></script>
+    <!-- REST MODULE -->
+    <script src="bower_components/lodash/lodash.min.js"></script>
+    <script src="bower_components/restangular/dist/restangular.min.js"></script>
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-rest/appverse-rest.js"></script>
 
-        <!-- IONIC MODULE -->
-        <script src="bower_components/ionic/release/js/ionic.min.js"></script>
-        <script src="bower_components/ionic/release/js/ionic-angular.min.js"></script>
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-ionic/appverse-ionic.min.js"></script>
+    <!-- IONIC MODULE -->
+    <script src="bower_components/ionic/release/js/ionic.min.js"></script>
+    <script src="bower_components/ionic/release/js/ionic-angular.min.js"></script>
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-ionic/appverse-ionic.min.js"></script>
 
-        <!-- LOGGING MODULE -->
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-logging/appverse-logging.js"></script>
+    <!-- LOGGING MODULE -->
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-logging/appverse-logging.js"></script>
 
-        <!-- CACHE MODULE -->
-        <script src="bower_components/angular-cache/dist/angular-cache.min.js"></script>
-        <script src="bower_components/appverse-web-html5-core/dist/appverse-cache/appverse-cache.js"></script>
+    <!-- CACHE MODULE -->
+    <script src="bower_components/angular-cache/dist/angular-cache.min.js"></script>
+    <script src="bower_components/appverse-web-html5-core/dist/appverse-cache/appverse-cache.js"></script>
 
-        <!-- endbuild -->
+    <!-- endbuild -->
 
-        <script src="scripts/controllers/rest-controller-code.js"></script>
-        <script src="scripts/controllers/rest-ng-repeat-code.js"></script>
-        <script src="scripts/controllers/detection-controller-code.js"></script>
-        <script src="scripts/controllers/webworkers-controller-code.js"></script>
-        <script src="scripts/controllers/translation-controller-code.js"></script>
-        <script src="scripts/controllers/simpleidb-controller-code.js"></script>
-        <script src="scripts/controllers/websocket-controller-code.js"></script>
+    <script src="scripts/controllers/rest-controller-code.js"></script>
+    <script src="scripts/controllers/rest-ng-repeat-code.js"></script>
+    <script src="scripts/controllers/users-controller-code.js"></script>
+    <script src="scripts/controllers/detection-controller-code.js"></script>
+    <script src="scripts/controllers/webworkers-controller-code.js"></script>
+    <script src="scripts/controllers/translation-controller-code.js"></script>
+    <script src="scripts/controllers/simpleidb-controller-code.js"></script>
+    <script src="scripts/controllers/websocket-controller-code.js"></script>
     </body>
 
 </html>

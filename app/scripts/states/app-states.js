@@ -21,7 +21,7 @@
 angular.module('showcaseApp')
 
 .config(
-    function ($stateProvider, $urlRouterProvider, $httpProvider, WebworkerProvider) {
+    function($stateProvider, $urlRouterProvider, $httpProvider, WebworkerProvider) {
 
         'use strict';
 
@@ -91,6 +91,12 @@ angular.module('showcaseApp')
             parent: 'content',
             url: '/rest-ng-repeat',
             templateUrl: 'views/rest/rest-ng-repeat.html'
+        })
+
+        .state('rest-ag-grid', {
+            parent: 'content',
+            url: '/rest-ag-grid',
+            templateUrl: 'views/rest/rest-ag-grid.html'
         })
 
         .state('translation', {

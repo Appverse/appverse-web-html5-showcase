@@ -48,6 +48,7 @@
         'appverse',
         'hljs',
         'ngGrid',
+        'agGrid',
         'ja.qr',
         'xeditable',
         'ngWebworker',
