@@ -34,29 +34,30 @@ module.exports = function() {
         colors: true,
 
         files: [
-            //3rd Party Code
+            //3rd Party Code            
+            'app/bower_components/es5-shim/es5-shim.min.js',
+            'app/bower_components/es5-shim/es5-sham.min.js',
+            'app/bower_components/json3/lib/json3.min.js',
+
             'app/bower_components/jquery/dist/jquery.min.js',
             'app/bower_components/angular/angular.min.js',
             'app/bower_components/angular-touch/angular-touch.min.js',
             'app/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-            'app/bower_components/angular-cookies/angular-cookies.min.js',
             'app/bower_components/angular-ui-router/release/angular-ui-router.min.js',
-            'app/bower_components/angular-resource/angular-resource.min.js',
             'app/bower_components/angular-cache/dist/angular-cache.min.js',
             'app/bower_components/ng-grid/build/ng-grid.min.js',
+            'app/bower_components/ag-grid/dist/ag-grid.min.js',
 
             //App-specific Code
             'app/bower_components/appverse-web-html5-core/dist/appverse-cache/appverse-cache.js',
-            //            'app/bower_components/appverse-web-html5-core/dist/appverse-detection/appverse-detection.js',
-            //'app/bower_components/appverse-web-html5-core/dist/appverse-logging/appverse-logging.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse-detection/appverse-detection.js',
+            'app/bower_components/appverse-web-html5-core/dist/appverse-logging/appverse-logging.js',
             'app/bower_components/appverse-web-html5-core/dist/appverse-router/appverse-router.min.js',
             'app/bower_components/appverse-web-html5-core/dist/appverse/appverse.min.js',
 
             'app/bower_components/lodash/lodash.min.js',
             'app/bower_components/restangular/dist/restangular.min.js',
             'app/bower_components/appverse-web-html5-core/dist/appverse-rest/appverse-rest.js',
-
-            'app/bower_components/appverse-web-html5-security/dist/appverse-security/appverse-security.js',
 
             'app/bower_components/appverse-web-html5-core/dist/appverse-serverpush/appverse-serverpush.js',
 
