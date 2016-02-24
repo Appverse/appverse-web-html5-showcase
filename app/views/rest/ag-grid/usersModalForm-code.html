@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{item.fromServer?'Edit':'Add'}}</h3>
+</div>
+
+<form name="myform">
+
+    <div class="modal-body">
+
+        <div class="form-group" ng-class="{'has-success has-feedback': myform.name.$valid, 'has-error has-feedback': myform.name.$invalid}">
+            <label class="control-label" for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" ng-model="item.name" required autofocus>
+            <span ng-class="{'glyphicon-ok': myform.name.$valid, 'glyphicon-remove': myform.name.$invalid}" class="glyphicon form-control-feedback"></span>
+        </div>
+
+        <div class="form-group" ng-class="{'has-success has-feedback': myform.gender.$valid, 'has-error has-feedback': myform.gender.$invalid}">
+            <label class="control-label" for="name">Gender</label>
+            <select class="form-control" name="gender" ng-model="item.gender" required>
+                <option value="male">male</option>
+                <option value="female">female</option>
+            </select>
+        </div>
+
+        <div class="form-group" ng-class="{'has-success has-feedback': myform.company.$valid, 'has-error has-feedback': myform.company.$invalid}">
+            <label class="control-label" for="company">Company</label>
+            <input type="text" class="form-control" id="company" name="company" ng-model="item.company" required autofocus>
+            <span ng-class="{'glyphicon-ok': myform.company.$valid, 'glyphicon-remove': myform.company.$invalid}" class="glyphicon form-control-feedback"></span>
+        </div>
+
+        <div class="form-group" ng-class="{'has-success has-feedback': myform.age.$valid, 'has-error has-feedback': myform.age.$invalid}">
+            <label class="control-label" for="age">Age</label>
+            <input type="number" class="form-control" id="age" name="age" ng-model="item.age" required autofocus>
+            <span ng-class="{'glyphicon-ok': myform.age.$valid, 'glyphicon-remove': myform.age.$invalid}" class="glyphicon form-control-feedback"></span>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button angular-ripple type="button" class="btn btn-default" ng-click="cancel()"><i class="glyphicon glyphicon-ban-circle"></i> Cancel</button>
+        <button angular-ripple type="submit" class="btn btn-action" ng-click="ok()" av-rest-save="item" ng-disabled="!myform.$valid"><i class="glyphicon {{item.fromServer?'glyphicon-floppy-disk':'glyphicon-plus'}}"></i> {{item.fromServer?'Save':'Add'}}</button>
+    </div>
+</form>
