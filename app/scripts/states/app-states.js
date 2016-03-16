@@ -149,9 +149,27 @@ angular.module('showcaseApp')
             controller: 'SecurityController'
         })
 
-        .state('about', {
-            url: '/about',
-            templateUrl: 'views/about.html',
+        .state('getting-started', {
+            abstract: true,
+            templateUrl: 'views/getting-started.html',
+        })
+
+        .state('generator', {
+            parent: 'getting-started',
+            url: '/generator',
+            templateUrl: 'views/getting-started/generator.html',
+        })
+
+        .state('doc', {
+            parent: 'getting-started',
+            url: '/doc',
+            templateUrl: 'views/getting-started/doc.html',
+        })
+
+        .state('links', {
+            parent: 'getting-started',
+            url: '/links',
+            templateUrl: 'views/getting-started/links.html',
         });
 
     });
