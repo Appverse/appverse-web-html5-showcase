@@ -5,7 +5,10 @@
 module.exports = {
     options: {
         sourceMap: true,
-        includePaths: ['<%=paths.app%>/bower_components/bootstrap-sass/assets/stylesheets']
+        includePaths: [
+            '<%=paths.app%>/bower_components/bootstrap-sass/assets/stylesheets',
+            '<%=paths.app%>/bower_components/appverse-bootstrap-sass-theme/appverse'
+        ]
     },
     server: {
         files: [{
@@ -14,7 +17,7 @@ module.exports = {
             src: '*.{scss,sass}',
             dest: '.tmp/styles',
             ext: '.css'
-                }]
+        }]
     }
 
 };
