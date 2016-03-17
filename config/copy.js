@@ -18,7 +18,7 @@ module.exports = {
                 'scripts/**/*-code.js',
                 'styles/images/**',
                 'styles/bootstrap-theme/fonts/**',
-                'views/**/*.html'
+                'views/**/*.*'
             ]
         }, {
             expand: true,
