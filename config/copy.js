@@ -4,40 +4,48 @@
 
 module.exports = {
     dist: {
-        files: [
-            {
-                expand: true,
-                dot: true,
-                cwd: '<%= paths.app %>',
-                dest: '<%= paths.dist %>',
-                src: [
-                        '*.{ico,html}',
-                        'api/**',
-                        'bower_components/ng-webworker/src/worker_wrapper.min.js',
-                        'images/**',
-                        'resources/**',
-                        'scripts/**/*-code.js',
-                        'styles/images/**',
-                        'styles/bootstrap-theme/fonts/**',
-                        'views/**/*.html'
-                    ]
-            }, {
-                expand: true,
-                cwd: '<%=paths.app%>/bower_components/bootstrap-sass/assets/fonts/bootstrap',
-                dest: '<%=paths.dist%>/fonts',
-                src: '**/*'
-            }, {
-                expand: true,
-                cwd: '<%=paths.app%>/bower_components/angular-i18n',
-                dest: '<%=paths.dist%>/resources/i18n/angular',
-                src: [
-                        '*en-us.js',
-                        '*es-es.js',
-                        '*ja-jp.js',
-                        '*ar-eg.js'
-                    ]
-            }
-        ]
+        files: [{
+            expand: true,
+            dot: true,
+            cwd: '<%= paths.app %>',
+            dest: '<%= paths.dist %>',
+            src: [
+                '*.{ico,html}',
+                'api/**',
+                'bower_components/ng-webworker/src/worker_wrapper.min.js',
+                'images/**',
+                'resources/**',
+                'scripts/**/*-code.js',
+                'styles/images/**',
+                'styles/bootstrap-theme/fonts/**',
+                'views/**/*.html'
+            ]
+        }, {
+            expand: true,
+            cwd: '<%=paths.app%>/bower_components/bootstrap-sass/assets/fonts/bootstrap',
+            dest: '<%=paths.dist%>/fonts',
+            src: '**/*'
+        }, {
+            expand: true,
+            cwd: '<%=paths.app%>/bower_components/appverse-bootstrap-sass-theme/appverse/bootstrap-theme/fonts',
+            dest: '<%=paths.dist%>/styles/fonts',
+            src: '**/*'
+        }, {
+            expand: true,
+            cwd: '<%=paths.app%>/bower_components/appverse-bootstrap-sass-theme/appverse/bootstrap-theme/images',
+            dest: '<%=paths.dist%>/images',
+            src: '**/*'
+        }, {
+            expand: true,
+            cwd: '<%=paths.app%>/bower_components/angular-i18n',
+            dest: '<%=paths.dist%>/resources/i18n/angular',
+            src: [
+                '*en-us.js',
+                '*es-es.js',
+                '*ja-jp.js',
+                '*ar-eg.js'
+            ]
+        }]
     },
     styles: {
         expand: true,
@@ -50,16 +58,28 @@ module.exports = {
         cwd: '<%=paths.app%>/bower_components/angular-i18n',
         dest: '.tmp/resources/i18n/angular',
         src: [
-                    '*en-us.js',
-                    '*es-es.js',
-                    '*ja-jp.js',
-                    '*ar-eg.js'
-                ]
+            '*en-us.js',
+            '*es-es.js',
+            '*ja-jp.js',
+            '*ar-eg.js'
+        ]
     },
     fonts: {
-        expand: true,
-        cwd: '<%=paths.app%>/bower_components/bootstrap-sass/assets/fonts/bootstrap',
-        dest: '.tmp/fonts',
-        src: '**/*'
+        files: [{
+            expand: true,
+            cwd: '<%=paths.app%>/bower_components/bootstrap-sass/assets/fonts/bootstrap',
+            dest: '.tmp/fonts',
+            src: '**/*'
+        }, {
+            expand: true,
+            cwd: '<%=paths.app%>/bower_components/appverse-bootstrap-sass-theme/appverse/bootstrap-theme/fonts',
+            dest: '.tmp/styles/fonts',
+            src: '**/*'
+        }, {
+            expand: true,
+            cwd: '<%=paths.app%>/bower_components/appverse-bootstrap-sass-theme/appverse/bootstrap-theme/images',
+            dest: '.tmp/images',
+            src: '**/*'
+        }]
     }
 };
