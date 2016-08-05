@@ -45,6 +45,7 @@
         'appverse.router',
         'appverse.serverPush',
         'appverse.translate',
+        'appverse.security',
         'appverse',
         'hljs',
         'ngGrid',

@@ -8,27 +8,34 @@
 <div class="container">
     <div class="row">
         <div ng-show="isAuthenticated===false" class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-            <form action="/oauth-server/oauth/authorize" enctype="application/x-www-form-urlencoded" method="post">
-                <div class="form-group">
-                    <label for="username">User</label>
-                    <input type="text" class="form-control" name="username" placeholder="User" value="user">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" name="password" placeholder="Password" value="password">
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" ng-model="remembered" ng-change="remember()" />
-                        <span class="checkbox-material"><span class="check"></span></span>
-                        Remember me
-                    </label>
-                </div>
-                <input type="hidden" name="client_id" value="oauth-server-showcase-client">
-                <input type="hidden" name="redirect_uri" value="{{url}}">
-                <input type="hidden" name="response_type" value="code">
-                <button angular-ripple type="submit" class="btn btn-primary">Submit</button>
-            </form>
+            <div class="form-group">
+                <label for="username">User</label>
+                <input type="text" class="form-control" name="username" ng-model="username" placeholder="User" value="user">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" ng-model="password" placeholder="Password" value="password">
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="remembered" ng-change="remember()"/>
+                    <span class="checkbox-material">
+                        <span class="check"></span>
+                    </span>
+                    Remember me
+                </label>
+            </div>
+            <input type="hidden" name="client_id" value="oauth-server-showcase-client">
+            <input type="hidden" name="redirect_uri" value="{{url}}">
+            <input type="hidden" name="response_type" value="code">
+            <button angular-ripple class="btn btn-primary" ng-click="login()">Login</button>
+            <br>
+            <br>
+            <p ng-show="isSending2">Sending log to server using secured API ...</p>
+            <div ng-show="sendLogResponse2">Server response:
+                <pre hljs hljs-language="json" hljs-source="sendLogResponse2 | json"></pre>
+            </div>
+
             <p ng-show="logOutSuccess" class="text-success">Logout successful !</p>
         </div>
         <div ng-show="isAuthenticated" class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
@@ -38,7 +45,9 @@
             <p>Oauth data:
                 <pre hljs hljs-language="json" hljs-source="oauth_response | json"></pre>
             </p>
-            <p ng-show="expiration_seconds >= 1">Access token expires in: <span ng-bind="expiration_seconds"></span> seconds</p>
+            <p ng-show="expiration_seconds >= 1">Access token expires in:
+                <span ng-bind="expiration_seconds"></span>
+                seconds</p>
             <p ng-show="expiration_seconds < 1 && !refreshingToken" class="text-warning">Access token expired.</p>
             <p ng-show="refreshingToken">Refreshing access token using refresh token...</p>
         </div>
@@ -56,7 +65,9 @@
             <br>
             <br>
             <p ng-show="isSending">Sending log to server using secured API ...</p>
-            <div ng-show="sendLogResponse">Server response: <pre hljs hljs-language="json" hljs-source="sendLogResponse | json"></pre></div>
+            <div ng-show="sendLogResponse">Server response:
+                <pre hljs hljs-language="json" hljs-source="sendLogResponse | json"></pre>
+            </div>
         </div>
         <div class="col-sm-6">
             <div class="panel panel-primary">
@@ -69,7 +80,9 @@
             <br>
             <br>
             <p ng-show="isSending2">Sending log to server using secured API ...</p>
-            <div ng-show="sendLogResponse2">Server response: <pre hljs hljs-language="json" hljs-source="sendLogResponse2 | json"></pre></div>
+            <div ng-show="sendLogResponse2">Server response:
+                <pre hljs hljs-language="json" hljs-source="sendLogResponse2 | json"></pre>
+            </div>
         </div>
     </div>
 </div>

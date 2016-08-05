@@ -21,11 +21,11 @@
 angular.module('App.Controllers')
 
 .controller('SecurityController',
-    function($scope, $log, $http, $window, $interval, $rootScope, $state) {
+    function($scope, $log, $http, $window, AuthenticationService, $interval, $rootScope, $state) {
 
         'use strict';
 
-        $log.debug('SecurityController');
+        $log.debug('SecurityController: initial');
 
         $scope.url = $window.location.origin + $window.location.pathname + '#' + $state.current.url;
 
@@ -33,7 +33,7 @@ angular.module('App.Controllers')
 
         var response = JSON.parse(localStorage.getItem('oauth_response'));
 
-        $log.debug('localStorage oauth_response', response);
+        $log.debug('SecurityController: localStorage oauth_response: ', response);
 
         if (response) {
             checkResponse(response);
@@ -44,20 +44,33 @@ angular.module('App.Controllers')
         var code = localStorage.getItem('code');
 
         if (code) {
-            $log.debug('localStorage code', code);
+            $log.debug('SecurityController: localStorage code', code);
             getToken(code);
             localStorage.removeItem('code');
         } else if (!$scope.isAuthenticated) {
             $scope.isAuthenticated = false;
         }
 
+        function login() {
+          $log.debug('SecurityController: login');
+
+          var username = $scope.username;
+          var password = $scope.password;
+          AuthenticationService.sendLogoutRequest();
+          var credentials;
+          credentials.name = username;
+          credentials.password = password;
+          AuthenticationService.sendLoginRequest(credentials);
+        }
+
         function checkResponse(response) {
+            $log.debug('SecurityController: checkResponse response:', response);
 
             var token_date = localStorage.getItem('token_date');
 
             if (token_date) {
 
-                $log.debug('token_date', token_date);
+                $log.debug('SecurityController: checkResponse token_date', token_date);
 
                 $scope.oauth_response = response;
 
@@ -81,7 +94,7 @@ angular.module('App.Controllers')
 
         function refreshToken() {
 
-            $log.debug('refreshToken');
+            $log.debug('SecurityController: refreshToken');
 
             if (!$scope.oauth_response || !$scope.oauth_response.refresh_token) {
                 return {
@@ -108,7 +121,7 @@ angular.module('App.Controllers')
                     'authorization': 'Basic ' + btoa('oauth-server-showcase-client:our-secret')
                 }
             }).then(function(response) {
-                $log.debug('refreshToken success', response);
+                $log.debug('SecurityController: refreshToken success response:', response);
 
                 $scope.oauth_response = response.data;
 
@@ -134,7 +147,7 @@ angular.module('App.Controllers')
 
         function getToken(code) {
 
-            $log.debug('getToken', code);
+            $log.debug('SecurityController: getToken code: ', code);
 
             $http({
                 method: 'POST',
@@ -150,7 +163,7 @@ angular.module('App.Controllers')
                     'authorization': 'Basic ' + btoa('oauth-server-showcase-client:our-secret')
                 }
             }).success(function(response) {
-                $log.debug('getToken success', response);
+                $log.debug('SecurityController: getToken success response: ', response);
 
                 $scope.oauth_response = response;
 
@@ -163,7 +176,7 @@ angular.module('App.Controllers')
 
                 checkResponse($scope.oauth_response);
             }).error(function(response, statusCode) {
-                $log.debug('getToken error', response);
+                $log.debug('SecurityController: getToken error response: ', response);
 
                 if (statusCode === 400) {
                     $scope.isAuthenticated = false;
@@ -171,59 +184,8 @@ angular.module('App.Controllers')
             });
         }
 
-        $scope.remember = function() {
-
-            $log.debug('remembered', $scope.remembered);
-
-            if ($scope.remembered) {
-                localStorage.setItem('remember', true);
-            } else {
-                localStorage.removeItem('remember');
-            }
-        };
-
-        $scope.logOut = function() {
-
-            $http({
-                method: 'POST',
-                url: '/oauth-server/api/sec/logout',
-                data: $.param({
-                    access_token: $scope.oauth_response.access_token
-                })
-            }).then(function(response) {
-                $log.debug('logOut response', response);
-                $scope.logOutSuccess = true;
-
-                localStorage.removeItem('oauth_response');
-                localStorage.removeItem('token_date');
-                $scope.isAuthenticated = false;
-                $scope.oauth_response = null;
-                $interval.cancel(expirationInterval);
-            });
-        };
-
-        $scope.sendLog = function(refresh) {
-
-            $log.debug('sendLog', refresh);
-
-            if (!$scope.oauth_response || !$scope.oauth_response.access_token) {
-                $scope.oauth_response = {
-                    access_token: null
-                };
-            }
-
-            if ($scope.expiration_seconds < 1 && refresh) {
-                refreshToken().then(function(response) {
-                    if (response.status === 200) {
-                        send(refresh);
-                    }
-                });
-            } else {
-                send(refresh);
-            }
-        };
-
         function send(refresh) {
+            $log.debug('SecurityController: send refresh:', refresh);
 
             if (refresh) {
                 $scope.isSending = true;
@@ -280,4 +242,59 @@ angular.module('App.Controllers')
                 }
             });
         }
+
+        $scope.remember = function() {
+
+            $log.debug('SecurityController: remembered', $scope.remembered);
+
+            if ($scope.remembered) {
+                localStorage.setItem('remember', true);
+            } else {
+                localStorage.removeItem('remember');
+            }
+        };
+
+        $scope.logOut = function() {
+            AuthenticationService.sendLogoutRequest();
+            /*
+            $http({
+                method: 'POST',
+                url: '/oauth-server/api/sec/logout',
+                data: $.param({
+                    access_token: $scope.oauth_response.access_token
+                })
+            }).then(function(response) {
+                $log.debug('logOut response', response);
+                $scope.logOutSuccess = true;
+
+                localStorage.removeItem('oauth_response');
+                localStorage.removeItem('token_date');
+                $scope.isAuthenticated = false;
+                $scope.oauth_response = null;
+                $interval.cancel(expirationInterval);
+            });
+            */
+        };
+
+        $scope.sendLog = function(refresh) {
+
+            $log.debug('sendLog', refresh);
+
+            if (!$scope.oauth_response || !$scope.oauth_response.access_token) {
+                $scope.oauth_response = {
+                    access_token: null
+                };
+            }
+
+            if ($scope.expiration_seconds < 1 && refresh) {
+                refreshToken().then(function(response) {
+                    if (response.status === 200) {
+                        send(refresh);
+                    }
+                });
+            } else {
+                send(refresh);
+            }
+        };
+
     });

@@ -34,7 +34,7 @@ module.exports = function() {
         colors: true,
 
         files: [
-            //3rd Party Code            
+            //3rd Party Code
             'app/bower_components/es5-shim/es5-shim.min.js',
             'app/bower_components/es5-shim/es5-sham.min.js',
             'app/bower_components/json3/lib/json3.min.js',
@@ -54,6 +54,9 @@ module.exports = function() {
             'app/bower_components/appverse-web-html5-core/dist/appverse-logging/appverse-logging.js',
             'app/bower_components/appverse-web-html5-core/dist/appverse-router/appverse-router.min.js',
             'app/bower_components/appverse-web-html5-core/dist/appverse/appverse.min.js',
+
+            'app/bower_components/appverse-web-html5-security/dist/appverse-security/appverse-security.min.js',
+            'app/bower_components/appverse-web-html5-security/dist/appverse-html5-security.min.js',
 
             'app/bower_components/lodash/lodash.min.js',
             'app/bower_components/restangular/dist/restangular.min.js',
