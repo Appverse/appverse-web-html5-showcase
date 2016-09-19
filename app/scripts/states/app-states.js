@@ -21,7 +21,7 @@
 angular.module('showcaseApp')
 
 .config(
-    function($stateProvider, $urlRouterProvider, $httpProvider, WebworkerProvider) {
+    function ($stateProvider, $urlRouterProvider, $httpProvider, WebworkerProvider) {
 
         'use strict';
 
@@ -31,6 +31,7 @@ angular.module('showcaseApp')
         $httpProvider.useApplyAsync();
 
         $urlRouterProvider.otherwise('/home');
+        $urlRouterProvider.when('/roles', '/roles/login');
 
         $stateProvider.state('home', {
             url: '/home',
@@ -144,9 +145,58 @@ angular.module('showcaseApp')
         })
 
         .state('security', {
-            url: '/security',
-            templateUrl: 'views/security/security.html',
-            controller: 'SecurityController'
+            abstract: true,
+            templateUrl: 'views/security.html'
+        })
+
+        .state('oauth', {
+            parent: 'security',
+            url: '/oauth',
+            templateUrl: 'views/oauth/oauth.html',
+            controller: 'OAuthController'
+        })
+
+        .state('roles', {
+            parent: 'security',
+            url: '/roles',
+            templateUrl: 'views/roles/roles.html'
+        })
+
+        .state('login', {
+            parent: 'roles',
+            url: '/login',
+            templateUrl: 'views/roles/login.html',
+            controller: 'RolesController'
+        })
+
+        .state('admin', {
+            parent: 'roles',
+            url: '/admin',
+            templateUrl: 'views/roles/admin.html'
+        })
+
+        .state('customer', {
+            parent: 'roles',
+            url: '/customer',
+            templateUrl: 'views/roles/customer.html'
+        })
+
+        .state('profile', {
+            parent: 'roles',
+            url: '/profile',
+            templateUrl: 'views/roles/profile.html'
+        })
+
+        .state('routeDenied', {
+            parent: 'roles',
+            url: '/routeDenied',
+            templateUrl: 'views/roles/routeDenied.html'
+        })
+
+        .state('help', {
+            parent: 'roles',
+            url: '/help',
+            templateUrl: 'views/roles/help.html'
         })
 
         .state('getting-started', {

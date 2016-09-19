@@ -1,0 +1,43 @@
+<h2>Help page</h2>
+<p class="alert alert-info">This page is accessible even if you are not logged in.</p>
+<p>Two users are available in this demo:</p>
+<table class="table table-bordered table-hovered">
+    <tr class="info">
+        <th>Username</th>
+        <th>Password</th>
+        <th>Roles</th>
+    </tr>
+    <tr>
+        <td>admin</td>
+        <td>admin</td>
+        <td>ADMIN</td>
+    </tr>
+    <tr>
+        <td>john</td>
+        <td>john</td>
+        <td>CUSTOMER</td>
+    </tr>
+</table>
+<p>Here are the restrictions on the different pages:</p>
+<table class="table table-bordered table-hovered">
+    <tr class="info">
+        <th>URL</th>
+        <th>Roles allowed</th>
+    </tr>
+    <tr>
+        <td>/admin</td>
+        <td>ADMIN</td>
+    </tr>
+    <tr>
+        <td>/customer</td>
+        <td>CUSTOMER</td>
+    </tr>
+    <tr>
+        <td>/profile</td>
+        <td>ADMIN,CUSTOMER</td>
+    </tr>
+</table>
+<a ui-sref="login" class="btn btn-primary">Go to login page</a>
+<a ui-sref="admin" class="btn btn-primary">Go to admin page</a>
+<a ui-sref="customer" class="btn btn-primary">Go to customer page</a>
+<a ui-sref="profile" class="btn btn-primary">Go to profile page</a>

@@ -19,3 +19,25 @@ describe("E2E: Testing dataloading view", function () {
         });
     });
 });
+
+describe("E2E: Testing indexedDB view", function () {
+
+    beforeAll(function () {
+        browser.setLocation('cache');
+    });
+
+    it('should have a working /cache route', function () {
+        expect(browser.getLocationAbsUrl()).toBe("/cache");
+    });
+});
+
+describe("E2E: Testing websocket view", function () {
+
+    beforeAll(function () {
+        browser.setLocation('websocket');
+    });
+
+    it('should have a working /websocket route', function () {
+        expect(browser.getLocationAbsUrl()).toBe("/websocket");
+    });
+});
