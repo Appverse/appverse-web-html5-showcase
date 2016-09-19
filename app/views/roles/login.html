@@ -1,0 +1,30 @@
+<h2>Login Page</h2>
+
+<div class="row">
+    <div class="col-lg-5 col-md-6 col-sm-8">
+
+        <div ng-if="errorStatus" class="alert alert-danger" role="alert">
+            <p>Username and/or password are incorrect. Please try again</p>
+        </div>
+
+        <form ng-submit="login()" ng-hide="AuthenticationService.isLoggedIn()">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Username" ng-model="username">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" ng-model="password">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <div ng-show="AuthenticationService.isLoggedIn()">
+            <a ui-sref="admin" class="btn btn-primary">Go to admin page</a>
+            <a ui-sref="customer" class="btn btn-primary">Go to customer page</a>
+            <a ui-sref="profile" class="btn btn-primary">Go to profile page</a>
+        </div>
+
+    </div>
+</div>

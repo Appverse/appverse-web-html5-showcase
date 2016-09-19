@@ -10,4 +10,8 @@ describe("E2E: Testing webworkers view", function () {
     it('should have a working /webworkers route', function () {
         expect(browser.getLocationAbsUrl()).toBe("/webworkers");
     });
+
+    it('should run the demo image', function () {
+        element(by.buttonText('Run')).click();
+    });
 });

@@ -18,8 +18,18 @@ describe("E2E: Testing Routes", function () {
         expect(browser.getLocationAbsUrl()).toBe("/charts");
     });
 
-    it('should have a working /about route', function () {
-        browser.setLocation('about');
-        expect(browser.getLocationAbsUrl()).toBe("/about");
+    it('should have a working /generator route', function () {
+        browser.setLocation('generator');
+        expect(browser.getLocationAbsUrl()).toBe("/generator");
+    });
+
+    it('should have a working /doc route', function () {
+        browser.setLocation('doc');
+        expect(browser.getLocationAbsUrl()).toBe("/doc");
+    });
+
+    it('should have a working /links route', function () {
+        browser.setLocation('links');
+        expect(browser.getLocationAbsUrl()).toBe("/links");
     });
 });

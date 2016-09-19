@@ -21,7 +21,7 @@
 
 
 /*globals AppInit:false */
-(function() {
+(function () {
     'use strict';
     angular.module('App.Controllers', []);
     angular.module('App.Filters', []);
@@ -45,6 +45,7 @@
         'appverse.router',
         'appverse.serverPush',
         'appverse.translate',
+        'appverse.security',
         'appverse',
         'hljs',
         'ngGrid',
@@ -52,13 +53,14 @@
         'ja.qr',
         'xeditable',
         'ngWebworker',
-        'ngclipboard'
-    ]).run(function($log, $rootScope, $window) {
+        'ngclipboard',
+        'ngMockE2E'
+    ]).run(function ($log, $rootScope, $window, $httpBackend, SECURITY_GENERAL, Base64) {
 
         $log.debug('App run', $window.location.search);
 
         $rootScope.$on('$locationChangeStart',
-            function(angularEvent, newUrl, oldUrl) {
+            function (angularEvent, newUrl, oldUrl) {
 
                 $log.debug('$locationChangeStart', newUrl);
                 $log.debug('$locationChangeStart', oldUrl);
@@ -80,10 +82,45 @@
 
             });
 
-        $rootScope.hideMenu = function() {
+        $rootScope.hideMenu = function () {
             $log.debug('hideMenu');
             $('#main-navbar-collapse').collapse('hide');
         };
+
+        $httpBackend.whenGET(/^views\//).passThrough();
+        $httpBackend.whenGET(/^resources\//).passThrough();
+        $httpBackend.whenGET(/^scripts\//).passThrough();
+        $httpBackend.whenGET(/^api\//).passThrough();
+        $httpBackend.whenPUT(/^api\//).passThrough();
+        $httpBackend.whenDELETE(/^api\//).passThrough();
+
+        $httpBackend.when(SECURITY_GENERAL.loginHTTPMethod, SECURITY_GENERAL.loginURL).respond(function (method, url, data, headers) {
+
+            var header = headers.Authorization;
+            var login = Base64.decode(header.split('Basic ')[1]);
+
+            if (login === 'admin:admin') {
+                return [200, {
+                    name: 'admin',
+                    roles: ['ADMIN'],
+                    bToken: 'aaa',
+                    xsrfToken: 'bbb'
+            }];
+            }
+
+            if (login === 'john:john') {
+                return [200, {
+                    name: 'john',
+                    roles: ['CUSTOMER'],
+                    bToken: 'aaa',
+                    xsrfToken: 'bbb'
+            }];
+            }
+
+            return [400];
+        });
+
+        $httpBackend.when(SECURITY_GENERAL.logoutHTTPMethod, SECURITY_GENERAL.logoutURL).respond(200);
     });
 
     AppInit.setConfig({
@@ -94,6 +131,21 @@
             },
             I18N_CONFIG: {
                 LocaleFilePattern: 'resources/i18n/angular/angular-locale_{{locale}}.js'
+            },
+            SECURITY_GENERAL: {
+                securityEnabled: true,
+                loginURL: 'http://myserver/rest/login',
+                loginHTTPMethod: 'POST',
+                logoutURL: 'http://myserver/rest/logout',
+                logoutHTTPMethod: 'POST',
+                routes: {
+                    "/roles/admin": ["ADMIN"],
+                    "/roles/customer": ["CUSTOMER"],
+                    "/roles/profile": ["ADMIN", "CUSTOMER"]
+                },
+                routeDeniedRedirect: "/roles/routeDenied",
+                loginRequiredRedirect: "/roles/login",
+                error401Redirect: "/roles/error401"
             }
         },
         appverseMobile: {},

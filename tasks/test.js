@@ -1,7 +1,7 @@
 /*jshint node:true */
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     grunt.registerTask('testserver', [
         'clean:server',
@@ -12,6 +12,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('testserver:watch', [
+        'clean:reportsE2e',
         'testserver',
         'watch'
     ]);

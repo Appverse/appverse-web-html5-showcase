@@ -1,0 +1,10 @@
+<div class="jumbotron">
+    <h2 class="text-info">Roles demo</h2>
+    <p ng-hide="UserService.getCurrentUser()">You are not logged in.</p>
+    <p ng-show="UserService.getCurrentUser()">You are logged in as <b ng-bind="UserService.getCurrentUser().name"></b>.
+        <button type="button" class="btn btn-danger" ng-click="AuthenticationService.sendLogoutRequest()">Logout</button>
+    </p>
+    <a ui-sref="help" class="btn btn-default">Need help?</a>
+</div>
+
+<ui-view/>
