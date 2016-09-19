@@ -87,6 +87,8 @@
             $('#main-navbar-collapse').collapse('hide');
         };
 
+        $httpBackend.whenGET(/^http\:\/\//).passThrough();
+        $httpBackend.whenGET(/^https\:\/\//).passThrough();
         $httpBackend.whenGET(/^views\//).passThrough();
         $httpBackend.whenGET(/^resources\//).passThrough();
         $httpBackend.whenGET(/^scripts\//).passThrough();
