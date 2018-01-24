@@ -3,8 +3,10 @@
     <div class="panel-heading">Explanation</div>
     <div class="panel-body">
         <p>UI Bootstrap components with Appverse theme applied.</p>
-        <p>More examples and code snippets on the
-            <a href="https://angular-ui.github.io/bootstrap" target="_blank">official website</a>.</p>
+        <div class="alert alert-warning" role="alert">
+            <u>Warning!</u> Below examples are for version 0.14.3 of UI Bootstrap.
+            <br> Official documentation for this version can be found
+            <a class="alert-link" href="http://angular-ui.github.io/bootstrap/versioned-docs/0.14.3/" target="_blank">here</a>.</div>
     </div>
 </div>
 
@@ -29,8 +31,7 @@
 
 <div class="checkbox">
     <label>
-        <input ng-model="oneAtATime" type="checkbox">
-        Open only one at a time
+        <input ng-model="oneAtATime" type="checkbox"> Open only one at a time
     </label>
 </div>
 
@@ -88,8 +89,8 @@
                 <uib-slide active="slide.active" ng-repeat="slide in slides">
                     <img ng-src="{{slide.image}}" style="margin:auto;">
                     <div class="carousel-caption">
-                        <h4>Slide
-                            {{$index}}</h4>
+                        <h4>Slide {{$index}}
+                        </h4>
                         <p>{{slide.text}}</p>
                     </div>
                 </uib-slide>
@@ -101,8 +102,7 @@
                 <button class="btn btn-info" ng-click="addSlide()" type="button">Add Slide</button>
                 <div class="checkbox">
                     <label>
-                        <input ng-model="noWrapSlides" type="checkbox">
-                        Disable Slide Looping
+                        <input ng-model="noWrapSlides" type="checkbox"> Disable Slide Looping
                     </label>
                 </div>
             </div>
@@ -164,7 +164,8 @@
 <div class="row">
     <div class="col-md-6">
         <p class="input-group">
-            <input class="form-control datepicker" close-text="Close" datepicker-options="dateOptions" is-open="opened" max-date="'2099-06-22'" min-date="minDate" ng-model="dt" ng-required="true" type="text" uib-datepicker-popup="{{format}}"/>
+            <input class="form-control datepicker" close-text="Close" datepicker-options="dateOptions" is-open="opened" max-date="'2099-06-22'"
+                min-date="minDate" ng-model="dt" ng-required="true" type="text" uib-datepicker-popup="{{format}}" />
             <span class="input-group-btn">
                 <button angular-ripple class="btn btn-default" ng-click="open($event)" type="button">
                     <i class="glyphicon glyphicon-calendar"></i>
@@ -197,8 +198,7 @@
 <button angular-ripple class="btn btn-default" ng-click="openModal('lg')">Large modal</button>
 <button angular-ripple class="btn btn-default" ng-click="openModal('sm')">Small modal</button>
 <button class="btn btn-default" ng-click="toggleAnimation()" type="button">Toggle Animation ({{ animationsEnabled }})</button>
-<div ng-show="selected">Selection from a modal:
-    {{ selected }}</div>
+<div ng-show="selected">Selection from a modal: {{ selected }}</div>
 
 <uib-tabset class="mt-md mb-md">
     <uib-tab heading="HTML">
